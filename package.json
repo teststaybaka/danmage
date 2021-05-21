@@ -1,0 +1,30 @@
+{
+  "name": "danmage_server",
+  "version": "0.0.1",
+  "description": "The backend server for DanMage.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teststaybaka/danmage_server.git"
+  },
+  "keywords": [
+    "Danmage",
+    "TypeScript"
+  ],
+  "author": "Yuxuan Xie <teststaybaka@gmail.com> (http://www.yuxuanxie.com)",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/teststaybaka/danmage_server/issues"
+  },
+  "homepage": "https://github.com/teststaybaka/danmage_server#readme",
+  "devDependencies": {
+    "@selfage/datastore_client": "^1.0.4",
+    "@selfage/message": "^1.0.5",
+    "@selfage/service_descriptor": "^1.0.6",
+    "@selfage/service_handler": "^1.0.5",
+    "@selfage/test_matcher": "^1.0.6",
+    "@selfage/test_runner": "^1.1.4",
+    "@selfage/tsconfig": "^1.0.6",
+    "@types/node": "^15.3.1",
+    "typescript": "^4.2.4"
+  }
+}
