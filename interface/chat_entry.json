@@ -1,0 +1,57 @@
+[{
+  "enum": {
+    "name": "HostApp",
+    "values": [{
+      "name": "YouTube",
+      "value": 1
+    }, {
+      "name": "Crunchyroll",
+      "value": 2
+    }]
+  }
+}, {
+  "message": {
+    "name": "Chat",
+    "fields": [{
+      "name": "id",
+      "type": "string"
+    }, {
+      "name": "hostApp",
+      "type": "HostApp"
+    }, {
+      "name": "hostContentId",
+      "type": "string"
+    }, {
+      "name": "userId",
+      "type": "string"
+    }, {
+      "name": "userDisplayName",
+      "type": "string"
+    }, {
+      "name": "content",
+      "type": "string"
+    }, {
+      "name": "timestamp",
+      "type": "number",
+      "comment": "If absent, the chat is essentially a comment."
+    }, {
+      "name": "created",
+      "type": "number"
+    }],
+    "datastore": {
+      "output": "../backend/datastore/chat_model",
+      "key": "id",
+      "indexes": [{
+        "name": "UserHistory",
+        "fields": [{
+          "fieldName": "userId"
+        }, {
+          "fieldName": "hostApp"
+        }, {
+          "fieldName": "created",
+          "descending": true
+        }]
+      }]
+    }
+  }
+}]
