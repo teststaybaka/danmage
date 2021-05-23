@@ -17,14 +17,16 @@
   },
   "homepage": "https://github.com/teststaybaka/danmage_server#readme",
   "devDependencies": {
-    "@selfage/datastore_client": "^1.0.4",
-    "@selfage/message": "^1.0.5",
-    "@selfage/service_descriptor": "^1.0.6",
-    "@selfage/service_handler": "^1.0.5",
     "@selfage/test_matcher": "^1.0.6",
     "@selfage/test_runner": "^1.1.4",
     "@selfage/tsconfig": "^1.0.6",
-    "@types/node": "^15.3.1",
+    "@types/node": "^15.6.0",
     "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "@selfage/datastore_client": "^1.0.4",
+    "@selfage/message": "^1.0.5",
+    "@selfage/service_descriptor": "^1.0.6",
+    "@selfage/service_handler": "^1.0.5"
   }
 }
