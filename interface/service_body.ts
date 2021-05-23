@@ -1,5 +1,5 @@
 import { MessageDescriptor, PrimitiveType } from '@selfage/message/descriptor';
-import { HostApp, HOST_APP, Chat, CHAT } from './chat_entry';
+import { HostApp, HOST_APP, ChatEntry, CHAT_ENTRY } from './chat_entry';
 
 export interface GetChatRequest {
   hostApp?: HostApp,
@@ -24,7 +24,7 @@ export let GET_CHAT_REQUEST: MessageDescriptor<GetChatRequest> = {
 };
 
 export interface GetChatResponse {
-  chats?: Array<Chat>,
+  chatEntries?: Array<ChatEntry>,
 }
 
 export let GET_CHAT_RESPONSE: MessageDescriptor<GetChatResponse> = {
@@ -34,8 +34,8 @@ export let GET_CHAT_RESPONSE: MessageDescriptor<GetChatResponse> = {
   },
   fields: [
     {
-      name: 'chats',
-      enumDescriptor: CHAT,
+      name: 'chatEntries',
+      messageDescriptor: CHAT_ENTRY,
       arrayFactoryFn: () => {
         return new Array<any>();
       },
@@ -44,9 +44,11 @@ export let GET_CHAT_RESPONSE: MessageDescriptor<GetChatResponse> = {
 };
 
 export interface GetChatHistoryRequest {
-  userId?: string,
+  signedSession?: string,
 /* Optional. */
   hostApp?: HostApp,
+/* If absent, query from the beginning. */
+  cursor?: string,
 }
 
 export let GET_CHAT_HISTORY_REQUEST: MessageDescriptor<GetChatHistoryRequest> = {
@@ -56,18 +58,23 @@ export let GET_CHAT_HISTORY_REQUEST: MessageDescriptor<GetChatHistoryRequest> = 
   },
   fields: [
     {
-      name: 'userId',
+      name: 'signedSession',
       primitiveType: PrimitiveType.STRING,
     },
     {
       name: 'hostApp',
       enumDescriptor: HOST_APP,
     },
+    {
+      name: 'cursor',
+      primitiveType: PrimitiveType.STRING,
+    },
   ]
 };
 
 export interface GetChatHistoryResponse {
-  chats?: Array<Chat>,
+  chatEntries?: Array<ChatEntry>,
+  cursor?: string,
 }
 
 export let GET_CHAT_HISTORY_RESPONSE: MessageDescriptor<GetChatHistoryResponse> = {
@@ -77,11 +84,15 @@ export let GET_CHAT_HISTORY_RESPONSE: MessageDescriptor<GetChatHistoryResponse> 
   },
   fields: [
     {
-      name: 'chats',
-      enumDescriptor: CHAT,
+      name: 'chatEntries',
+      messageDescriptor: CHAT_ENTRY,
       arrayFactoryFn: () => {
         return new Array<any>();
       },
+    },
+    {
+      name: 'cursor',
+      primitiveType: PrimitiveType.STRING,
     },
   ]
 };

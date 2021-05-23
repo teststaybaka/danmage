@@ -14,8 +14,8 @@
   "message": {
     "name": "GetChatResponse",
     "fields": [{
-      "name": "chats",
-      "type": "Chat",
+      "name": "chatEntries",
+      "type": "ChatEntry",
       "isArray": true,
       "import": "./chat_entry"
     }]
@@ -40,8 +40,8 @@
   "message": {
     "name": "GetChatHistoryResponse",
     "fields": [{
-      "name": "chats",
-      "type": "Chat",
+      "name": "chatEntries",
+      "type": "ChatEntry",
       "isArray": true,
       "import": "./chat_entry"
     }, {
