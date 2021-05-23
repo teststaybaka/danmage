@@ -1,0 +1,52 @@
+[{
+  "message": {
+    "name": "GetChatRequest",
+    "fields": [{
+      "name": "hostApp",
+      "type": "HostApp",
+      "import": "./chat_entry"
+    }, {
+      "name": "hostContentId",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "GetChatResponse",
+    "fields": [{
+      "name": "chats",
+      "type": "Chat",
+      "isArray": true,
+      "import": "./chat_entry"
+    }]
+  }
+}, {
+  "message": {
+    "name": "GetChatHistoryRequest",
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }, {
+      "name": "hostApp",
+      "type": "HostApp",
+      "comment": "Optional."
+    }, {
+      "name": "cursor",
+      "type": "string",
+      "comment": "If absent, query from the beginning."
+    }]
+  }
+}, {
+  "message": {
+    "name": "GetChatHistoryResponse",
+    "fields": [{
+      "name": "chats",
+      "type": "Chat",
+      "isArray": true,
+      "import": "./chat_entry"
+    }, {
+      "name": "cursor",
+      "type": "string"
+    }]
+  }
+}]

@@ -11,7 +11,7 @@
   }
 }, {
   "message": {
-    "name": "Chat",
+    "name": "ChatEntry",
     "fields": [{
       "name": "id",
       "type": "string"
@@ -33,13 +33,13 @@
     }, {
       "name": "timestamp",
       "type": "number",
-      "comment": "If absent, the chat is essentially a comment."
+      "comment": "If absent, the chat entry is essentially a comment."
     }, {
       "name": "created",
       "type": "number"
     }],
     "datastore": {
-      "output": "../backend/datastore/chat_model",
+      "output": "../backend/datastore/chat_entry_model",
       "key": "id",
       "indexes": [{
         "name": "UserHistory",
@@ -50,6 +50,13 @@
         }, {
           "fieldName": "created",
           "descending": true
+        }]
+      }, {
+        "name": "HostContent",
+        "fields": [{
+          "fieldName": "hostApp"
+        }, {
+          "fieldName": "hostContentId"
         }]
       }]
     }

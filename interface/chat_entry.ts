@@ -19,20 +19,20 @@ export let HOST_APP: EnumDescriptor<HostApp> = {
   ]
 }
 
-export interface Chat {
+export interface ChatEntry {
   id?: string,
   hostApp?: HostApp,
   hostContentId?: string,
   userId?: string,
   userDisplayName?: string,
   content?: string,
-/* If absent, the chat is essentially a comment. */
+/* If absent, the chat entry is essentially a comment. */
   timestamp?: number,
   created?: number,
 }
 
-export let CHAT: MessageDescriptor<Chat> = {
-  name: 'Chat',
+export let CHAT_ENTRY: MessageDescriptor<ChatEntry> = {
+  name: 'ChatEntry',
   factoryFn: () => {
     return new Object();
   },

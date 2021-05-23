@@ -1,0 +1,19 @@
+[{
+  "service": {
+    "name": "GetChat",
+    "path": "/get_chat",
+    "request": "GetChatRequest",
+    "importRequest": "./service_body",
+    "response": "GetChatResponse",
+    "importResponse": "./service_body"
+  }
+}, {
+  "service": {
+    "name": "GetChatHistory",
+    "path": "/get_chat_history",
+    "request": "GetChatHistoryRequest",
+    "importRequest": "./service_body",
+    "response": "GetChatHistoryResponse",
+    "importResponse": "./service_body"
+  }
+}]

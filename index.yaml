@@ -1,7 +1,0 @@
-indexes:
-  - kind: Chat
-    properties:
-      - name: created
-        direction: desc
-      - name: hostApp
-      - name: userId
