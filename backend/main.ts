@@ -13,8 +13,6 @@ import {
 import { SessionSigner } from "@selfage/service_handler/session_signer";
 import "../environment";
 
-let HOST_NAME = "www.danmage.com";
-
 async function main(): Promise<void> {
   let app = express();
   registerCorsAllowedPreflightHandler(app);
@@ -26,7 +24,7 @@ async function main(): Promise<void> {
 
 async function startServer(app: express.Express): Promise<void> {
   if (globalThis.ENVIRONMENT === "prod") {
-    let storage = new Storage();
+    let reader = new BucketReader(new Storage(), "danmage-keys");
     let [
       privateKey,
       certificate,
@@ -35,22 +33,23 @@ async function startServer(app: express.Express): Promise<void> {
       ca2,
       sessionKey,
     ] = await Promise.all([
-      readFileFromStorage(storage, "danmage.key"),
-      readFileFromStorage(storage, "danmage.crt"),
-      readFileFromStorage(storage, "ca_g0.crt"),
-      readFileFromStorage(storage, "ca_g1.crt"),
-      readFileFromStorage(storage, "ca_g2.crt"),
-      readFileFromStorage(storage, "session.key"),
+      reader.read("danmage.key"),
+      reader.read("danmage.crt"),
+      reader.read("ca_g0.crt"),
+      reader.read("ca_g1.crt"),
+      reader.read("ca_g2.crt"),
+      reader.read("session.key"),
     ]);
 
     SessionSigner.SECRET_KEY = sessionKey;
 
+    let hostName = "www.danmage.com";
     let redirectApp = express();
     redirectApp.get("/*", (req, res) => {
-      res.redirect(`https://${HOST_NAME}` + req.path);
+      res.redirect(`https://${hostName}` + req.path);
     });
     let httpServer = http.createServer(redirectApp);
-    httpServer.listen({ host: HOST_NAME, port: 80 }, () => {
+    httpServer.listen({ host: hostName, port: 80 }, () => {
       console.log("Http server started at 80.");
     });
 
@@ -62,8 +61,17 @@ async function startServer(app: express.Express): Promise<void> {
       },
       app
     );
-    httpsServer.listen({ host: HOST_NAME, port: 443 }, () => {
+    httpsServer.listen({ host: hostName, port: 443 }, () => {
       console.log("Https server started at 443.");
+    });
+  } else if (globalThis.ENVIRONMENT === "dev") {
+    let reader = new BucketReader(new Storage(), "danmage-dev-keys");
+    let sessionKey = await reader.read("session.key");
+    SessionSigner.SECRET_KEY = sessionKey;
+
+    let httpServer = http.createServer(app);
+    httpServer.listen({ host: "dev.danmage.com", port: 80 }, () => {
+      console.log("Http server started at 80.");
     });
   } else if (globalThis.ENVIRONMENT === "local") {
     SessionSigner.SECRET_KEY = "randomlocalkey";
@@ -72,16 +80,19 @@ async function startServer(app: express.Express): Promise<void> {
     httpServer.listen({ host: "localhost", port: 8080 }, () => {
       console.log("Http server started at 8080.");
     });
+  } else {
+    throw new Error(`Not supported environment ${globalThis.ENVIRONMENT}.`);
   }
 }
 
-function readFileFromStorage(
-  storage: Storage,
-  fileName: string
-): Promise<string> {
-  return getStream(
-    storage.bucket("danmage-keys").file(fileName).createReadStream()
-  );
+class BucketReader {
+  public constructor(private storage: Storage, private bucketName: string) {}
+
+  public async read(fileName: string): Promise<string> {
+    return getStream(
+      this.storage.bucket(this.bucketName).file(fileName).createReadStream()
+    );
+  }
 }
 
 main();
