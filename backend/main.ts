@@ -3,9 +3,13 @@ import getStream = require("get-stream");
 import http = require("http");
 import https = require("https");
 import { GetChatHandler } from "./get_chat_handler";
+import { GetChatHistoryHandler } from "./get_chat_history_handler";
 import { Storage } from "@google-cloud/storage";
 import { registerCorsAllowedPreflightHandler } from "@selfage/service_handler/preflight_handler";
-import { registerUnauthed } from "@selfage/service_handler/register";
+import {
+  registerAuthed,
+  registerUnauthed,
+} from "@selfage/service_handler/register";
 import { SessionSigner } from "@selfage/service_handler/session_signer";
 import "../environment";
 
@@ -15,6 +19,7 @@ async function main(): Promise<void> {
   let app = express();
   registerCorsAllowedPreflightHandler(app);
   registerUnauthed(app, GetChatHandler.create());
+  registerAuthed(app, GetChatHistoryHandler.create());
 
   await startServer(app);
 }
