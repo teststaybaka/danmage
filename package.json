@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/teststaybaka/danmage_server#readme",
   "devDependencies": {
+    "@selfage/bundler_cli": "^1.0.5",
     "@selfage/test_matcher": "^1.0.6",
     "@selfage/test_runner": "^1.1.4",
     "@selfage/tsconfig": "^1.0.6",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^5.8.5",
+    "@selfage/cli": "^1.3.3",
     "@selfage/datastore_client": "^1.0.4",
     "@selfage/message": "^1.0.5",
     "@selfage/service_descriptor": "^1.0.6",
