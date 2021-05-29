@@ -1,6 +1,12 @@
 steps:
+- name: node:12.22.1
+  entrypoint: npm
+  args: ['install']
+- name: node:12.22.1
+  entrypoint: npx
+  args: ['bundage', 'bfn', 'backend/main', 'backend/main_bin', '-e', 'environment_${_ENVIRONMENT}']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--build-arg', 'ENVIRONMENT=${_ENVIRONMENT}', '-t', 'gcr.io/${PROJECT_ID}/web', '.']
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/web', '.']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['compute', 'instances', 'stop', '${_SERVER_NAME}', '--zone', '${_SERVER_ZONE}']
 - name: 'gcr.io/cloud-builders/gcloud'

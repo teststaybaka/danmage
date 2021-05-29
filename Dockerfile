@@ -1,10 +1,10 @@
 FROM node:12.22.1
-ARG ENVIRONMENT
 
 WORKDIR /app
-COPY . .
-RUN npm install
-RUN npx bundage bfn backend/main backend/main_bin -e environment_$ENVIRONMENT
+COPY package.json .
+COPY package-lock.json .
+COPY backend/main_bin.js ./backend/
+RUN npm install --production
 
 EXPOSE 80 443
 CMD ["node", "backend/main_bin"]
