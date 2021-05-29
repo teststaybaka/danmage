@@ -2,3 +2,4 @@ node_modules/
 *.d.ts
 *.js
 *.tsbuildinfo
+*_test.ts

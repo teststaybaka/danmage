@@ -1,4 +1,8 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '--build-arg', 'ENVIRONMENT=${_ENVIRONMENT}', '-t', 'gcr.io/${PROJECT_ID}/web', '.']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['compute', 'instances', 'stop', 'web-server']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['compute', 'instances', 'start', 'web-server']
 images: ['gcr.io/${PROJECT_ID}/web']
