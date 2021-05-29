@@ -13,6 +13,8 @@ import {
 import { SessionSigner } from "@selfage/service_handler/session_signer";
 import "../environment";
 
+let HOST_NAME_PROD = "www.danmage.com";
+
 async function main(): Promise<void> {
   let app = express();
   registerCorsAllowedPreflightHandler(app);
@@ -43,13 +45,12 @@ async function startServer(app: express.Express): Promise<void> {
 
     SessionSigner.SECRET_KEY = sessionKey;
 
-    let hostName = "www.danmage.com";
     let redirectApp = express();
     redirectApp.get("/*", (req, res) => {
-      res.redirect(`https://${hostName}` + req.path);
+      res.redirect(`https://${HOST_NAME_PROD}` + req.path);
     });
     let httpServer = http.createServer(redirectApp);
-    httpServer.listen({ host: hostName, port: 80 }, () => {
+    httpServer.listen(80, () => {
       console.log("Http server started at 80.");
     });
 
@@ -61,7 +62,7 @@ async function startServer(app: express.Express): Promise<void> {
       },
       app
     );
-    httpsServer.listen({ host: hostName, port: 443 }, () => {
+    httpsServer.listen(443, () => {
       console.log("Https server started at 443.");
     });
   } else if (globalThis.ENVIRONMENT === "dev") {
@@ -70,14 +71,14 @@ async function startServer(app: express.Express): Promise<void> {
     SessionSigner.SECRET_KEY = sessionKey;
 
     let httpServer = http.createServer(app);
-    httpServer.listen({ host: "dev.danmage.com", port: 80 }, () => {
+    httpServer.listen(80, () => {
       console.log("Http server started at 80.");
     });
   } else if (globalThis.ENVIRONMENT === "local") {
     SessionSigner.SECRET_KEY = "randomlocalkey";
 
     let httpServer = http.createServer(app);
-    httpServer.listen({ host: "localhost", port: 8080 }, () => {
+    httpServer.listen(8080, () => {
       console.log("Http server started at 8080.");
     });
   } else {
