@@ -2,7 +2,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '--build-arg', 'ENVIRONMENT=${_ENVIRONMENT}', '-t', 'gcr.io/${PROJECT_ID}/web', '.']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['compute', 'instances', 'stop', 'web-server', '--zone', 'us-central1-a']
+  args: ['compute', 'instances', 'stop', '${_SERVER_NAME}', '--zone', '${_SERVER_ZONE}']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['compute', 'instances', 'start', 'web-server', '--zone', 'us-central1-a']
+  args: ['compute', 'instances', 'start', '${_SERVER_NAME}', '--zone', '${_SERVER_ZONE}']
 images: ['gcr.io/${PROJECT_ID}/web']
