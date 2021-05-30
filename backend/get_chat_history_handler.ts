@@ -1,8 +1,8 @@
-import { GET_CHAT_HISTORY } from "../interface/service";
 import {
+  GET_CHAT_HISTORY,
   GetChatHistoryRequest,
   GetChatHistoryResponse,
-} from "../interface/service_body";
+} from "../interface/service";
 import { UserSession } from "../interface/session";
 import { UserHistoryQueryBuilder } from "./datastore/chat_entry_model";
 import { UserAuthedServiceHandler } from "./user_authed_service_handler";

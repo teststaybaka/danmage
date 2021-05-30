@@ -1,5 +1,8 @@
-import { GET_CHAT } from "../interface/service";
-import { GetChatRequest, GetChatResponse } from "../interface/service_body";
+import {
+  GET_CHAT,
+  GetChatRequest,
+  GetChatResponse,
+} from "../interface/service";
 import { HostContentQueryBuilder } from "./datastore/chat_entry_model";
 import { DatastoreClient } from "@selfage/datastore_client";
 import { UnauthedServiceHandler } from "@selfage/service_handler";

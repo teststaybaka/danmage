@@ -1,19 +1,66 @@
 [{
+  "message": {
+    "name": "GetChatRequest",
+    "fields": [{
+      "name": "hostApp",
+      "type": "HostApp",
+      "import": "./chat_entry"
+    }, {
+      "name": "hostContentId",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "GetChatResponse",
+    "fields": [{
+      "name": "chatEntries",
+      "type": "ChatEntry",
+      "isArray": true,
+      "import": "./chat_entry"
+    }]
+  }
+}, {
   "service": {
     "name": "GetChat",
     "path": "/get_chat",
     "request": "GetChatRequest",
-    "importRequest": "./service_body",
-    "response": "GetChatResponse",
-    "importResponse": "./service_body"
+    "response": "GetChatResponse"
+  }
+}, {
+  "message": {
+    "name": "GetChatHistoryRequest",
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }, {
+      "name": "hostApp",
+      "type": "HostApp",
+      "comment": "Optional."
+    }, {
+      "name": "cursor",
+      "type": "string",
+      "comment": "If absent, query from the beginning."
+    }]
+  }
+}, {
+  "message": {
+    "name": "GetChatHistoryResponse",
+    "fields": [{
+      "name": "chatEntries",
+      "type": "ChatEntry",
+      "isArray": true,
+      "import": "./chat_entry"
+    }, {
+      "name": "cursor",
+      "type": "string"
+    }]
   }
 }, {
   "service": {
     "name": "GetChatHistory",
     "path": "/get_chat_history",
     "request": "GetChatHistoryRequest",
-    "importRequest": "./service_body",
-    "response": "GetChatHistoryResponse",
-    "importResponse": "./service_body"
+    "response": "GetChatHistoryResponse"
   }
 }]
