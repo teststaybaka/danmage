@@ -1,0 +1,20 @@
+[{
+  "message": {
+    "name": "User",
+    "fields": [{
+      "name": "id",
+      "type": "string"
+    }, {
+      "name": "displayName",
+      "type": "string"
+    }, {
+      "name": "created",
+      "type": "number",
+      "comment": "seconds since epoch"
+    }],
+    "datastore": {
+      "output": "../backend/datastore/user_model",
+      "key": "id"
+    }
+  }
+}]

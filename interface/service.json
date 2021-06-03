@@ -1,5 +1,28 @@
 [{
   "message": {
+    "name": "SignInRequest",
+    "fields": [{
+      "name": "googleAccessToken",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "SignInResponse",
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }]
+  }
+}, {
+  "service": {
+    "name": "SignIn",
+    "path": "/sign_in",
+    "request": "SignInRequest",
+    "response": "SignInResponse"
+  }
+}, {
+  "message": {
     "name": "GetChatRequest",
     "fields": [{
       "name": "hostApp",

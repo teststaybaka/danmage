@@ -1,6 +1,47 @@
 import { MessageDescriptor, PrimitiveType } from '@selfage/message/descriptor';
-import { HostApp, HOST_APP, ChatEntry, CHAT_ENTRY } from './chat_entry';
 import { UnauthedServiceDescriptor, AuthedServiceDescriptor } from '@selfage/service_descriptor';
+import { HostApp, HOST_APP, ChatEntry, CHAT_ENTRY } from './chat_entry';
+
+export interface SignInRequest {
+  googleAccessToken?: string,
+}
+
+export let SIGN_IN_REQUEST: MessageDescriptor<SignInRequest> = {
+  name: 'SignInRequest',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+    {
+      name: 'googleAccessToken',
+      primitiveType: PrimitiveType.STRING,
+    },
+  ]
+};
+
+export interface SignInResponse {
+  signedSession?: string,
+}
+
+export let SIGN_IN_RESPONSE: MessageDescriptor<SignInResponse> = {
+  name: 'SignInResponse',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+    {
+      name: 'signedSession',
+      primitiveType: PrimitiveType.STRING,
+    },
+  ]
+};
+
+export let SIGN_IN: UnauthedServiceDescriptor<SignInRequest, SignInResponse> = {
+  name: "SignIn",
+  path: "/sign_in",
+  requestDescriptor: SIGN_IN_REQUEST,
+  responseDescriptor: SIGN_IN_RESPONSE,
+};
 
 export interface GetChatRequest {
   hostApp?: HostApp,
