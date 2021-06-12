@@ -1,0 +1,76 @@
+[{
+  "enum": {
+    "name": "BlockKind",
+    "values": [{
+      "name": "Keyword",
+      "value": 1
+    }, {
+      "name": "RegExp",
+      "value": 3
+    }]
+  }
+}, {
+  "message": {
+    "name": "BlockPattern",
+    "fields": [{
+      "name": "kind",
+      "type": "BlockKind"
+    }, {
+      "name": "content",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "BlockSettings",
+    "fields": [{
+      "name": "blockPatterns",
+      "type": "BlockPattern",
+      "isArray": true
+    }]
+  }
+}, {
+  "message": {
+    "name": "DisplaySettings",
+    "fields": [{
+      "name": "enable",
+      "type": "boolean"
+    }, {
+      "name": "speed",
+      "type": "number"
+    }, {
+      "name": "opacity",
+      "type": "number"
+    }, {
+      "name": "fontSize",
+      "type": "number"
+    }, {
+      "name": "numLimit",
+      "type": "number"
+    }, {
+      "name": "fontFamily",
+      "type": "string"
+    }, {
+      "name": "showUserName",
+      "type": "boolean"
+    }]
+  }
+}, {
+  "message": {
+    "name": "PlayerSettings",
+    "fields": [{
+      "name": "userId",
+      "type": "string"
+    }, {
+      "name": "displaySettings",
+      "type": "DisplaySettings"
+    }, {
+      "name": "blockSettings",
+      "type": "BlockSettings"
+    }],
+    "datastore": {
+      "output": "../backend/datastore/player_settings_model",
+      "key": "userId"
+    }
+  }
+}]

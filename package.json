@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/teststaybaka/danmage_web_server#readme",
   "devDependencies": {
-    "@selfage/bundler_cli": "^1.0.5",
+    "@selfage/bundler_cli": "^1.1.2",
     "@selfage/counter": "^1.0.9",
     "@selfage/test_matcher": "^1.0.6",
-    "@selfage/test_runner": "^1.1.4",
+    "@selfage/test_runner": "^1.1.5",
     "@selfage/tsconfig": "^1.0.6",
     "@types/express": "^4.17.11",
     "@types/node": "^15.6.0",
