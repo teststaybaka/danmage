@@ -23,6 +23,55 @@
   }
 }, {
   "message": {
+    "name": "GetUserRequest",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "GetUserResponse",
+    "fields": [{
+      "name": "user",
+      "type": "User",
+      "import": "./user"
+    }]
+  }
+}, {
+  "service": {
+    "name": "GetUser",
+    "path": "/get_user",
+    "request": "GetUserRequest",
+    "response": "GetUserResponse"
+  }
+}, {
+  "message": {
+    "name": "PostChatRequest",
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }, {
+      "name": "chatEntry",
+      "type": "ChatEntry",
+      "import": "./chat_entry"
+    }]
+  }
+}, {
+  "message": {
+    "name": "PostChatResponse",
+    "fields": [{
+      "name": "chatEntry",
+      "type": "ChatEntry",
+      "import": "./chat_entry"
+    }]
+  }
+}, {
+  "service": {
+    "name": "PostChat",
+    "path": "/post_chat",
+    "request": "PostChatRequest",
+    "response": "PostChatResponse"
+  }
+}, {
+  "message": {
     "name": "GetChatRequest",
     "fields": [{
       "name": "hostApp",
@@ -85,5 +134,76 @@
     "path": "/get_chat_history",
     "request": "GetChatHistoryRequest",
     "response": "GetChatHistoryResponse"
+  }
+}, {
+  "message": {
+    "name": "UpdatePlayerSettingsRequest",
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }, {
+      "name": "playerSettings",
+      "type": "PlayerSettings",
+      "import": "./player_settings"
+    }]
+  }
+}, {
+  "message": {
+    "name": "UpdatePlayerSettingsResponse",
+    "fields": []
+  }
+}, {
+  "service": {
+    "name": "UpdatePlayerSettings",
+    "path": "/update_player_settings",
+    "request": "UpdatePlayerSettingsRequest",
+    "response": "UpdatePlayerSettingsResponse"
+  }
+}, {
+  "message": {
+    "name": "GetPlayerSettingsRequest",
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "GetPlayerSettingsResponse",
+    "fields": [{
+      "name": "playerSettings",
+      "type": "PlayerSettings",
+      "import": "./player_settings"
+    }]
+  }
+}, {
+  "service": {
+    "name": "GetPlayerSettings",
+    "path": "/get_player_settings",
+    "request": "GetPlayerSettingsRequest",
+    "response": "GetPlayerSettingsResponse"
+  }
+}, {
+  "message": {
+    "name": "UpdateDisplayNameRequest",
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }, {
+      "name": "newName",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "UpdateDisplayNameResponse",
+    "fields": []
+  }
+}, {
+  "service": {
+    "name": "UpdateDisplayName",
+    "path": "/update_display_name",
+    "request": "UpdateDisplayNameRequest",
+    "response": "UpdateDisplayNameResponse"
   }
 }]

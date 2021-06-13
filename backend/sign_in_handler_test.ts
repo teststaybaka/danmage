@@ -3,6 +3,7 @@ import { USER, User } from "../interface/user";
 import { SignInHandler } from "./sign_in_handler";
 import { Counter } from "@selfage/counter";
 import { DatastoreClient } from "@selfage/datastore_client";
+import { HttpError } from "@selfage/http_error";
 import { eqMessage } from "@selfage/message/test_matcher";
 import { SessionBuilder } from "@selfage/service_handler/session_signer";
 import {
@@ -41,6 +42,7 @@ TEST_RUNNER.run({
             assertThat(url, containStr("access_token=some_token"), "url");
             return Promise.resolve({
               ok: false,
+              status: 400,
               statusText: "400 error",
             } as any);
           }
@@ -53,7 +55,12 @@ TEST_RUNNER.run({
 
         // Verify
         assertThat(counter.get("fetch"), eq(1), "fetch called");
-        assertThat(error, eqError(new Error("Failed to fetch")), "error");
+        assertThat(
+          error,
+          eqError(new HttpError(400, "Failed to fetch")),
+          "error"
+        );
+        assertThat(error.status, eq(400), "error code");
       },
     },
     {

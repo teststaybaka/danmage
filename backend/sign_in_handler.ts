@@ -4,6 +4,7 @@ import { SIGN_IN, SignInRequest, SignInResponse } from "../interface/service";
 import { UserSession } from "../interface/session";
 import { USER_MODEL } from "./datastore/user_model";
 import { DatastoreClient } from "@selfage/datastore_client";
+import { HttpError } from "@selfage/http_error";
 import { UnauthedServiceHandler } from "@selfage/service_handler";
 import { SessionBuilder } from "@selfage/service_handler/session_signer";
 import {
@@ -47,7 +48,8 @@ export class SignInHandler
       { timeout: 60000 /* ms */ }
     );
     if (!response.ok) {
-      throw new Error(
+      throw new HttpError(
+        response.status,
         `Failed to fetch Google access token info. Response status: ` +
           `${response.statusText}`
       );
