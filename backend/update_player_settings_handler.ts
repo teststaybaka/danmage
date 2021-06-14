@@ -1,4 +1,5 @@
 import {
+  CHANGE_PLAYER_SETTINGS,
   UPDATE_PLAYER_SETTINGS,
   UpdatePlayerSettingsRequest,
   UpdatePlayerSettingsResponse,
@@ -20,6 +21,36 @@ export class UpdatePlayerSettingsHandler extends UserAuthedServiceHandler<
 
   public static create(): UpdatePlayerSettingsHandler {
     return new UpdatePlayerSettingsHandler(DatastoreClient.create());
+  }
+
+  public async handle(
+    logContext: string,
+    request: UpdatePlayerSettingsRequest,
+    session: UserSession
+  ): Promise<UpdatePlayerSettingsResponse> {
+    request.playerSettings.userId = session.userId;
+    await this.datastoreClient.save(
+      [request.playerSettings],
+      PLAYER_SETTINGS_MODEL,
+      "upsert"
+    );
+    return {};
+  }
+}
+
+// Legacy handler.
+export class ChangePlayerSettingsHandler extends UserAuthedServiceHandler<
+  UpdatePlayerSettingsRequest,
+  UpdatePlayerSettingsResponse
+> {
+  public serviceDescriptor = CHANGE_PLAYER_SETTINGS;
+
+  public constructor(private datastoreClient: DatastoreClient) {
+    super();
+  }
+
+  public static create(): ChangePlayerSettingsHandler {
+    return new ChangePlayerSettingsHandler(DatastoreClient.create());
   }
 
   public async handle(

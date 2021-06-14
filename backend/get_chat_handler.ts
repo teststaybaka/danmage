@@ -1,5 +1,7 @@
 import {
+  EmptyMessage,
   GET_CHAT,
+  GET_DANMAKU,
   GetChatRequest,
   GetChatResponse,
 } from "../interface/service";
@@ -29,5 +31,20 @@ export class GetChatHandler
     return {
       chatEntries: values,
     };
+  }
+}
+
+// Legacy handler
+export class GetDanmakuHandler
+  implements UnauthedServiceHandler<EmptyMessage, EmptyMessage> {
+  public serviceDescriptor = GET_DANMAKU;
+
+  public constructor() {}
+
+  public async handle(
+    logContext: string,
+    request: EmptyMessage
+  ): Promise<EmptyMessage> {
+    return {};
   }
 }
