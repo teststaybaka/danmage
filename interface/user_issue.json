@@ -1,0 +1,22 @@
+[{
+  "message": {
+    "name": "UserIssue",
+    "fields": [{
+      "name": "id",
+      "type": "string"
+    }, {
+      "name": "email",
+      "type": "string"
+    }, {
+      "name": "description",
+      "type": "string"
+    }, {
+      "name": "created",
+      "type": "number"
+    }],
+    "datastore": {
+      "output": "../backend/datastore/user_issue_model",
+      "key": "id"
+    }
+  }
+}]

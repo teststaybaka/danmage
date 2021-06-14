@@ -3,6 +3,7 @@ import { UnauthedServiceDescriptor, AuthedServiceDescriptor } from '@selfage/ser
 import { User, USER } from './user';
 import { ChatEntry, CHAT_ENTRY, HostApp, HOST_APP } from './chat_entry';
 import { PlayerSettings, PLAYER_SETTINGS } from './player_settings';
+import { UserIssue, USER_ISSUE } from './user_issue';
 
 export interface SignInRequest {
   googleAccessToken?: string,
@@ -40,7 +41,7 @@ export let SIGN_IN_RESPONSE: MessageDescriptor<SignInResponse> = {
 
 export let SIGN_IN: UnauthedServiceDescriptor<SignInRequest, SignInResponse> = {
   name: "SignIn",
-  path: "/sign_in",
+  path: "/SignIn",
   requestDescriptor: SIGN_IN_REQUEST,
   responseDescriptor: SIGN_IN_RESPONSE,
 };
@@ -76,7 +77,7 @@ export let GET_USER_RESPONSE: MessageDescriptor<GetUserResponse> = {
 
 export let GET_USER: UnauthedServiceDescriptor<GetUserRequest, GetUserResponse> = {
   name: "GetUser",
-  path: "/get_user",
+  path: "/GetUser",
   requestDescriptor: GET_USER_REQUEST,
   responseDescriptor: GET_USER_RESPONSE,
 };
@@ -122,7 +123,7 @@ export let POST_CHAT_RESPONSE: MessageDescriptor<PostChatResponse> = {
 
 export let POST_CHAT: AuthedServiceDescriptor<PostChatRequest, PostChatResponse> = {
   name: "PostChat",
-  path: "/post_chat",
+  path: "/PostChat",
   requestDescriptor: POST_CHAT_REQUEST,
   responseDescriptor: POST_CHAT_RESPONSE,
 };
@@ -171,7 +172,7 @@ export let GET_CHAT_RESPONSE: MessageDescriptor<GetChatResponse> = {
 
 export let GET_CHAT: UnauthedServiceDescriptor<GetChatRequest, GetChatResponse> = {
   name: "GetChat",
-  path: "/get_chat",
+  path: "/GetChat",
   requestDescriptor: GET_CHAT_REQUEST,
   responseDescriptor: GET_CHAT_RESPONSE,
 };
@@ -232,7 +233,7 @@ export let GET_CHAT_HISTORY_RESPONSE: MessageDescriptor<GetChatHistoryResponse> 
 
 export let GET_CHAT_HISTORY: AuthedServiceDescriptor<GetChatHistoryRequest, GetChatHistoryResponse> = {
   name: "GetChatHistory",
-  path: "/get_chat_history",
+  path: "/GetChatHistory",
   requestDescriptor: GET_CHAT_HISTORY_REQUEST,
   responseDescriptor: GET_CHAT_HISTORY_RESPONSE,
 };
@@ -273,7 +274,7 @@ export let UPDATE_PLAYER_SETTINGS_RESPONSE: MessageDescriptor<UpdatePlayerSettin
 
 export let UPDATE_PLAYER_SETTINGS: AuthedServiceDescriptor<UpdatePlayerSettingsRequest, UpdatePlayerSettingsResponse> = {
   name: "UpdatePlayerSettings",
-  path: "/update_player_settings",
+  path: "/UpdatePlayerSettings",
   requestDescriptor: UPDATE_PLAYER_SETTINGS_REQUEST,
   responseDescriptor: UPDATE_PLAYER_SETTINGS_RESPONSE,
 };
@@ -314,7 +315,7 @@ export let GET_PLAYER_SETTINGS_RESPONSE: MessageDescriptor<GetPlayerSettingsResp
 
 export let GET_PLAYER_SETTINGS: AuthedServiceDescriptor<GetPlayerSettingsRequest, GetPlayerSettingsResponse> = {
   name: "GetPlayerSettings",
-  path: "/get_player_settings",
+  path: "/GetPlayerSettings",
   requestDescriptor: GET_PLAYER_SETTINGS_REQUEST,
   responseDescriptor: GET_PLAYER_SETTINGS_RESPONSE,
 };
@@ -355,7 +356,43 @@ export let UPDATE_DISPLAY_NAME_RESPONSE: MessageDescriptor<UpdateDisplayNameResp
 
 export let UPDATE_DISPLAY_NAME: AuthedServiceDescriptor<UpdateDisplayNameRequest, UpdateDisplayNameResponse> = {
   name: "UpdateDisplayName",
-  path: "/update_display_name",
+  path: "/UpdateDisplayName",
   requestDescriptor: UPDATE_DISPLAY_NAME_REQUEST,
   responseDescriptor: UPDATE_DISPLAY_NAME_RESPONSE,
+};
+
+export interface ReportUserIssueRequest {
+  userIssue?: UserIssue,
+}
+
+export let REPORT_USER_ISSUE_REQUEST: MessageDescriptor<ReportUserIssueRequest> = {
+  name: 'ReportUserIssueRequest',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+    {
+      name: 'userIssue',
+      messageDescriptor: USER_ISSUE,
+    },
+  ]
+};
+
+export interface ReportUserIssueResponse {
+}
+
+export let REPORT_USER_ISSUE_RESPONSE: MessageDescriptor<ReportUserIssueResponse> = {
+  name: 'ReportUserIssueResponse',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+  ]
+};
+
+export let REPORT_USER_ISSUE: UnauthedServiceDescriptor<ReportUserIssueRequest, ReportUserIssueResponse> = {
+  name: "ReportUserIssue",
+  path: "/ReportUserIssue",
+  requestDescriptor: REPORT_USER_ISSUE_REQUEST,
+  responseDescriptor: REPORT_USER_ISSUE_RESPONSE,
 };
