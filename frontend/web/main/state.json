@@ -1,0 +1,72 @@
+[{
+  "message": {
+    "name": "HomeState",
+    "fields": [{
+      "name": "show",
+      "type": "boolean"
+    }]
+  }
+}, {
+  "message": {
+    "name": "ChatHistoryState",
+    "fields": [{
+      "name": "show",
+      "type": "boolean"
+    }]
+  }
+}, {
+  "message": {
+    "name": "AccountInfoState",
+    "fields": [{
+      "name": "show",
+      "type": "boolean"
+    }]
+  }
+}, {
+  "message": {
+    "name": "ReportUserIssueState",
+    "fields": [{
+      "name": "show",
+      "type": "boolean"
+    }]
+  }
+}, {
+  "message": {
+    "name": "PrivacyPolicyState",
+    "fields": [{
+      "name": "show",
+      "type": "boolean"
+    }]
+  }
+}, {
+  "message": {
+    "name": "TermsAndConditionsState",
+    "fields": [{
+      "name": "show",
+      "type": "boolean"
+    }]
+  }
+}, {
+  "message": {
+    "name": "State",
+    "fields": [{
+      "name": "homeState",
+      "type": "HomeState"
+    }, {
+      "name": "chatHistoryState",
+      "type": "ChatHistoryState"
+    }, {
+      "name": "accountInfoState",
+      "type": "AccountInfoState"
+    }, {
+      "name": "reportUserIssueState",
+      "type": "ReportUserIssueState"
+    }, {
+      "name": "privacyPolicyState",
+      "type": "PrivacyPolicyState"
+    }, {
+      "name": "termsAndConditionsState",
+      "type": "TermsAndConditionsState"
+    }]
+  }
+}]
