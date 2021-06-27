@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/teststaybaka/danmage_web_server#readme",
   "devDependencies": {
-    "@selfage/bundler_cli": "^1.2.1",
+    "@selfage/bundler_cli": "^1.2.2",
     "@selfage/counter": "^1.0.9",
     "@selfage/puppeteer_executor_api": "^1.1.1",
     "@selfage/test_matcher": "^1.0.6",
