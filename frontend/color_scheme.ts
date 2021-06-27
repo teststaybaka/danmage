@@ -15,7 +15,7 @@ enum Purpose {
   ALTERNATIVE_BACKGROUND,
   CONTENT,
   ERROR_CONTENT,
-  HIGHLIGHT_CONTENT,
+  LINK_CONTENT,
   HINT_CONTENT,
   BLOCK_SEPARATOR,
   INPUT_BORDER, // Includes button/dropdown/text input
@@ -32,8 +32,30 @@ enum Purpose {
   POPUP_SHADOW,
 }
 
+export let CLASSIC_COLOR_SCHEME: Map<Purpose, string> = new Map([
+  [Purpose.BACKGROUND, WHITE],
+  [Purpose.ALTERNATIVE_BACKGROUND, LIGHT_GREY],
+  [Purpose.CONTENT, DARKER_GREY],
+  [Purpose.ERROR_CONTENT, RED],
+  [Purpose.LINK_CONTENT, BLUE],
+  [Purpose.HINT_CONTENT, DARK_GREY],
+  [Purpose.BLOCK_SEPARATOR, DARK_GREY],
+  [Purpose.INPUT_BORDER, GREY],
+  [Purpose.PRESSED_BUTTON_CONTENT, BLUE],
+  [Purpose.PRESSED_BUTTON_BORDER, LIGHT_BLUE],
+  [Purpose.DISABLED_BUTTON_CONTENT, LIGHT_BLUE],
+  [Purpose.DISABLED_BUTTON_BORDER, LIGHT_BLUE],
+  [Purpose.IMPORTANT_BUTTON_CONTENT, WHITE],
+  [Purpose.IMPORTANT_BUTTON_BACKGROUND, BLUE],
+  [Purpose.PRESSED_IMPORTANT_BUTTON_BACKGROUND, LIGHT_BLUE],
+  [Purpose.DISABLED_IMPORTANT_BUTTON_BACKGROUND, LIGHT_BLUE],
+  [Purpose.SWITCH_OFF_BACKGROUND, GREY],
+  [Purpose.SWITCH_ON_BACKGROUND, GREEN],
+  [Purpose.POPUP_SHADOW, DARKER_GREY],
+]);
+
 export class ColorScheme {
-  public static SCHEME: Map<Purpose, string>;
+  public static SCHEME = CLASSIC_COLOR_SCHEME;
 
   public static getBackground(): string {
     return ColorScheme.SCHEME.get(Purpose.BACKGROUND);
@@ -51,8 +73,8 @@ export class ColorScheme {
     return ColorScheme.SCHEME.get(Purpose.ERROR_CONTENT);
   }
 
-  public static getHighlightContent(): string {
-    return ColorScheme.SCHEME.get(Purpose.HIGHLIGHT_CONTENT);
+  public static getLinkContent(): string {
+    return ColorScheme.SCHEME.get(Purpose.LINK_CONTENT);
   }
 
   public static getHintContent(): string {
@@ -112,24 +134,3 @@ export class ColorScheme {
   }
 }
 
-export let CLASSIC_COLOR_SCHEME: Map<Purpose, string> = new Map([
-  [Purpose.BACKGROUND, WHITE],
-  [Purpose.ALTERNATIVE_BACKGROUND, LIGHT_GREY],
-  [Purpose.CONTENT, DARKER_GREY],
-  [Purpose.ERROR_CONTENT, RED],
-  [Purpose.HIGHLIGHT_CONTENT, BLUE],
-  [Purpose.HINT_CONTENT, DARK_GREY],
-  [Purpose.BLOCK_SEPARATOR, DARK_GREY],
-  [Purpose.INPUT_BORDER, GREY],
-  [Purpose.PRESSED_BUTTON_CONTENT, BLUE],
-  [Purpose.PRESSED_BUTTON_BORDER, LIGHT_BLUE],
-  [Purpose.DISABLED_BUTTON_CONTENT, LIGHT_BLUE],
-  [Purpose.DISABLED_BUTTON_BORDER, LIGHT_BLUE],
-  [Purpose.IMPORTANT_BUTTON_CONTENT, WHITE],
-  [Purpose.IMPORTANT_BUTTON_BACKGROUND, BLUE],
-  [Purpose.PRESSED_IMPORTANT_BUTTON_BACKGROUND, LIGHT_BLUE],
-  [Purpose.DISABLED_IMPORTANT_BUTTON_BACKGROUND, LIGHT_BLUE],
-  [Purpose.SWITCH_OFF_BACKGROUND, GREY],
-  [Purpose.SWITCH_ON_BACKGROUND, GREEN],
-  [Purpose.POPUP_SHADOW, DARKER_GREY],
-]);

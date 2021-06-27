@@ -2,3 +2,5 @@ node_modules/
 *.d.ts
 *.js
 *.tsbuildinfo
+*.html
+*.gz
