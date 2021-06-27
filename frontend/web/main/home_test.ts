@@ -43,8 +43,8 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Cleanup
         await Promise.all([
-          globalThis.deleteFile(__dirname + "/golden/home.png"),
-          globalThis.deleteFile(__dirname + "/golden/home_narrow.png"),
+          globalThis.deleteFile(__dirname + "/home.png"),
+          globalThis.deleteFile(__dirname + "/home_narrow.png"),
         ]);
       },
     },
