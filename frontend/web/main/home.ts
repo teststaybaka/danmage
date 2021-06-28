@@ -118,29 +118,22 @@ export class Home {
     ...textElements: Array<HTMLElement>
   ): HTMLElement {
     let backgroundColor: string;
-    let wrap: string;
-    let alignItems: string;
+    let direction: string;
     if (index % 2 == 1) {
       backgroundColor = ColorScheme.getBackground();
-      wrap = "wrap";
-      alignItems = "flex-start";
+      direction = "row";
     } else {
       backgroundColor = ColorScheme.getAlternativeBackground();
-      wrap = "wrap-reverse";
-      alignItems = "flex-end";
+      direction = "row-reverse";
     }
     let paragraph = E.div(
-      `class="home-paragraph" style="display: flex; flex-flow: row ${wrap}; ` +
-        `justify-content: center; align-items: ${alignItems}; ` +
-        `padding: 2.5rem; background-color: ${backgroundColor};"`
+      `class="home-paragraph" style="display: flex; ` +
+        `flex-flow: ${direction} wrap; justify-content: center; ` +
+        `align-items: flex-start; padding: 2.5rem; ` +
+        `background-color: ${backgroundColor};"`
     );
-    if (index % 2 == 1) {
-      paragraph.appendChild(Home.picture(Home.IMAGE_PATHS[index - 1]));
-      paragraph.appendChild(Home.textContainer(index, textElements));
-    } else {
-      paragraph.appendChild(Home.textContainer(index, textElements));
-      paragraph.appendChild(Home.picture(Home.IMAGE_PATHS[index - 1]));
-    }
+    paragraph.appendChild(Home.picture(Home.IMAGE_PATHS[index - 1]));
+    paragraph.appendChild(Home.textContainer(index, textElements));
     return paragraph;
   }
 
