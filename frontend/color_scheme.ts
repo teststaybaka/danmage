@@ -19,14 +19,12 @@ enum Purpose {
   HINT_CONTENT,
   BLOCK_SEPARATOR,
   INPUT_BORDER, // Includes button/dropdown/text input
-  PRESSED_BUTTON_CONTENT,
-  PRESSED_BUTTON_BORDER,
-  DISABLED_BUTTON_CONTENT,
-  DISABLED_BUTTON_BORDER,
-  IMPORTANT_BUTTON_CONTENT,
-  IMPORTANT_BUTTON_BACKGROUND,
-  PRESSED_IMPORTANT_BUTTON_BACKGROUND,
-  DISABLED_IMPORTANT_BUTTON_BACKGROUND,
+  DISABLED_INPUT_CONTENT,
+  PRESSED_BUTTON_BACKGROUND,
+  PRIMARY_BUTTON_CONTENT,
+  PRIMARY_BUTTON_BACKGROUND,
+  PRESSED_PRIMARY_BUTTON_BACKGROUND,
+  DISABLED_PRIMARY_BUTTON_BACKGROUND,
   SWITCH_OFF_BACKGROUND,
   SWITCH_ON_BACKGROUND,
   POPUP_SHADOW,
@@ -41,14 +39,12 @@ export let CLASSIC_COLOR_SCHEME: Map<Purpose, string> = new Map([
   [Purpose.HINT_CONTENT, DARK_GREY],
   [Purpose.BLOCK_SEPARATOR, DARK_GREY],
   [Purpose.INPUT_BORDER, GREY],
-  [Purpose.PRESSED_BUTTON_CONTENT, BLUE],
-  [Purpose.PRESSED_BUTTON_BORDER, LIGHT_BLUE],
-  [Purpose.DISABLED_BUTTON_CONTENT, LIGHT_BLUE],
-  [Purpose.DISABLED_BUTTON_BORDER, LIGHT_BLUE],
-  [Purpose.IMPORTANT_BUTTON_CONTENT, WHITE],
-  [Purpose.IMPORTANT_BUTTON_BACKGROUND, BLUE],
-  [Purpose.PRESSED_IMPORTANT_BUTTON_BACKGROUND, LIGHT_BLUE],
-  [Purpose.DISABLED_IMPORTANT_BUTTON_BACKGROUND, LIGHT_BLUE],
+  [Purpose.DISABLED_INPUT_CONTENT, LIGHT_GREY],
+  [Purpose.PRESSED_BUTTON_BACKGROUND, GREY],
+  [Purpose.PRIMARY_BUTTON_CONTENT, WHITE],
+  [Purpose.PRIMARY_BUTTON_BACKGROUND, BLUE],
+  [Purpose.PRESSED_PRIMARY_BUTTON_BACKGROUND, LIGHT_BLUE],
+  [Purpose.DISABLED_PRIMARY_BUTTON_BACKGROUND, LIGHT_BLUE],
   [Purpose.SWITCH_OFF_BACKGROUND, GREY],
   [Purpose.SWITCH_ON_BACKGROUND, GREEN],
   [Purpose.POPUP_SHADOW, DARKER_GREY],
@@ -89,36 +85,28 @@ export class ColorScheme {
     return ColorScheme.SCHEME.get(Purpose.INPUT_BORDER);
   }
 
-  public static getPressedButtonContent(): string {
-    return ColorScheme.SCHEME.get(Purpose.PRESSED_BUTTON_CONTENT);
+  public static getDisabledInputContent(): string {
+    return ColorScheme.SCHEME.get(Purpose.DISABLED_INPUT_CONTENT);
   }
 
-  public static getPressedButtonBorder(): string {
-    return ColorScheme.SCHEME.get(Purpose.PRESSED_BUTTON_BORDER);
+  public static getPressedButtonBackground(): string {
+    return ColorScheme.SCHEME.get(Purpose.PRESSED_BUTTON_BACKGROUND);
   }
 
-  public static getDisabledButtonContent(): string {
-    return ColorScheme.SCHEME.get(Purpose.DISABLED_BUTTON_CONTENT);
+  public static getPrimaryButtonContent(): string {
+    return ColorScheme.SCHEME.get(Purpose.PRIMARY_BUTTON_CONTENT);
   }
 
-  public static getDisabledButtonBorder(): string {
-    return ColorScheme.SCHEME.get(Purpose.DISABLED_BUTTON_BORDER);
+  public static getPrimaryButtonBackground(): string {
+    return ColorScheme.SCHEME.get(Purpose.PRIMARY_BUTTON_BACKGROUND);
   }
 
-  public static getImportantButtonContent(): string {
-    return ColorScheme.SCHEME.get(Purpose.IMPORTANT_BUTTON_CONTENT);
+  public static getPressedPrimaryButtonBackground(): string {
+    return ColorScheme.SCHEME.get(Purpose.PRESSED_PRIMARY_BUTTON_BACKGROUND);
   }
 
-  public static getImportantButtonBackground(): string {
-    return ColorScheme.SCHEME.get(Purpose.IMPORTANT_BUTTON_BACKGROUND);
-  }
-
-  public static getPressedImportantButtonBackground(): string {
-    return ColorScheme.SCHEME.get(Purpose.PRESSED_IMPORTANT_BUTTON_BACKGROUND);
-  }
-
-  public static getDisabledImportantButtonBackground(): string {
-    return ColorScheme.SCHEME.get(Purpose.DISABLED_IMPORTANT_BUTTON_BACKGROUND);
+  public static getDisabledPrimaryButtonBackground(): string {
+    return ColorScheme.SCHEME.get(Purpose.DISABLED_PRIMARY_BUTTON_BACKGROUND);
   }
 
   public static getSwitchOffBackground(): string {
@@ -133,4 +121,3 @@ export class ColorScheme {
     return ColorScheme.SCHEME.get(Purpose.POPUP_SHADOW);
   }
 }
-
