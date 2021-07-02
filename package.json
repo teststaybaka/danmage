@@ -35,6 +35,7 @@
     "@selfage/http_error": "^1.0.4",
     "@selfage/message": "^1.0.5",
     "@selfage/ref": "^1.0.2",
+    "@selfage/service_client": "^1.0.4",
     "@selfage/service_descriptor": "^1.0.6",
     "@selfage/service_handler": "^1.0.5",
     "big-integer": "^1.6.48",
