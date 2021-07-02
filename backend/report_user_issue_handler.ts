@@ -3,6 +3,7 @@ import {
   ReportUserIssueRequest,
   ReportUserIssueResponse,
 } from "../interface/service";
+import { DATASTORE_CLIENT } from "./datastore/client";
 import { USER_ISSUE_MODEL } from "./datastore/user_issue_model";
 import { DatastoreClient } from "@selfage/datastore_client";
 import { UnauthedServiceHandler } from "@selfage/service_handler";
@@ -15,7 +16,7 @@ export class ReportUserIssueHandler
   public constructor(private datastoreClient: DatastoreClient) {}
 
   public static create(): ReportUserIssueHandler {
-    return new ReportUserIssueHandler(DatastoreClient.create());
+    return new ReportUserIssueHandler(DATASTORE_CLIENT);
   }
 
   public async handle(

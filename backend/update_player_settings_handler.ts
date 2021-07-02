@@ -5,6 +5,7 @@ import {
   UpdatePlayerSettingsResponse,
 } from "../interface/service";
 import { UserSession } from "../interface/session";
+import { DATASTORE_CLIENT } from "./datastore/client";
 import { PLAYER_SETTINGS_MODEL } from "./datastore/player_settings_model";
 import { UserAuthedServiceHandler } from "./user_authed_service_handler";
 import { DatastoreClient } from "@selfage/datastore_client";
@@ -20,7 +21,7 @@ export class UpdatePlayerSettingsHandler extends UserAuthedServiceHandler<
   }
 
   public static create(): UpdatePlayerSettingsHandler {
-    return new UpdatePlayerSettingsHandler(DatastoreClient.create());
+    return new UpdatePlayerSettingsHandler(DATASTORE_CLIENT);
   }
 
   public async handle(
@@ -50,7 +51,7 @@ export class ChangePlayerSettingsHandler extends UserAuthedServiceHandler<
   }
 
   public static create(): ChangePlayerSettingsHandler {
-    return new ChangePlayerSettingsHandler(DatastoreClient.create());
+    return new ChangePlayerSettingsHandler(DATASTORE_CLIENT);
   }
 
   public async handle(

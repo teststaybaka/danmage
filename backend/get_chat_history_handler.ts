@@ -5,6 +5,7 @@ import {
 } from "../interface/service";
 import { UserSession } from "../interface/session";
 import { UserHistoryQueryBuilder } from "./datastore/chat_entry_model";
+import { DATASTORE_CLIENT } from "./datastore/client";
 import { UserAuthedServiceHandler } from "./user_authed_service_handler";
 import { DatastoreClient } from "@selfage/datastore_client";
 
@@ -19,7 +20,7 @@ export class GetChatHistoryHandler extends UserAuthedServiceHandler<
   }
 
   public static create(): GetChatHistoryHandler {
-    return new GetChatHistoryHandler(DatastoreClient.create());
+    return new GetChatHistoryHandler(DATASTORE_CLIENT);
   }
 
   public async handle(

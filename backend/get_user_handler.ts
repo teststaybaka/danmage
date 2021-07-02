@@ -4,6 +4,7 @@ import {
   GetUserResponse,
 } from "../interface/service";
 import { UserSession } from "../interface/session";
+import { DATASTORE_CLIENT } from "./datastore/client";
 import { USER_MODEL } from "./datastore/user_model";
 import { UserAuthedServiceHandler } from "./user_authed_service_handler";
 import { DatastoreClient } from "@selfage/datastore_client";
@@ -19,7 +20,7 @@ export class GetUserHandler extends UserAuthedServiceHandler<
   }
 
   public static create(): GetUserHandler {
-    return new GetUserHandler(DatastoreClient.create());
+    return new GetUserHandler(DATASTORE_CLIENT);
   }
 
   public async handle(

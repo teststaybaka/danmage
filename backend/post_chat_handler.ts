@@ -5,6 +5,7 @@ import {
 } from "../interface/service";
 import { UserSession } from "../interface/session";
 import { CHAT_ENTRY_MODEL } from "./datastore/chat_entry_model";
+import { DATASTORE_CLIENT } from "./datastore/client";
 import { USER_MODEL } from "./datastore/user_model";
 import { UserAuthedServiceHandler } from "./user_authed_service_handler";
 import { DatastoreClient } from "@selfage/datastore_client";
@@ -23,7 +24,7 @@ export class PostChatHandler extends UserAuthedServiceHandler<
   }
 
   public static create(): PostChatHandler {
-    return new PostChatHandler(DatastoreClient.create(), () => Date.now());
+    return new PostChatHandler(DATASTORE_CLIENT, () => Date.now());
   }
 
   public async handle(

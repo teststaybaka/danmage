@@ -2,6 +2,7 @@ import bigInt = require("big-integer");
 import nodeFetch from "node-fetch";
 import { SIGN_IN, SignInRequest, SignInResponse } from "../interface/service";
 import { UserSession } from "../interface/session";
+import { DATASTORE_CLIENT } from "./datastore/client";
 import { USER_MODEL } from "./datastore/user_model";
 import { DatastoreClient } from "@selfage/datastore_client";
 import { HttpError } from "@selfage/http_error";
@@ -31,7 +32,7 @@ export class SignInHandler
   public static create(googleOauthClientId: string): SignInHandler {
     return new SignInHandler(
       googleOauthClientId,
-      DatastoreClient.create(),
+      DATASTORE_CLIENT,
       SessionBuilder.create(),
       () => Date.now(),
       nodeFetch
