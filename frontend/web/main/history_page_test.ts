@@ -1,3 +1,4 @@
+import { HostApp } from "../../../interface/chat_entry";
 import {
   GET_CHAT_HISTORY,
   GetChatHistoryRequest,
@@ -7,7 +8,6 @@ import { TextButton } from "../../button";
 import { HistoryPage } from "./history_page";
 import { Counter } from "@selfage/counter";
 import { Button } from "@selfage/element/button";
-import { E } from "@selfage/element/factory";
 import { ServiceClient } from "@selfage/service_client";
 import {
   AuthedServiceDescriptor,
@@ -16,6 +16,10 @@ import {
 import { assertThat, eq } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
+
+document.documentElement.style.fontSize = "62.5%";
+document.body.style.margin = "0";
+document.body.style.fontSize = "0";
 
 PUPPETEER_TEST_RUNNER.run({
   name: "HistoryPageTest",
@@ -41,7 +45,7 @@ PUPPETEER_TEST_RUNNER.run({
         })();
         new HistoryPage(
           undefined,
-          E.div(""),
+          document.body,
           button,
           new (class extends ServiceClient {
             constructor() {
@@ -68,12 +72,15 @@ PUPPETEER_TEST_RUNNER.run({
                   assertThat(
                     (request as GetChatHistoryRequest).cursor,
                     eq(undefined),
-                    `no cursor`
+                    `first cursor`
                   );
                   return ({
                     chatEntries: [
                       {
+                        hostApp: HostApp.YouTube,
+                        hostContentId: "piavxf",
                         timestamp: 80000,
+                        content: "Chashu!",
                         created: 100000,
                       },
                     ],
@@ -83,13 +90,16 @@ PUPPETEER_TEST_RUNNER.run({
                   assertThat(
                     (request as GetChatHistoryRequest).cursor,
                     eq(`new cursor`),
-                    `no cursor`
+                    `second cursor`
                   );
                   return ({
                     chatEntries: [
                       {
-                        timestamp: 80000,
-                        created: 100000,
+                        hostApp: HostApp.Crunchyroll,
+                        hostContentId: "pacmxz",
+                        timestamp: 81000,
+                        content: "Miso soup!",
+                        created: 110000,
                       },
                     ],
                   } as GetChatHistoryResponse) as any;
@@ -116,6 +126,21 @@ PUPPETEER_TEST_RUNNER.run({
           `second fetchAuthed called`
         );
         assertThat(counter.get("hide"), eq(1), `hide button called`);
+
+        await globalThis.setViewport(1600, 400);
+        {
+          let [rendered, golden] = await Promise.all([
+            globalThis.screenshot(__dirname + "/history_page.png", {
+              delay: 500,
+              fullPage: true,
+            }),
+            globalThis.readFile(__dirname + "/golden/history_page.png"),
+          ]);
+          assertThat(rendered, eq(golden), "screenshot");
+        }
+
+        // Cleanup
+        await globalThis.deleteFile(__dirname + "/history_page.png");
       },
     },
   ],

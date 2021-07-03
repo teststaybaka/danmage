@@ -55,7 +55,7 @@ export class HistoryPage {
     createdStr: string
   ): HTMLDivElement {
     let backgroundColor: string;
-    if (mod === 1) {
+    if (mod === 0) {
       backgroundColor = ColorScheme.getBackground();
     } else {
       backgroundColor = ColorScheme.getAlternativeBackground();
@@ -66,33 +66,32 @@ export class HistoryPage {
         `font-size: 1.6rem; color: ${ColorScheme.getContent()}; ` +
         `background-color: ${backgroundColor};"`,
       E.div(
-        `class="history-entry-host-app" style="flex-grow: 1; ` +
-          `padding-right: .1rem; word-break: break-all;" ` +
+        `class="history-entry-host-app" style="flex: 1 0 0; ` +
+          `padding-right: .5rem; word-break: break-all;" ` +
           `title="${hostAppStr}"`,
         E.text(hostAppStr)
       ),
       E.div(
-        `class="history-entry-host-content-id" style="flex-grow: 1; ` +
-          `padding-right: .1rem; word-break: break-all;" ` +
+        `class="history-entry-host-content-id" style="flex: 1 0 0; ` +
+          `padding-right: .5rem; word-break: break-all;" ` +
           `title="${hostContentIdStr}"`,
         E.text(hostContentIdStr)
       ),
       E.div(
-        `class-"histroy-entry-timestamp" style="flex-grow: 1; ` +
-          `padding-right: .1rem; word-break: break-all;" ` +
+        `class="histroy-entry-timestamp" style="flex: 1 0 0; ` +
+          `padding-right: .5rem; word-break: break-all;" ` +
           `title="${timestampStr}"`,
         E.text(timestampStr)
       ),
       E.div(
-        `class="history-entry-content" style="style="flex-grow: 3; ` +
-          `paddin-right: .1rem; word-break: break-all;" ` +
+        `class="histroy-entry-content" style="flex: 7 0 0; ` +
+          `padding-right: .5rem; word-break: break-all;" ` +
           `title="${contentStr}"`,
         E.text(contentStr)
       ),
       E.div(
-        `class="history-entry-created" style="flex-grow: 1; ` +
-          `padding-right: .1rem; word-break: break-all;" ` +
-          `title="${createdStr}"`,
+        `class="history-entry-created" style="flex: 3 0 0; ` +
+          `word-break: break-all;" title="${createdStr}"`,
         E.text(createdStr)
       )
     );
