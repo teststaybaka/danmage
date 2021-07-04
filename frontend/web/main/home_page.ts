@@ -7,7 +7,7 @@ import image6Path = require("../image/6.jpg");
 import { ColorScheme } from "../../color_scheme";
 import { E } from "@selfage/element/factory";
 
-export class Home {
+export class HomePage {
   private static IMAGE_PATHS = [
     image1Path,
     image2Path,
@@ -20,9 +20,9 @@ export class Home {
   public static create(): HTMLElement {
     return E.div(
       `class="home-container"`,
-      Home.paragraph(
+      HomePage.paragraph(
         1,
-        Home.textElement(
+        HomePage.textElement(
           `DanMage is a Chrome extension that introduces NicoNico-style ` +
             `chats (or Danmaku, bullet comments, scrolling comments, ` +
             `whatever you call it) into video sites. It currently supports ` +
@@ -36,61 +36,61 @@ export class Home {
           )
         )
       ),
-      Home.paragraph(
+      HomePage.paragraph(
         2,
-        Home.textElement(
+        HomePage.textElement(
           `When watching videos on YouTube, the extension will replay ` +
             `chats scrolling from right to left. The control panel is ` +
             `located alongside with YouTube player settings, which ` +
             `displays as well as posts chats.`
         ),
-        Home.textElement(
+        HomePage.textElement(
           `Click on "Fire!" button to post a chat. The chat you posted ` +
             `will be sent to this site, separated from YouTube. You can ` +
             `find your chat history on this site.`
         )
       ),
-      Home.paragraph(
+      HomePage.paragraph(
         3,
-        Home.textElement(
+        HomePage.textElement(
           `When watching videos on Crunchyroll, it works exactly the same ` +
             `way as watching videos on YouTube.`
         ),
-        Home.textElement(
+        HomePage.textElement(
           `Click on those icons at the top-right corner of the control ` +
             `panel, you will find plenty of options to control how ` +
             `chats are scrolling over your videos.`
         )
       ),
-      Home.paragraph(
+      HomePage.paragraph(
         4,
-        Home.textElement(
+        HomePage.textElement(
           `When watching live stream on YouTube, the control panel can be ` +
             `found by clicking on the icon at top-right corner of the chat ` +
             `room.`
         ),
-        Home.textElement(
+        HomePage.textElement(
           `The control panel itself won't display any chat and you cannot ` +
             `post any chat there either. You can chat normally via ` +
             `YouTube's chat window and all chats will be captured and ` +
             `scrolled over the live stream, as long as you don't pop the ` +
             `chat window out of the video page.`
         ),
-        Home.textElement(
+        HomePage.textElement(
           `By default, the control panel shows a list of display settings ` +
             `which are stored for each site but could be cross-site if ` +
             `signed in, so you only need to set them once. However, there ` +
             `are certain options that only make sense in certain sites.`
         )
       ),
-      Home.paragraph(
+      HomePage.paragraph(
         5,
-        Home.textElement(
+        HomePage.textElement(
           `When watching live stream on Twitch, the control panel can be ` +
             `found by clicking on the icon next to Twitch's chat room ` +
             `options.`
         ),
-        Home.textElement(
+        HomePage.textElement(
           `Same as YouTube live stream, the control panel itself won't ` +
             `display any chat and you cannot post any chat there either. ` +
             `You can chat normally via Twitch's chat room and all chats ` +
@@ -98,9 +98,9 @@ export class Home {
             `as you don't hide chats.`
         )
       ),
-      Home.paragraph(
+      HomePage.paragraph(
         6,
-        Home.textElement(
+        HomePage.textElement(
           `There is another setting named "Block settings", a.k.a., ` +
             `filtering. You can add rules to block certain chats from ` +
             `scrolling over the video you are watching (and from ` +
@@ -132,8 +132,8 @@ export class Home {
         `align-items: flex-start; padding: 2.5rem; ` +
         `background-color: ${backgroundColor};"`
     );
-    paragraph.appendChild(Home.picture(Home.IMAGE_PATHS[index - 1]));
-    paragraph.appendChild(Home.textContainer(index, textElements));
+    paragraph.appendChild(HomePage.picture(HomePage.IMAGE_PATHS[index - 1]));
+    paragraph.appendChild(HomePage.textContainer(index, textElements));
     return paragraph;
   }
 
