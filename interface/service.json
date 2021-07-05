@@ -185,7 +185,7 @@
   }
 }, {
   "message": {
-    "name": "UpdateDisplayNameRequest",
+    "name": "UpdateNicknameRequest",
     "fields": [{
       "name": "signedSession",
       "type": "string"
@@ -196,15 +196,15 @@
   }
 }, {
   "message": {
-    "name": "UpdateDisplayNameResponse",
+    "name": "UpdateNicknameResponse",
     "fields": []
   }
 }, {
   "service": {
-    "name": "UpdateDisplayName",
-    "path": "/UpdateDisplayName",
-    "request": "UpdateDisplayNameRequest",
-    "response": "UpdateDisplayNameResponse"
+    "name": "UpdateNickname",
+    "path": "/UpdateNickname",
+    "request": "UpdateNicknameRequest",
+    "response": "UpdateNicknameResponse"
   }
 }, {
   "message": {

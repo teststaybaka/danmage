@@ -2,7 +2,7 @@ import { MessageDescriptor, PrimitiveType } from '@selfage/message/descriptor';
 
 export interface User {
   id?: string,
-  displayName?: string,
+  nickname?: string,
 /* seconds since epoch */
   created?: number,
 }
@@ -18,7 +18,7 @@ export let USER: MessageDescriptor<User> = {
       primitiveType: PrimitiveType.STRING,
     },
     {
-      name: 'displayName',
+      name: 'nickname',
       primitiveType: PrimitiveType.STRING,
     },
     {

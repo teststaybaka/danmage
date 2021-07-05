@@ -1,7 +1,7 @@
 import {
-  UPDATE_DISPLAY_NAME,
-  UpdateDisplayNameRequest,
-  UpdateDisplayNameResponse,
+  UPDATE_NICKNAME,
+  UpdateNicknameRequest,
+  UpdateNicknameResponse,
 } from "../interface/service";
 import { UserSession } from "../interface/session";
 import { DATASTORE_CLIENT } from "./datastore/client";
@@ -9,28 +9,28 @@ import { USER_MODEL } from "./datastore/user_model";
 import { UserAuthedServiceHandler } from "./user_authed_service_handler";
 import { DatastoreClient } from "@selfage/datastore_client";
 
-export class UpdateDisplayNameHandler extends UserAuthedServiceHandler<
-  UpdateDisplayNameRequest,
-  UpdateDisplayNameResponse
+export class UpdateNicknameHandler extends UserAuthedServiceHandler<
+  UpdateNicknameRequest,
+  UpdateNicknameResponse
 > {
-  public serviceDescriptor = UPDATE_DISPLAY_NAME;
+  public serviceDescriptor = UPDATE_NICKNAME;
 
   public constructor(private datastoreClient: DatastoreClient) {
     super();
   }
 
-  public static create(): UpdateDisplayNameHandler {
-    return new UpdateDisplayNameHandler(DATASTORE_CLIENT);
+  public static create(): UpdateNicknameHandler {
+    return new UpdateNicknameHandler(DATASTORE_CLIENT);
   }
 
   public async handle(
     logContext: string,
-    request: UpdateDisplayNameRequest,
+    request: UpdateNicknameRequest,
     session: UserSession
-  ): Promise<UpdateDisplayNameResponse> {
+  ): Promise<UpdateNicknameResponse> {
     let users = await this.datastoreClient.get([session.userId], USER_MODEL);
     let user = users[0];
-    user.displayName = request.newName;
+    user.nickname = request.newName;
     await this.datastoreClient.save([user], USER_MODEL, "update");
     return {};
   }

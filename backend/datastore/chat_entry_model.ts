@@ -4,7 +4,7 @@ import { HostApp, ChatEntry, CHAT_ENTRY } from '../../interface/chat_entry';
 export let CHAT_ENTRY_MODEL: DatastoreModelDescriptor<ChatEntry> = {
   name: "ChatEntry",
   key: "id",
-  excludedIndexes: ["id", "userDisplayName", "content", "timestamp"],
+  excludedIndexes: ["id", "userNickname", "content", "timestamp"],
   valueDescriptor: CHAT_ENTRY,
 }
 

@@ -24,7 +24,7 @@ export interface ChatEntry {
   hostApp?: HostApp,
   hostContentId?: string,
   userId?: string,
-  userDisplayName?: string,
+  userNickname?: string,
   content?: string,
 /* If absent, the chat entry is essentially a comment. */
   timestamp?: number,
@@ -54,7 +54,7 @@ export let CHAT_ENTRY: MessageDescriptor<ChatEntry> = {
       primitiveType: PrimitiveType.STRING,
     },
     {
-      name: 'userDisplayName',
+      name: 'userNickname',
       primitiveType: PrimitiveType.STRING,
     },
     {

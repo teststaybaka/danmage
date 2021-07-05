@@ -27,7 +27,7 @@ TEST_RUNNER.run({
               return Promise.resolve([
                 ({
                   id: "789",
-                  displayName: "some name",
+                  nickname: "some name",
                 } as User) as any,
               ]);
             }
@@ -75,7 +75,7 @@ TEST_RUNNER.run({
                 hostApp: HostApp.YouTube,
                 hostContentId: "12345",
                 userId: "789",
-                userDisplayName: "some name",
+                userNickname: "some name",
                 content: "some blabla",
                 timestamp: 567,
                 created: 10,

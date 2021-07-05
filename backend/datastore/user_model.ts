@@ -4,6 +4,6 @@ import { DatastoreModelDescriptor } from '@selfage/datastore_client/model_descri
 export let USER_MODEL: DatastoreModelDescriptor<User> = {
   name: "User",
   key: "id",
-  excludedIndexes: ["id", "displayName", "created"],
+  excludedIndexes: ["id", "nickname", "created"],
   valueDescriptor: USER,
 }

@@ -320,13 +320,13 @@ export let GET_PLAYER_SETTINGS: AuthedServiceDescriptor<GetPlayerSettingsRequest
   responseDescriptor: GET_PLAYER_SETTINGS_RESPONSE,
 };
 
-export interface UpdateDisplayNameRequest {
+export interface UpdateNicknameRequest {
   signedSession?: string,
   newName?: string,
 }
 
-export let UPDATE_DISPLAY_NAME_REQUEST: MessageDescriptor<UpdateDisplayNameRequest> = {
-  name: 'UpdateDisplayNameRequest',
+export let UPDATE_NICKNAME_REQUEST: MessageDescriptor<UpdateNicknameRequest> = {
+  name: 'UpdateNicknameRequest',
   factoryFn: () => {
     return new Object();
   },
@@ -342,11 +342,11 @@ export let UPDATE_DISPLAY_NAME_REQUEST: MessageDescriptor<UpdateDisplayNameReque
   ]
 };
 
-export interface UpdateDisplayNameResponse {
+export interface UpdateNicknameResponse {
 }
 
-export let UPDATE_DISPLAY_NAME_RESPONSE: MessageDescriptor<UpdateDisplayNameResponse> = {
-  name: 'UpdateDisplayNameResponse',
+export let UPDATE_NICKNAME_RESPONSE: MessageDescriptor<UpdateNicknameResponse> = {
+  name: 'UpdateNicknameResponse',
   factoryFn: () => {
     return new Object();
   },
@@ -354,11 +354,11 @@ export let UPDATE_DISPLAY_NAME_RESPONSE: MessageDescriptor<UpdateDisplayNameResp
   ]
 };
 
-export let UPDATE_DISPLAY_NAME: AuthedServiceDescriptor<UpdateDisplayNameRequest, UpdateDisplayNameResponse> = {
-  name: "UpdateDisplayName",
-  path: "/UpdateDisplayName",
-  requestDescriptor: UPDATE_DISPLAY_NAME_REQUEST,
-  responseDescriptor: UPDATE_DISPLAY_NAME_RESPONSE,
+export let UPDATE_NICKNAME: AuthedServiceDescriptor<UpdateNicknameRequest, UpdateNicknameResponse> = {
+  name: "UpdateNickname",
+  path: "/UpdateNickname",
+  requestDescriptor: UPDATE_NICKNAME_REQUEST,
+  responseDescriptor: UPDATE_NICKNAME_RESPONSE,
 };
 
 export interface ReportUserIssueRequest {

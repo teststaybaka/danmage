@@ -9,7 +9,7 @@ import { GetUserHandler } from "./get_user_handler";
 import { PostChatHandler } from "./post_chat_handler";
 import { ReportUserIssueHandler } from "./report_user_issue_handler";
 import { SignInHandler } from "./sign_in_handler";
-import { UpdateDisplayNameHandler } from "./update_display_name_handler";
+import { UpdateNicknameHandler } from "./update_nickname_handler";
 import {
   ChangePlayerSettingsHandler,
   UpdatePlayerSettingsHandler,
@@ -105,7 +105,7 @@ function registerHandlers(
   registerAuthed(app, GetChatHistoryHandler.create());
   registerAuthed(app, UpdatePlayerSettingsHandler.create());
   registerAuthed(app, GetPlayerSettingsHandler.create());
-  registerAuthed(app, UpdateDisplayNameHandler.create());
+  registerAuthed(app, UpdateNicknameHandler.create());
   registerUnauthed(app, ReportUserIssueHandler.create());
   registerUnauthed(app, new GetDanmakuHandler());
   registerAuthed(app, ChangePlayerSettingsHandler.create());
