@@ -1,33 +1,43 @@
 import { HostApp } from "../../../interface/chat_entry";
 import { GET_CHAT_HISTORY } from "../../../interface/service";
-import { TextButton } from "../../button";
+import { TextButtonComponent } from "../../button_component";
 import { ColorScheme } from "../../color_scheme";
 import { formatTimestamp } from "../../timestamp_formatter";
 import { SERVICE_CLIENT } from "./service_client";
 import { E } from "@selfage/element/factory";
-import { Ref, assign } from "@selfage/ref";
+import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
-export class HistoryPage {
+export class HistoryComponent {
   private cursor: string;
 
   public constructor(
-    public ele: HTMLElement,
+    public body: HTMLElement,
     private entryListContainer: HTMLElement,
-    private showMoreButton: TextButton,
+    private showMoreButton: TextButtonComponent,
     private serviceClient: ServiceClient
   ) {}
 
-  public static create(): HistoryPage {
+  public static create(): HistoryComponent {
+    let { body, entryListContainer } = HistoryComponent.createView();
+    let showMoreButton = TextButtonComponent.create(E.text("Show more"));
+    return new HistoryComponent(
+      body,
+      entryListContainer,
+      showMoreButton,
+      SERVICE_CLIENT
+    ).init();
+  }
+
+  public static createView() {
     let entryListContainer = new Ref<HTMLDivElement>();
-    let showMoreButton = new Ref<TextButton>();
-    let container = E.div(
+    let body = E.div(
       `class="history-container" style="display: flex; ` +
-        `flex-flow: column nowrap; align-items: center;"`,
+        `flex-flow: column nowrap; width: 100%; align-items: center;"`,
       E.divRef(
         entryListContainer,
-        `class="history-entry-list"`,
-        HistoryPage.createHistoryEntry(
+        `class="history-entry-list" style="width: 100%; margin-bottom: 1rem;"`,
+        HistoryComponent.createEntryView(
           0,
           "Video site",
           "Video id",
@@ -35,18 +45,15 @@ export class HistoryPage {
           "Content",
           "Posted date"
         )
-      ),
-      assign(showMoreButton, TextButton.create(E.text("Show more"))).button.ele
+      )
     );
-    return new HistoryPage(
-      container,
-      entryListContainer.val,
-      showMoreButton.val,
-      SERVICE_CLIENT
-    ).init();
+    return {
+      body,
+      entryListContainer: entryListContainer.val,
+    };
   }
 
-  private static createHistoryEntry(
+  public static createEntryView(
     mod: number,
     hostAppStr: string,
     hostContentIdStr: string,
@@ -55,7 +62,7 @@ export class HistoryPage {
     createdStr: string
   ): HTMLDivElement {
     let backgroundColor: string;
-    if (mod === 0) {
+    if (mod === 1) {
       backgroundColor = ColorScheme.getBackground();
     } else {
       backgroundColor = ColorScheme.getAlternativeBackground();
@@ -98,6 +105,7 @@ export class HistoryPage {
   }
 
   public init(): this {
+    this.body.appendChild(this.showMoreButton.body);
     this.showMoreButton.on("click", () => {
       return this.loadMore();
     });
@@ -110,11 +118,11 @@ export class HistoryPage {
       GET_CHAT_HISTORY
     );
     for (let chatEntry of response.chatEntries) {
-      let mod = (this.entryListContainer.childElementCount + 1) % 2;
+      let mod = this.entryListContainer.childElementCount % 2;
       let timestampStr = formatTimestamp(chatEntry.timestamp);
       let createdStr = new Date(chatEntry.created).toString();
       this.entryListContainer.appendChild(
-        HistoryPage.createHistoryEntry(
+        HistoryComponent.createEntryView(
           mod,
           HostApp[chatEntry.hostApp],
           chatEntry.hostContentId,
@@ -127,7 +135,7 @@ export class HistoryPage {
 
     this.cursor = response.cursor;
     if (!this.cursor) {
-      this.showMoreButton.button.hide();
+      this.showMoreButton.hide();
     }
   }
 }

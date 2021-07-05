@@ -1,5 +1,6 @@
-import { FillButton, TextButton } from "./button";
+import { FillButtonComponent, TextButtonComponent } from "./button_component";
 import { E } from "@selfage/element/factory";
+import { Ref, assign } from "@selfage/ref";
 import { assertThat, eq } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
@@ -9,7 +10,7 @@ document.body.style.margin = "0";
 document.body.style.fontSize = "0";
 
 PUPPETEER_TEST_RUNNER.run({
-  name: "ButtonTest",
+  name: "ButtonComponentTest",
   cases: [
     {
       name: "FillButtonRender",
@@ -18,24 +19,34 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(300, 100);
 
         // Execute
+        let button = new Ref<FillButtonComponent>();
         document.body.appendChild(
-          FillButton.create(E.text("Primary")).button.ele
+          assign(
+            button,
+            new FillButtonComponent(
+              FillButtonComponent.createView(E.text("Primary")),
+              undefined
+            )
+          ).body
         );
+        button.val.enable();
 
         // Verify
         {
           let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(__dirname + "/button_fill.png", {
+            globalThis.screenshot(__dirname + "/button_component_fill.png", {
               delay: 500,
               fullPage: true,
             }),
-            globalThis.readFile(__dirname + "/golden/button_fill.png"),
+            globalThis.readFile(
+              __dirname + "/golden/button_component_fill.png"
+            ),
           ]);
           assertThat(rendered, eq(golden), "screenshot");
         }
 
         // Cleanup
-        await globalThis.deleteFile(__dirname + "/button_fill.png");
+        await globalThis.deleteFile(__dirname + "/button_component_fill.png");
         document.body.removeChild(document.body.lastChild);
       },
     },
@@ -46,24 +57,34 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(300, 100);
 
         // Execute
+        let button = new Ref<TextButtonComponent>();
         document.body.appendChild(
-          TextButton.create(E.text("Text")).button.ele
+          assign(
+            button,
+            new TextButtonComponent(
+              TextButtonComponent.createView(E.text("Text")),
+              undefined
+            )
+          ).body
         );
+        button.val.enable();
 
         // Verify
         {
           let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(__dirname + "/button_text.png", {
+            globalThis.screenshot(__dirname + "/button_component_text.png", {
               delay: 500,
               fullPage: true,
             }),
-            globalThis.readFile(__dirname + "/golden/button_text.png"),
+            globalThis.readFile(
+              __dirname + "/golden/button_component_text.png"
+            ),
           ]);
           assertThat(rendered, eq(golden), "screenshot");
         }
 
         // Cleanup
-        await globalThis.deleteFile(__dirname + "/button_text.png");
+        await globalThis.deleteFile(__dirname + "/button_component_text.png");
         document.body.removeChild(document.body.lastChild);
       },
     },
