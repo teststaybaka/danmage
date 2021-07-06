@@ -17,7 +17,7 @@ export declare interface FillButtonComponent {
 export class FillButtonComponent extends EventEmitter {
   public constructor(
     public body: HTMLButtonElement,
-    private buttonController: ButtonController
+    private controller: ButtonController
   ) {
     super();
   }
@@ -39,41 +39,45 @@ export class FillButtonComponent extends EventEmitter {
   }
 
   public init(): this {
-    this.buttonController.on("enable", () => this.enable());
-    this.buttonController.on("disable", () => this.disable());
-    this.buttonController.on("down", () => this.down());
-    this.buttonController.on("up", () => this.up());
-    this.buttonController.on("click", () => this.click());
+    this.controller.on("enable", () => this.enable());
+    this.controller.on("disable", () => this.disable());
+    this.controller.on("down", () => this.down());
+    this.controller.on("up", () => this.up());
+    this.controller.on("click", () => this.click());
     this.enable();
     return this;
   }
 
-  public enable(): void {
+  private enable(): void {
     this.body.style.backgroundColor = ColorScheme.getPrimaryButtonBackground();
   }
 
-  public disable(): void {
+  private disable(): void {
     this.body.style.backgroundColor = ColorScheme.getDisabledPrimaryButtonBackground();
   }
 
-  public down(): void {
+  private down(): void {
     this.body.style.backgroundColor = ColorScheme.getPressedPrimaryButtonBackground();
   }
 
-  public up(): void {
+  private up(): void {
     this.body.style.backgroundColor = ColorScheme.getPrimaryButtonBackground();
   }
 
-  public async click(): Promise<void> {
+  private async click(): Promise<void> {
     await Promise.all(this.listeners("click").map((callback) => callback()));
   }
 
+  public async triggerClick(): Promise<void> {
+    await this.controller.click();
+  }
+
   public hide(): void {
-    this.buttonController.hide();
+    this.controller.hide();
   }
 
   public show(): void {
-    this.buttonController.show();
+    this.controller.show();
   }
 }
 
@@ -85,7 +89,7 @@ export declare interface TextButtonComponent {
 export class TextButtonComponent extends EventEmitter {
   public constructor(
     public body: HTMLButtonElement,
-    private buttonController: ButtonController
+    private controller: ButtonController
   ) {
     super();
   }
@@ -103,40 +107,44 @@ export class TextButtonComponent extends EventEmitter {
   }
 
   public init(): this {
-    this.buttonController.on("enable", () => this.enable());
-    this.buttonController.on("disable", () => this.disable());
-    this.buttonController.on("down", () => this.down());
-    this.buttonController.on("up", () => this.up());
-    this.buttonController.on("click", () => this.click());
+    this.controller.on("enable", () => this.enable());
+    this.controller.on("disable", () => this.disable());
+    this.controller.on("down", () => this.down());
+    this.controller.on("up", () => this.up());
+    this.controller.on("click", () => this.click());
     this.enable();
     return this;
   }
 
-  public enable(): void {
+  private enable(): void {
     this.body.style.color = ColorScheme.getContent();
   }
 
-  public disable(): void {
+  private disable(): void {
     this.body.style.color = ColorScheme.getDisabledInputContent();
   }
 
-  public down(): void {
+  private down(): void {
     this.body.style.backgroundColor = ColorScheme.getPressedButtonBackground();
   }
 
-  public up(): void {
+  private up(): void {
     this.body.style.backgroundColor = "initial";
   }
 
-  public async click(): Promise<void> {
+  private async click(): Promise<void> {
     await Promise.all(this.listeners("click").map((callback) => callback()));
   }
 
+  public async triggerClick(): Promise<void> {
+    await this.controller.click();
+  }
+
   public hide(): void {
-    this.buttonController.hide();
+    this.controller.hide();
   }
 
   public show(): void {
-    this.buttonController.show();
+    this.controller.show();
   }
 }

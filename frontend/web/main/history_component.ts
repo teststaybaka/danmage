@@ -9,6 +9,7 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
 export class HistoryComponent {
+  private displayStyle: string;
   private cursor: string;
 
   public constructor(
@@ -105,6 +106,7 @@ export class HistoryComponent {
   }
 
   public init(): this {
+    this.displayStyle = this.body.style.display;
     this.body.appendChild(this.showMoreButton.body);
     this.showMoreButton.on("click", () => {
       return this.loadMore();
@@ -137,5 +139,14 @@ export class HistoryComponent {
     if (!this.cursor) {
       this.showMoreButton.hide();
     }
+  }
+
+  public async show(): Promise<void> {
+    this.body.style.display = this.displayStyle;
+    await this.showMoreButton.triggerClick();
+  }
+
+  public hide(): void {
+    this.body.style.display = "none";
   }
 }

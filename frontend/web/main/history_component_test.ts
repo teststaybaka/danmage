@@ -36,88 +36,92 @@ PUPPETEER_TEST_RUNNER.run({
               undefined
             );
           }
+          public async triggerClick() {
+            await Promise.all(
+              this.listeners("click").map((callback) => callback())
+            );
+          }
           public hide() {
             counter.increment("hide");
           }
         })();
         let { body, entryListContainer } = HistoryComponent.createView();
-        document.body.appendChild(
-          new HistoryComponent(
-            body,
-            entryListContainer,
-            button,
-            new (class extends ServiceClient {
-              constructor() {
-                super(undefined, undefined);
-              }
-              public async fetchAuthed<
-                ServiceRequest extends WithSession,
+        let historyComponent = new HistoryComponent(
+          body,
+          entryListContainer,
+          button,
+          new (class extends ServiceClient {
+            constructor() {
+              super(undefined, undefined);
+            }
+            public async fetchAuthed<
+              ServiceRequest extends WithSession,
+              ServiceResponse
+            >(
+              request: ServiceRequest,
+              serviceDescriptor: AuthedServiceDescriptor<
+                ServiceRequest,
                 ServiceResponse
-              >(
-                request: ServiceRequest,
-                serviceDescriptor: AuthedServiceDescriptor<
-                  ServiceRequest,
-                  ServiceResponse
-                >
-              ): Promise<ServiceResponse> {
-                counter.increment("fetchAuthed");
-                assertThat(
-                  serviceDescriptor,
-                  eq(GET_CHAT_HISTORY),
-                  "service descriptor"
-                );
-                switch (counter.get("fetchAuthed")) {
-                  case 1:
-                    assertThat(
-                      (request as GetChatHistoryRequest).cursor,
-                      eq(undefined),
-                      `first cursor`
-                    );
-                    return ({
-                      chatEntries: [
-                        {
-                          hostApp: HostApp.YouTube,
-                          hostContentId: "piavxf",
-                          timestamp: 80000,
-                          content: "Chashu!",
-                          created: 100000,
-                        },
-                      ],
-                      cursor: "new cursor",
-                    } as GetChatHistoryResponse) as any;
-                  case 2:
-                    assertThat(
-                      (request as GetChatHistoryRequest).cursor,
-                      eq(`new cursor`),
-                      `second cursor`
-                    );
-                    return ({
-                      chatEntries: [
-                        {
-                          hostApp: HostApp.Crunchyroll,
-                          hostContentId: "pacmxz",
-                          timestamp: 81000,
-                          content: "Miso soup!",
-                          created: 110000,
-                        },
-                      ],
-                    } as GetChatHistoryResponse) as any;
-                  default:
-                    return {} as any;
-                }
+              >
+            ): Promise<ServiceResponse> {
+              counter.increment("fetchAuthed");
+              assertThat(
+                serviceDescriptor,
+                eq(GET_CHAT_HISTORY),
+                "service descriptor"
+              );
+              switch (counter.get("fetchAuthed")) {
+                case 1:
+                  assertThat(
+                    (request as GetChatHistoryRequest).cursor,
+                    eq(undefined),
+                    `first cursor`
+                  );
+                  return ({
+                    chatEntries: [
+                      {
+                        hostApp: HostApp.YouTube,
+                        hostContentId: "piavxf",
+                        timestamp: 80000,
+                        content: "Chashu!",
+                        created: 100000,
+                      },
+                    ],
+                    cursor: "new cursor",
+                  } as GetChatHistoryResponse) as any;
+                case 2:
+                  assertThat(
+                    (request as GetChatHistoryRequest).cursor,
+                    eq(`new cursor`),
+                    `second cursor`
+                  );
+                  return ({
+                    chatEntries: [
+                      {
+                        hostApp: HostApp.Crunchyroll,
+                        hostContentId: "pacmxz",
+                        timestamp: 81000,
+                        content: "Miso soup!",
+                        created: 110000,
+                      },
+                    ],
+                  } as GetChatHistoryResponse) as any;
+                default:
+                  return {} as any;
               }
-            })()
-          ).init().body
-        );
+            }
+          })()
+        ).init();
+        document.body.appendChild(historyComponent.body);
 
         // Execute
-        await button.click();
+        await historyComponent.show();
 
         // Verify
         assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
 
         // Execute
-        await button.click();
+        await button.triggerClick();
 
         // Verify
         assertThat(

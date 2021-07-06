@@ -1,6 +1,6 @@
 import { FillButtonComponent, TextButtonComponent } from "./button_component";
+import { ButtonController } from "@selfage/element/button_controller";
 import { E } from "@selfage/element/factory";
-import { Ref, assign } from "@selfage/ref";
 import { assertThat, eq } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
@@ -19,17 +19,18 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(300, 100);
 
         // Execute
-        let button = new Ref<FillButtonComponent>();
+        let button = new (class extends ButtonController {
+          constructor() {
+            super(undefined);
+          }
+        })();
         document.body.appendChild(
-          assign(
-            button,
-            new FillButtonComponent(
-              FillButtonComponent.createView(E.text("Primary")),
-              undefined
-            )
-          ).body
+          new FillButtonComponent(
+            FillButtonComponent.createView(E.text("Primary")),
+            button
+          ).init().body
         );
-        button.val.enable();
+        button.emit("enable");
 
         // Verify
         {
@@ -57,17 +58,18 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(300, 100);
 
         // Execute
-        let button = new Ref<TextButtonComponent>();
+        let button = new (class extends ButtonController {
+          constructor() {
+            super(undefined);
+          }
+        })();
         document.body.appendChild(
-          assign(
-            button,
-            new TextButtonComponent(
-              TextButtonComponent.createView(E.text("Text")),
-              undefined
-            )
-          ).body
+          new TextButtonComponent(
+            TextButtonComponent.createView(E.text("Text")),
+            button
+          ).init().body
         );
-        button.val.enable();
+        button.emit("enable");
 
         // Verify
         {
