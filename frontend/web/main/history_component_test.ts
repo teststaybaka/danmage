@@ -46,71 +46,72 @@ PUPPETEER_TEST_RUNNER.run({
           }
         })();
         let { body, entryListContainer } = HistoryComponent.createView();
+        let serviceClient = new (class extends ServiceClient {
+          constructor() {
+            super(undefined, undefined);
+          }
+          public async fetchAuthed<
+            ServiceRequest extends WithSession,
+            ServiceResponse
+          >(
+            request: ServiceRequest,
+            serviceDescriptor: AuthedServiceDescriptor<
+              ServiceRequest,
+              ServiceResponse
+            >
+          ): Promise<ServiceResponse> {
+            counter.increment("fetchAuthed");
+            assertThat(
+              serviceDescriptor,
+              eq(GET_CHAT_HISTORY),
+              "service descriptor"
+            );
+            switch (counter.get("fetchAuthed")) {
+              case 1:
+                assertThat(
+                  (request as GetChatHistoryRequest).cursor,
+                  eq(undefined),
+                  `first cursor`
+                );
+                return ({
+                  chatEntries: [
+                    {
+                      hostApp: HostApp.YouTube,
+                      hostContentId: "piavxf",
+                      timestamp: 80000,
+                      content: "Chashu!",
+                      created: 100000,
+                    },
+                  ],
+                  cursor: "new cursor",
+                } as GetChatHistoryResponse) as any;
+              case 2:
+                assertThat(
+                  (request as GetChatHistoryRequest).cursor,
+                  eq(`new cursor`),
+                  `second cursor`
+                );
+                return ({
+                  chatEntries: [
+                    {
+                      hostApp: HostApp.Crunchyroll,
+                      hostContentId: "pacmxz",
+                      timestamp: 81000,
+                      content: "Miso soup!",
+                      created: 110000,
+                    },
+                  ],
+                } as GetChatHistoryResponse) as any;
+              default:
+                return {} as any;
+            }
+          }
+        })();
         let historyComponent = new HistoryComponent(
           body,
           entryListContainer,
           button,
-          new (class extends ServiceClient {
-            constructor() {
-              super(undefined, undefined);
-            }
-            public async fetchAuthed<
-              ServiceRequest extends WithSession,
-              ServiceResponse
-            >(
-              request: ServiceRequest,
-              serviceDescriptor: AuthedServiceDescriptor<
-                ServiceRequest,
-                ServiceResponse
-              >
-            ): Promise<ServiceResponse> {
-              counter.increment("fetchAuthed");
-              assertThat(
-                serviceDescriptor,
-                eq(GET_CHAT_HISTORY),
-                "service descriptor"
-              );
-              switch (counter.get("fetchAuthed")) {
-                case 1:
-                  assertThat(
-                    (request as GetChatHistoryRequest).cursor,
-                    eq(undefined),
-                    `first cursor`
-                  );
-                  return ({
-                    chatEntries: [
-                      {
-                        hostApp: HostApp.YouTube,
-                        hostContentId: "piavxf",
-                        timestamp: 80000,
-                        content: "Chashu!",
-                        created: 100000,
-                      },
-                    ],
-                    cursor: "new cursor",
-                  } as GetChatHistoryResponse) as any;
-                case 2:
-                  assertThat(
-                    (request as GetChatHistoryRequest).cursor,
-                    eq(`new cursor`),
-                    `second cursor`
-                  );
-                  return ({
-                    chatEntries: [
-                      {
-                        hostApp: HostApp.Crunchyroll,
-                        hostContentId: "pacmxz",
-                        timestamp: 81000,
-                        content: "Miso soup!",
-                        created: 110000,
-                      },
-                    ],
-                  } as GetChatHistoryResponse) as any;
-                default:
-                  return {} as any;
-              }
-            }
-          })()
+          serviceClient
         ).init();
         document.body.appendChild(historyComponent.body);
 
@@ -145,6 +146,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Cleanup
         await globalThis.deleteFile(__dirname + "/history_component.png");
+        historyComponent.body.remove();
       },
     },
   ],

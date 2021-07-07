@@ -108,9 +108,7 @@ export class HistoryComponent {
   public init(): this {
     this.displayStyle = this.body.style.display;
     this.body.appendChild(this.showMoreButton.body);
-    this.showMoreButton.on("click", () => {
-      return this.loadMore();
-    });
+    this.showMoreButton.on("click", () => this.loadMore());
     return this;
   }
 

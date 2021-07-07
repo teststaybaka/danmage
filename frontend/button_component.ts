@@ -72,6 +72,10 @@ export class FillButtonComponent extends EventEmitter {
     await this.controller.click();
   }
 
+  public forceDisable(): void {
+    this.controller.forceDisable();
+  }
+
   public hide(): void {
     this.controller.hide();
   }
@@ -138,6 +142,10 @@ export class TextButtonComponent extends EventEmitter {
 
   public async triggerClick(): Promise<void> {
     await this.controller.click();
+  }
+
+  public forceDisable(): void {
+    this.controller.forceDisable();
   }
 
   public hide(): void {
