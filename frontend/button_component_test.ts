@@ -30,7 +30,6 @@ PUPPETEER_TEST_RUNNER.run({
             button
           ).init().body
         );
-        button.emit("enable");
 
         // Verify
         {
@@ -69,7 +68,6 @@ PUPPETEER_TEST_RUNNER.run({
             button
           ).init().body
         );
-        button.emit("enable");
 
         // Verify
         {
