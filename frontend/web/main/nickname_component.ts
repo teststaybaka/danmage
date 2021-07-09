@@ -74,6 +74,7 @@ export class NicknameComponent {
       UPDATE_NICKNAME
     );
     this.setButton.forceDisable();
+    this.input.readOnly = true;
   }
 
   public async show(): Promise<void> {
@@ -84,6 +85,7 @@ export class NicknameComponent {
     }
 
     this.input.value = response.user.nickname;
+    this.input.readOnly = true;
     this.setButton.forceDisable();
   }
 
