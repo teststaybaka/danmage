@@ -91,6 +91,8 @@ PUPPETEER_TEST_RUNNER.run({
             }
           }
         })();
+
+        // Execute
         let nicknameComponent = new NicknameComponent(
           body,
           input,
@@ -98,8 +100,6 @@ PUPPETEER_TEST_RUNNER.run({
           setButton,
           serviceClient
         ).init();
-
-        // Execute
         document.body.appendChild(nicknameComponent.body);
         await nicknameComponent.show();
 
@@ -190,6 +190,8 @@ PUPPETEER_TEST_RUNNER.run({
             }
           }
         })();
+
+        // Execute
         let nicknameComponent = new NicknameComponent(
           E.div(""),
           input,
@@ -197,8 +199,6 @@ PUPPETEER_TEST_RUNNER.run({
           setButton,
           serviceClient
         ).init();
-
-        // Execute
         await nicknameComponent.show();
 
         // Verify
@@ -230,6 +230,8 @@ PUPPETEER_TEST_RUNNER.run({
             super(undefined, undefined);
           }
         })();
+
+        // Execute
         new NicknameComponent(
           E.div(""),
           undefined,
@@ -237,8 +239,6 @@ PUPPETEER_TEST_RUNNER.run({
           setButton,
           serviceClient
         ).init();
-
-        // Execute
         await inputController.enter();
 
         // Verify

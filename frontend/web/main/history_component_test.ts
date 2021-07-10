@@ -107,6 +107,8 @@ PUPPETEER_TEST_RUNNER.run({
             }
           }
         })();
+
+        // Execute
         let historyComponent = new HistoryComponent(
           body,
           entryListContainer,
@@ -114,8 +116,6 @@ PUPPETEER_TEST_RUNNER.run({
           serviceClient
         ).init();
         document.body.appendChild(historyComponent.body);
-
-        // Execute
         await historyComponent.show();
 
         // Verify

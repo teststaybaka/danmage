@@ -1,6 +1,6 @@
 import { GET_USER, UPDATE_NICKNAME } from "../../../interface/service";
 import { FillButtonComponent } from "../../button_component";
-import { ColorScheme } from "../../color_scheme";
+import { INPUT_STYLE, LABEL_STYLE } from "./common_style";
 import { SERVICE_CLIENT } from "./service_client";
 import { E } from "@selfage/element/factory";
 import { TextInputController } from "@selfage/element/text_input_controller";
@@ -40,19 +40,16 @@ export class NicknameComponent {
       E.div(
         `class="nickname-input-line" style="display: flex; ` +
           `flex-flow: row nowrap; width: 100%; align-items: center; ` +
-          `justify-content: center; padding-bottom: 2rem;"`,
+          `justify-content: center; padding-bottom: 6rem;"`,
         E.div(`style="flex: 2;"`),
         E.div(
-          `class="nickname-label" style="font-size: 1.4rem; ` +
-            `color: ${ColorScheme.getContent()}; padding-right: 1rem;"`,
+          `class="nickname-label" style="${LABEL_STYLE}"`,
           E.text("Nickname")
         ),
         E.inputRef(
           input,
           `class="nickname-input" placeholder="You can only set it once."` +
-            `style="padding: 0; margin: 0; outline: none; border: 0; ` +
-            `background-color: initial; flex: 3; font-size: 1.4rem; ` +
-            `border-bottom: .1rem solid ${ColorScheme.getInputBorder()};"`
+            `style="${INPUT_STYLE}"`
         ),
         E.div(`style="flex: 2;"`)
       )
