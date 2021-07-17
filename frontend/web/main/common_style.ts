@@ -1,5 +1,6 @@
 import { ColorScheme } from "../../color_scheme";
 
+export let SIDE_PADDING = 5; // rem
 export let LABEL_STYLE =
   `font-size: 1.4rem; width: 10rem; ` + `color: ${ColorScheme.getContent()};`;
 export let INPUT_STYLE =

@@ -45,7 +45,6 @@ PUPPETEER_TEST_RUNNER.run({
             counter.increment("hide");
           }
         })();
-        let { body, entryListContainer } = HistoryComponent.createView();
         let serviceClient = new (class extends ServiceClient {
           constructor() {
             super(undefined, undefined);
@@ -110,8 +109,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         let historyComponent = new HistoryComponent(
-          body,
-          entryListContainer,
+          ...HistoryComponent.createView(),
           button,
           serviceClient
         ).init();

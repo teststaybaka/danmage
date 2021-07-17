@@ -20,12 +20,9 @@ export class HistoryComponent {
   ) {}
 
   public static create(): HistoryComponent {
-    let { body, entryListContainer } = HistoryComponent.createView();
-    let showMoreButton = TextButtonComponent.create(E.text("Show more"));
     return new HistoryComponent(
-      body,
-      entryListContainer,
-      showMoreButton,
+      ...HistoryComponent.createView(),
+      TextButtonComponent.create(E.text("Show more")),
       SERVICE_CLIENT
     ).init();
   }
@@ -48,10 +45,7 @@ export class HistoryComponent {
         )
       )
     );
-    return {
-      body,
-      entryListContainer: entryListContainer.val,
-    };
+    return [body, entryListContainer.val] as const;
   }
 
   public static createEntryView(

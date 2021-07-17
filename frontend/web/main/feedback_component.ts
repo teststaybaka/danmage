@@ -16,13 +16,9 @@ export class FeedbackComponent {
   ) {}
 
   public static create(): FeedbackComponent {
-    let { body, textarea, input } = FeedbackComponent.createView();
-    let button = FillButtonComponent.create(E.text("Submit"));
     return new FeedbackComponent(
-      body,
-      textarea,
-      input,
-      button,
+      ...FeedbackComponent.createView(),
+      FillButtonComponent.create(E.text("Submit")),
       SERVICE_CLIENT
     ).init();
   }
@@ -64,7 +60,7 @@ export class FeedbackComponent {
         E.div(`style="flex: 2;"`)
       )
     );
-    return { body, textarea: textareaRef.val, input: inputRef.val };
+    return [body, textareaRef.val, inputRef.val] as const;
   }
 
   public init(): this {

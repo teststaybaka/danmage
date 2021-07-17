@@ -5,6 +5,7 @@ import image4Path = require("../image/4.jpg");
 import image5Path = require("../image/5.jpg");
 import image6Path = require("../image/6.jpg");
 import { ColorScheme } from "../../color_scheme";
+import { SIDE_PADDING } from "./common_style";
 import { E } from "@selfage/element/factory";
 
 export class HomeView {
@@ -17,7 +18,7 @@ export class HomeView {
     image6Path,
   ];
 
-  public static create(): HTMLElement {
+  public static create(): HTMLDivElement {
     return E.div(
       `class="home-container"`,
       HomeView.paragraph(
@@ -129,7 +130,7 @@ export class HomeView {
     let paragraph = E.div(
       `class="home-paragraph" style="display: flex; ` +
         `flex-flow: ${direction} wrap; justify-content: center; ` +
-        `align-items: flex-start; padding: 2.5rem; ` +
+        `align-items: flex-start; padding: 2.5rem ${SIDE_PADDING / 2}rem; ` +
         `background-color: ${backgroundColor};"`
     );
     paragraph.appendChild(HomeView.picture(HomeView.IMAGE_PATHS[index - 1]));
@@ -139,7 +140,8 @@ export class HomeView {
 
   private static picture(imagePath: string): HTMLElement {
     let pic = E.image(
-      `class="home-picture" style="width: 70rem; padding: 2.5rem;"`
+      `class="home-picture" style="width: 70rem; ` +
+        `padding: 2.5rem ${SIDE_PADDING / 2}rem;"`
     );
     pic.src = imagePath;
     return pic;
@@ -151,7 +153,7 @@ export class HomeView {
   ): HTMLElement {
     return E.div(
       `class="home-text-container" style="flex: 1 0 20rem; ` +
-        `padding: 2.5rem 2.5rem 1.5rem; font-size: 1.6rem; ` +
+        `padding: 2.5rem ${SIDE_PADDING / 2}rem 1.5rem; font-size: 1.6rem; ` +
         `color: ${ColorScheme.getContent()};"`,
       ...textElements
     );

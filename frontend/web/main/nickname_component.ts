@@ -19,14 +19,11 @@ export class NicknameComponent {
   ) {}
 
   public static create(): NicknameComponent {
-    let { body, input } = NicknameComponent.createView();
-    let inputController = new TextInputController(input);
-    let setButton = FillButtonComponent.create(E.text("Set"));
+    let views = NicknameComponent.createView();
     return new NicknameComponent(
-      body,
-      input,
-      inputController,
-      setButton,
+      ...views,
+      new TextInputController(views[1]),
+      FillButtonComponent.create(E.text("Set")),
       SERVICE_CLIENT
     ).init();
   }
@@ -54,7 +51,7 @@ export class NicknameComponent {
         E.div(`style="flex: 2;"`)
       )
     );
-    return { body, input: input.val };
+    return [body, input.val] as const;
   }
 
   public init(): this {

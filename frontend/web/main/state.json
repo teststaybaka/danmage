@@ -4,7 +4,8 @@
     "fields": [{
       "name": "show",
       "type": "boolean"
-    }]
+    }],
+    "isObservable": true
   }
 }, {
   "message": {
@@ -12,7 +13,8 @@
     "fields": [{
       "name": "show",
       "type": "boolean"
-    }]
+    }],
+    "isObservable": true
   }
 }, {
   "message": {
@@ -20,7 +22,8 @@
     "fields": [{
       "name": "show",
       "type": "boolean"
-    }]
+    }],
+    "isObservable": true
   }
 }, {
   "message": {
@@ -28,7 +31,8 @@
     "fields": [{
       "name": "show",
       "type": "boolean"
-    }]
+    }],
+    "isObservable": true
   }
 }, {
   "message": {
@@ -36,7 +40,8 @@
     "fields": [{
       "name": "show",
       "type": "boolean"
-    }]
+    }],
+    "isObservable": true
   }
 }, {
   "message": {
@@ -44,7 +49,8 @@
     "fields": [{
       "name": "show",
       "type": "boolean"
-    }]
+    }],
+    "isObservable": true
   }
 }, {
   "message": {
@@ -67,6 +73,7 @@
     }, {
       "name": "termsAndConditionsState",
       "type": "TermsAndConditionsState"
-    }]
+    }],
+    "isObservable": true
   }
 }]

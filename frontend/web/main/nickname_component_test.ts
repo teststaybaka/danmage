@@ -30,7 +30,7 @@ PUPPETEER_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
-        let { body, input } = NicknameComponent.createView();
+        let [body, input] = NicknameComponent.createView();
         let inputController = new (class extends TextInputController {
           public constructor() {
             super(undefined);

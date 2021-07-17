@@ -25,7 +25,7 @@ PUPPETEER_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
-        let { body, textarea, input } = FeedbackComponent.createView();
+        let [body, textarea, input] = FeedbackComponent.createView();
         let button = new (class extends FillButtonComponent {
           public constructor() {
             super(FillButtonComponent.createView(E.text("Submit")), undefined);
