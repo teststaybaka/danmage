@@ -1,4 +1,4 @@
-import { HomeState, STATE, State } from "./state";
+import { STATE, State } from "./state";
 import { parseMessage } from "@selfage/message/parser";
 
 export class StateLoader {
@@ -12,8 +12,8 @@ export class StateLoader {
 
   public init(): this {
     this.state = new State();
-    this.state.homeState = new HomeState();
-    this.state.homeState.show = true;
+    this.state.showHome = true;
+    this.load();
     this.window.onpopstate = () => this.load();
     return this;
   }

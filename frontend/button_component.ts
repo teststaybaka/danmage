@@ -10,7 +10,7 @@ let COMMON_BUTTON_STYLE =
   `border-radius: .5rem; padding: .8rem 1.2rem;`;
 
 export declare interface FillButtonComponent {
-  on(event: "click", listener: () => Promise<void>): this;
+  on(event: "click", listener: () => Promise<boolean>): this;
   on(event: string, listener: Function): this;
 }
 
@@ -53,27 +53,32 @@ export class FillButtonComponent extends EventEmitter {
   }
 
   private disable(): void {
-    this.body.style.backgroundColor = ColorScheme.getDisabledPrimaryButtonBackground();
+    this.body.style.backgroundColor =
+      ColorScheme.getDisabledPrimaryButtonBackground();
   }
 
   private down(): void {
-    this.body.style.backgroundColor = ColorScheme.getPressedPrimaryButtonBackground();
+    this.body.style.backgroundColor =
+      ColorScheme.getPressedPrimaryButtonBackground();
   }
 
   private up(): void {
     this.body.style.backgroundColor = ColorScheme.getPrimaryButtonBackground();
   }
 
-  private async click(): Promise<void> {
-    await Promise.all(this.listeners("click").map((callback) => callback()));
+  private async click(): Promise<boolean> {
+    let toEnables = await Promise.all(
+      this.listeners("click").map((callback) => callback())
+    );
+    return !toEnables.some((toEnable) => !toEnable);
   }
 
   public async triggerClick(): Promise<void> {
     await this.controller.click();
   }
 
-  public forceDisable(): void {
-    this.controller.forceDisable();
+  public triggerDisable(): void {
+    this.controller.disable();
   }
 
   public hide(): void {
@@ -86,7 +91,7 @@ export class FillButtonComponent extends EventEmitter {
 }
 
 export declare interface TextButtonComponent {
-  on(event: "click", listener: () => Promise<void>): this;
+  on(event: "click", listener: () => Promise<boolean>): this;
   on(event: string, listener: Function): this;
 }
 
@@ -136,16 +141,19 @@ export class TextButtonComponent extends EventEmitter {
     this.body.style.backgroundColor = "initial";
   }
 
-  private async click(): Promise<void> {
-    await Promise.all(this.listeners("click").map((callback) => callback()));
+  private async click(): Promise<boolean> {
+    let toEnables = await Promise.all(
+      this.listeners("click").map((callback) => callback())
+    );
+    return !toEnables.some((toEnable) => !toEnable);
   }
 
   public async triggerClick(): Promise<void> {
     await this.controller.click();
   }
 
-  public forceDisable(): void {
-    this.controller.forceDisable();
+  public triggerDisable(): void {
+    this.controller.disable();
   }
 
   public hide(): void {

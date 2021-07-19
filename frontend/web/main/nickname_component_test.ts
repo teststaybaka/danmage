@@ -14,7 +14,7 @@ import {
   AuthedServiceDescriptor,
   WithSession,
 } from "@selfage/service_descriptor";
-import { assertThat, eq } from "@selfage/test_matcher";
+import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
 
@@ -40,14 +40,6 @@ PUPPETEER_TEST_RUNNER.run({
           public constructor() {
             super(FillButtonComponent.createView(E.text("Set")), undefined);
           }
-          public async triggerClick() {
-            await Promise.all(
-              this.listeners("click").map((callback) => callback())
-            );
-          }
-          public forceDisable() {
-            counter.increment("forceDisable");
-          }
         })();
         let serviceClient = new (class extends ServiceClient {
           public constructor() {
@@ -71,9 +63,9 @@ PUPPETEER_TEST_RUNNER.run({
                   eq(GET_USER),
                   "first service descriptor"
                 );
-                return ({
+                return {
                   user: {},
-                } as GetUserResponse) as any;
+                } as GetUserResponse as any;
               case 2:
                 assertThat(
                   serviceDescriptor,
@@ -126,7 +118,9 @@ PUPPETEER_TEST_RUNNER.run({
         input.value = "new name";
 
         // Execute
-        await setButton.triggerClick();
+        let toEnables = await Promise.all(
+          setButton.listeners("click").map((callback) => callback())
+        );
 
         // Verify
         assertThat(
@@ -134,7 +128,7 @@ PUPPETEER_TEST_RUNNER.run({
           eq(2),
           `second fetchAuthed called`
         );
-        assertThat(counter.get("forceDisable"), eq(1), `forceDisable called`);
+        assertThat(toEnables, eqArray([eq(false)]), "enable button");
 
         // Cleanup
         await globalThis.deleteFile(__dirname + "/nickname_component.png");
@@ -156,8 +150,8 @@ PUPPETEER_TEST_RUNNER.run({
           public constructor() {
             super(E.button(""), undefined);
           }
-          public forceDisable() {
-            counter.increment("forceDisable");
+          public triggerDisable() {
+            counter.increment("triggerDisable");
           }
         })();
         let serviceClient = new (class extends ServiceClient {
@@ -182,9 +176,9 @@ PUPPETEER_TEST_RUNNER.run({
                   eq(GET_USER),
                   "service descriptor"
                 );
-                return ({
+                return {
                   user: { nickname: "some name" },
-                } as GetUserResponse) as any;
+                } as GetUserResponse as any;
               default:
                 return {} as any;
             }
@@ -203,7 +197,11 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Verify
         assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
-        assertThat(counter.get("forceDisable"), eq(1), `forceDisable called`);
+        assertThat(
+          counter.get("triggerDisable"),
+          eq(1),
+          `triggerDisable called`
+        );
         assertThat(input.value, eq("some name"), `input value`);
       },
     },

@@ -1,332 +1,124 @@
+import { EventEmitter } from 'events';
 import { MessageDescriptor, PrimitiveType } from '@selfage/message/descriptor';
 
-export class HomeState {
-  public onShowChange: (newValue: boolean, oldValue: boolean) => void;
-  private show_?: boolean;
-  get show(): boolean {
-    return this.show_;
-  }
-  set show(value: boolean) {
-    let oldValue = this.show_;
-    if (value === oldValue) {
-      return;
-    }
-    this.show_ = value;
-    if (this.onShowChange) {
-      this.onShowChange(this.show_, oldValue);
-    }
-  }
-
-  public toJSON(): Object {
-    return {
-      show: this.show,
-    };
-  }
+export interface State {
+  on(event: 'showHome', listener: (newValue: boolean, oldValue: boolean) => void): this;
+  on(event: 'showNickname', listener: (newValue: boolean, oldValue: boolean) => void): this;
+  on(event: 'showHistory', listener: (newValue: boolean, oldValue: boolean) => void): this;
+  on(event: 'showTerms', listener: (newValue: boolean, oldValue: boolean) => void): this;
+  on(event: 'showPrivacy', listener: (newValue: boolean, oldValue: boolean) => void): this;
+  on(event: 'showFeedback', listener: (newValue: boolean, oldValue: boolean) => void): this;
+  on(event: string, listener: Function): this;
 }
 
-export let HOME_STATE: MessageDescriptor<HomeState> = {
-  name: 'HomeState',
-  factoryFn: () => {
-    return new HomeState();
-  },
-  fields: [
-    {
-      name: 'show',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-  ]
-};
-
-export class ChatHistoryState {
-  public onShowChange: (newValue: boolean, oldValue: boolean) => void;
-  private show_?: boolean;
-  get show(): boolean {
-    return this.show_;
+export class State extends EventEmitter {
+  private showHome_?: boolean;
+  get showHome(): boolean {
+    return this.showHome_;
   }
-  set show(value: boolean) {
-    let oldValue = this.show_;
+  set showHome(value: boolean) {
+    let oldValue = this.showHome_;
     if (value === oldValue) {
       return;
     }
-    this.show_ = value;
-    if (this.onShowChange) {
-      this.onShowChange(this.show_, oldValue);
+    this.showHome_ = value;
+    this.emit('showHome', this.showHome_, oldValue);
+  }
+
+  private showNickname_?: boolean;
+  get showNickname(): boolean {
+    return this.showNickname_;
+  }
+  set showNickname(value: boolean) {
+    let oldValue = this.showNickname_;
+    if (value === oldValue) {
+      return;
+    }
+    this.showNickname_ = value;
+    this.emit('showNickname', this.showNickname_, oldValue);
+  }
+
+  private showHistory_?: boolean;
+  get showHistory(): boolean {
+    return this.showHistory_;
+  }
+  set showHistory(value: boolean) {
+    let oldValue = this.showHistory_;
+    if (value === oldValue) {
+      return;
+    }
+    this.showHistory_ = value;
+    this.emit('showHistory', this.showHistory_, oldValue);
+  }
+
+  private showTerms_?: boolean;
+  get showTerms(): boolean {
+    return this.showTerms_;
+  }
+  set showTerms(value: boolean) {
+    let oldValue = this.showTerms_;
+    if (value === oldValue) {
+      return;
+    }
+    this.showTerms_ = value;
+    this.emit('showTerms', this.showTerms_, oldValue);
+  }
+
+  private showPrivacy_?: boolean;
+  get showPrivacy(): boolean {
+    return this.showPrivacy_;
+  }
+  set showPrivacy(value: boolean) {
+    let oldValue = this.showPrivacy_;
+    if (value === oldValue) {
+      return;
+    }
+    this.showPrivacy_ = value;
+    this.emit('showPrivacy', this.showPrivacy_, oldValue);
+  }
+
+  private showFeedback_?: boolean;
+  get showFeedback(): boolean {
+    return this.showFeedback_;
+  }
+  set showFeedback(value: boolean) {
+    let oldValue = this.showFeedback_;
+    if (value === oldValue) {
+      return;
+    }
+    this.showFeedback_ = value;
+    this.emit('showFeedback', this.showFeedback_, oldValue);
+  }
+
+  public triggerInitialEvents(): void {
+    if (this.showHome_ !== undefined) {
+      this.emit('showHome', this.showHome_, undefined);
+    }
+    if (this.showNickname_ !== undefined) {
+      this.emit('showNickname', this.showNickname_, undefined);
+    }
+    if (this.showHistory_ !== undefined) {
+      this.emit('showHistory', this.showHistory_, undefined);
+    }
+    if (this.showTerms_ !== undefined) {
+      this.emit('showTerms', this.showTerms_, undefined);
+    }
+    if (this.showPrivacy_ !== undefined) {
+      this.emit('showPrivacy', this.showPrivacy_, undefined);
+    }
+    if (this.showFeedback_ !== undefined) {
+      this.emit('showFeedback', this.showFeedback_, undefined);
     }
   }
 
   public toJSON(): Object {
     return {
-      show: this.show,
-    };
-  }
-}
-
-export let CHAT_HISTORY_STATE: MessageDescriptor<ChatHistoryState> = {
-  name: 'ChatHistoryState',
-  factoryFn: () => {
-    return new ChatHistoryState();
-  },
-  fields: [
-    {
-      name: 'show',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-  ]
-};
-
-export class AccountInfoState {
-  public onShowChange: (newValue: boolean, oldValue: boolean) => void;
-  private show_?: boolean;
-  get show(): boolean {
-    return this.show_;
-  }
-  set show(value: boolean) {
-    let oldValue = this.show_;
-    if (value === oldValue) {
-      return;
-    }
-    this.show_ = value;
-    if (this.onShowChange) {
-      this.onShowChange(this.show_, oldValue);
-    }
-  }
-
-  public toJSON(): Object {
-    return {
-      show: this.show,
-    };
-  }
-}
-
-export let ACCOUNT_INFO_STATE: MessageDescriptor<AccountInfoState> = {
-  name: 'AccountInfoState',
-  factoryFn: () => {
-    return new AccountInfoState();
-  },
-  fields: [
-    {
-      name: 'show',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-  ]
-};
-
-export class ReportUserIssueState {
-  public onShowChange: (newValue: boolean, oldValue: boolean) => void;
-  private show_?: boolean;
-  get show(): boolean {
-    return this.show_;
-  }
-  set show(value: boolean) {
-    let oldValue = this.show_;
-    if (value === oldValue) {
-      return;
-    }
-    this.show_ = value;
-    if (this.onShowChange) {
-      this.onShowChange(this.show_, oldValue);
-    }
-  }
-
-  public toJSON(): Object {
-    return {
-      show: this.show,
-    };
-  }
-}
-
-export let REPORT_USER_ISSUE_STATE: MessageDescriptor<ReportUserIssueState> = {
-  name: 'ReportUserIssueState',
-  factoryFn: () => {
-    return new ReportUserIssueState();
-  },
-  fields: [
-    {
-      name: 'show',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-  ]
-};
-
-export class PrivacyPolicyState {
-  public onShowChange: (newValue: boolean, oldValue: boolean) => void;
-  private show_?: boolean;
-  get show(): boolean {
-    return this.show_;
-  }
-  set show(value: boolean) {
-    let oldValue = this.show_;
-    if (value === oldValue) {
-      return;
-    }
-    this.show_ = value;
-    if (this.onShowChange) {
-      this.onShowChange(this.show_, oldValue);
-    }
-  }
-
-  public toJSON(): Object {
-    return {
-      show: this.show,
-    };
-  }
-}
-
-export let PRIVACY_POLICY_STATE: MessageDescriptor<PrivacyPolicyState> = {
-  name: 'PrivacyPolicyState',
-  factoryFn: () => {
-    return new PrivacyPolicyState();
-  },
-  fields: [
-    {
-      name: 'show',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-  ]
-};
-
-export class TermsAndConditionsState {
-  public onShowChange: (newValue: boolean, oldValue: boolean) => void;
-  private show_?: boolean;
-  get show(): boolean {
-    return this.show_;
-  }
-  set show(value: boolean) {
-    let oldValue = this.show_;
-    if (value === oldValue) {
-      return;
-    }
-    this.show_ = value;
-    if (this.onShowChange) {
-      this.onShowChange(this.show_, oldValue);
-    }
-  }
-
-  public toJSON(): Object {
-    return {
-      show: this.show,
-    };
-  }
-}
-
-export let TERMS_AND_CONDITIONS_STATE: MessageDescriptor<TermsAndConditionsState> = {
-  name: 'TermsAndConditionsState',
-  factoryFn: () => {
-    return new TermsAndConditionsState();
-  },
-  fields: [
-    {
-      name: 'show',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-  ]
-};
-
-export class State {
-  public onHomeStateChange: (newValue: HomeState, oldValue: HomeState) => void;
-  private homeState_?: HomeState;
-  get homeState(): HomeState {
-    return this.homeState_;
-  }
-  set homeState(value: HomeState) {
-    let oldValue = this.homeState_;
-    if (value === oldValue) {
-      return;
-    }
-    this.homeState_ = value;
-    if (this.onHomeStateChange) {
-      this.onHomeStateChange(this.homeState_, oldValue);
-    }
-  }
-
-  public onChatHistoryStateChange: (newValue: ChatHistoryState, oldValue: ChatHistoryState) => void;
-  private chatHistoryState_?: ChatHistoryState;
-  get chatHistoryState(): ChatHistoryState {
-    return this.chatHistoryState_;
-  }
-  set chatHistoryState(value: ChatHistoryState) {
-    let oldValue = this.chatHistoryState_;
-    if (value === oldValue) {
-      return;
-    }
-    this.chatHistoryState_ = value;
-    if (this.onChatHistoryStateChange) {
-      this.onChatHistoryStateChange(this.chatHistoryState_, oldValue);
-    }
-  }
-
-  public onAccountInfoStateChange: (newValue: AccountInfoState, oldValue: AccountInfoState) => void;
-  private accountInfoState_?: AccountInfoState;
-  get accountInfoState(): AccountInfoState {
-    return this.accountInfoState_;
-  }
-  set accountInfoState(value: AccountInfoState) {
-    let oldValue = this.accountInfoState_;
-    if (value === oldValue) {
-      return;
-    }
-    this.accountInfoState_ = value;
-    if (this.onAccountInfoStateChange) {
-      this.onAccountInfoStateChange(this.accountInfoState_, oldValue);
-    }
-  }
-
-  public onReportUserIssueStateChange: (newValue: ReportUserIssueState, oldValue: ReportUserIssueState) => void;
-  private reportUserIssueState_?: ReportUserIssueState;
-  get reportUserIssueState(): ReportUserIssueState {
-    return this.reportUserIssueState_;
-  }
-  set reportUserIssueState(value: ReportUserIssueState) {
-    let oldValue = this.reportUserIssueState_;
-    if (value === oldValue) {
-      return;
-    }
-    this.reportUserIssueState_ = value;
-    if (this.onReportUserIssueStateChange) {
-      this.onReportUserIssueStateChange(this.reportUserIssueState_, oldValue);
-    }
-  }
-
-  public onPrivacyPolicyStateChange: (newValue: PrivacyPolicyState, oldValue: PrivacyPolicyState) => void;
-  private privacyPolicyState_?: PrivacyPolicyState;
-  get privacyPolicyState(): PrivacyPolicyState {
-    return this.privacyPolicyState_;
-  }
-  set privacyPolicyState(value: PrivacyPolicyState) {
-    let oldValue = this.privacyPolicyState_;
-    if (value === oldValue) {
-      return;
-    }
-    this.privacyPolicyState_ = value;
-    if (this.onPrivacyPolicyStateChange) {
-      this.onPrivacyPolicyStateChange(this.privacyPolicyState_, oldValue);
-    }
-  }
-
-  public onTermsAndConditionsStateChange: (newValue: TermsAndConditionsState, oldValue: TermsAndConditionsState) => void;
-  private termsAndConditionsState_?: TermsAndConditionsState;
-  get termsAndConditionsState(): TermsAndConditionsState {
-    return this.termsAndConditionsState_;
-  }
-  set termsAndConditionsState(value: TermsAndConditionsState) {
-    let oldValue = this.termsAndConditionsState_;
-    if (value === oldValue) {
-      return;
-    }
-    this.termsAndConditionsState_ = value;
-    if (this.onTermsAndConditionsStateChange) {
-      this.onTermsAndConditionsStateChange(this.termsAndConditionsState_, oldValue);
-    }
-  }
-
-  public toJSON(): Object {
-    return {
-      homeState: this.homeState,
-      chatHistoryState: this.chatHistoryState,
-      accountInfoState: this.accountInfoState,
-      reportUserIssueState: this.reportUserIssueState,
-      privacyPolicyState: this.privacyPolicyState,
-      termsAndConditionsState: this.termsAndConditionsState,
+      showHome: this.showHome,
+      showNickname: this.showNickname,
+      showHistory: this.showHistory,
+      showTerms: this.showTerms,
+      showPrivacy: this.showPrivacy,
+      showFeedback: this.showFeedback,
     };
   }
 }
@@ -338,28 +130,28 @@ export let STATE: MessageDescriptor<State> = {
   },
   fields: [
     {
-      name: 'homeState',
-      messageDescriptor: HOME_STATE,
+      name: 'showHome',
+      primitiveType: PrimitiveType.BOOLEAN,
     },
     {
-      name: 'chatHistoryState',
-      messageDescriptor: CHAT_HISTORY_STATE,
+      name: 'showNickname',
+      primitiveType: PrimitiveType.BOOLEAN,
     },
     {
-      name: 'accountInfoState',
-      messageDescriptor: ACCOUNT_INFO_STATE,
+      name: 'showHistory',
+      primitiveType: PrimitiveType.BOOLEAN,
     },
     {
-      name: 'reportUserIssueState',
-      messageDescriptor: REPORT_USER_ISSUE_STATE,
+      name: 'showTerms',
+      primitiveType: PrimitiveType.BOOLEAN,
     },
     {
-      name: 'privacyPolicyState',
-      messageDescriptor: PRIVACY_POLICY_STATE,
+      name: 'showPrivacy',
+      primitiveType: PrimitiveType.BOOLEAN,
     },
     {
-      name: 'termsAndConditionsState',
-      messageDescriptor: TERMS_AND_CONDITIONS_STATE,
+      name: 'showFeedback',
+      primitiveType: PrimitiveType.BOOLEAN,
     },
   ]
 };

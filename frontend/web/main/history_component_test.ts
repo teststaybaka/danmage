@@ -13,7 +13,7 @@ import {
   AuthedServiceDescriptor,
   WithSession,
 } from "@selfage/service_descriptor";
-import { assertThat, eq } from "@selfage/test_matcher";
+import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
 
@@ -37,8 +37,12 @@ PUPPETEER_TEST_RUNNER.run({
             );
           }
           public async triggerClick() {
-            await Promise.all(
-              this.listeners("click").map((callback) => callback())
+            assertThat(
+              await Promise.all(
+                this.listeners("click").map((callback) => callback())
+              ),
+              eqArray([eq(true)]),
+              `enable button`
             );
           }
           public hide() {
@@ -72,7 +76,7 @@ PUPPETEER_TEST_RUNNER.run({
                   eq(undefined),
                   `first cursor`
                 );
-                return ({
+                return {
                   chatEntries: [
                     {
                       hostApp: HostApp.YouTube,
@@ -83,14 +87,14 @@ PUPPETEER_TEST_RUNNER.run({
                     },
                   ],
                   cursor: "new cursor",
-                } as GetChatHistoryResponse) as any;
+                } as GetChatHistoryResponse as any;
               case 2:
                 assertThat(
                   (request as GetChatHistoryRequest).cursor,
                   eq(`new cursor`),
                   `second cursor`
                 );
-                return ({
+                return {
                   chatEntries: [
                     {
                       hostApp: HostApp.Crunchyroll,
@@ -100,7 +104,7 @@ PUPPETEER_TEST_RUNNER.run({
                       created: 110000,
                     },
                   ],
-                } as GetChatHistoryResponse) as any;
+                } as GetChatHistoryResponse as any;
               default:
                 return {} as any;
             }

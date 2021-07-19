@@ -7,6 +7,8 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
 export class FeedbackComponent {
+  private displayStyle: string;
+
   public constructor(
     public body: HTMLDivElement,
     private textarea: HTMLTextAreaElement,
@@ -64,12 +66,13 @@ export class FeedbackComponent {
   }
 
   public init(): this {
+    this.displayStyle = this.body.style.display;
     this.body.appendChild(this.button.body);
     this.button.on("click", () => this.submit());
     return this;
   }
 
-  private async submit(): Promise<void> {
+  private async submit(): Promise<boolean> {
     await this.serviceClient.fetchUnauthed(
       {
         userIssue: {
@@ -81,5 +84,14 @@ export class FeedbackComponent {
     );
     this.input.value = "";
     this.textarea.value = "";
+    return true;
+  }
+
+  public show(): void {
+    this.body.style.display = this.displayStyle;
+  }
+
+  public hide(): void {
+    this.body.style.display = "none";
   }
 }

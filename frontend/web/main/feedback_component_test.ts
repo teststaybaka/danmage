@@ -9,7 +9,7 @@ import { E } from "@selfage/element/factory";
 import { eqMessage } from "@selfage/message/test_matcher";
 import { ServiceClient } from "@selfage/service_client";
 import { UnauthedServiceDescriptor } from "@selfage/service_descriptor";
-import { assertThat, eq } from "@selfage/test_matcher";
+import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
 
@@ -93,12 +93,15 @@ PUPPETEER_TEST_RUNNER.run({
         input.value = "some email";
 
         // Execute
-        await button.listeners("click").map((callback) => callback());
+        let toEnables = await Promise.all(
+          button.listeners("click").map((callback) => callback())
+        );
 
         // Verify
         assertThat(counter.get("fetchUnauthed"), eq(1), `fetchUnauthed called`);
         assertThat(textarea.value, eq(""), `textarea cleared`);
         assertThat(input.value, eq(""), `input cleared`);
+        assertThat(toEnables, eqArray([eq(true)]), `enable button`);
 
         // Cleanup
         await globalThis.deleteFile(__dirname + "/feedback_component.png");

@@ -106,7 +106,7 @@ export class HistoryComponent {
     return this;
   }
 
-  private async loadMore(): Promise<void> {
+  private async loadMore(): Promise<boolean> {
     let response = await this.serviceClient.fetchAuthed(
       { cursor: this.cursor },
       GET_CHAT_HISTORY
@@ -131,6 +131,7 @@ export class HistoryComponent {
     if (!this.cursor) {
       this.showMoreButton.hide();
     }
+    return true;
   }
 
   public async show(): Promise<void> {

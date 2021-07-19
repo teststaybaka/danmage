@@ -1,78 +1,24 @@
 [{
   "message": {
-    "name": "HomeState",
-    "fields": [{
-      "name": "show",
-      "type": "boolean"
-    }],
-    "isObservable": true
-  }
-}, {
-  "message": {
-    "name": "ChatHistoryState",
-    "fields": [{
-      "name": "show",
-      "type": "boolean"
-    }],
-    "isObservable": true
-  }
-}, {
-  "message": {
-    "name": "AccountInfoState",
-    "fields": [{
-      "name": "show",
-      "type": "boolean"
-    }],
-    "isObservable": true
-  }
-}, {
-  "message": {
-    "name": "ReportUserIssueState",
-    "fields": [{
-      "name": "show",
-      "type": "boolean"
-    }],
-    "isObservable": true
-  }
-}, {
-  "message": {
-    "name": "PrivacyPolicyState",
-    "fields": [{
-      "name": "show",
-      "type": "boolean"
-    }],
-    "isObservable": true
-  }
-}, {
-  "message": {
-    "name": "TermsAndConditionsState",
-    "fields": [{
-      "name": "show",
-      "type": "boolean"
-    }],
-    "isObservable": true
-  }
-}, {
-  "message": {
     "name": "State",
     "fields": [{
-      "name": "homeState",
-      "type": "HomeState"
+      "name": "showHome",
+      "type": "boolean"
     }, {
-      "name": "chatHistoryState",
-      "type": "ChatHistoryState"
+      "name": "showNickname",
+      "type": "boolean"
     }, {
-      "name": "accountInfoState",
-      "type": "AccountInfoState"
+      "name": "showHistory",
+      "type": "boolean"
     }, {
-      "name": "reportUserIssueState",
-      "type": "ReportUserIssueState"
+      "name": "showTerms",
+      "type": "boolean"
     }, {
-      "name": "privacyPolicyState",
-      "type": "PrivacyPolicyState"
+      "name": "showPrivacy",
+      "type": "boolean"
     }, {
-      "name": "termsAndConditionsState",
-      "type": "TermsAndConditionsState"
+      "name": "showFeedback",
+      "type": "boolean"
     }],
     "isObservable": true
   }
