@@ -6,9 +6,9 @@ import { Counter } from "@selfage/counter";
 import { DatastoreClient } from "@selfage/datastore_client";
 import { eqMessage } from "@selfage/message/test_matcher";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
-import { TEST_RUNNER } from "@selfage/test_runner";
+import { NODE_TEST_RUNNER } from "@selfage/test_runner";
 
-TEST_RUNNER.run({
+NODE_TEST_RUNNER.run({
   name: "PostChatHandlerTest",
   cases: [
     {
