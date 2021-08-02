@@ -7,10 +7,10 @@ import { E } from "@selfage/element/factory";
 let COMMON_BUTTON_STYLE =
   `outline: none; border: 0; background-color: initial; ` +
   `font-family: initial !important; font-size: 1.4rem; line-height: 1em; ` +
-  `border-radius: .5rem; padding: .8rem 1.2rem;`;
+  `border-radius: .5rem; padding: .8rem 1.2rem; cursor: pointer;`;
 
 export declare interface FillButtonComponent {
-  on(event: "click", listener: () => Promise<boolean>): this;
+  on(event: "click", listener: () => Promise<boolean | undefined>): this;
   on(event: string, listener: Function): this;
 }
 
@@ -43,7 +43,7 @@ export class FillButtonComponent extends EventEmitter {
     this.controller.on("disable", () => this.disable());
     this.controller.on("down", () => this.down());
     this.controller.on("up", () => this.up());
-    this.controller.on("click", () => this.click());
+    this.controller.on("click", () => this.handleClick());
     this.enable();
     return this;
   }
@@ -66,14 +66,14 @@ export class FillButtonComponent extends EventEmitter {
     this.body.style.backgroundColor = ColorScheme.getPrimaryButtonBackground();
   }
 
-  private async click(): Promise<boolean> {
-    let toEnables = await Promise.all(
+  private async handleClick(): Promise<boolean> {
+    let keepDisableds = await Promise.all(
       this.listeners("click").map((callback) => callback())
     );
-    return !toEnables.some((toEnable) => !toEnable);
+    return keepDisableds.some((keepDisabled) => keepDisabled);
   }
 
-  public async triggerClick(): Promise<void> {
+  public async click(): Promise<void> {
     await this.controller.click();
   }
 
@@ -91,7 +91,7 @@ export class FillButtonComponent extends EventEmitter {
 }
 
 export declare interface TextButtonComponent {
-  on(event: "click", listener: () => Promise<boolean>): this;
+  on(event: "click", listener: () => Promise<boolean | undefined>): this;
   on(event: string, listener: Function): this;
 }
 
@@ -120,7 +120,7 @@ export class TextButtonComponent extends EventEmitter {
     this.controller.on("disable", () => this.disable());
     this.controller.on("down", () => this.down());
     this.controller.on("up", () => this.up());
-    this.controller.on("click", () => this.click());
+    this.controller.on("click", () => this.handleClick());
     this.enable();
     return this;
   }
@@ -141,14 +141,14 @@ export class TextButtonComponent extends EventEmitter {
     this.body.style.backgroundColor = "initial";
   }
 
-  private async click(): Promise<boolean> {
-    let toEnables = await Promise.all(
+  private async handleClick(): Promise<boolean> {
+    let keepDisableds = await Promise.all(
       this.listeners("click").map((callback) => callback())
     );
-    return !toEnables.some((toEnable) => !toEnable);
+    return keepDisableds.some((keepDisabled) => keepDisabled);
   }
 
-  public async triggerClick(): Promise<void> {
+  public async click(): Promise<void> {
     await this.controller.click();
   }
 
