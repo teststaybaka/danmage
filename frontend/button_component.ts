@@ -40,7 +40,7 @@ export class FillButtonComponent extends EventEmitter {
 
   public init(): this {
     this.controller.on("enable", () => this.enable());
-    this.controller.on("disable", () => this.disable());
+    this.controller.on("disable", () => this.handleDisable());
     this.controller.on("down", () => this.down());
     this.controller.on("up", () => this.up());
     this.controller.on("click", () => this.handleClick());
@@ -52,7 +52,7 @@ export class FillButtonComponent extends EventEmitter {
     this.body.style.backgroundColor = ColorScheme.getPrimaryButtonBackground();
   }
 
-  private disable(): void {
+  private handleDisable(): void {
     this.body.style.backgroundColor =
       ColorScheme.getDisabledPrimaryButtonBackground();
   }
@@ -77,7 +77,7 @@ export class FillButtonComponent extends EventEmitter {
     await this.controller.click();
   }
 
-  public triggerDisable(): void {
+  public disable(): void {
     this.controller.disable();
   }
 
@@ -117,7 +117,7 @@ export class TextButtonComponent extends EventEmitter {
 
   public init(): this {
     this.controller.on("enable", () => this.enable());
-    this.controller.on("disable", () => this.disable());
+    this.controller.on("disable", () => this.handleDisable());
     this.controller.on("down", () => this.down());
     this.controller.on("up", () => this.up());
     this.controller.on("click", () => this.handleClick());
@@ -129,7 +129,7 @@ export class TextButtonComponent extends EventEmitter {
     this.body.style.color = ColorScheme.getContent();
   }
 
-  private disable(): void {
+  private handleDisable(): void {
     this.body.style.color = ColorScheme.getDisabledInputContent();
   }
 
@@ -152,7 +152,7 @@ export class TextButtonComponent extends EventEmitter {
     await this.controller.click();
   }
 
-  public triggerDisable(): void {
+  public disable(): void {
     this.controller.disable();
   }
 

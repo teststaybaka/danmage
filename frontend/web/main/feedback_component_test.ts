@@ -2,7 +2,8 @@ import {
   REPORT_USER_ISSUE,
   REPORT_USER_ISSUE_REQUEST,
 } from "../../../interface/service";
-import { FillButtonComponent } from "../../button_component";
+import { normalizeBody } from "../../body_normalizer";
+import { FillButtonComponentMock } from "../../mocks";
 import { FeedbackComponent } from "./feedback_component";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
@@ -13,9 +14,7 @@ import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
 
-document.documentElement.style.fontSize = "62.5%";
-document.body.style.margin = "0";
-document.body.style.fontSize = "0";
+normalizeBody();
 
 PUPPETEER_TEST_RUNNER.run({
   name: "FeedbackComponentTest",
@@ -26,11 +25,7 @@ PUPPETEER_TEST_RUNNER.run({
         // Prepare
         let counter = new Counter<string>();
         let [body, textarea, input] = FeedbackComponent.createView();
-        let button = new (class extends FillButtonComponent {
-          public constructor() {
-            super(FillButtonComponent.createView(E.text("Submit")), undefined);
-          }
-        })();
+        let button = new FillButtonComponentMock(E.text("Submit"));
         let serviceClient = new (class extends ServiceClient {
           public constructor() {
             super(undefined, undefined);
@@ -93,7 +88,7 @@ PUPPETEER_TEST_RUNNER.run({
         input.value = "some email";
 
         // Execute
-        let toEnables = await Promise.all(
+        let keepDisableds = await Promise.all(
           button.listeners("click").map((callback) => callback())
         );
 
@@ -101,7 +96,7 @@ PUPPETEER_TEST_RUNNER.run({
         assertThat(counter.get("fetchUnauthed"), eq(1), `fetchUnauthed called`);
         assertThat(textarea.value, eq(""), `textarea cleared`);
         assertThat(input.value, eq(""), `input cleared`);
-        assertThat(toEnables, eqArray([eq(true)]), `enable button`);
+        assertThat(keepDisableds, eqArray([eq(undefined)]), `enable button`);
 
         // Cleanup
         await globalThis.deleteFile(__dirname + "/feedback_component.png");

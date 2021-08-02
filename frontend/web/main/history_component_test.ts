@@ -4,7 +4,8 @@ import {
   GetChatHistoryRequest,
   GetChatHistoryResponse,
 } from "../../../interface/service";
-import { TextButtonComponent } from "../../button_component";
+import { normalizeBody } from "../../body_normalizer";
+import { TextButtonComponentMock } from "../../mocks";
 import { HistoryComponent } from "./history_component";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
@@ -17,9 +18,7 @@ import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
 
-document.documentElement.style.fontSize = "62.5%";
-document.body.style.margin = "0";
-document.body.style.fontSize = "0";
+normalizeBody();
 
 PUPPETEER_TEST_RUNNER.run({
   name: "HistoryComponentTest",
@@ -29,19 +28,17 @@ PUPPETEER_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
-        let button = new (class extends TextButtonComponent {
+        let button = new (class extends TextButtonComponentMock {
           public constructor() {
-            super(
-              TextButtonComponent.createView(E.text("Show more")),
-              undefined
-            );
+            super(E.text("Show more"));
           }
-          public async triggerClick() {
+          public async click() {
+            counter.increment("click");
             assertThat(
               await Promise.all(
                 this.listeners("click").map((callback) => callback())
               ),
-              eqArray([eq(true)]),
+              eqArray([eq(undefined)]),
               `enable button`
             );
           }
@@ -122,9 +119,10 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Verify
         assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
+        assertThat(counter.get("click"), eq(1), "click called");
 
         // Execute
-        await button.triggerClick();
+        await button.click();
 
         // Verify
         assertThat(

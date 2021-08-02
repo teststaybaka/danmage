@@ -58,7 +58,7 @@ export class NicknameComponent {
     this.displayStyle = this.body.style.display;
     this.body.appendChild(this.setButton.body);
     this.setButton.on("click", () => this.updateNickname());
-    this.inputController.on("enter", () => this.setButton.triggerClick());
+    this.inputController.on("enter", () => this.setButton.click());
     return this;
   }
 
@@ -68,7 +68,7 @@ export class NicknameComponent {
       UPDATE_NICKNAME
     );
     this.input.readOnly = true;
-    return false;
+    return true;
   }
 
   public async show(): Promise<void> {
@@ -80,7 +80,7 @@ export class NicknameComponent {
 
     this.input.value = response.user.nickname;
     this.input.readOnly = true;
-    this.setButton.triggerDisable();
+    this.setButton.disable();
   }
 
   public hide(): void {

@@ -4,7 +4,8 @@ import {
   UPDATE_NICKNAME,
   UpdateNicknameRequest,
 } from "../../../interface/service";
-import { FillButtonComponent } from "../../button_component";
+import { normalizeBody } from "../../body_normalizer";
+import { FillButtonComponentMock } from "../../mocks";
 import { NicknameComponent } from "./nickname_component";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
@@ -18,9 +19,7 @@ import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
 
-document.documentElement.style.fontSize = "62.5%";
-document.body.style.margin = "0";
-document.body.style.fontSize = "0";
+normalizeBody();
 
 PUPPETEER_TEST_RUNNER.run({
   name: "NicknameComponentTest",
@@ -36,11 +35,7 @@ PUPPETEER_TEST_RUNNER.run({
             super(undefined);
           }
         })();
-        let setButton = new (class extends FillButtonComponent {
-          public constructor() {
-            super(FillButtonComponent.createView(E.text("Set")), undefined);
-          }
-        })();
+        let setButton = new FillButtonComponentMock(E.text("Set"));
         let serviceClient = new (class extends ServiceClient {
           public constructor() {
             super(undefined, undefined);
@@ -118,7 +113,7 @@ PUPPETEER_TEST_RUNNER.run({
         input.value = "new name";
 
         // Execute
-        let toEnables = await Promise.all(
+        let keepDisableds = await Promise.all(
           setButton.listeners("click").map((callback) => callback())
         );
 
@@ -128,7 +123,7 @@ PUPPETEER_TEST_RUNNER.run({
           eq(2),
           `second fetchAuthed called`
         );
-        assertThat(toEnables, eqArray([eq(false)]), "enable button");
+        assertThat(keepDisableds, eqArray([eq(true)]), "enable button");
 
         // Cleanup
         await globalThis.deleteFile(__dirname + "/nickname_component.png");
@@ -146,12 +141,9 @@ PUPPETEER_TEST_RUNNER.run({
             super(undefined);
           }
         })();
-        let setButton = new (class extends FillButtonComponent {
-          public constructor() {
-            super(E.button(""), undefined);
-          }
-          public triggerDisable() {
-            counter.increment("triggerDisable");
+        let setButton = new (class extends FillButtonComponentMock {
+          public disable() {
+            counter.increment("disable");
           }
         })();
         let serviceClient = new (class extends ServiceClient {
@@ -197,11 +189,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Verify
         assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
-        assertThat(
-          counter.get("triggerDisable"),
-          eq(1),
-          `triggerDisable called`
-        );
+        assertThat(counter.get("disable"), eq(1), `disable called`);
         assertThat(input.value, eq("some name"), `input value`);
       },
     },
@@ -215,12 +203,9 @@ PUPPETEER_TEST_RUNNER.run({
             super(undefined);
           }
         })();
-        let setButton = new (class extends FillButtonComponent {
-          public constructor() {
-            super(E.button(""), undefined);
-          }
-          public async triggerClick() {
-            counter.increment("triggerClick");
+        let setButton = new (class extends FillButtonComponentMock {
+          public async click() {
+            counter.increment("click");
           }
         })();
         let serviceClient = new (class extends ServiceClient {
@@ -240,7 +225,7 @@ PUPPETEER_TEST_RUNNER.run({
         await inputController.enter();
 
         // Verify
-        assertThat(counter.get("triggerClick"), eq(1), `triggerClick called`);
+        assertThat(counter.get("click"), eq(1), `click called`);
       },
     },
   ],

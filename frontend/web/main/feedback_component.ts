@@ -72,7 +72,7 @@ export class FeedbackComponent {
     return this;
   }
 
-  private async submit(): Promise<boolean> {
+  private async submit(): Promise<void> {
     await this.serviceClient.fetchUnauthed(
       {
         userIssue: {
@@ -84,7 +84,6 @@ export class FeedbackComponent {
     );
     this.input.value = "";
     this.textarea.value = "";
-    return true;
   }
 
   public show(): void {
