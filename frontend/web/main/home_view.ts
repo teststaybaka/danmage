@@ -19,6 +19,8 @@ export class HomeView {
   ];
 
   public static create(): HTMLDivElement {
+    let chromeStoreUrl =
+      "https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm";
     return E.div(
       `class="home-container"`,
       HomeView.paragraph(
@@ -30,11 +32,10 @@ export class HomeView {
             `Twitch, YouTube and Crunchyroll. Get it here:`
         ),
         E.a(
-          `style="display: block; color: ${ColorScheme.getLinkContent()}; ` +
-            `word-break: break-all; margin-bottom: 1rem;"`,
-          E.text(
-            "https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm"
-          )
+          `href="${chromeStoreUrl}" target="_blank" style="display: block; ` +
+            `color: ${ColorScheme.getLinkContent()}; word-break: break-all; ` +
+            `margin-bottom: 1rem; text-decoration: none;"`,
+          E.text(chromeStoreUrl)
         )
       ),
       HomeView.paragraph(

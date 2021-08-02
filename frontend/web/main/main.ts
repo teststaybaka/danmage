@@ -1,17 +1,16 @@
+import { normalizeBody } from "../../body_normalizer";
 import { BrowserHistoryPusher } from "./browser_history_pusher";
+import { PageShellComponent } from "./page_shell_component";
 import { StateLoader } from "./state_loader";
 
-let QUERY_PARAM_KEY_FOR_STATE = "q";
-
 function main(): void {
-  document.documentElement.style.fontSize = "62.5%";
-  document.body.style.margin = "0";
-  document.body.style.fontSize = "0";
+  normalizeBody();
 
-  let state = StateLoader.create(QUERY_PARAM_KEY_FOR_STATE).state;
-  let historyPusher = BrowserHistoryPusher.create(
-    state,
-    QUERY_PARAM_KEY_FOR_STATE
+  let queryParamKeyForState = "q";
+  let state = StateLoader.create(queryParamKeyForState).state;
+  let historyPusher = BrowserHistoryPusher.create(state, queryParamKeyForState);
+  document.body.appendChild(
+    PageShellComponent.create(state, historyPusher).body
   );
 }
 
