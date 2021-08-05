@@ -32,13 +32,7 @@ export class PageShellComponent {
     private logo: HTMLDivElement,
     private signInButton: HTMLDivElement,
     private signedInButtonsContainer: HTMLDivElement,
-    private nicknameButtonWrapper: HTMLDivElement,
-    private historyButtonWrapper: HTMLDivElement,
-    private signOutButtonWrapper: HTMLDivElement,
     private tabsContainer: HTMLDivElement,
-    private termsButtonWrapper: HTMLDivElement,
-    private privacyButtonWrapper: HTMLDivElement,
-    private feedbackButtonWrapper: HTMLDivElement,
     private nicknameButton: TextButtonComponent,
     private historyButton: TextButtonComponent,
     private signOutButton: TextButtonComponent,
@@ -62,13 +56,14 @@ export class PageShellComponent {
     browserHistoryPusher: BrowserHistoryPusher
   ): PageShellComponent {
     return new PageShellComponent(
-      ...PageShellComponent.createView(),
-      TextButtonComponent.create(E.text("Nickname")),
-      TextButtonComponent.create(E.text("History")),
-      TextButtonComponent.create(E.text("Sign out")),
-      TextButtonComponent.create(E.text("Terms and Conditions")),
-      TextButtonComponent.create(E.text("Privacy policy")),
-      TextButtonComponent.create(E.text("Feedback")),
+      ...PageShellComponent.createView(
+        TextButtonComponent.create(E.text("Nickname")),
+        TextButtonComponent.create(E.text("History")),
+        TextButtonComponent.create(E.text("Sign out")),
+        TextButtonComponent.create(E.text("Terms and Conditions")),
+        TextButtonComponent.create(E.text("Privacy policy")),
+        TextButtonComponent.create(E.text("Feedback"))
+      ),
       () => HomeView.create(),
       () => NicknameComponent.create(),
       () => HistoryComponent.create(),
@@ -82,18 +77,19 @@ export class PageShellComponent {
     ).init();
   }
 
-  public static createView() {
+  public static createView(
+    nicknameButton: TextButtonComponent,
+    historyButton: TextButtonComponent,
+    signOutButton: TextButtonComponent,
+    termsButton: TextButtonComponent,
+    privacyButton: TextButtonComponent,
+    feedbackButton: TextButtonComponent
+  ) {
     let logoRef = new Ref<HTMLDivElement>();
     let signInButtonRef = new Ref<HTMLDivElement>();
     let googleIconSvgRef = new Ref<SVGSVGElement>();
     let signedInButtonsContainerRef = new Ref<HTMLDivElement>();
-    let nicknameButtonWrapperRef = new Ref<HTMLDivElement>();
-    let historyButtonWrapperRef = new Ref<HTMLDivElement>();
-    let signOutButtonWrapperRef = new Ref<HTMLDivElement>();
     let tabsContainerRef = new Ref<HTMLDivElement>();
-    let termsButtonWrapperRef = new Ref<HTMLDivElement>();
-    let privacyButtonWrapperRef = new Ref<HTMLDivElement>();
-    let feedbackButtonWrapperRef = new Ref<HTMLDivElement>();
     let body = E.div(
       `class="main-body" style="display: flex; flex-flow: column nowrap; ` +
         `min-height: 100vh; overflow-y: auto;"`,
@@ -138,20 +134,17 @@ export class PageShellComponent {
           signedInButtonsContainerRef,
           `class="main-header-signed-in-tab-buttons-container" style="` +
             `display: flex; flex-flow: row nowrap; align-items: center;"`,
-          E.divRef(
-            nicknameButtonWrapperRef,
+          E.div(
             `class="main-header-nickname-button-wrapper" style="` +
-              `margin-right: 2rem;"`
+              `margin-right: 2rem;"`,
+            nicknameButton.body
           ),
-          E.divRef(
-            historyButtonWrapperRef,
+          E.div(
             `class="main-header-history-button-wrapper" style="` +
-              `margin-right: 2rem;"`
+              `margin-right: 2rem;"`,
+            historyButton.body
           ),
-          E.divRef(
-            signOutButtonWrapperRef,
-            `class="main-heaer-history-button-wrapper"`
-          )
+          E.div(`class="main-heaer-history-button-wrapper"`, signOutButton.body)
         )
       ),
       E.divRef(tabsContainerRef, `class="main-tab-container" style="flex: 1;"`),
@@ -159,23 +152,17 @@ export class PageShellComponent {
         `class="main-footer" style="display: flex; flex-flow: row nowrap; ` +
           `align-items: center; justify-content: center; padding: 2rem 0; ` +
           `border-top: .1rem solid ${ColorScheme.getBlockSeparator()};"`,
-        E.divRef(termsButtonWrapperRef, `class="main-terms-button-wrapper"`),
+        termsButton.body,
         E.div(
           `style="height: 2rem; margin: 0 .2rem; width: .1rem; ` +
             `background-color: ${ColorScheme.getBlockSeparator()}"`
         ),
-        E.divRef(
-          privacyButtonWrapperRef,
-          `class="main-privacy-button-wrapper"`
-        ),
+        privacyButton.body,
         E.div(
           `style="height: 2rem; margin: 0 .2rem; width: .1rem; ` +
             `background-color: ${ColorScheme.getBlockSeparator()}"`
         ),
-        E.divRef(
-          feedbackButtonWrapperRef,
-          `class="main-feedback-button-wrapper"`
-        )
+        feedbackButton.body
       )
     );
     googleIconSvgRef.val.innerHTML = `
@@ -205,23 +192,17 @@ export class PageShellComponent {
       logoRef.val,
       signInButtonRef.val,
       signedInButtonsContainerRef.val,
-      nicknameButtonWrapperRef.val,
-      historyButtonWrapperRef.val,
-      signOutButtonWrapperRef.val,
       tabsContainerRef.val,
-      termsButtonWrapperRef.val,
-      privacyButtonWrapperRef.val,
-      feedbackButtonWrapperRef.val,
+      nicknameButton,
+      historyButton,
+      signOutButton,
+      termsButton,
+      privacyButton,
+      feedbackButton,
     ] as const;
   }
 
   public init(): this {
-    this.nicknameButtonWrapper.appendChild(this.nicknameButton.body);
-    this.historyButtonWrapper.appendChild(this.historyButton.body);
-    this.signOutButtonWrapper.appendChild(this.signOutButton.body);
-    this.termsButtonWrapper.appendChild(this.termsButton.body);
-    this.privacyButtonWrapper.appendChild(this.privacyButton.body);
-    this.feedbackButtonWrapper.appendChild(this.feedbackButton.body);
     new TabsNavigationController(
       this.tabsContainer,
       this.state,

@@ -19,13 +19,14 @@ export class FeedbackComponent {
 
   public static create(): FeedbackComponent {
     return new FeedbackComponent(
-      ...FeedbackComponent.createView(),
-      FillButtonComponent.create(E.text("Submit")),
+      ...FeedbackComponent.createView(
+        FillButtonComponent.create(E.text("Submit"))
+      ),
       SERVICE_CLIENT
     ).init();
   }
 
-  public static createView() {
+  public static createView(button: FillButtonComponent) {
     let textareaRef = new Ref<HTMLTextAreaElement>();
     let inputRef = new Ref<HTMLInputElement>();
     let body = E.div(
@@ -60,14 +61,14 @@ export class FeedbackComponent {
             `style="${INPUT_STYLE}"`
         ),
         E.div(`style="flex: 2;"`)
-      )
+      ),
+      button.body
     );
-    return [body, textareaRef.val, inputRef.val] as const;
+    return [body, textareaRef.val, inputRef.val, button] as const;
   }
 
   public init(): this {
     this.displayStyle = this.body.style.display;
-    this.body.appendChild(this.button.body);
     this.button.on("click", () => this.submit());
     return this;
   }

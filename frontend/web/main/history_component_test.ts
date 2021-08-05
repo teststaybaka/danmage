@@ -110,8 +110,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         let historyComponent = new HistoryComponent(
-          ...HistoryComponent.createView(),
-          button,
+          ...HistoryComponent.createView(button),
           serviceClient
         ).init();
         document.body.appendChild(historyComponent.body);

@@ -13,22 +13,23 @@ export class NicknameComponent {
   public constructor(
     public body: HTMLDivElement,
     private input: HTMLInputElement,
-    private inputController: TextInputController,
     private setButton: FillButtonComponent,
+    private inputController: TextInputController,
     private serviceClient: ServiceClient
   ) {}
 
   public static create(): NicknameComponent {
-    let views = NicknameComponent.createView();
+    let views = NicknameComponent.createView(
+      FillButtonComponent.create(E.text("Set"))
+    );
     return new NicknameComponent(
       ...views,
       new TextInputController(views[1]),
-      FillButtonComponent.create(E.text("Set")),
       SERVICE_CLIENT
     ).init();
   }
 
-  public static createView() {
+  public static createView(setButton: FillButtonComponent) {
     let input = new Ref<HTMLInputElement>();
     let body = E.div(
       `class="nickname-container" style="display: flex; ` +
@@ -49,14 +50,14 @@ export class NicknameComponent {
             `style="${INPUT_STYLE}"`
         ),
         E.div(`style="flex: 2;"`)
-      )
+      ),
+      setButton.body
     );
-    return [body, input.val] as const;
+    return [body, input.val, setButton] as const;
   }
 
   public init(): this {
     this.displayStyle = this.body.style.display;
-    this.body.appendChild(this.setButton.body);
     this.setButton.on("click", () => this.updateNickname());
     this.inputController.on("enter", () => this.setButton.click());
     return this;

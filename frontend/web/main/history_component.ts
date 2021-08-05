@@ -21,13 +21,14 @@ export class HistoryComponent {
 
   public static create(): HistoryComponent {
     return new HistoryComponent(
-      ...HistoryComponent.createView(),
-      TextButtonComponent.create(E.text("Show more")),
+      ...HistoryComponent.createView(
+        TextButtonComponent.create(E.text("Show more"))
+      ),
       SERVICE_CLIENT
     ).init();
   }
 
-  public static createView() {
+  public static createView(showMoreButton: TextButtonComponent) {
     let entryListContainer = new Ref<HTMLDivElement>();
     let body = E.div(
       `class="history-container" style="display: flex; ` +
@@ -43,9 +44,10 @@ export class HistoryComponent {
           "Content",
           "Posted date"
         )
-      )
+      ),
+      showMoreButton.body
     );
-    return [body, entryListContainer.val] as const;
+    return [body, entryListContainer.val, showMoreButton] as const;
   }
 
   public static createEntryView(
@@ -101,7 +103,6 @@ export class HistoryComponent {
 
   public init(): this {
     this.displayStyle = this.body.style.display;
-    this.body.appendChild(this.showMoreButton.body);
     this.showMoreButton.on("click", () => this.loadMore());
     return this;
   }

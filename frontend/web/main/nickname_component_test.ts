@@ -29,13 +29,14 @@ PUPPETEER_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
-        let [body, input] = NicknameComponent.createView();
+        let [body, input, setButton] = NicknameComponent.createView(
+          new FillButtonComponentMock(E.text("Set"))
+        );
         let inputController = new (class extends TextInputController {
           public constructor() {
             super(undefined);
           }
         })();
-        let setButton = new FillButtonComponentMock(E.text("Set"));
         let serviceClient = new (class extends ServiceClient {
           public constructor() {
             super(undefined, undefined);
@@ -83,8 +84,8 @@ PUPPETEER_TEST_RUNNER.run({
         let nicknameComponent = new NicknameComponent(
           body,
           input,
-          inputController,
           setButton,
+          inputController,
           serviceClient
         ).init();
         document.body.appendChild(nicknameComponent.body);
@@ -181,8 +182,8 @@ PUPPETEER_TEST_RUNNER.run({
         let nicknameComponent = new NicknameComponent(
           E.div(""),
           input,
-          inputController,
           setButton,
+          inputController,
           serviceClient
         ).init();
         await nicknameComponent.show();
@@ -218,8 +219,8 @@ PUPPETEER_TEST_RUNNER.run({
         new NicknameComponent(
           E.div(""),
           undefined,
-          inputController,
           setButton,
+          inputController,
           serviceClient
         ).init();
         await inputController.enter();

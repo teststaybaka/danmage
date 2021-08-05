@@ -57,13 +57,14 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         let pageShellComponent = new PageShellComponent(
-          ...PageShellComponent.createView(),
-          nicknameButton,
-          historyButton,
-          signOutButton,
-          termsButton,
-          privacyButton,
-          feedbackButton,
+          ...PageShellComponent.createView(
+            nicknameButton,
+            historyButton,
+            signOutButton,
+            termsButton,
+            privacyButton,
+            feedbackButton
+          ),
           () => HomeView.create(),
           () => nicknameComponent,
           () => historyComponent,

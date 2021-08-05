@@ -24,8 +24,9 @@ PUPPETEER_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
-        let [body, textarea, input] = FeedbackComponent.createView();
-        let button = new FillButtonComponentMock(E.text("Submit"));
+        let [body, textarea, input, button] = FeedbackComponent.createView(
+          new FillButtonComponentMock(E.text("Submit"))
+        );
         let serviceClient = new (class extends ServiceClient {
           public constructor() {
             super(undefined, undefined);
