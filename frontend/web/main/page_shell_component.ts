@@ -7,10 +7,8 @@ import { HistoryComponent } from "./history_component";
 import { HomeView } from "./home_view";
 import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
 import { NicknameComponent } from "./nickname_component";
-import { PrivacyView } from "./privacy_view";
 import { State } from "./state";
 import { TabsNavigationController } from "./tabs_navigation_controller";
-import { TermsView } from "./terms_view";
 import { E } from "@selfage/element/factory";
 import { HideableElementController } from "@selfage/element/hideable_element_controller";
 import { Ref } from "@selfage/ref";
@@ -42,8 +40,6 @@ export class PageShellComponent {
     private homeViewFactoryFn: () => HTMLElement,
     private nicknameComponentFactoryFn: () => NicknameComponent,
     private historyComponentFactoryFn: () => HistoryComponent,
-    private termsViewFactoryFn: () => HTMLElement,
-    private privacyViewFactoryFn: () => HTMLElement,
     private feedbackComponentFactoryFn: () => FeedbackComponent,
     private state: State,
     private browserHistoryPusher: BrowserHistoryPusher,
@@ -67,8 +63,6 @@ export class PageShellComponent {
       () => HomeView.create(),
       () => NicknameComponent.create(),
       () => HistoryComponent.create(),
-      () => TermsView.create(),
-      () => PrivacyView.create(),
       () => FeedbackComponent.create(),
       state,
       browserHistoryPusher,
@@ -219,18 +213,14 @@ export class PageShellComponent {
         this.historyButton,
         this.historyComponentFactoryFn
       )
-      .addWithButton("showTerms", this.termsButton, this.termsViewFactoryFn)
-      .addWithButton(
-        "showPrivacy",
-        this.privacyButton,
-        this.privacyViewFactoryFn
-      )
       .addWithHideable(
         "showFeedback",
         this.feedbackButton,
         this.feedbackComponentFactoryFn
       )
       .init();
+    this.termsButton.on("click", () => this.gotoTerms());
+    this.privacyButton.on("click", () => this.gotoPrivacy());
 
     this.hideableSignInButton = new HideableElementController(
       this.signInButton
@@ -248,6 +238,14 @@ export class PageShellComponent {
     this.signInButton.addEventListener("click", () => this.signIn());
     this.signOutButton.on("click", () => this.signOut());
     return this;
+  }
+
+  private gotoTerms(): void {
+    this.window.location.href = "/terms";
+  }
+
+  private gotoPrivacy(): void {
+    this.window.location.href = "/privacy";
   }
 
   private showSignInButton(): void {

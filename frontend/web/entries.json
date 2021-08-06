@@ -2,5 +2,17 @@
   "entries": [{
     "source": "./main/main",
     "output": "./index"
+  }, {
+    "source": "./oauth_start/main",
+    "output": "./oauth_start"
+  }, {
+    "source": "./oauth_callback/main",
+    "output": "./oauth_callback"
+  }, {
+    "source": "./privacy/main",
+    "output": "./privacy"
+  }, {
+    "source": "./terms/main",
+    "output": "./terms"
   }]
 }

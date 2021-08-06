@@ -5,8 +5,6 @@ export interface State {
   on(event: 'showHome', listener: (newValue: boolean, oldValue: boolean) => void): this;
   on(event: 'showNickname', listener: (newValue: boolean, oldValue: boolean) => void): this;
   on(event: 'showHistory', listener: (newValue: boolean, oldValue: boolean) => void): this;
-  on(event: 'showTerms', listener: (newValue: boolean, oldValue: boolean) => void): this;
-  on(event: 'showPrivacy', listener: (newValue: boolean, oldValue: boolean) => void): this;
   on(event: 'showFeedback', listener: (newValue: boolean, oldValue: boolean) => void): this;
   on(event: string, listener: Function): this;
 }
@@ -51,32 +49,6 @@ export class State extends EventEmitter {
     this.emit('showHistory', this.showHistory_, oldValue);
   }
 
-  private showTerms_?: boolean;
-  get showTerms(): boolean {
-    return this.showTerms_;
-  }
-  set showTerms(value: boolean) {
-    let oldValue = this.showTerms_;
-    if (value === oldValue) {
-      return;
-    }
-    this.showTerms_ = value;
-    this.emit('showTerms', this.showTerms_, oldValue);
-  }
-
-  private showPrivacy_?: boolean;
-  get showPrivacy(): boolean {
-    return this.showPrivacy_;
-  }
-  set showPrivacy(value: boolean) {
-    let oldValue = this.showPrivacy_;
-    if (value === oldValue) {
-      return;
-    }
-    this.showPrivacy_ = value;
-    this.emit('showPrivacy', this.showPrivacy_, oldValue);
-  }
-
   private showFeedback_?: boolean;
   get showFeedback(): boolean {
     return this.showFeedback_;
@@ -100,12 +72,6 @@ export class State extends EventEmitter {
     if (this.showHistory_ !== undefined) {
       this.emit('showHistory', this.showHistory_, undefined);
     }
-    if (this.showTerms_ !== undefined) {
-      this.emit('showTerms', this.showTerms_, undefined);
-    }
-    if (this.showPrivacy_ !== undefined) {
-      this.emit('showPrivacy', this.showPrivacy_, undefined);
-    }
     if (this.showFeedback_ !== undefined) {
       this.emit('showFeedback', this.showFeedback_, undefined);
     }
@@ -116,8 +82,6 @@ export class State extends EventEmitter {
       showHome: this.showHome,
       showNickname: this.showNickname,
       showHistory: this.showHistory,
-      showTerms: this.showTerms,
-      showPrivacy: this.showPrivacy,
       showFeedback: this.showFeedback,
     };
   }
@@ -139,14 +103,6 @@ export let STATE: MessageDescriptor<State> = {
     },
     {
       name: 'showHistory',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-    {
-      name: 'showTerms',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-    {
-      name: 'showPrivacy',
       primitiveType: PrimitiveType.BOOLEAN,
     },
     {

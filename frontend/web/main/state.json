@@ -11,12 +11,6 @@
       "name": "showHistory",
       "type": "boolean"
     }, {
-      "name": "showTerms",
-      "type": "boolean"
-    }, {
-      "name": "showPrivacy",
-      "type": "boolean"
-    }, {
       "name": "showFeedback",
       "type": "boolean"
     }],

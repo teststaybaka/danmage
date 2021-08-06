@@ -8,9 +8,7 @@ import {
   NicknameComponentMock,
 } from "./mocks";
 import { PageShellComponent } from "./page_shell_component";
-import { PrivacyView } from "./privacy_view";
 import { State } from "./state";
-import { TermsView } from "./terms_view";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
@@ -52,7 +50,7 @@ PUPPETEER_TEST_RUNNER.run({
         let sessionStorage = new LocalSessionStorage();
         let state = new State();
         state.showHome = true;
-        let windowMock: any = {};
+        let windowMock = { location: {} } as any;
         await globalThis.setViewport(1280, 600);
 
         // Execute
@@ -68,8 +66,6 @@ PUPPETEER_TEST_RUNNER.run({
           () => HomeView.create(),
           () => nicknameComponent,
           () => historyComponent,
-          () => TermsView.create(),
-          () => PrivacyView.create(),
           () => feedbackComponent,
           state,
           browserHistoryPusher,
@@ -106,23 +102,7 @@ PUPPETEER_TEST_RUNNER.run({
           eqArray([eq(undefined)]),
           "terms button enabled"
         );
-        assertThat(state.showTerms, eq(true), "show terms");
-        assertThat(state.showHome, eq(undefined), "hide home");
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/page_shell_component_terms.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/page_shell_component_terms.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "terms screenshot");
-        }
+        assertThat(windowMock.location.href, eq("/terms"), "goto /terms");
 
         // Execute
         let keepDisables2 = await Promise.all(
@@ -135,23 +115,7 @@ PUPPETEER_TEST_RUNNER.run({
           eqArray([eq(undefined)]),
           "privacy button enabled"
         );
-        assertThat(state.showPrivacy, eq(true), "show privacy");
-        assertThat(state.showTerms, eq(undefined), "hide terms");
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/page_shell_component_privacy.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/page_shell_component_privacy.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "privacy screenshot");
-        }
+        assertThat(windowMock.location.href, eq("/privacy"), "goto /privacy");
 
         // Execute
         let keepDisables3 = await Promise.all(
@@ -165,7 +129,7 @@ PUPPETEER_TEST_RUNNER.run({
           "feedback button enabled"
         );
         assertThat(state.showFeedback, eq(true), "show feedback");
-        assertThat(state.showPrivacy, eq(undefined), "hide privacy");
+        assertThat(state.showHome, eq(undefined), "hide home");
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
@@ -185,10 +149,6 @@ PUPPETEER_TEST_RUNNER.run({
         // Cleanup
         await Promise.all([
           globalThis.deleteFile(__dirname + "/page_shell_component_home.png"),
-          globalThis.deleteFile(__dirname + "/page_shell_component_terms.png"),
-          globalThis.deleteFile(
-            __dirname + "/page_shell_component_privacy.png"
-          ),
           globalThis.deleteFile(
             __dirname + "/page_shell_component_feedback.png"
           ),

@@ -1,16 +1,30 @@
+import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
+import { normalizeBody } from "../../body_normalizer";
 import { ColorScheme } from "../../color_scheme";
 import { E } from "@selfage/element/factory";
+import "../../../environment";
 
-export class TermsView {
-  public static create(): HTMLDivElement {
-    let body = E.div(
-      `class="terms" style="padding: 5rem; font-size: 1.7rem; ` +
-        `color: ${ColorScheme.getContent()}"`
-    );
-    body.innerHTML = `
+function main(): void {
+  normalizeBody();
+
+  let origin = "";
+  if (globalThis.ENVIRONMENT === "prod") {
+    origin = ORIGIN_PROD;
+  } else if (globalThis.ENVIRONMENT === "local") {
+    origin = ORIGIN_LOCAL;
+  } else {
+    throw new Error("Unsupported environment.");
+  }
+
+  let body = E.div(
+    `class="privacy" style="padding: 5rem; font-size: 1.7rem; ` +
+      `color: ${ColorScheme.getContent()};"`
+  );
+  document.body.appendChild(body);
+  body.innerHTML = `
 <h1>Terms and Conditions ("Terms")</h1>
 <p>Last updated: April 30, 2019</p>
-<p>Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the <a href="/">www.danamge.com</a> website (the "Service") operated by DanMage ("us", "we", or "our").</p>
+<p>Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the <a href="/">${origin}</a> website (the "Service") operated by DanMage ("us", "we", or "our").</p>
 <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service.</p>
 <p>By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service. The Terms and Conditions agreement  for DanMage has been created with the help of <a href="https://www.freeprivacypolicy.com/">FreePrivacyPolicy Terms and Conditions Generator</a>.</p>
 <h2>Accounts</h2>
@@ -36,6 +50,6 @@ export class TermsView {
 <h2>Contact Us</h2>
 <p>If you have any questions about these Terms, please contact us.</p>
 `;
-    return body;
-  }
 }
+
+main();
