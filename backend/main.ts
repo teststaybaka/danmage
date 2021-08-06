@@ -2,6 +2,7 @@ import express = require("express");
 import getStream = require("get-stream");
 import http = require("http");
 import https = require("https");
+import { HOST_BASE_PROD } from "../common";
 import { GetChatHandler, GetDanmakuHandler } from "./get_chat_handler";
 import { GetChatHistoryHandler } from "./get_chat_history_handler";
 import { GetPlayerSettingsHandler } from "./get_player_settings_handler";
@@ -22,8 +23,6 @@ import {
 } from "@selfage/service_handler/register";
 import { SessionSigner } from "@selfage/service_handler/session_signer";
 import "../environment";
-
-let HOST_NAME_PROD = "www.danmage.com";
 
 async function main(): Promise<void> {
   if (globalThis.ENVIRONMENT === "prod") {
@@ -48,7 +47,7 @@ async function main(): Promise<void> {
 
     let redirectApp = express();
     redirectApp.get("/*", (req, res) => {
-      res.redirect(`https://${HOST_NAME_PROD}` + req.path);
+      res.redirect(`${HOST_BASE_PROD}${req.path}`);
     });
     let httpServer = http.createServer(redirectApp);
     httpServer.listen(80, () => {
