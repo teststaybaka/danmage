@@ -21,7 +21,7 @@ import "@selfage/puppeteer_executor_api";
 normalizeBody();
 
 PUPPETEER_TEST_RUNNER.run({
-  name: "PageShellTest",
+  name: "PageShellComponentTest",
   cases: [
     {
       name: "RenderHomeAndTermsAndPrivacyAndFeedback",
