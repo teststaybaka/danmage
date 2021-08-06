@@ -1,4 +1,4 @@
-import { HOST_BASE_LOCAL, HOST_BASE_PROD } from "../../../common";
+import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import "../../../environment";
 
 // Copied from https://developers.google.com/identity/protocols/OAuth2UserAgent
@@ -7,11 +7,11 @@ import "../../../environment";
  * Create form to request access token from Google's OAuth 2.0 server.
  */
 function oauthSignIn() {
-  let hostBase = "";
+  let origin = "";
   if (globalThis.ENVIRONMENT === "prod") {
-    hostBase = HOST_BASE_PROD;
+    origin = ORIGIN_PROD;
   } else if (globalThis.ENVIRONMENT === "local") {
-    hostBase = HOST_BASE_LOCAL;
+    origin = ORIGIN_LOCAL;
   } else {
     throw new Error("Unsupported environment.");
   }
@@ -27,7 +27,7 @@ function oauthSignIn() {
   var params = {
     client_id:
       "796944535248-jnsa4io0gk4emf3djdlme07692ckec94.apps.googleusercontent.com",
-    redirect_uri: `${hostBase}/oauth_callback`,
+    redirect_uri: `${origin}/oauth_callback`,
     response_type: "token",
     scope: "profile",
   } as any;
