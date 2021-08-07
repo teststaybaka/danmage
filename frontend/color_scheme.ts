@@ -1,6 +1,7 @@
 export let ORANGE = "rgb(255, 118, 35)";
 let DARKER_GREY = "rgb(50, 50, 50)";
 let DARK_GREY = "rgb(120, 120, 120)";
+let DARK_GREY_TRANSPARENT = "rgba(120, 120, 120, .5)";
 let GREY = "rgb(200, 200, 200)";
 let LIGHT_GREY = "rgb(245, 245, 245)";
 export let BLUE = "rgb(0, 174, 239)";
@@ -13,6 +14,7 @@ let WHITE = "white";
 enum Purpose {
   BACKGROUND,
   ALTERNATIVE_BACKGROUND,
+  POPUP_BACKGROUND,
   CONTENT,
   ERROR_CONTENT,
   LINK_CONTENT,
@@ -33,6 +35,7 @@ enum Purpose {
 export let CLASSIC_COLOR_SCHEME: Map<Purpose, string> = new Map([
   [Purpose.BACKGROUND, WHITE],
   [Purpose.ALTERNATIVE_BACKGROUND, LIGHT_GREY],
+  [Purpose.POPUP_BACKGROUND, DARK_GREY_TRANSPARENT],
   [Purpose.CONTENT, DARKER_GREY],
   [Purpose.ERROR_CONTENT, RED],
   [Purpose.LINK_CONTENT, BLUE],
@@ -59,6 +62,10 @@ export class ColorScheme {
 
   public static getAlternativeBackground(): string {
     return ColorScheme.SCHEME.get(Purpose.ALTERNATIVE_BACKGROUND);
+  }
+
+  public static getPopupBackground(): string {
+    return ColorScheme.SCHEME.get(Purpose.POPUP_BACKGROUND);
   }
 
   public static getContent(): string {

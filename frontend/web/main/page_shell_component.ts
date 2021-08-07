@@ -1,3 +1,4 @@
+import { SIGN_IN } from "../../../interface/service";
 import { TextButtonComponent } from "../../button_component";
 import { BLUE, ColorScheme, ORANGE } from "../../color_scheme";
 import { BrowserHistoryPusher } from "./browser_history_pusher";
@@ -7,23 +8,21 @@ import { HistoryComponent } from "./history_component";
 import { HomeView } from "./home_view";
 import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
 import { NicknameComponent } from "./nickname_component";
+import { SERVICE_CLIENT } from "./service_client";
 import { State } from "./state";
 import { TabsNavigationController } from "./tabs_navigation_controller";
 import { E } from "@selfage/element/factory";
 import { HideableElementController } from "@selfage/element/hideable_element_controller";
 import { Ref } from "@selfage/ref";
-import { SessionStorage } from "@selfage/service_client/session_storage";
+import { ServiceClient } from "@selfage/service_client";
+import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
 import { TabSwitcher } from "@selfage/tabs/switcher";
 
 export class PageShellComponent {
-  private static CHECK_SIGN_IN_STATUS_MAX_COUNT = 10 * 60 * 2; // Roughly 10 mins
-  private static CHECK_SIGN_IN_STATUS_INTERVAL = 500; // ms
-
   private signInButtonsSwitcher = new TabSwitcher();
   private hideableSignInButton: HideableElementController;
   private hideableSignedInButtonsContainer: HideableElementController;
-  private checkSignInStatusIntervalId: number;
-  private checkSignInStatusCountdown: number;
+  private hideablePopupContainer: HideableElementController;
 
   public constructor(
     public body: HTMLDivElement,
@@ -31,6 +30,8 @@ export class PageShellComponent {
     private signInButton: HTMLDivElement,
     private signedInButtonsContainer: HTMLDivElement,
     private tabsContainer: HTMLDivElement,
+    private popupContainer: HTMLDivElement,
+    private popupIframe: HTMLIFrameElement,
     private nicknameButton: TextButtonComponent,
     private historyButton: TextButtonComponent,
     private signOutButton: TextButtonComponent,
@@ -43,13 +44,16 @@ export class PageShellComponent {
     private feedbackComponentFactoryFn: () => FeedbackComponent,
     private state: State,
     private browserHistoryPusher: BrowserHistoryPusher,
-    private sessionStorage: SessionStorage,
+    private origin: string,
+    private localSessionStorage: LocalSessionStorage,
+    private serviceClient: ServiceClient,
     private window: Window
   ) {}
 
   public static create(
     state: State,
-    browserHistoryPusher: BrowserHistoryPusher
+    browserHistoryPusher: BrowserHistoryPusher,
+    origin: string
   ): PageShellComponent {
     return new PageShellComponent(
       ...PageShellComponent.createView(
@@ -66,7 +70,9 @@ export class PageShellComponent {
       () => FeedbackComponent.create(),
       state,
       browserHistoryPusher,
+      origin,
       LOCAL_SESSION_STORAGE,
+      SERVICE_CLIENT,
       window
     ).init();
   }
@@ -84,6 +90,8 @@ export class PageShellComponent {
     let googleIconSvgRef = new Ref<SVGSVGElement>();
     let signedInButtonsContainerRef = new Ref<HTMLDivElement>();
     let tabsContainerRef = new Ref<HTMLDivElement>();
+    let popupContainerRef = new Ref<HTMLDivElement>();
+    let popupIframeRef = new Ref<HTMLIFrameElement>();
     let body = E.div(
       `class="main-body" style="display: flex; flex-flow: column nowrap; ` +
         `min-height: 100vh; overflow-y: auto;"`,
@@ -154,9 +162,21 @@ export class PageShellComponent {
         privacyButton.body,
         E.div(
           `style="height: 2rem; margin: 0 .2rem; width: .1rem; ` +
-            `background-color: ${ColorScheme.getBlockSeparator()}"`
+            `background-color: ${ColorScheme.getBlockSeparator()};"`
         ),
         feedbackButton.body
+      ),
+      E.divRef(
+        popupContainerRef,
+        `class="main-popup-container" style="position: fixed; ` +
+          `display: flex; justify-content: center; align-items: center; ` +
+          `width: 100%; height: 100%; ` +
+          `background-color: ${ColorScheme.getPopupBackground()};"`,
+        E.iframeRef(
+          popupIframeRef,
+          `class="main-popup-iframe" src="about:blank" style="width: 80%; ` +
+            `height: 80%;"`
+        )
       )
     );
     googleIconSvgRef.val.innerHTML = `
@@ -187,6 +207,8 @@ export class PageShellComponent {
       signInButtonRef.val,
       signedInButtonsContainerRef.val,
       tabsContainerRef.val,
+      popupContainerRef.val,
+      popupIframeRef.val,
       nicknameButton,
       historyButton,
       signOutButton,
@@ -230,13 +252,21 @@ export class PageShellComponent {
       this.signedInButtonsContainer
     );
     this.hideableSignedInButtonsContainer.hide();
-    if (!this.sessionStorage.read()) {
+    if (!this.localSessionStorage.read()) {
       this.showSignInButton();
     } else {
       this.showSignedInButtonsContainer();
     }
     this.signInButton.addEventListener("click", () => this.signIn());
     this.signOutButton.on("click", () => this.signOut());
+
+    this.hideablePopupContainer = new HideableElementController(
+      this.popupContainer
+    );
+    this.hideablePopupContainer.hide();
+    this.popupContainer.addEventListener("keydown", (event: KeyboardEvent) =>
+      this.tryHidePopup(event)
+    );
     return this;
   }
 
@@ -271,35 +301,39 @@ export class PageShellComponent {
   }
 
   private signIn(): void {
-    this.window.open("/oauth_start");
-    this.checkSignInStatusCountdown =
-      PageShellComponent.CHECK_SIGN_IN_STATUS_MAX_COUNT;
-    if (this.checkSignInStatusIntervalId) {
+    this.hideablePopupContainer.show();
+    this.popupIframe.src = "/oauth_start";
+    this.window.addEventListener("message", this.handleMessage);
+  }
+
+  private handleMessage = async (event: MessageEvent): Promise<void> => {
+    if (event.origin !== this.origin) {
+      return;
+    }
+    this.window.removeEventListener("message", this.handleMessage);
+
+    let accessToken = event.data;
+    let response = await this.serviceClient.fetchUnauthed(
+      { googleAccessToken: accessToken },
+      SIGN_IN
+    );
+    this.localSessionStorage.save(response.signedSession);
+    this.showSignedInButtonsContainer();
+    this.hideablePopupContainer.hide();
+  };
+
+  private tryHidePopup(event: KeyboardEvent): void {
+    if (event.code !== "Escape") {
       return;
     }
 
-    this.checkSignInStatusIntervalId = this.window.setInterval(
-      () => this.checkSignInStatus(),
-      PageShellComponent.CHECK_SIGN_IN_STATUS_INTERVAL
-    );
-  }
-
-  private checkSignInStatus(): void {
-    if (!this.sessionStorage.read()) {
-      this.checkSignInStatusCountdown -= 1;
-      if (this.checkSignInStatusCountdown <= 0) {
-        this.window.clearInterval(this.checkSignInStatusIntervalId);
-        this.checkSignInStatusIntervalId = undefined;
-      }
-    } else {
-      this.window.clearInterval(this.checkSignInStatusIntervalId);
-      this.checkSignInStatusIntervalId = undefined;
-      this.showSignedInButtonsContainer();
-    }
+    this.popupIframe.src = "about:blank";
+    this.window.removeEventListener("message", this.handleMessage);
+    this.hideablePopupContainer.hide();
   }
 
   private signOut(): void {
-    this.sessionStorage.clear();
+    this.localSessionStorage.clear();
     this.showSignInButton();
   }
 }
