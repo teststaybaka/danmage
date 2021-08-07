@@ -1,5 +1,6 @@
 import EventEmitter = require("events");
 import { BrowserHistoryPusher } from "./browser_history_pusher";
+import { HideableElementController } from "@selfage/element/hideable_element_controller";
 
 interface Button {
   on(
@@ -35,15 +36,11 @@ export class TabsNavigationController<State extends EventEmitter> {
     button: Button,
     tabFactoryFn: () => HTMLElement
   ): this {
-    this.fieldToTabFactoryFns.set(
+    return this.addWithHideable(
       fieldName,
-      () => new HideableController(tabFactoryFn())
+      button,
+      () => new HideableWithBody(tabFactoryFn())
     );
-    this.state.on(fieldName, (newValue) =>
-      this.handleStateChange(fieldName, newValue)
-    );
-    button.on("click", () => this.handleClick(fieldName));
-    return this;
   }
 
   public addWithHTMLButton(
@@ -53,7 +50,7 @@ export class TabsNavigationController<State extends EventEmitter> {
   ): this {
     this.fieldToTabFactoryFns.set(
       fieldName,
-      () => new HideableController(tabFactoryFn())
+      () => new HideableWithBody(tabFactoryFn())
     );
     this.state.on(fieldName, (newValue) =>
       this.handleStateChange(fieldName, newValue)
@@ -101,21 +98,18 @@ export class TabsNavigationController<State extends EventEmitter> {
   }
 }
 
-export class HideableController {
-  private displayStyle: string;
+export class HideableWithBody {
+  private hideableElementController: HideableElementController;
 
-  public constructor(public body: HTMLElement) {}
-
-  public hide(): void {
-    this.displayStyle = this.body.style.display;
-    this.body.style.display = "none";
-    this.body.hidden = true;
+  public constructor(public body: HTMLElement) {
+    this.hideableElementController = new HideableElementController(body);
   }
 
   public show(): void {
-    if (this.displayStyle) {
-      this.body.style.display = this.displayStyle;
-    }
-    this.body.hidden = false;
+    this.hideableElementController.show();
+  }
+
+  public hide(): void {
+    this.hideableElementController.hide();
   }
 }
