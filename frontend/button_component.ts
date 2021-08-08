@@ -105,7 +105,10 @@ export class TextButtonComponent extends EventEmitter {
 
   public static create(...childNodes: Array<Node>): TextButtonComponent {
     let button = TextButtonComponent.createView(...childNodes);
-    return new TextButtonComponent(button, new ButtonController(button)).init();
+    return new TextButtonComponent(
+      button,
+      ButtonController.create(button)
+    ).init();
   }
 
   public static createView(...childNodes: Array<Node>): HTMLButtonElement {

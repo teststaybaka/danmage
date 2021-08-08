@@ -41,6 +41,7 @@
     "@selfage/tabs": "^1.0.0",
     "big-integer": "^1.6.48",
     "express": "^4.17.1",
+    "express-static-gzip": "^2.1.1",
     "get-stream": "^6.0.1",
     "node-fetch": "^2.6.1"
   },

@@ -87,7 +87,6 @@ export class TabsNavigationController<State extends EventEmitter> {
       } else {
         tab.show();
       }
-      this.browserHistoryPusher.push();
     } else {
       this.fieldToTabs.get(fieldName).hide();
     }
@@ -95,6 +94,7 @@ export class TabsNavigationController<State extends EventEmitter> {
 
   private handleClick(fieldName: string): void {
     (this.state as any)[fieldName] = true;
+    this.browserHistoryPusher.push();
   }
 }
 

@@ -1,4 +1,5 @@
 import express = require("express");
+import expressStaticGzip = require("express-static-gzip");
 import getStream = require("get-stream");
 import http = require("http");
 import https = require("https");
@@ -23,6 +24,7 @@ import {
 } from "@selfage/service_handler/register";
 import { SessionSigner } from "@selfage/service_handler/session_signer";
 import "../environment";
+import "@selfage/bundler_cli/web_app_base_dir";
 
 async function main(): Promise<void> {
   if (globalThis.ENVIRONMENT === "prod") {
@@ -94,7 +96,6 @@ function registerHandlers(
   googleOauthClientId: string
 ): express.Express {
   SessionSigner.SECRET_KEY = sessionKey;
-
   let app = express();
   registerCorsAllowedPreflightHandler(app);
   registerUnauthed(app, SignInHandler.create(googleOauthClientId));
@@ -108,7 +109,15 @@ function registerHandlers(
   registerUnauthed(app, ReportUserIssueHandler.create());
   registerUnauthed(app, new GetDanmakuHandler());
   registerAuthed(app, ChangePlayerSettingsHandler.create());
-
+  app.use(
+    "/",
+    expressStaticGzip(globalThis.WEB_APP_BASE_DIR, {
+      serveStatic: {
+        extensions: ["html"],
+        fallthrough: false,
+      },
+    })
+  );
   return app;
 }
 
