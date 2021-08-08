@@ -135,6 +135,11 @@ export class HistoryComponent {
   }
 
   public async show(): Promise<void> {
+    this.cursor = undefined;
+    while (this.entryListContainer.childElementCount > 1) {
+      this.entryListContainer.lastElementChild.remove();
+    }
+    this.showMoreButton.show();
     this.body.style.display = this.displayStyle;
     await this.showMoreButton.click();
   }

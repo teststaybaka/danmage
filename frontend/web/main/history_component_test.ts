@@ -20,7 +20,7 @@ PUPPETEER_TEST_RUNNER.run({
   name: "HistoryComponentTest",
   cases: [
     {
-      name: "Render",
+      name: "ShowAndShowAgainAndClickWithNoMore",
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
@@ -37,6 +37,9 @@ PUPPETEER_TEST_RUNNER.run({
               eqArray([eq(undefined)]),
               `enable button`
             );
+          }
+          public show() {
+            counter.increment("show");
           }
           public hide() {
             counter.increment("hide");
@@ -55,7 +58,7 @@ PUPPETEER_TEST_RUNNER.run({
                 assertThat(
                   (request as GetChatHistoryRequest).cursor,
                   eq(undefined),
-                  `first cursor`
+                  `1st cursor`
                 );
                 return {
                   chatEntries: [
@@ -67,13 +70,31 @@ PUPPETEER_TEST_RUNNER.run({
                       created: 100000,
                     },
                   ],
-                  cursor: "new cursor",
+                  cursor: "a cursor",
                 } as GetChatHistoryResponse as any;
               case 2:
                 assertThat(
                   (request as GetChatHistoryRequest).cursor,
+                  eq(undefined),
+                  `2nd cursor`
+                );
+                return {
+                  chatEntries: [
+                    {
+                      hostApp: HostApp.YouTube,
+                      hostContentId: "loaca",
+                      timestamp: 90000,
+                      content: "Ramen!",
+                      created: 120000,
+                    },
+                  ],
+                  cursor: "new cursor",
+                } as GetChatHistoryResponse as any;
+              case 3:
+                assertThat(
+                  (request as GetChatHistoryRequest).cursor,
                   eq(`new cursor`),
-                  `second cursor`
+                  `3rd cursor`
                 );
                 return {
                   chatEntries: [
@@ -91,6 +112,7 @@ PUPPETEER_TEST_RUNNER.run({
             }
           }
         })();
+        await globalThis.setViewport(1600, 400);
 
         // Execute
         let historyComponent = new HistoryComponent(
@@ -101,34 +123,75 @@ PUPPETEER_TEST_RUNNER.run({
         await historyComponent.show();
 
         // Verify
-        assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
+        assertThat(counter.get("show"), eq(1), "show called");
         assertThat(counter.get("click"), eq(1), "click called");
+        assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
+        {
+          let [rendered, golden] = await Promise.all([
+            globalThis.screenshot(__dirname + "/history_component_show.png", {
+              delay: 500,
+              fullPage: true,
+            }),
+            globalThis.readFile(
+              __dirname + "/golden/history_component_show.png"
+            ),
+          ]);
+          assertThat(rendered, eq(golden), "show screenshot");
+        }
+
+        // Execute
+        await historyComponent.show();
+
+        // Verify
+        assertThat(counter.get("show"), eq(2), "2nd show called");
+        assertThat(counter.get("click"), eq(2), "2nd click called");
+        assertThat(counter.get("fetchAuthed"), eq(2), `2nd fetchAuthed called`);
+        {
+          let [rendered, golden] = await Promise.all([
+            globalThis.screenshot(
+              __dirname + "/history_component_show_again.png",
+              {
+                delay: 500,
+                fullPage: true,
+              }
+            ),
+            globalThis.readFile(
+              __dirname + "/golden/history_component_show_again.png"
+            ),
+          ]);
+          assertThat(rendered, eq(golden), "show again screenshot");
+        }
 
         // Execute
         await button.click();
 
         // Verify
-        assertThat(
-          counter.get("fetchAuthed"),
-          eq(2),
-          `second fetchAuthed called`
-        );
+        assertThat(counter.get("fetchAuthed"), eq(3), `2nd fetchAuthed called`);
         assertThat(counter.get("hide"), eq(1), `hide button called`);
-
-        await globalThis.setViewport(1600, 400);
         {
           let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(__dirname + "/history_component.png", {
-              delay: 500,
-              fullPage: true,
-            }),
-            globalThis.readFile(__dirname + "/golden/history_component.png"),
+            globalThis.screenshot(
+              __dirname + "/history_component_no_more.png",
+              {
+                delay: 500,
+                fullPage: true,
+              }
+            ),
+            globalThis.readFile(
+              __dirname + "/golden/history_component_no_more.png"
+            ),
           ]);
           assertThat(rendered, eq(golden), "screenshot");
         }
 
         // Cleanup
-        await globalThis.deleteFile(__dirname + "/history_component.png");
+        await Promise.all([
+          globalThis.deleteFile(__dirname + "/history_component_show.png"),
+          globalThis.deleteFile(
+            __dirname + "/history_component_show_again.png"
+          ),
+          globalThis.deleteFile(__dirname + "/history_component_no_more.png"),
+        ]);
         historyComponent.body.remove();
       },
     },
