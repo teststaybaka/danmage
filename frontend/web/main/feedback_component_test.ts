@@ -8,8 +8,7 @@ import { FeedbackComponent } from "./feedback_component";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
 import { eqMessage } from "@selfage/message/test_matcher";
-import { ServiceClient } from "@selfage/service_client";
-import { UnauthedServiceDescriptor } from "@selfage/service_descriptor";
+import { ServiceClientMock } from "@selfage/service_client/mocks";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
@@ -27,17 +26,8 @@ PUPPETEER_TEST_RUNNER.run({
         let [body, textarea, input, button] = FeedbackComponent.createView(
           new FillButtonComponentMock(E.text("Submit"))
         );
-        let serviceClient = new (class extends ServiceClient {
-          public constructor() {
-            super(undefined, undefined);
-          }
-          public async fetchUnauthed<ServiceRequest, ServiceResponse>(
-            request: ServiceRequest,
-            serviceDescriptor: UnauthedServiceDescriptor<
-              ServiceRequest,
-              ServiceResponse
-            >
-          ): Promise<ServiceResponse> {
+        let serviceClient = new (class extends ServiceClientMock {
+          public fetchUnauthedAny(request: any, serviceDescriptor: any): any {
             counter.increment("fetchUnauthed");
             assertThat(
               serviceDescriptor,

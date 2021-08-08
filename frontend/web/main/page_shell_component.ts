@@ -22,7 +22,6 @@ export class PageShellComponent {
   private signInButtonsSwitcher = new TabSwitcher();
   private hideableSignInButton: HideableElementController;
   private hideableSignedInButtonsContainer: HideableElementController;
-  private hideablePopupContainer: HideableElementController;
 
   public constructor(
     public body: HTMLDivElement,
@@ -30,8 +29,6 @@ export class PageShellComponent {
     private signInButton: HTMLDivElement,
     private signedInButtonsContainer: HTMLDivElement,
     private tabsContainer: HTMLDivElement,
-    private popupContainer: HTMLDivElement,
-    private popupIframe: HTMLIFrameElement,
     private nicknameButton: TextButtonComponent,
     private historyButton: TextButtonComponent,
     private signOutButton: TextButtonComponent,
@@ -90,8 +87,6 @@ export class PageShellComponent {
     let googleIconSvgRef = new Ref<SVGSVGElement>();
     let signedInButtonsContainerRef = new Ref<HTMLDivElement>();
     let tabsContainerRef = new Ref<HTMLDivElement>();
-    let popupContainerRef = new Ref<HTMLDivElement>();
-    let popupIframeRef = new Ref<HTMLIFrameElement>();
     let body = E.div(
       `class="main-body" style="display: flex; flex-flow: column nowrap; ` +
         `min-height: 100vh; overflow-y: auto;"`,
@@ -165,18 +160,6 @@ export class PageShellComponent {
             `background-color: ${ColorScheme.getBlockSeparator()};"`
         ),
         feedbackButton.body
-      ),
-      E.divRef(
-        popupContainerRef,
-        `class="main-popup-container" style="position: fixed; ` +
-          `display: flex; justify-content: center; align-items: center; ` +
-          `width: 100%; height: 100%; ` +
-          `background-color: ${ColorScheme.getPopupBackground()};"`,
-        E.iframeRef(
-          popupIframeRef,
-          `class="main-popup-iframe" src="about:blank" style="width: 80%; ` +
-            `height: 80%;"`
-        )
       )
     );
     googleIconSvgRef.val.innerHTML = `
@@ -207,8 +190,6 @@ export class PageShellComponent {
       signInButtonRef.val,
       signedInButtonsContainerRef.val,
       tabsContainerRef.val,
-      popupContainerRef.val,
-      popupIframeRef.val,
       nicknameButton,
       historyButton,
       signOutButton,
@@ -260,13 +241,10 @@ export class PageShellComponent {
     this.signInButton.addEventListener("click", () => this.signIn());
     this.signOutButton.on("click", () => this.signOut());
 
-    this.hideablePopupContainer = new HideableElementController(
-      this.popupContainer
+    this.window.addEventListener("message", (event) =>
+      this.handleMessage(event)
     );
-    this.hideablePopupContainer.hide();
-    this.popupContainer.addEventListener("keydown", (event: KeyboardEvent) =>
-      this.tryHidePopup(event)
-    );
+    this.serviceClient.on("unauthenticated", () => this.showSignInButton());
     return this;
   }
 
@@ -301,16 +279,18 @@ export class PageShellComponent {
   }
 
   private signIn(): void {
-    this.hideablePopupContainer.show();
-    this.popupIframe.src = "/oauth_start";
-    this.window.addEventListener("message", this.handleMessage);
+    this.window.open("/oauth_start");
   }
 
-  private handleMessage = async (event: MessageEvent): Promise<void> => {
+  private signOut(): void {
+    this.localSessionStorage.clear();
+    this.showSignInButton();
+  }
+
+  private async handleMessage(event: MessageEvent): Promise<void> {
     if (event.origin !== this.origin) {
       return;
     }
-    this.window.removeEventListener("message", this.handleMessage);
 
     let accessToken = event.data;
     let response = await this.serviceClient.fetchUnauthed(
@@ -319,21 +299,5 @@ export class PageShellComponent {
     );
     this.localSessionStorage.save(response.signedSession);
     this.showSignedInButtonsContainer();
-    this.hideablePopupContainer.hide();
-  };
-
-  private tryHidePopup(event: KeyboardEvent): void {
-    if (event.code !== "Escape") {
-      return;
-    }
-
-    this.popupIframe.src = "about:blank";
-    this.window.removeEventListener("message", this.handleMessage);
-    this.hideablePopupContainer.hide();
-  }
-
-  private signOut(): void {
-    this.localSessionStorage.clear();
-    this.showSignInButton();
   }
 }

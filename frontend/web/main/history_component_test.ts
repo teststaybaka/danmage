@@ -9,11 +9,7 @@ import { TextButtonComponentMock } from "../../mocks";
 import { HistoryComponent } from "./history_component";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
-import { ServiceClient } from "@selfage/service_client";
-import {
-  AuthedServiceDescriptor,
-  WithSession,
-} from "@selfage/service_descriptor";
+import { ServiceClientMock } from "@selfage/service_client/mocks";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
@@ -46,20 +42,8 @@ PUPPETEER_TEST_RUNNER.run({
             counter.increment("hide");
           }
         })();
-        let serviceClient = new (class extends ServiceClient {
-          constructor() {
-            super(undefined, undefined);
-          }
-          public async fetchAuthed<
-            ServiceRequest extends WithSession,
-            ServiceResponse
-          >(
-            request: ServiceRequest,
-            serviceDescriptor: AuthedServiceDescriptor<
-              ServiceRequest,
-              ServiceResponse
-            >
-          ): Promise<ServiceResponse> {
+        let serviceClient = new (class extends ServiceClientMock {
+          public fetchAuthedAny(request: any, serviceDescriptor: any): any {
             counter.increment("fetchAuthed");
             assertThat(
               serviceDescriptor,

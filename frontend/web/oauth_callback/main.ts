@@ -15,8 +15,9 @@ function main(): void {
   let match = window.location.hash.match(extractRegex);
   if (match) {
     let accessToken = match[1];
-    window.parent.postMessage(accessToken, origin);
+    window.opener.postMessage(accessToken, origin);
   }
+  window.close();
 }
 
 main();

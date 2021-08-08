@@ -35,7 +35,7 @@
     "@selfage/http_error": "^1.0.4",
     "@selfage/message": "^2.0.1",
     "@selfage/ref": "^1.0.2",
-    "@selfage/service_client": "^2.0.0",
+    "@selfage/service_client": "^3.0.1",
     "@selfage/service_descriptor": "^2.0.0",
     "@selfage/service_handler": "^2.0.0",
     "@selfage/tabs": "^1.0.0",
@@ -48,5 +48,9 @@
   "datastoreIndex": "./backend/datastore/index",
   "assetExts": [
     ".jpg"
-  ]
+  ],
+  "scripts": {
+    "tests": "selfage run backend/test_suite; bundage prun frontend/test_suite",
+    "local": "bundage bws backend/main backend/main_bin -ec frontend/web/entries.json -b frontend/web/ -e environment_local; node backend/main_bin"
+  }
 }

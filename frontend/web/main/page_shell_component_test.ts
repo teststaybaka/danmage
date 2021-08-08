@@ -1,3 +1,4 @@
+import { SIGN_IN } from "../../../interface/service";
 import { normalizeBody } from "../../body_normalizer";
 import { TextButtonComponentMock } from "../../mocks";
 import { HomeView } from "./home_view";
@@ -11,8 +12,8 @@ import { PageShellComponent } from "./page_shell_component";
 import { State } from "./state";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
-import { ServiceClient } from "@selfage/service_client";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
+import { ServiceClientMock } from "@selfage/service_client/mocks";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 import "@selfage/puppeteer_executor_api";
@@ -41,9 +42,6 @@ PUPPETEER_TEST_RUNNER.run({
         let historyComponent = new HistoryComponentMock();
         let feedbackComponent = new FeedbackComponentMock();
         let browserHistoryPusher = new (class extends BrowserHistoryPusherMock {
-          public constructor() {
-            super();
-          }
           public push() {
             counter.increment("push");
           }
@@ -51,12 +49,11 @@ PUPPETEER_TEST_RUNNER.run({
         let sessionStorage = new LocalSessionStorage();
         let state = new State();
         state.showHome = true;
-        let serviceClient = new (class extends ServiceClient {
-          public constructor() {
-            super(undefined, undefined);
-          }
-        })();
-        let windowMock = { location: {} } as any;
+        let serviceClient = new ServiceClientMock();
+        let windowMock = new (class {
+          public location = {};
+          public addEventListener() {}
+        })() as any;
         await globalThis.setViewport(1280, 600);
 
         // Execute
@@ -100,39 +97,39 @@ PUPPETEER_TEST_RUNNER.run({
         }
 
         // Execute
-        let keepDisables = await Promise.all(
+        let termsKeepDisables = await Promise.all(
           termsButton.listeners("click").map((callback) => callback())
         );
 
         // Verify
         assertThat(
-          keepDisables,
+          termsKeepDisables,
           eqArray([eq(undefined)]),
           "terms button enabled"
         );
         assertThat(windowMock.location.href, eq("/terms"), "goto /terms");
 
         // Execute
-        let keepDisables2 = await Promise.all(
+        let privacyKeepDisables = await Promise.all(
           privacyButton.listeners("click").map((callback) => callback())
         );
 
         // Verify
         assertThat(
-          keepDisables2,
+          privacyKeepDisables,
           eqArray([eq(undefined)]),
           "privacy button enabled"
         );
         assertThat(windowMock.location.href, eq("/privacy"), "goto /privacy");
 
         // Execute
-        let keepDisables3 = await Promise.all(
+        let feedbackKeepDisables = await Promise.all(
           feedbackButton.listeners("click").map((callback) => callback())
         );
 
         // Verify
         assertThat(
-          keepDisables3,
+          feedbackKeepDisables,
           eqArray([eq(undefined)]),
           "feedback button enabled"
         );
@@ -165,7 +162,7 @@ PUPPETEER_TEST_RUNNER.run({
       },
     },
     {
-      name: "WithSignedInRenderHomeAndNicknameAndHistoryAndSignout",
+      name: "WithSignedInRenderHomeAndNicknameAndHistory",
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
@@ -183,9 +180,6 @@ PUPPETEER_TEST_RUNNER.run({
         let historyComponent = new HistoryComponentMock();
         let feedbackComponent = new FeedbackComponentMock();
         let browserHistoryPusher = new (class extends BrowserHistoryPusherMock {
-          public constructor() {
-            super();
-          }
           public push() {
             counter.increment("push");
           }
@@ -194,12 +188,11 @@ PUPPETEER_TEST_RUNNER.run({
         sessionStorage.save("some signed session");
         let state = new State();
         state.showHome = true;
-        let serviceClient = new (class extends ServiceClient {
-          public constructor() {
-            super(undefined, undefined);
-          }
-        })();
-        let windowMock = {} as any;
+        let serviceClient = new ServiceClientMock();
+        let windowMock = new (class {
+          public location = {};
+          public addEventListener() {}
+        })() as any;
         await globalThis.setViewport(1280, 600);
 
         // Execute
@@ -243,13 +236,13 @@ PUPPETEER_TEST_RUNNER.run({
         }
 
         // Execute
-        let keepDisables = await Promise.all(
+        let nicknameKeepDisables = await Promise.all(
           nicknameButton.listeners("click").map((callback) => callback())
         );
 
         // Verify
         assertThat(
-          keepDisables,
+          nicknameKeepDisables,
           eqArray([eq(undefined)]),
           "nickname button enabled"
         );
@@ -272,13 +265,13 @@ PUPPETEER_TEST_RUNNER.run({
         }
 
         // Execute
-        let keepDisables2 = await Promise.all(
+        let historyKeepDisables = await Promise.all(
           historyButton.listeners("click").map((callback) => callback())
         );
 
         // Verify
         assertThat(
-          keepDisables2,
+          historyKeepDisables,
           eqArray([eq(undefined)]),
           "history button enabled"
         );
@@ -300,33 +293,6 @@ PUPPETEER_TEST_RUNNER.run({
           assertThat(rendered, eq(golden), "history screenshot");
         }
 
-        // Execute
-        let keepDisables3 = await Promise.all(
-          signOutButton.listeners("click").map((callback) => callback())
-        );
-
-        // Verify
-        assertThat(
-          keepDisables3,
-          eqArray([eq(undefined)]),
-          "signOut button enabled"
-        );
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/page_shell_component_history_signed_out.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/page_shell_component_history_signed_out.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "history signed-out screenshot");
-        }
-
         // Cleanup
         await Promise.all([
           globalThis.deleteFile(
@@ -338,8 +304,179 @@ PUPPETEER_TEST_RUNNER.run({
           globalThis.deleteFile(
             __dirname + "/page_shell_component_history.png"
           ),
+        ]);
+        pageShellComponent.body.remove();
+      },
+    },
+    {
+      name: "SignInFailedAndSignInSuccessAndSignOutAndHandleUnauthError",
+      execute: async () => {
+        // Prepare
+        let counter = new Counter<string>();
+        let nicknameButton = new TextButtonComponentMock(E.text("Nickname"));
+        let historyButton = new TextButtonComponentMock(E.text("History"));
+        let signOutButton = new TextButtonComponentMock(E.text("Sign out"));
+        let termsButton = new TextButtonComponentMock(
+          E.text("Terms and Conditions")
+        );
+        let privacyButton = new TextButtonComponentMock(
+          E.text("Privacy policy")
+        );
+        let feedbackButton = new TextButtonComponentMock(E.text("Feedback"));
+        let nicknameComponent = new NicknameComponentMock();
+        let historyComponent = new HistoryComponentMock();
+        let feedbackComponent = new FeedbackComponentMock();
+        let browserHistoryPusher = new BrowserHistoryPusherMock();
+        let sessionStorage = new LocalSessionStorage();
+        let state = new State();
+        state.showFeedback = true;
+        let serviceClient = new (class extends ServiceClientMock {
+          public fetchUnauthedAny(request: any, serviceDescriptor: any): any {
+            counter.increment("fetchUnauthed");
+            assertThat(serviceDescriptor, eq(SIGN_IN), "sign in");
+            assertThat(
+              request.googleAccessToken,
+              eq("some token"),
+              "access token"
+            );
+            return { signedSession: "some session" };
+          }
+        })();
+        let windowMock = new (class {
+          public callback: Function;
+          public location = {};
+          public open(url: string) {
+            counter.increment("open");
+            assertThat(url, eq("/oauth_start"), "open url");
+          }
+          public addEventListener(event: string, callback: Function) {
+            this.callback = callback;
+          }
+        })() as any;
+        await globalThis.setViewport(1280, 600);
+
+        // Execute
+        let views = PageShellComponent.createView(
+          nicknameButton,
+          historyButton,
+          signOutButton,
+          termsButton,
+          privacyButton,
+          feedbackButton
+        );
+        let signInButton = views[2];
+        let pageShellComponent = new PageShellComponent(
+          ...views,
+          () => HomeView.create(),
+          () => nicknameComponent,
+          () => historyComponent,
+          () => feedbackComponent,
+          state,
+          browserHistoryPusher,
+          "http://some.origin.com",
+          sessionStorage,
+          serviceClient,
+          windowMock
+        ).init();
+        document.body.appendChild(pageShellComponent.body);
+        signInButton.click();
+
+        // Verify
+        assertThat(counter.get("open"), eq(1), "open called");
+
+        // Execute
+        await windowMock.callback({
+          data: "a token",
+          origin: "http://other.com",
+        });
+
+        // Verify
+        assertThat(counter.get("fetchUnauthed"), eq(0), "not sign in");
+
+        // Execute
+        await windowMock.callback({
+          data: "some token",
+          origin: "http://some.origin.com",
+        });
+
+        // Verify
+        assertThat(counter.get("fetchUnauthed"), eq(1), "sign in called");
+        assertThat(sessionStorage.read(), eq("some session"), "session stored");
+        {
+          let [rendered, golden] = await Promise.all([
+            globalThis.screenshot(
+              __dirname + "/page_shell_component_signed_in.png",
+              {
+                delay: 500,
+                fullPage: true,
+              }
+            ),
+            globalThis.readFile(
+              __dirname + "/golden/page_shell_component_signed_in.png"
+            ),
+          ]);
+          assertThat(rendered, eq(golden), "successfuly signed in screenshot");
+        }
+
+        // Execute
+        await Promise.all(
+          signOutButton.listeners("click").map((callback) => callback())
+        );
+
+        // Verify
+        assertThat(sessionStorage.read(), eq(null), "session cleared");
+        {
+          let [rendered, golden] = await Promise.all([
+            globalThis.screenshot(
+              __dirname + "/page_shell_component_signed_out.png",
+              {
+                delay: 500,
+                fullPage: true,
+              }
+            ),
+            globalThis.readFile(
+              __dirname + "/golden/page_shell_component_signed_out.png"
+            ),
+          ]);
+          assertThat(rendered, eq(golden), "successfuly signed out screenshot");
+        }
+
+        // Prepare
+        await windowMock.callback({
+          data: "some token",
+          origin: "http://some.origin.com",
+        });
+
+        // Execute
+        serviceClient.emit("unauthenticated");
+
+        // Verify
+        {
+          let [rendered, golden] = await Promise.all([
+            globalThis.screenshot(
+              __dirname + "/page_shell_component_handle_unauth.png",
+              {
+                delay: 500,
+                fullPage: true,
+              }
+            ),
+            globalThis.readFile(
+              __dirname + "/golden/page_shell_component_handle_unauth.png"
+            ),
+          ]);
+          assertThat(rendered, eq(golden), "handle unauth error screenshot");
+        }
+
+        // Cleanup
+        await Promise.all([
           globalThis.deleteFile(
-            __dirname + "/page_shell_component_history_signed_out.png"
+            __dirname + "/page_shell_component_signed_in.png"
+          ),
+          globalThis.deleteFile(
+            __dirname + "/page_shell_component_signed_out.png"
+          ),
+          globalThis.deleteFile(
+            __dirname + "/page_shell_component_handle_unauth.png"
           ),
         ]);
         pageShellComponent.body.remove();
