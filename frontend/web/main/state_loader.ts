@@ -2,17 +2,18 @@ import { STATE, State } from "./state";
 import { parseMessage } from "@selfage/message/parser";
 
 export class StateLoader {
-  public state: State;
+  private defaultState = new State();
+  public state = new State();
 
-  public constructor(private queryParamKey: string, private window: Window) {}
+  public constructor(private queryParamKey: string, private window: Window) {
+    this.defaultState.showHome = true;
+  }
 
   public static create(queryParamKey: string): StateLoader {
     return new StateLoader(queryParamKey, window).init();
   }
 
   public init(): this {
-    this.state = new State();
-    this.state.showHome = true;
     this.load();
     this.window.onpopstate = () => this.load();
     return this;
@@ -22,8 +23,18 @@ export class StateLoader {
     let stateStr = new URLSearchParams(this.window.location.search).get(
       this.queryParamKey
     );
+    parseMessage(this.parseJsonState(stateStr), STATE, this.state);
+  }
+
+  private parseJsonState(stateStr: string): any {
     if (stateStr) {
-      parseMessage(JSON.parse(stateStr), STATE, this.state);
+      try {
+        return JSON.parse(stateStr);
+      } catch (e) {
+        return this.defaultState;
+      }
+    } else {
+      return this.defaultState;
     }
   }
 }
