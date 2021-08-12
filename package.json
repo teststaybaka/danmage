@@ -50,7 +50,6 @@
     ".jpg"
   ],
   "scripts": {
-    "tests": "selfage run backend/test_suite; bundage prun frontend/test_suite",
     "local": "bundage bws backend/main backend/main_bin -ec frontend/web/entries.json -b frontend/web/ -e environment_local; node backend/main_bin"
   }
 }
