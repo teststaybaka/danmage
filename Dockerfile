@@ -3,7 +3,7 @@ FROM node:12.22.1
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-COPY backend/bin/ .
+COPY bin/ .
 RUN npm install --production
 
 EXPOSE 80 443
