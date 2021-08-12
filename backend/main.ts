@@ -24,7 +24,7 @@ import {
 } from "@selfage/service_handler/register";
 import { SessionSigner } from "@selfage/service_handler/session_signer";
 import "../environment";
-import "@selfage/bundler_cli/web_app_base_dir";
+import "@selfage/web_app_base_dir";
 
 async function main(): Promise<void> {
   if (globalThis.ENVIRONMENT === "prod") {
