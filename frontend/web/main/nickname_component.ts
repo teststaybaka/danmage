@@ -74,6 +74,7 @@ export class NicknameComponent {
 
   public async show(): Promise<void> {
     this.body.style.display = this.displayStyle;
+    console.log("nickname show");
     let response = await this.serviceClient.fetchAuthed({}, GET_USER);
     if (response.user.nickname === undefined) {
       return;

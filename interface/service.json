@@ -24,7 +24,10 @@
 }, {
   "message": {
     "name": "GetUserRequest",
-    "fields": []
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }]
   }
 }, {
   "message": {

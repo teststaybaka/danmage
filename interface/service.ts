@@ -47,6 +47,7 @@ export let SIGN_IN: UnauthedServiceDescriptor<SignInRequest, SignInResponse> = {
 };
 
 export interface GetUserRequest {
+  signedSession?: string,
 }
 
 export let GET_USER_REQUEST: MessageDescriptor<GetUserRequest> = {
@@ -55,6 +56,10 @@ export let GET_USER_REQUEST: MessageDescriptor<GetUserRequest> = {
     return new Object();
   },
   fields: [
+    {
+      name: 'signedSession',
+      primitiveType: PrimitiveType.STRING,
+    },
   ]
 };
 
@@ -75,7 +80,7 @@ export let GET_USER_RESPONSE: MessageDescriptor<GetUserResponse> = {
   ]
 };
 
-export let GET_USER: UnauthedServiceDescriptor<GetUserRequest, GetUserResponse> = {
+export let GET_USER: AuthedServiceDescriptor<GetUserRequest, GetUserResponse> = {
   name: "GetUser",
   path: "/GetUser",
   requestDescriptor: GET_USER_REQUEST,
