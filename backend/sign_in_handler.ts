@@ -58,7 +58,6 @@ export class SignInHandler
     }
 
     let data = await response.json();
-    console.log("aud:" + data.aud + ";clientId" + this.googleOauthClientId);
     if (data.aud !== this.googleOauthClientId) {
       throw new Error("Unexpected aud from Google access token.");
     }
