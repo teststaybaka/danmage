@@ -35,9 +35,9 @@ export class GetChatHistoryHandler extends UserAuthedServiceHandler<
     if (request.cursor) {
       queryBuilder.start(request.cursor);
     }
-    let { values, cursor } = await this.datastoreClient.query(
-      queryBuilder.build()
-    );
+    let query = queryBuilder.build();
+    console.log(JSON.stringify(query));
+    let { values, cursor } = await this.datastoreClient.query(query);
     return {
       chatEntries: values,
       cursor: cursor,
