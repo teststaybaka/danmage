@@ -1,0 +1,64 @@
+[{
+  "message": {
+    "name": "BackgroundRequest",
+    "fields": [{
+      "name": "signInRequest",
+      "type": "SignInRequest"
+    }, {
+      "name": "signOutRequest",
+      "type": "SignOutRequest"
+    }, {
+      "name": "getSessionRequest",
+      "type": "GetSessionRequest"
+    }, {
+      "name": "getUrlRequest",
+      "type": "GetUrlRequest"
+    }]
+  }
+}, {
+  "message": {
+    "name": "SignInRequest",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "SignInResponse",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "SignOutRequest",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "SignOutResponse",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "GetSessionRequest",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "GetSessionResponse",
+    "fields": [{
+      "name": "signedSession",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "GetUrlRequest",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "GetUrlResponse",
+    "fields": [{
+      "name": "url",
+      "type": "string"
+    }]
+  }
+}]
