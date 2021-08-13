@@ -31,18 +31,6 @@ export class TabsNavigationController<State extends EventEmitter> {
     return this;
   }
 
-  public addWithButton(
-    fieldName: string,
-    button: Button,
-    tabFactoryFn: () => HTMLElement
-  ): this {
-    return this.addWithHideable(
-      fieldName,
-      button,
-      () => new HideableWithBody(tabFactoryFn())
-    );
-  }
-
   public addWithHTMLButton(
     fieldName: string,
     button: HTMLElement,
@@ -84,9 +72,8 @@ export class TabsNavigationController<State extends EventEmitter> {
         tab = tabFactoryFn();
         this.fieldToTabs.set(fieldName, tab);
         this.tabsContainer.appendChild(tab.body);
-      } else {
-        tab.show();
       }
+      tab.show();
     } else {
       this.fieldToTabs.get(fieldName).hide();
     }
