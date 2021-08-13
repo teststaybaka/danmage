@@ -15,7 +15,8 @@ import {
 } from "node-fetch";
 
 export class SignInHandler
-  implements UnauthedServiceHandler<SignInRequest, SignInResponse> {
+  implements UnauthedServiceHandler<SignInRequest, SignInResponse>
+{
   public serviceDescriptor = SIGN_IN;
 
   public constructor(
@@ -57,6 +58,7 @@ export class SignInHandler
     }
 
     let data = await response.json();
+    console.log("aud:" + data.aud + ";clientId" + this.googleOauthClientId);
     if (data.aud !== this.googleOauthClientId) {
       throw new Error("Unexpected aud from Google access token.");
     }
