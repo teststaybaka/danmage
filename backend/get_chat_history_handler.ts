@@ -30,8 +30,10 @@ export class GetChatHistoryHandler extends UserAuthedServiceHandler<
   ): Promise<GetChatHistoryResponse> {
     let queryBuilder = new UserHistoryQueryBuilder()
       .filterByUserId("=", session.userId)
-      .filterByHostApp("=", request.hostApp)
       .limit(20);
+    if (request.hostApp) {
+      queryBuilder.filterByHostApp("=", request.hostApp);
+    }
     if (request.cursor) {
       queryBuilder.start(request.cursor);
     }
