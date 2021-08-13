@@ -288,6 +288,7 @@ export class PageShellComponent {
   }
 
   private async handleMessage(event: MessageEvent): Promise<void> {
+    console.log(event);
     if (event.origin !== this.origin) {
       return;
     }
