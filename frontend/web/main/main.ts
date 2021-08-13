@@ -8,6 +8,7 @@ import "../../../environment";
 
 function main(): void {
   normalizeBody();
+  document.title = "DanMage";
 
   let origin = "";
   if (globalThis.ENVIRONMENT === "prod") {
