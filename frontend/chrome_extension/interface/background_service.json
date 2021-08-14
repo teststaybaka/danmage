@@ -1,29 +1,15 @@
 [{
   "message": {
-    "name": "BackgroundRequest",
-    "fields": [{
-      "name": "signInRequest",
-      "type": "SignInRequest"
-    }, {
-      "name": "signOutRequest",
-      "type": "SignOutRequest"
-    }, {
-      "name": "getSessionRequest",
-      "type": "GetSessionRequest"
-    }, {
-      "name": "getUrlRequest",
-      "type": "GetUrlRequest"
-    }]
-  }
-}, {
-  "message": {
     "name": "SignInRequest",
     "fields": []
   }
 }, {
   "message": {
     "name": "SignInResponse",
-    "fields": []
+    "fields": [{
+      "name": "error",
+      "type": "string"
+    }]
   }
 }, {
   "message": {
@@ -59,6 +45,23 @@
     "fields": [{
       "name": "url",
       "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "BackgroundRequest",
+    "fields": [{
+      "name": "signInRequest",
+      "type": "SignInRequest"
+    }, {
+      "name": "signOutRequest",
+      "type": "SignOutRequest"
+    }, {
+      "name": "getSessionRequest",
+      "type": "GetSessionRequest"
+    }, {
+      "name": "getUrlRequest",
+      "type": "GetUrlRequest"
     }]
   }
 }]
