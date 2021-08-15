@@ -25,9 +25,14 @@ PUPPETEER_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
-        let [body, input, setButton] = NicknameComponent.createView(
-          new FillButtonComponentMock(E.text("Set"))
-        );
+        let setButton = new (class extends FillButtonComponentMock {
+          public constructor() {
+            super(E.text("Set"));
+          }
+          public hide() {
+            counter.increment("hide");
+          }
+        })();
         let inputController = new (class extends TextInputController {
           public constructor() {
             super(undefined);
@@ -65,10 +70,10 @@ PUPPETEER_TEST_RUNNER.run({
         })();
 
         // Execute
+        let views = NicknameComponent.createView(setButton);
+        let input = views[1];
         let nicknameComponent = new NicknameComponent(
-          body,
-          input,
-          setButton,
+          ...views,
           inputController,
           serviceClient
         ).init();
@@ -108,7 +113,8 @@ PUPPETEER_TEST_RUNNER.run({
           eq(2),
           `second fetchAuthed called`
         );
-        assertThat(keepDisableds, eqArray([eq(true)]), "enable button");
+        assertThat(keepDisableds, eqArray([eq(undefined)]), "enable button");
+        assertThat(counter.get("hide"), eq(1), "hide button");
 
         // Cleanup
         await globalThis.deleteFile(__dirname + "/nickname_component.png");
@@ -127,8 +133,8 @@ PUPPETEER_TEST_RUNNER.run({
           }
         })();
         let setButton = new (class extends FillButtonComponentMock {
-          public disable() {
-            counter.increment("disable");
+          public hide() {
+            counter.increment("hide");
           }
         })();
         let serviceClient = new (class extends ServiceClientMock {
@@ -162,7 +168,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Verify
         assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
-        assertThat(counter.get("disable"), eq(1), `disable called`);
+        assertThat(counter.get("hide"), eq(1), `hide called`);
         assertThat(input.value, eq("some name"), `input value`);
       },
     },

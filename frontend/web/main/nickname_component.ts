@@ -63,13 +63,13 @@ export class NicknameComponent {
     return this;
   }
 
-  public async updateNickname(): Promise<boolean> {
+  public async updateNickname(): Promise<void> {
     await this.serviceClient.fetchAuthed(
       { newName: this.input.value },
       UPDATE_NICKNAME
     );
     this.input.readOnly = true;
-    return true;
+    this.setButton.hide();
   }
 
   public async show(): Promise<void> {
@@ -81,7 +81,7 @@ export class NicknameComponent {
 
     this.input.value = response.user.nickname;
     this.input.readOnly = true;
-    this.setButton.disable();
+    this.setButton.hide();
   }
 
   public hide(): void {
