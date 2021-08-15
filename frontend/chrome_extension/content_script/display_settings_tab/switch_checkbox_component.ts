@@ -1,6 +1,6 @@
 import EventEmitter = require("events");
 import { ColorScheme } from "../../../color_scheme";
-import { ENTRY_MAGIN_TOP, INPUT_WIDTH, LABEL_STYLE } from "./common";
+import { ENTRY_MARGIN_TOP, INPUT_WIDTH, LABEL_STYLE } from "./common";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 
@@ -14,6 +14,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
 
   public constructor(
     public body: HTMLDivElement,
+    private switchBarWrapper: HTMLDivElement,
     private switchBarLeft: HTMLDivElement,
     private switchBarRight: HTMLDivElement,
     private switchCircle: HTMLDivElement,
@@ -36,23 +37,25 @@ export class SwitchCheckboxComponent extends EventEmitter {
   }
 
   public static createView(label: string) {
-    let switchBarLeft: Ref<HTMLDivElement> = {};
-    let switchBarRight: Ref<HTMLDivElement> = {};
-    let switchCircle: Ref<HTMLDivElement> = {};
+    let switchBarWrapperRef = new Ref<HTMLDivElement>();
+    let switchBarLeftRef = new Ref<HTMLDivElement>();
+    let switchBarRightRef = new Ref<HTMLDivElement>();
+    let switchCircleRef = new Ref<HTMLDivElement>();
     let body = E.div(
       `class="switch-checkbox-container" style="display: flex; ` +
         `flex-flow: row nowrap; justify-content: space-between; ` +
-        `align-items: center; ${ENTRY_MAGIN_TOP} cursor: pointer;"`,
+        `align-items: center; ${ENTRY_MARGIN_TOP}"`,
       E.div(
         `class="switch-checkbox-label", style="${LABEL_STYLE}" ` +
           `title="${label}"`,
         E.text(label)
       ),
-      E.div(
+      E.divRef(
+        switchBarWrapperRef,
         `class="switch-checkbox-wrapper" style="position: relative; ` +
-          `${INPUT_WIDTH}"`,
+          `${INPUT_WIDTH} cursor: pointer;"`,
         E.divRef(
-          switchBarLeft,
+          switchBarLeftRef,
           `class="switch-checkbox-bar-left" style="display: inline-block; ` +
             `height: 1.8rem; ` +
             `border-radius: ${SwitchCheckboxComponent.RADIUS} 0 0 ${SwitchCheckboxComponent.RADIUS};` +
@@ -60,7 +63,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
             `transition: width ${SwitchCheckboxComponent.TRANSITION_DURATION};`
         ),
         E.divRef(
-          switchBarRight,
+          switchBarRightRef,
           `class="switch-checkbox-bar-right" style="display: inline-block; ` +
             `height: 1.8rem; ` +
             `border-radius: 0 ${SwitchCheckboxComponent.RADIUS} ${SwitchCheckboxComponent.RADIUS} 0; ` +
@@ -68,7 +71,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
             `transition: width ${SwitchCheckboxComponent.TRANSITION_DURATION};`
         ),
         E.divRef(
-          switchCircle,
+          switchCircleRef,
           `class="switch-checkbox-circle" style="position: absolute; ` +
             `height: 1.8rem; width: 1.8rem; ` +
             `left: -${SwitchCheckboxComponent.RADIUS}; ` +
@@ -81,15 +84,16 @@ export class SwitchCheckboxComponent extends EventEmitter {
     );
     return [
       body,
-      switchBarLeft.val,
-      switchBarRight.val,
-      switchCircle.val,
+      switchBarWrapperRef.val,
+      switchBarLeftRef.val,
+      switchBarRightRef.val,
+      switchCircleRef.val,
     ] as const;
   }
 
   public init(): this {
     this.setValue(this.value);
-    this.body.addEventListener("click", () => this.toggleSwitch());
+    this.switchBarWrapper.addEventListener("click", () => this.toggleSwitch());
     return this;
   }
 
