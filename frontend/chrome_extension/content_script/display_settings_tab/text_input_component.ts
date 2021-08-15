@@ -56,6 +56,7 @@ export class TextInputComponent extends EventEmitter {
 
   public init(): this {
     this.textInputController.on("enter", () => this.changeValue());
+    this.input.addEventListener("blur", () => this.changeValue());
     return this;
   }
 
