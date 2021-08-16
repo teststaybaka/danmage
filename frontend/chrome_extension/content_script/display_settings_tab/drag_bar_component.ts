@@ -73,14 +73,14 @@ export class DragBarComponent extends EventEmitter {
           `class="drag-bar-bar-wrapper" style="position: relative; ` +
             `flex-grow: 1; cursor: pointer; user-select: none;"`,
           E.div(
-            `class="drag-bar-bar" style="height: .4rem; margin: .9rem 0;` +
+            `class="drag-bar-bar" style="height: .4rem; margin: 1rem 0;` +
               `background-color: ${ColorScheme.getInputBorder()};` +
               `border-radius: .2rem;"`
           ),
           E.divRef(
             cursorRef,
             `class="drag-bar-cursor" style="position: absolute; width: 1rem;` +
-              `height: 1rem; border-radius: 50%; left: -.5rem; top: .6rem;` +
+              `height: 1rem; border-radius: 50%; left: -.5rem; top: .7rem;` +
               `background-color: ${ColorScheme.getBackground()};` +
               `border: .1rem solid ${ColorScheme.getInputBorder()};` +
               `pointer-events: none;"`
