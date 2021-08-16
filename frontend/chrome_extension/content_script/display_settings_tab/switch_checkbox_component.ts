@@ -60,7 +60,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
             `height: 1.8rem; ` +
             `border-radius: ${SwitchCheckboxComponent.RADIUS} 0 0 ${SwitchCheckboxComponent.RADIUS};` +
             `background-color: ${ColorScheme.getSwitchOffBackground()}; ` +
-            `transition: width ${SwitchCheckboxComponent.TRANSITION_DURATION};`
+            `transition: width ${SwitchCheckboxComponent.TRANSITION_DURATION};"`
         ),
         E.divRef(
           switchBarRightRef,
@@ -68,7 +68,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
             `height: 1.8rem; ` +
             `border-radius: 0 ${SwitchCheckboxComponent.RADIUS} ${SwitchCheckboxComponent.RADIUS} 0; ` +
             `background-color: ${ColorScheme.getSwitchOnBackground()}; ` +
-            `transition: width ${SwitchCheckboxComponent.TRANSITION_DURATION};`
+            `transition: width ${SwitchCheckboxComponent.TRANSITION_DURATION};"`
         ),
         E.divRef(
           switchCircleRef,

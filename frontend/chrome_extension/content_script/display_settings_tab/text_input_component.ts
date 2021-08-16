@@ -1,6 +1,6 @@
 import EventEmitter = require("events");
 import { ColorScheme } from "../../../color_scheme";
-import { ENTRY_MARGIN_TOP, INPUT_WIDTH, LABEL_STYLE } from "./common";
+import { ENTRY_MARGIN_TOP, LABEL_STYLE, TEXT_INPUT_STYLE } from "./common";
 import { E } from "@selfage/element/factory";
 import { TextInputController } from "@selfage/element/text_input_controller";
 import { Ref } from "@selfage/ref";
@@ -44,11 +44,7 @@ export class TextInputComponent extends EventEmitter {
       ),
       E.inputRef(
         inputRef,
-        `class="text-input" style="padding: 0; margin: 0; outline: none; ` +
-          `border: 0; background-color: initial; width: ${INPUT_WIDTH}; ` +
-          `border-bottom: .1rem solid ${ColorScheme.getInputBorder()}; ` +
-          `font-size: 1.4rem; font-family: initial !important; ` +
-          `color: ${ColorScheme.getContent()}; value=${value}"`
+        `class="text-input" style="${TEXT_INPUT_STYLE}" value="${value}"`
       )
     );
     return [body, inputRef.val] as const;
