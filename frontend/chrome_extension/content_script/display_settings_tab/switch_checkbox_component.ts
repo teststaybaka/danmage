@@ -1,6 +1,10 @@
 import EventEmitter = require("events");
 import { ColorScheme } from "../../../color_scheme";
-import { ENTRY_MARGIN_TOP, INPUT_WIDTH, LABEL_STYLE } from "./common";
+import {
+  ENTRY_MARGIN_TOP_STYLE,
+  INPUT_WIDTH_STYLE,
+  LABEL_STYLE,
+} from "./common";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 
@@ -44,7 +48,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
     let body = E.div(
       `class="switch-checkbox-container" style="display: flex; ` +
         `flex-flow: row nowrap; justify-content: space-between; ` +
-        `align-items: center; ${ENTRY_MARGIN_TOP}"`,
+        `align-items: center; ${ENTRY_MARGIN_TOP_STYLE}"`,
       E.div(
         `class="switch-checkbox-label", style="${LABEL_STYLE}" ` +
           `title="${label}"`,
@@ -53,7 +57,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
       E.divRef(
         switchBarWrapperRef,
         `class="switch-checkbox-wrapper" style="position: relative; ` +
-          `${INPUT_WIDTH} cursor: pointer;"`,
+          `${INPUT_WIDTH_STYLE} cursor: pointer;"`,
         E.divRef(
           switchBarLeftRef,
           `class="switch-checkbox-bar-left" style="display: inline-block; ` +

@@ -1,7 +1,11 @@
 import EventEmitter = require("events");
 import { ColorScheme } from "../../../color_scheme";
 import { NumberRange } from "../number_range";
-import { ENTRY_MARGIN_TOP, LABEL_STYLE, TEXT_INPUT_STYLE } from "./common";
+import {
+  ENTRY_MARGIN_TOP_STYLE,
+  LABEL_STYLE,
+  TEXT_INPUT_STYLE,
+} from "./common";
 import { E } from "@selfage/element/factory";
 import { TextInputController } from "@selfage/element/text_input_controller";
 import { Ref } from "@selfage/ref";
@@ -44,7 +48,7 @@ export class DragBarComponent extends EventEmitter {
     let barWrapperRef = new Ref<HTMLDivElement>();
     let cursorRef = new Ref<HTMLDivElement>();
     let body = E.div(
-      `class="drab-bar-container" style="${ENTRY_MARGIN_TOP}"`,
+      `class="drab-bar-container" style="${ENTRY_MARGIN_TOP_STYLE}"`,
       E.div(
         `class="drag-bar-input-line" style="display: flex; ` +
           `flex-flow: row nowrap; justify-content: space-between; ` +

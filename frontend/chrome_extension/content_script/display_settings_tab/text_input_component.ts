@@ -1,6 +1,9 @@
 import EventEmitter = require("events");
-import { ColorScheme } from "../../../color_scheme";
-import { ENTRY_MARGIN_TOP, LABEL_STYLE, TEXT_INPUT_STYLE } from "./common";
+import {
+  ENTRY_MARGIN_TOP_STYLE,
+  LABEL_STYLE,
+  TEXT_INPUT_STYLE,
+} from "./common";
 import { E } from "@selfage/element/factory";
 import { TextInputController } from "@selfage/element/text_input_controller";
 import { Ref } from "@selfage/ref";
@@ -37,7 +40,7 @@ export class TextInputComponent extends EventEmitter {
     let body = E.div(
       `class="text-input-container" style="display: flex; ` +
         `flex-flow: row nowrap; justify-content: space-between; ` +
-        `align-items: center; ${ENTRY_MARGIN_TOP}"`,
+        `align-items: center; ${ENTRY_MARGIN_TOP_STYLE}"`,
       E.div(
         `class="text-input-label" style="${LABEL_STYLE}" title="${label}"`,
         E.text(label)
