@@ -16,6 +16,7 @@ enum Purpose {
   ALTERNATIVE_BACKGROUND,
   POPUP_BACKGROUND,
   CONTENT,
+  HIGHLIGH_CONTENT,
   ERROR_CONTENT,
   LINK_CONTENT,
   HINT_CONTENT,
@@ -37,6 +38,7 @@ export let CLASSIC_COLOR_SCHEME: Map<Purpose, string> = new Map([
   [Purpose.ALTERNATIVE_BACKGROUND, LIGHT_GREY],
   [Purpose.POPUP_BACKGROUND, DARK_GREY_TRANSPARENT],
   [Purpose.CONTENT, DARKER_GREY],
+  [Purpose.HIGHLIGH_CONTENT, BLUE],
   [Purpose.ERROR_CONTENT, RED],
   [Purpose.LINK_CONTENT, BLUE],
   [Purpose.HINT_CONTENT, DARK_GREY],
@@ -70,6 +72,10 @@ export class ColorScheme {
 
   public static getContent(): string {
     return ColorScheme.SCHEME.get(Purpose.CONTENT);
+  }
+
+  public static getHighlightContent(): string {
+    return ColorScheme.SCHEME.get(Purpose.HIGHLIGH_CONTENT);
   }
 
   public static getErrorContent(): string {
