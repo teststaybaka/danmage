@@ -39,9 +39,11 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     super();
   }
 
-  public static create(displaySettings: DisplaySettings): DisplaySettingsTab {
-    return new DisplaySettingsTab(
-      ...DisplaySettingsTab.createView(
+  public static create(
+    displaySettings: DisplaySettings
+  ): DisplaySettingsTabComponent {
+    return new DisplaySettingsTabComponent(
+      ...DisplaySettingsTabComponent.createView(
         SwitchCheckboxComponent.create(
           "Enable/Disable chat scrolling",
           ENABLE_CHAT_SCROLLING_DEFAULT,
@@ -116,7 +118,7 @@ export class DisplaySettingsTabComponent extends EventEmitter {
           resetButtonRef,
           `class="display-settings-tab-reset-button-svg" ` +
             `style="width: 2.4rem; height: 2.4rem; ` +
-            `padding: 0 ${(INPUT_WIDTH - 2.4) / 2}rem; cursor: pointer; `+
+            `padding: 0 ${(INPUT_WIDTH - 2.4) / 2}rem; cursor: pointer; ` +
             `fill: ${ColorScheme.getContent()};" viewBox="0 0 200 200"`,
           E.path(
             `class="display-settings-tab-reset-button-path" ` +
