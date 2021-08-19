@@ -28,7 +28,7 @@ export class BlockEntryComponent extends EventEmitter {
     let removeButtonRef = new Ref<SVGSVGElement>();
     let body = E.div(
       `class="block-entry-container" style="display: flex; ` +
-        `flex-flow: row nowrap; align-items: center; padding: .4rem 0;"`,
+        `flex-flow: row nowrap; align-items: center; margin: .4rem 0;"`,
       E.div(
         `class="block-entry-type" style="font-size: 1.4rem; ` +
           `line-height: 100%; font-family: initial !important;"`,
