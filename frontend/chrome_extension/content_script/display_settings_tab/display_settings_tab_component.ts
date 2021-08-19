@@ -17,11 +17,11 @@ import { TextInputComponent } from "./text_input_component";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 
-export interface DisplaySettingsTab {
+export interface DisplaySettingsTabComponent {
   on(event: "update", listener: () => void): this;
 }
 
-export class DisplaySettingsTab extends EventEmitter {
+export class DisplaySettingsTabComponent extends EventEmitter {
   private displayStyle: string;
 
   public constructor(
