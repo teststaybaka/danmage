@@ -73,7 +73,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
     let blockEntryListRef = new Ref<HTMLDivElement>();
     let body = E.div(
       `class="block-settings-tab-container" style="display: flex; ` +
-        `flow-flow: column nowrap; height: 100%; padding: 0 .5rem;"`,
+        `flow-flow: column nowrap; height: 100%;"`,
       E.div(
         `class="block-settings-tab-input-container" ` +
           `style="display: flex; flex-flow: row nowrap; align-items: center; ` +

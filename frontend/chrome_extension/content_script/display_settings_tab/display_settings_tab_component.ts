@@ -97,7 +97,7 @@ export class DisplaySettingsTabComponent extends EventEmitter {
   ) {
     let resetButtonRef = new Ref<SVGSVGElement>();
     let body = E.div(
-      `class="display-settings-tab-container" style="padding: 0 .5rem;"`,
+      `class="display-settings-tab-container"`,
       enableComponent.body,
       opacityComponent.body,
       fontSizeComponent.body,
