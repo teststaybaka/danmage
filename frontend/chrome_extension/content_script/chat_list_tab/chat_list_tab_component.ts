@@ -70,7 +70,7 @@ export class ChatListTabComponent extends EventEmitter {
           `class="chat-list-tab-input" style="padding: 0; margin: 0; ` +
             `outline: none; border: 0; flex-grow: 1; margin-right: 1rem; ` +
             `font-size: 1.4rem; line-height: 2.4rem; ` +
-            `border-bottom: `
+            `border-bottom: 0.1rem solid ${ColorScheme.getInputBorder()};` +
             `font-family: initial !important; ` +
             `color: ${ColorScheme.getContent()};" placeholder="Locak & load!"`
         ),
@@ -132,6 +132,7 @@ export class ChatListTabComponent extends EventEmitter {
     for (
       let iter = this.chatListEntries.createRightIterator();
       !iter.isStart();
+
     ) {
       let entry = iter.getValue();
       if (entry.isBlocked()) {
