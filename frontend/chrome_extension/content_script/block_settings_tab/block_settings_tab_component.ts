@@ -11,7 +11,7 @@ import { BlockEntryComponent } from "./block_entry_component";
 import { BlockOptionEntryComponent } from "./block_option_entry_component";
 import { E } from "@selfage/element/factory";
 import { TextInputController } from "@selfage/element/text_input_controller";
-import { Ref, assign } from "@selfage/ref";
+import { Ref } from "@selfage/ref";
 
 export interface BlockSettingsTabComponent {
   on(event: "update", listener: () => void): this;
@@ -27,11 +27,11 @@ export class BlockSettingsTabComponent extends EventEmitter {
     private optionSelected: HTMLDivElement,
     private optionSelectedText: Text,
     private optionList: HTMLDivElement,
+    private patternInput: HTMLInputElement,
+    private blockEntryList: HTMLDivElement,
     private blockOptionKeyword: BlockOptionEntryComponent,
     private blockOptionRegExp: BlockOptionEntryComponent,
-    private patternInput: HTMLInputElement,
     private submitButton: FillButtonComponent,
-    private blockEntryList: HTMLDivElement,
     private patternInputController: TextInputController,
     private blockEntryComponentFactoryFn: (
       blockPattern: BlockPattern
@@ -46,29 +46,34 @@ export class BlockSettingsTabComponent extends EventEmitter {
     blockSettings: BlockSettings,
     globalDocuments: GlobalDocuments
   ): BlockSettingsTabComponent {
-    let views = BlockSettingsTabComponent.createView();
+    let views = BlockSettingsTabComponent.createView(
+      BlockOptionEntryComponent.create(BlockKind.Keyword),
+      BlockOptionEntryComponent.create(BlockKind.RegExp),
+      FillButtonComponent.create(E.text("Add"))
+    );
     return new BlockSettingsTabComponent(
       ...views,
-      new TextInputController(views[7]),
+      TextInputController.create(views[5]),
       BlockEntryComponent.create,
       blockSettings,
       globalDocuments
     ).init();
   }
 
-  public static createView() {
+  public static createView(
+    blockOptionKeyword: BlockOptionEntryComponent,
+    blockOptionRegExp: BlockOptionEntryComponent,
+    submitButton: FillButtonComponent
+  ) {
     let optionContainerRef = new Ref<HTMLDivElement>();
     let optionSelectedRef = new Ref<HTMLDivElement>();
     let optionSelectedTextRef = new Ref<Text>();
     let optionListRef = new Ref<HTMLDivElement>();
-    let blockOptionKeywordRef = new Ref<BlockOptionEntryComponent>();
-    let blockOptionRegExpRef = new Ref<BlockOptionEntryComponent>();
     let patternInputRef = new Ref<HTMLInputElement>();
-    let submitButtonRef = new Ref<FillButtonComponent>();
     let blockEntryListRef = new Ref<HTMLDivElement>();
     let body = E.div(
       `class="block-settings-tab-container" style="display: flex; ` +
-        `flow-flow: column nowrap; padding: 0 .5rem;"`,
+        `flow-flow: column nowrap; height: 100%; padding: 0 .5rem;"`,
       E.div(
         `class="block-settings-tab-input-container" ` +
           `style="display: flex; flex-flow: row nowrap; align-items: center; ` +
@@ -103,25 +108,20 @@ export class BlockSettingsTabComponent extends EventEmitter {
               `style="position: absolute; width: 100%; ` +
               `box-shadow: .1rem .1rem .3rem ${ColorScheme.getPopupShadow()}; ` +
               `background-color: ${ColorScheme.getBackground()};`,
-            assign(
-              blockOptionKeywordRef,
-              BlockOptionEntryComponent.create(BlockKind.Keyword)
-            ).body,
-            assign(
-              blockOptionRegExpRef,
-              BlockOptionEntryComponent.create(BlockKind.RegExp)
-            ).body
+            blockOptionKeyword.body,
+            blockOptionRegExp.body
           )
         ),
         E.inputRef(
           patternInputRef,
-          `class="block-settings-tab-pattern-input" style="flex-grow: 3; ` +
+          `class="block-settings-tab-pattern-input" style="padding: 0; ` +
+            `margin: 0; outline: none; border: 0; flex-grow: 3; ` +
             `margin-left: 1rem; line-height: 2.4rem; font-size: 1.4rem; ` +
             `font-family: initial !important; ` +
             `border-bottom: .1rem solid ${ColorScheme.getInputBorder()}; ` +
             `placeHolder="New block rule"`
         ),
-        assign(submitButtonRef, FillButtonComponent.create(E.text("Add"))).body
+        submitButton.body
       ),
       E.divRef(
         blockEntryListRef,
@@ -135,11 +135,11 @@ export class BlockSettingsTabComponent extends EventEmitter {
       optionSelectedRef.val,
       optionSelectedTextRef.val,
       optionListRef.val,
-      blockOptionKeywordRef.val,
-      blockOptionRegExpRef.val,
       patternInputRef.val,
-      submitButtonRef.val,
       blockEntryListRef.val,
+      blockOptionKeyword,
+      blockOptionRegExp,
+      submitButton,
     ] as const;
   }
 
