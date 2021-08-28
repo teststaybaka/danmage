@@ -6,10 +6,7 @@
 }, {
   "message": {
     "name": "SignInResponse",
-    "fields": [{
-      "name": "error",
-      "type": "string"
-    }]
+    "fields": []
   }
 }, {
   "message": {
@@ -49,6 +46,32 @@
   }
 }, {
   "message": {
+    "name": "SavePlayerSettingsRequest",
+    "fields": [{
+      "name": "playerSettingsStringified",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
+    "name": "SavePlayerSettingsResponse",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "ReadPlayerSettingsRequest",
+    "fields": []
+  }
+}, {
+  "message": {
+    "name": "ReadPlayerSettingsResponse",
+    "fields": [{
+      "name": "playerSettingsStringified",
+      "type": "string"
+    }]
+  }
+}, {
+  "message": {
     "name": "BackgroundRequest",
     "fields": [{
       "name": "signInRequest",
@@ -62,6 +85,12 @@
     }, {
       "name": "getUrlRequest",
       "type": "GetUrlRequest"
+    }, {
+      "name": "savePlayerSettingsRequest",
+      "type": "SavePlayerSettingsRequest"
+    }, {
+      "name": "readPlayerSettingsRequest",
+      "type": "ReadPlayerSettingsRequest"
     }]
   }
 }]

@@ -13,7 +13,6 @@ export let SIGN_IN_REQUEST: MessageDescriptor<SignInRequest> = {
 };
 
 export interface SignInResponse {
-  error?: string,
 }
 
 export let SIGN_IN_RESPONSE: MessageDescriptor<SignInResponse> = {
@@ -22,10 +21,6 @@ export let SIGN_IN_RESPONSE: MessageDescriptor<SignInResponse> = {
     return new Object();
   },
   fields: [
-    {
-      name: 'error',
-      primitiveType: PrimitiveType.STRING,
-    },
   ]
 };
 
@@ -111,11 +106,71 @@ export let GET_URL_RESPONSE: MessageDescriptor<GetUrlResponse> = {
   ]
 };
 
+export interface SavePlayerSettingsRequest {
+  playerSettingsStringified?: string,
+}
+
+export let SAVE_PLAYER_SETTINGS_REQUEST: MessageDescriptor<SavePlayerSettingsRequest> = {
+  name: 'SavePlayerSettingsRequest',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+    {
+      name: 'playerSettingsStringified',
+      primitiveType: PrimitiveType.STRING,
+    },
+  ]
+};
+
+export interface SavePlayerSettingsResponse {
+}
+
+export let SAVE_PLAYER_SETTINGS_RESPONSE: MessageDescriptor<SavePlayerSettingsResponse> = {
+  name: 'SavePlayerSettingsResponse',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+  ]
+};
+
+export interface ReadPlayerSettingsRequest {
+}
+
+export let READ_PLAYER_SETTINGS_REQUEST: MessageDescriptor<ReadPlayerSettingsRequest> = {
+  name: 'ReadPlayerSettingsRequest',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+  ]
+};
+
+export interface ReadPlayerSettingsResponse {
+  playerSettingsStringified?: string,
+}
+
+export let READ_PLAYER_SETTINGS_RESPONSE: MessageDescriptor<ReadPlayerSettingsResponse> = {
+  name: 'ReadPlayerSettingsResponse',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+    {
+      name: 'playerSettingsStringified',
+      primitiveType: PrimitiveType.STRING,
+    },
+  ]
+};
+
 export interface BackgroundRequest {
   signInRequest?: SignInRequest,
   signOutRequest?: SignOutRequest,
   getSessionRequest?: GetSessionRequest,
   getUrlRequest?: GetUrlRequest,
+  savePlayerSettingsRequest?: SavePlayerSettingsRequest,
+  readPlayerSettingsRequest?: ReadPlayerSettingsRequest,
 }
 
 export let BACKGROUND_REQUEST: MessageDescriptor<BackgroundRequest> = {
@@ -139,6 +194,14 @@ export let BACKGROUND_REQUEST: MessageDescriptor<BackgroundRequest> = {
     {
       name: 'getUrlRequest',
       messageDescriptor: GET_URL_REQUEST,
+    },
+    {
+      name: 'savePlayerSettingsRequest',
+      messageDescriptor: SAVE_PLAYER_SETTINGS_REQUEST,
+    },
+    {
+      name: 'readPlayerSettingsRequest',
+      messageDescriptor: READ_PLAYER_SETTINGS_REQUEST,
     },
   ]
 };

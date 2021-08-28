@@ -3,6 +3,8 @@ import {
   BACKGROUND_REQUEST,
   GetSessionResponse,
   GetUrlResponse,
+  ReadPlayerSettingsResponse,
+  SavePlayerSettingsResponse,
   SignInResponse,
   SignOutResponse,
 } from "../interface/background_service";
@@ -10,6 +12,7 @@ import { parseMessage } from "@selfage/message/parser";
 import { ServiceClient } from "@selfage/service_client";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
 
+let PLAYER_SETTINGS_STORAGE_KEY = "player_settings";
 let LOCAL_SESSION_STORAGE = new LocalSessionStorage();
 let SERVICE_CLIENT = new ServiceClient(
   LOCAL_SESSION_STORAGE,
@@ -28,7 +31,7 @@ async function handle(
       });
     });
     if (!token) {
-      return { error: "No access token returned." } as SignInResponse;
+      return {} as SignInResponse;
     }
 
     let response = await SERVICE_CLIENT.fetchUnauthed(
@@ -48,6 +51,17 @@ async function handle(
     return {
       url: sender.tab.url,
     } as GetUrlResponse;
+  } else if (backgroundRequest.savePlayerSettingsRequest) {
+    localStorage.setItem(
+      PLAYER_SETTINGS_STORAGE_KEY,
+      backgroundRequest.savePlayerSettingsRequest.playerSettingsStringified
+    );
+    return {} as SavePlayerSettingsResponse;
+  } else if (backgroundRequest.readPlayerSettingsRequest) {
+    let playerSettingsStringified = localStorage.getItem(
+      PLAYER_SETTINGS_STORAGE_KEY
+    );
+    return { playerSettingsStringified } as ReadPlayerSettingsResponse;
   }
 }
 
