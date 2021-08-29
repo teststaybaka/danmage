@@ -10,7 +10,7 @@ export class BackgroundSessionStorage implements SessionStorage {
   public constructor(private chromeRuntime: ChromeRuntime) {}
 
   public static create(): BackgroundSessionStorage {
-    return new BackgroundSessionStorage(new ChromeRuntime());
+    return new BackgroundSessionStorage(ChromeRuntime.create());
   }
 
   public save(session: string): void {

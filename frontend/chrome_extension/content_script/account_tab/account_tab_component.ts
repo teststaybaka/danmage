@@ -25,7 +25,7 @@ export class AccountTabComponent {
         SignInComponent.create(),
         WelcomeComponent.create()
       ),
-      new ChromeRuntime(),
+      ChromeRuntime(),
       SERVICE_CLIENT
     ).init();
   }

@@ -24,7 +24,7 @@ export class SignInComponent extends EventEmitter {
     let button = FillButtonComponent.create(E.text("Sign in"));
     return new SignInComponent(
       ...SignInComponent.createView(button),
-      new ChromeRuntime()
+      ChromeRuntime.create()
     ).init();
   }
 

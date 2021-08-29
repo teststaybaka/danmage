@@ -35,7 +35,7 @@ export class WelcomeComponent extends EventEmitter {
       ...WelcomeComponent.createView(
         FillButtonComponent.create(E.text("Sign out"))
       ),
-      new ChromeRuntime(),
+      ChromeRuntime.create(),
       SERVICE_CLIENT
     ).init();
   }
