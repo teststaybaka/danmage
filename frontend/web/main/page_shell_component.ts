@@ -13,13 +13,13 @@ import { State } from "./state";
 import { TabsNavigationController } from "./tabs_navigation_controller";
 import { E } from "@selfage/element/factory";
 import { HideableElementController } from "@selfage/element/hideable_element_controller";
+import { TabsSwitcher } from "@selfage/element/tabs_switcher";
 import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
-import { TabSwitcher } from "@selfage/tabs/switcher";
 
 export class PageShellComponent {
-  private signInButtonsSwitcher = new TabSwitcher();
+  private signInButtonsSwitcher = TabsSwitcher.create();
   private hideableSignInButton: HideableElementController;
   private hideableSignedInButtonsContainer: HideableElementController;
 
