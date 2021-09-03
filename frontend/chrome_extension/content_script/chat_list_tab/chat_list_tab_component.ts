@@ -4,10 +4,7 @@ import { BlockSettings } from "../../../../interface/player_settings";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
 import { LinkedList } from "../linked_list";
-import {
-  ChatListEntryComponent,
-  ChatListEntryComponentFactory,
-} from "./chat_list_entry_component";
+import { ChatListEntryComponent } from "./chat_list_entry_component";
 import { E } from "@selfage/element/factory";
 import { TextInputController } from "@selfage/element/text_input_controller";
 import { Ref } from "@selfage/ref";
@@ -31,7 +28,11 @@ export class ChatListTabComponent extends EventEmitter {
     private chatInput: HTMLInputElement,
     private fireButton: FillButtonComponent,
     private chatInputController: TextInputController,
-    private chatListEntryComponentFactory: ChatListEntryComponentFactory
+    private blockSettings: BlockSettings,
+    private chatListEntryComponentFactoryFn: (
+      chatEntry: ChatEntry,
+      blockSettings: BlockSettings
+    ) => ChatListEntryComponent
   ) {
     super();
   }
@@ -43,7 +44,8 @@ export class ChatListTabComponent extends EventEmitter {
     return new ChatListTabComponent(
       ...views,
       TextInputController.create(views[2]),
-      new ChatListEntryComponentFactory(blockSettings)
+      blockSettings,
+      ChatListEntryComponent.create
     ).init();
   }
 
@@ -110,7 +112,10 @@ export class ChatListTabComponent extends EventEmitter {
       this.entryList.scrollTop + this.entryList.offsetHeight >=
       this.entryList.scrollHeight;
     for (let chatEntry of chatEntries) {
-      let entry = this.chatListEntryComponentFactory.create(chatEntry);
+      let entry = this.chatListEntryComponentFactoryFn(
+        chatEntry,
+        this.blockSettings
+      );
       this.entryList.appendChild(entry.body);
       this.chatListEntries.pushBack(entry);
     }

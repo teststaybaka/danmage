@@ -7,3 +7,5 @@ export let NUM_LIMIT_RANGE = new NumberRange(250, 5, 60);
 export let FONT_FAMILY_DEFAULT = "Arial";
 export let ENABLE_CHAT_SCROLLING_DEFAULT = true;
 export let SHOW_USER_NAME_DEFAULT = false;
+
+export let USERNAME_SEPARATOR = "@ ";
