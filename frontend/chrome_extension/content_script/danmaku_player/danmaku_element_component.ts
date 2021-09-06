@@ -1,10 +1,10 @@
-import { ChatEntry } from "../../../interface/chat_entry";
+import { ChatEntry } from "../../../../interface/chat_entry";
 import {
   DisplaySettings,
   PlayerSettings,
-} from "../../../interface/player_settings";
-import { BlockPatternTester } from "./block_pattern_tester";
-import { USERNAME_SEPARATOR } from "./common";
+} from "../../../../interface/player_settings";
+import { BlockPatternTester } from "../block_pattern_tester";
+import { USERNAME_SEPARATOR } from "../common";
 import { E } from "@selfage/element/factory";
 
 let GREYNESS_THRESHOLD = 120;
