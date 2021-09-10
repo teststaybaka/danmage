@@ -1,22 +1,18 @@
 import {
-  DanmakuCustomizer,
   DanmakuElementComponent,
   MoveResult,
   reverseColorAsTextShadow,
 } from "./danmaku_element_component";
+import { MockDanmakuElementCustomizer } from "./mocks";
 import { assertThat, eq } from "@selfage/test_matcher";
-import { NODE_TEST_RUNNER } from "@selfage/test_runner";
+import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 
 class MockElement {
   public style: any = { setProperty: () => {} };
   public offsetWidth: any;
 }
 
-class MockDanmakuCustomizer implements DanmakuCustomizer {
-  public render() {}
-}
-
-NODE_TEST_RUNNER.run({
+PUPPETEER_TEST_RUNNER.run({
   name: "DanmakuElementComponentTest",
   cases: [
     {
@@ -57,7 +53,7 @@ NODE_TEST_RUNNER.run({
           element as any,
           { speed: 10 },
           undefined,
-          new MockDanmakuCustomizer()
+          new MockDanmakuElementCustomizer()
         );
         danmakuElementComponent.setContent({});
 
@@ -139,7 +135,7 @@ NODE_TEST_RUNNER.run({
           element as any,
           settings,
           undefined,
-          new MockDanmakuCustomizer()
+          new MockDanmakuElementCustomizer()
         );
         danmakuElementComponent.setContent({});
         danmakuElementComponent.startMoving(20);

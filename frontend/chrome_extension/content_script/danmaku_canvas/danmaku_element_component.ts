@@ -33,7 +33,7 @@ function removeSelectedChildElements(
   }
 }
 
-export interface DanmakuCustomizer {
+export interface DanmakuElementCustomizer {
   render: (
     body: HTMLDivElement,
     chatEntry: ChatEntry,
@@ -41,7 +41,7 @@ export interface DanmakuCustomizer {
   ) => void;
 }
 
-class StructuredCustomizer implements DanmakuCustomizer {
+class StructuredCustomizer implements DanmakuElementCustomizer {
   public render(
     body: HTMLDivElement,
     chatEntry: ChatEntry,
@@ -57,7 +57,7 @@ class StructuredCustomizer implements DanmakuCustomizer {
   }
 }
 
-class TwitchChatCustomizer implements DanmakuCustomizer {
+class TwitchChatCustomizer implements DanmakuElementCustomizer {
   private static COLOR_EXTRACTION_REGEX = /^rgb\((.*),(.*),(.*)\)$/;
   private static COLON_REPLACER = />: ?<\//;
 
@@ -116,7 +116,7 @@ class TwitchChatCustomizer implements DanmakuCustomizer {
   }
 }
 
-class YouTubeChatCustomizer implements DanmakuCustomizer {
+class YouTubeChatCustomizer implements DanmakuElementCustomizer {
   public render(
     body: HTMLDivElement,
     chatEntry: ChatEntry,
@@ -170,10 +170,10 @@ export class DanmakuElementComponent {
     public body: HTMLDivElement,
     private displaySettings: DisplaySettings,
     private blockPatternTester: BlockPatternTester,
-    private danmakuCustomizer: DanmakuCustomizer
+    private danmakuElementCustomizer: DanmakuElementCustomizer
   ) {}
 
-  public createStructured(
+  public static createStructured(
     playerSettings: PlayerSettings
   ): DanmakuElementComponent {
     return new DanmakuElementComponent(
@@ -184,7 +184,9 @@ export class DanmakuElementComponent {
     );
   }
 
-  public createTwitch(playerSettings: PlayerSettings): DanmakuElementComponent {
+  public static createTwitch(
+    playerSettings: PlayerSettings
+  ): DanmakuElementComponent {
     return new DanmakuElementComponent(
       E.div(DanmakuElementComponent.DANMAKU_ELEMENT_ATTRIBUTES),
       playerSettings.displaySettings,
@@ -193,7 +195,7 @@ export class DanmakuElementComponent {
     );
   }
 
-  public createYouTube(
+  public static createYouTube(
     playerSettings: PlayerSettings
   ): DanmakuElementComponent {
     return new DanmakuElementComponent(
@@ -229,7 +231,7 @@ export class DanmakuElementComponent {
       this.displaySettings.fontFamily,
       "important"
     );
-    this.danmakuCustomizer.render(
+    this.danmakuElementCustomizer.render(
       this.body,
       this.chatEntry,
       this.displaySettings

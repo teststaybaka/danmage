@@ -1,8 +1,8 @@
 import { BlockPatternTester, ContentExtractor } from "./block_pattern_tester";
 import { assertThat, eq } from "@selfage/test_matcher";
-import { NODE_TEST_RUNNER } from "@selfage/test_runner";
+import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 
-NODE_TEST_RUNNER.run({
+PUPPETEER_TEST_RUNNER.run({
   name: "BlockPatternTesterTest",
   cases: [
     {

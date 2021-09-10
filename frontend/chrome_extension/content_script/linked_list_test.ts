@@ -1,7 +1,7 @@
 import { LinkedList } from "./linked_list";
 import { eqLinkedList } from "./linked_list_matcher";
 import { MatchFn, assertThat, eq } from "@selfage/test_matcher";
-import { NODE_TEST_RUNNER } from "@selfage/test_runner";
+import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 
 function eqLinkedListBilateral<T>(
   expected: Array<MatchFn<T>>
@@ -21,7 +21,7 @@ function eqLinkedListBilateral<T>(
   };
 }
 
-NODE_TEST_RUNNER.run({
+PUPPETEER_TEST_RUNNER.run({
   name: "LinkedListTest",
   cases: [
     {
