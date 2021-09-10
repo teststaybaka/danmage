@@ -1,6 +1,6 @@
 import "./button_component_test";
 import "./chrome_extension/content_script/block_pattern_tester_test";
-import "./chrome_extension/content_script/chat_pool_test.ts";
+import "./chrome_extension/content_script/chat_pool_test";
 import "./chrome_extension/content_script/danmaku_canvas/danmaku_canvas_controller_test";
 import "./chrome_extension/content_script/danmaku_canvas/danmaku_element_component_test";
 import "./chrome_extension/content_script/linked_list_test";
