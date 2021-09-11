@@ -47,13 +47,12 @@ PUPPETEER_TEST_RUNNER.run({
         })();
         let serviceClient = new (class extends ServiceClientMock {
           public fetchAuthedAny(request: any, serviceDescriptor: any): any {
-            counter.increment("fetchAuthed");
             assertThat(
               serviceDescriptor,
               eq(GET_CHAT_HISTORY),
               "service descriptor"
             );
-            switch (counter.get("fetchAuthed")) {
+            switch (counter.increment("fetchAuthed")) {
               case 1:
                 assertThat(
                   (request as GetChatHistoryRequest).cursor,

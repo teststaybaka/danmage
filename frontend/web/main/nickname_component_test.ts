@@ -40,8 +40,7 @@ PUPPETEER_TEST_RUNNER.run({
         })();
         let serviceClient = new (class extends ServiceClientMock {
           public fetchAuthedAny(request: any, serviceDescriptor: any): any {
-            counter.increment("fetchAuthed");
-            switch (counter.get("fetchAuthed")) {
+            switch (counter.increment("fetchAuthed")) {
               case 1:
                 assertThat(
                   serviceDescriptor,
@@ -139,8 +138,7 @@ PUPPETEER_TEST_RUNNER.run({
         })();
         let serviceClient = new (class extends ServiceClientMock {
           public fetchAuthedAny(request: any, serviceDescriptor: any): any {
-            counter.increment("fetchAuthed");
-            switch (counter.get("fetchAuthed")) {
+            switch (counter.increment("fetchAuthed")) {
               case 1:
                 assertThat(
                   serviceDescriptor,

@@ -14,7 +14,8 @@ PUPPETEER_TEST_RUNNER.run({
       name: "Render",
       execute: async () => {
         // Execute
-        document.body.appendChild(HomeView.create());
+        let homeView = HomeView.create();
+        document.body.appendChild(homeView);
 
         // Verify
         {
@@ -46,7 +47,7 @@ PUPPETEER_TEST_RUNNER.run({
           globalThis.deleteFile(__dirname + "/home_view.png"),
           globalThis.deleteFile(__dirname + "/home_view_narrow.png"),
         ]);
-        document.body.removeChild(document.body.lastChild);
+        homeView.remove();
       },
     },
   ],

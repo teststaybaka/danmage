@@ -176,8 +176,16 @@ PUPPETEER_TEST_RUNNER.run({
           E.text("Privacy policy")
         );
         let feedbackButton = new TextButtonComponentMock(E.text("Feedback"));
-        let nicknameComponent = new NicknameComponentMock();
-        let historyComponent = new HistoryComponentMock();
+        let nicknameComponent = new (class extends NicknameComponentMock {
+          public show() {
+            return Promise.resolve();
+          }
+        })();
+        let historyComponent = new (class extends HistoryComponentMock {
+          public show() {
+            return Promise.resolve();
+          }
+        })();
         let feedbackComponent = new FeedbackComponentMock();
         let browserHistoryPusher = new (class extends BrowserHistoryPusherMock {
           public push() {

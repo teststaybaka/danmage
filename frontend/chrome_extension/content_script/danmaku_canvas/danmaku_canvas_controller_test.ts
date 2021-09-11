@@ -387,6 +387,9 @@ PUPPETEER_TEST_RUNNER.run({
           eq(2),
           "startMoving called after ended"
         );
+
+        // Cleanup
+        canvas.remove();
       },
     },
     {
@@ -455,6 +458,9 @@ PUPPETEER_TEST_RUNNER.run({
           eq(2),
           "startMoving called after ended"
         );
+
+        // Cleanup
+        canvas.remove();
       },
     },
     {
@@ -577,6 +583,9 @@ PUPPETEER_TEST_RUNNER.run({
           eq(2),
           "startMoving2 called after cleared"
         );
+
+        // Cleanup
+        canvas.remove();
       },
     },
     {
@@ -695,6 +704,9 @@ PUPPETEER_TEST_RUNNER.run({
           eq(2),
           "startMoving2 called after cleared"
         );
+
+        // Cleanup
+        canvas.remove();
       },
     },
   ],
