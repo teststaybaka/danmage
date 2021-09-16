@@ -1,6 +1,7 @@
 import { SIGN_IN } from "../../../interface/service";
 import { normalizeBody } from "../../body_normalizer";
 import { TextButtonComponentMock } from "../../mocks";
+import { BodyComponent } from "./body_component";
 import { HomeView } from "./home_view";
 import {
   BrowserHistoryPusherMock,
@@ -8,7 +9,6 @@ import {
   HistoryComponentMock,
   NicknameComponentMock,
 } from "./mocks";
-import { PageShellComponent } from "./page_shell_component";
 import { State } from "./state";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
@@ -21,7 +21,7 @@ import "@selfage/puppeteer_executor_api";
 normalizeBody();
 
 PUPPETEER_TEST_RUNNER.run({
-  name: "PageShellComponentTest",
+  name: "BodyComponentTest",
   cases: [
     {
       name: "WithoutSignInRenderHomeAndFeedback",
@@ -57,8 +57,8 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(1280, 600);
 
         // Execute
-        let pageShellComponent = new PageShellComponent(
-          ...PageShellComponent.createView(
+        let bodyComponent = new BodyComponent(
+          ...BodyComponent.createView(
             nicknameButton,
             historyButton,
             signOutButton,
@@ -77,7 +77,7 @@ PUPPETEER_TEST_RUNNER.run({
           serviceClient,
           windowMock
         ).init();
-        document.body.appendChild(pageShellComponent.body);
+        document.body.appendChild(bodyComponent.body);
 
         // Verify
         {
@@ -158,7 +158,7 @@ PUPPETEER_TEST_RUNNER.run({
             __dirname + "/page_shell_component_feedback.png"
           ),
         ]);
-        pageShellComponent.body.remove();
+        bodyComponent.body.remove();
       },
     },
     {
@@ -204,8 +204,8 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(1280, 600);
 
         // Execute
-        let pageShellComponent = new PageShellComponent(
-          ...PageShellComponent.createView(
+        let bodyComponent = new BodyComponent(
+          ...BodyComponent.createView(
             nicknameButton,
             historyButton,
             signOutButton,
@@ -224,7 +224,7 @@ PUPPETEER_TEST_RUNNER.run({
           serviceClient,
           windowMock
         ).init();
-        document.body.appendChild(pageShellComponent.body);
+        document.body.appendChild(bodyComponent.body);
 
         // Verify
         {
@@ -313,7 +313,7 @@ PUPPETEER_TEST_RUNNER.run({
             __dirname + "/page_shell_component_history.png"
           ),
         ]);
-        pageShellComponent.body.remove();
+        bodyComponent.body.remove();
       },
     },
     {
@@ -364,7 +364,7 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(1280, 600);
 
         // Execute
-        let views = PageShellComponent.createView(
+        let views = BodyComponent.createView(
           nicknameButton,
           historyButton,
           signOutButton,
@@ -373,7 +373,7 @@ PUPPETEER_TEST_RUNNER.run({
           feedbackButton
         );
         let signInButton = views[2];
-        let pageShellComponent = new PageShellComponent(
+        let bodyComponent = new BodyComponent(
           ...views,
           () => HomeView.create(),
           () => nicknameComponent,
@@ -386,7 +386,7 @@ PUPPETEER_TEST_RUNNER.run({
           serviceClient,
           windowMock
         ).init();
-        document.body.appendChild(pageShellComponent.body);
+        document.body.appendChild(bodyComponent.body);
         signInButton.click();
 
         // Verify
@@ -487,7 +487,7 @@ PUPPETEER_TEST_RUNNER.run({
             __dirname + "/page_shell_component_handle_unauth.png"
           ),
         ]);
-        pageShellComponent.body.remove();
+        bodyComponent.body.remove();
       },
     },
   ],

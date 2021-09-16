@@ -1,7 +1,7 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { normalizeBody } from "../../body_normalizer";
+import { BodyComponent } from "./body_component";
 import { BrowserHistoryPusher } from "./browser_history_pusher";
-import { PageShellComponent } from "./page_shell_component";
 import { SERVICE_CLIENT } from "./service_client";
 import { StateLoader } from "./state_loader";
 import "../../../environment";
@@ -24,7 +24,7 @@ function main(): void {
   let state = StateLoader.create(queryParamKeyForState).state;
   let historyPusher = BrowserHistoryPusher.create(state, queryParamKeyForState);
   document.body.appendChild(
-    PageShellComponent.create(state, historyPusher, origin).body
+    BodyComponent.create(state, historyPusher, origin).body
   );
 }
 

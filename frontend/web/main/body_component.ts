@@ -18,7 +18,7 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
 
-export class PageShellComponent {
+export class BodyComponent {
   private signInButtonsSwitcher = TabsSwitcher.create();
   private hideableSignInButton: HideableElementController;
   private hideableSignedInButtonsContainer: HideableElementController;
@@ -51,9 +51,9 @@ export class PageShellComponent {
     state: State,
     browserHistoryPusher: BrowserHistoryPusher,
     origin: string
-  ): PageShellComponent {
-    return new PageShellComponent(
-      ...PageShellComponent.createView(
+  ): BodyComponent {
+    return new BodyComponent(
+      ...BodyComponent.createView(
         TextButtonComponent.create(E.text("Nickname")),
         TextButtonComponent.create(E.text("History")),
         TextButtonComponent.create(E.text("Sign out")),
@@ -88,65 +88,65 @@ export class PageShellComponent {
     let signedInButtonsContainerRef = new Ref<HTMLDivElement>();
     let tabsContainerRef = new Ref<HTMLDivElement>();
     let body = E.div(
-      `class="main-body" style="display: flex; flex-flow: column nowrap; ` +
+      `class="body" style="display: flex; flex-flow: column nowrap; ` +
         `min-height: 100vh; overflow-y: auto;"`,
       E.div(
-        `class="main-header" style="display: flex; flex-flow: row nowrap; ` +
+        `class="body-header" style="display: flex; flex-flow: row nowrap; ` +
           `align-items: center; padding: 1rem ${SIDE_PADDING}rem; ` +
           `border-bottom: .1rem solid ${ColorScheme.getBlockSeparator()};"`,
         E.divRef(
           logoRef,
-          `class="main-logo" style="font-size: 3rem; font-weight: bold; ` +
+          `class="body-logo" style="font-size: 3rem; font-weight: bold; ` +
             `font-family: Comic Sans MS, cursive, sans-serif; ` +
             `cursor: pointer;"`,
           E.div(
-            `class="main-logo-left" style="display: inline; color: ${ORANGE};"`,
+            `class="body-logo-left" style="display: inline; color: ${ORANGE};"`,
             E.text("Dan")
           ),
           E.div(
-            `class="main-logo-right" style="display: inline; color: ${BLUE};"`,
+            `class="body-logo-right" style="display: inline; color: ${BLUE};"`,
             E.text("Mage")
           )
         ),
         E.div(`style="flex: 1;"`),
         E.divRef(
           signInButtonRef,
-          `class="main-header-sign-in-button" style="display: flex; ` +
+          `class="body-header-sign-in-button" style="display: flex; ` +
             `flex-flow: row nowrap; align-items: center; ` +
             `border: .1rem solid ${ColorScheme.getPrimaryButtonBackground()}; ` +
             `background-color: ${ColorScheme.getPrimaryButtonBackground()}; ` +
             `cursor: pointer;"`,
           E.svgRef(
             googleIconSvgRef,
-            `class="main-header-google-icon" viewBox="0 0 46 46" ` +
+            `class="body-header-google-icon" viewBox="0 0 46 46" ` +
               `style="width: 3.5rem; height: 3.5rem; background-color: white;"`
           ),
           E.div(
-            `class="main-header-sign-in-text" style="padding: 0 1rem; ` +
+            `class="body-header-sign-in-text" style="padding: 0 1rem; ` +
               `font-size: 1.6rem; color: white;"`,
             E.text("Sign in with Google")
           )
         ),
         E.divRef(
           signedInButtonsContainerRef,
-          `class="main-header-signed-in-tab-buttons-container" style="` +
+          `class="body-header-signed-in-tab-buttons-container" style="` +
             `display: flex; flex-flow: row nowrap; align-items: center;"`,
           E.div(
-            `class="main-header-nickname-button-wrapper" style="` +
+            `class="body-header-nickname-button-wrapper" style="` +
               `margin-right: 2rem;"`,
             nicknameButton.body
           ),
           E.div(
-            `class="main-header-history-button-wrapper" style="` +
+            `class="body-header-history-button-wrapper" style="` +
               `margin-right: 2rem;"`,
             historyButton.body
           ),
-          E.div(`class="main-heaer-history-button-wrapper"`, signOutButton.body)
+          E.div(`class="body-heaer-history-button-wrapper"`, signOutButton.body)
         )
       ),
-      E.divRef(tabsContainerRef, `class="main-tab-container" style="flex: 1;"`),
+      E.divRef(tabsContainerRef, `class="body-tab-container" style="flex: 1;"`),
       E.div(
-        `class="main-footer" style="display: flex; flex-flow: row nowrap; ` +
+        `class="body-footer" style="display: flex; flex-flow: row nowrap; ` +
           `align-items: center; justify-content: center; padding: 2rem 0; ` +
           `border-top: .1rem solid ${ColorScheme.getBlockSeparator()};"`,
         termsButton.body,
