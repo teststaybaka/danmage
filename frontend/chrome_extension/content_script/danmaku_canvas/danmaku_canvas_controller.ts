@@ -86,6 +86,10 @@ export class DanmakuCanvasController {
     // Store width & height to save extra reflows.
     this.canvasWidth = this.canvas.offsetWidth;
     this.canvasHeight = this.canvas.offsetHeight;
+    if (!this.playerSettings.displaySettings.enable) {
+      return;
+    }
+
     for (let chatEntry of chatEntries) {
       if (this.getSize() >= this.playerSettings.displaySettings.numLimit) {
         break;

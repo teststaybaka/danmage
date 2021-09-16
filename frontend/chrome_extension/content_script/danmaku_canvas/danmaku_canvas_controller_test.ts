@@ -148,7 +148,7 @@ PUPPETEER_TEST_RUNNER.run({
         let canvas = E.div(`style="height: 30px;"`);
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { numLimit: 4 },
+          displaySettings: { enable: true, numLimit: 4 },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           canvas,
@@ -235,7 +235,7 @@ PUPPETEER_TEST_RUNNER.run({
         let canvas = E.div(`style="height: 5px;"`);
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { numLimit: 1 },
+          displaySettings: { enable: true, numLimit: 1 },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           canvas,
@@ -322,7 +322,7 @@ PUPPETEER_TEST_RUNNER.run({
         let canvas = E.div(`style="height: 30px; width: 30px;"`);
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { numLimit: 2 },
+          displaySettings: { enable: true, numLimit: 2 },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           canvas,
@@ -440,7 +440,7 @@ PUPPETEER_TEST_RUNNER.run({
         let canvas = E.div(`style="height: 30px; width: 30px;"`);
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { numLimit: 1 },
+          displaySettings: { enable: true, numLimit: 1 },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           canvas,
@@ -473,7 +473,7 @@ PUPPETEER_TEST_RUNNER.run({
       },
     },
     {
-      name: "RefreshDisplayAndClear",
+      name: "DisableDanmakuInTheMiddle",
       execute: () => {
         // Prepare
         let counter = new Counter<string>();
@@ -534,7 +534,7 @@ PUPPETEER_TEST_RUNNER.run({
         let canvas = E.div(`style="height: 30px; width: 30px;"`);
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { numLimit: 2, enable: true },
+          displaySettings: { enable: true, numLimit: 2 },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           canvas,
@@ -571,26 +571,57 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(counter.get("hide"), eq(1), "hide called");
         assertThat(counter.get("hide2"), eq(1), "hide2 called");
+
+        // Execute
         danmakuCanvasController.addPerCycle([chatEntry2, chatEntry]);
         assertThat(
           counter.get("setContent"),
+          eq(1),
+          "setContent not called after disabled"
+        );
+        assertThat(
+          counter.get("startMoving"),
+          eq(1),
+          "startMoving not called after disabled"
+        );
+        assertThat(
+          counter.get("setContent2"),
+          eq(1),
+          "setContent2 not called after disabled"
+        );
+        assertThat(
+          counter.get("startMoving2"),
+          eq(1),
+          "startMoving2 not called after disabled"
+        );
+
+        // Prepare
+        playerSettings.displaySettings.enable = true;
+
+        // Execute
+        danmakuCanvasController.refreshDisplay();
+        danmakuCanvasController.addPerCycle([chatEntry2, chatEntry]);
+
+        // Verify
+        assertThat(
+          counter.get("setContent"),
           eq(2),
-          "setContent called after cleared"
+          "setContent called after re-enabled"
         );
         assertThat(
           counter.get("startMoving"),
           eq(2),
-          "startMoving called after cleared"
+          "startMoving called after re-enabled"
         );
         assertThat(
           counter.get("setContent2"),
           eq(2),
-          "setContent2 called after cleared"
+          "setContent2 called after re-enabled"
         );
         assertThat(
           counter.get("startMoving2"),
           eq(2),
-          "startMoving2 called after cleared"
+          "startMoving2 called after re-enabled"
         );
 
         // Cleanup
@@ -665,7 +696,7 @@ PUPPETEER_TEST_RUNNER.run({
         let canvas = E.div(`style="height: 30px; width: 30px;"`);
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { numLimit: 2 },
+          displaySettings: { enable: true, numLimit: 2 },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           canvas,
