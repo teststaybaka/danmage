@@ -105,139 +105,6 @@ export class StructuredChatPool implements ChatPool {
   }
 }
 
-export class TwitchVideoChatPool implements ChatPool {
-  private static TW_HIDE_CLASS = "tw-hide";
-
-  private logElementPointer: Element;
-
-  public constructor(
-    private logsContainer: Element,
-    private blockTester: BlockPatternTester
-  ) {}
-
-  public static create(
-    logsContainer: Element,
-    blockSettings: BlockSettings
-  ): TwitchVideoChatPool {
-    return new TwitchVideoChatPool(
-      logsContainer,
-      BlockPatternTester.createHtml(blockSettings)
-    );
-  }
-
-  public fill(): void {
-    // Do nothing.
-  }
-
-  public clear(): void {
-    // Do nothing.
-  }
-
-  public start(): void {
-    this.logElementPointer = this.logsContainer.lastElementChild;
-  }
-
-  public read(): ChatEntry[] {
-    let nextLogElementPointer: Element;
-    if (this.logsContainer.contains(this.logElementPointer)) {
-      nextLogElementPointer = this.logElementPointer.nextElementSibling;
-    } else {
-      nextLogElementPointer = this.logsContainer.firstElementChild;
-    }
-
-    let returnChatEntries: ChatEntry[] = [];
-    for (
-      ;
-      nextLogElementPointer;
-      this.logElementPointer = nextLogElementPointer,
-        nextLogElementPointer = nextLogElementPointer.nextElementSibling
-    ) {
-      let htmlContent =
-        nextLogElementPointer.querySelector(".tw-flex-grow-1").innerHTML;
-      // Silly twitch hidden emoticons. Stop and try from here next time.
-      if (htmlContent.indexOf(TwitchVideoChatPool.TW_HIDE_CLASS) !== -1) {
-        break;
-      }
-
-      let chatEntry: ChatEntry = {
-        content: htmlContent,
-      };
-      if (this.blockTester.test(chatEntry)) {
-        continue;
-      }
-
-      returnChatEntries.push(chatEntry);
-    }
-    return returnChatEntries;
-  }
-}
-
-export class TwitchLiveChatPool implements ChatPool {
-  private static TW_HIDE_CLASS = "tw-hide";
-
-  private logElementPointer: Element;
-
-  public constructor(
-    private logsContainer: Element,
-    private blockTester: BlockPatternTester
-  ) {}
-
-  public static create(
-    logsContainer: Element,
-    blockSettings: BlockSettings
-  ): TwitchLiveChatPool {
-    return new TwitchLiveChatPool(
-      logsContainer,
-      BlockPatternTester.createHtml(blockSettings)
-    );
-  }
-
-  public fill(): void {
-    // Do nothing.
-  }
-
-  public clear(): void {
-    // Do nothing.
-  }
-
-  public start(): void {
-    this.logElementPointer = this.logsContainer.lastElementChild;
-  }
-
-  public read(): ChatEntry[] {
-    let nextLogElementPointer: Element;
-    if (this.logsContainer.contains(this.logElementPointer)) {
-      nextLogElementPointer = this.logElementPointer.nextElementSibling;
-    } else {
-      nextLogElementPointer = this.logsContainer.firstElementChild;
-    }
-
-    let returnChatEntries: ChatEntry[] = [];
-    for (
-      ;
-      nextLogElementPointer;
-      this.logElementPointer = nextLogElementPointer,
-        nextLogElementPointer = nextLogElementPointer.nextElementSibling
-    ) {
-      let htmlContent = nextLogElementPointer.innerHTML;
-      // Silly twitch hidden emoticons. Stop and try from here next time.
-      if (htmlContent.indexOf(TwitchLiveChatPool.TW_HIDE_CLASS) !== -1) {
-        break;
-      }
-
-      let chatEntry: ChatEntry = {
-        content: htmlContent,
-      };
-      if (this.blockTester.test(chatEntry)) {
-        continue;
-      }
-
-      returnChatEntries.push(chatEntry);
-    }
-    return returnChatEntries;
-  }
-}
-
 export class YouTubeChatPool implements ChatPool {
   private lastLogElement: Element;
 
@@ -319,6 +186,139 @@ export class YouTubeChatPool implements ChatPool {
       let chatEntry: ChatEntry = {
         content: htmlContent,
         userNickname: htmlUserName,
+      };
+      if (this.blockTester.test(chatEntry)) {
+        continue;
+      }
+
+      returnChatEntries.push(chatEntry);
+    }
+    return returnChatEntries;
+  }
+}
+
+export class TwitchVideoChatPool implements ChatPool {
+  private static TW_HIDE_CLASS = "tw-hide";
+
+  private logElementPointer: Element;
+
+  public constructor(
+    private chatContainer: Element,
+    private blockTester: BlockPatternTester
+  ) {}
+
+  public static create(
+    chatContainer: Element,
+    blockSettings: BlockSettings
+  ): TwitchVideoChatPool {
+    return new TwitchVideoChatPool(
+      chatContainer,
+      BlockPatternTester.createHtml(blockSettings)
+    );
+  }
+
+  public fill(): void {
+    // Do nothing.
+  }
+
+  public clear(): void {
+    // Do nothing.
+  }
+
+  public start(): void {
+    this.logElementPointer = this.chatContainer.lastElementChild;
+  }
+
+  public read(): ChatEntry[] {
+    let nextLogElementPointer: Element;
+    if (this.chatContainer.contains(this.logElementPointer)) {
+      nextLogElementPointer = this.logElementPointer.nextElementSibling;
+    } else {
+      nextLogElementPointer = this.chatContainer.firstElementChild;
+    }
+
+    let returnChatEntries: ChatEntry[] = [];
+    for (
+      ;
+      nextLogElementPointer;
+      this.logElementPointer = nextLogElementPointer,
+        nextLogElementPointer = nextLogElementPointer.nextElementSibling
+    ) {
+      let htmlContent =
+        nextLogElementPointer.querySelector(".tw-flex-grow-1").innerHTML;
+      // Silly twitch hidden emoticons. Stop and try from here next time.
+      if (htmlContent.indexOf(TwitchVideoChatPool.TW_HIDE_CLASS) !== -1) {
+        break;
+      }
+
+      let chatEntry: ChatEntry = {
+        content: htmlContent,
+      };
+      if (this.blockTester.test(chatEntry)) {
+        continue;
+      }
+
+      returnChatEntries.push(chatEntry);
+    }
+    return returnChatEntries;
+  }
+}
+
+export class TwitchLiveChatPool implements ChatPool {
+  private static TW_HIDE_CLASS = "tw-hide";
+
+  private logElementPointer: Element;
+
+  public constructor(
+    private chatContainer: Element,
+    private blockTester: BlockPatternTester
+  ) {}
+
+  public static create(
+    chatContainer: Element,
+    blockSettings: BlockSettings
+  ): TwitchLiveChatPool {
+    return new TwitchLiveChatPool(
+      chatContainer,
+      BlockPatternTester.createHtml(blockSettings)
+    );
+  }
+
+  public fill(): void {
+    // Do nothing.
+  }
+
+  public clear(): void {
+    // Do nothing.
+  }
+
+  public start(): void {
+    this.logElementPointer = this.chatContainer.lastElementChild;
+  }
+
+  public read(): ChatEntry[] {
+    let nextLogElementPointer: Element;
+    if (this.chatContainer.contains(this.logElementPointer)) {
+      nextLogElementPointer = this.logElementPointer.nextElementSibling;
+    } else {
+      nextLogElementPointer = this.chatContainer.firstElementChild;
+    }
+
+    let returnChatEntries: ChatEntry[] = [];
+    for (
+      ;
+      nextLogElementPointer;
+      this.logElementPointer = nextLogElementPointer,
+        nextLogElementPointer = nextLogElementPointer.nextElementSibling
+    ) {
+      let htmlContent = nextLogElementPointer.innerHTML;
+      // Silly twitch hidden emoticons. Stop and try from here next time.
+      if (htmlContent.indexOf(TwitchLiveChatPool.TW_HIDE_CLASS) !== -1) {
+        break;
+      }
+
+      let chatEntry: ChatEntry = {
+        content: htmlContent,
       };
       if (this.blockTester.test(chatEntry)) {
         continue;

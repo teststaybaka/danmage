@@ -22,7 +22,7 @@ export class DanmakuCanvasController {
     ) => DanmakuElementComponent
   ) {}
 
-  public static createYouTubeStructured(
+  public static createStructured(
     canvas: HTMLElement,
     playerSettings: PlayerSettings
   ): DanmakuCanvasController {
@@ -33,6 +33,28 @@ export class DanmakuCanvasController {
     ).init();
   }
 
+  public static createYouTube(
+    canvas: HTMLElement,
+    playerSettings: PlayerSettings
+  ): DanmakuCanvasController {
+    return new DanmakuCanvasController(
+      canvas,
+      playerSettings,
+      DanmakuElementComponent.createYouTube
+    ).init();
+  }
+
+  public static createTwitch(
+    canvas: HTMLElement,
+    playerSettings: PlayerSettings
+  ): DanmakuCanvasController {
+    return new DanmakuCanvasController(
+      canvas,
+      playerSettings,
+      DanmakuElementComponent.createTwitch
+    ).init();
+  }
+
   public init(): this {
     this.refreshIdleElements();
     return this;
@@ -40,15 +62,16 @@ export class DanmakuCanvasController {
 
   private refreshIdleElements(): void {
     for (
-      let i =
-        this.elementsOccupying.getSize() +
-        this.elementsDisplaying.getSize() +
-        this.elementsIdle.length;
+      let i = this.getSize() + this.elementsIdle.length;
       i < this.playerSettings.displaySettings.numLimit;
       i++
     ) {
       this.createOneIdleElement();
     }
+  }
+
+  private getSize(): number {
+    return this.elementsOccupying.getSize() + this.elementsDisplaying.getSize();
   }
 
   private createOneIdleElement(): void {
@@ -63,13 +86,19 @@ export class DanmakuCanvasController {
     // Store width & height to save extra reflows.
     this.canvasWidth = this.canvas.offsetWidth;
     this.canvasHeight = this.canvas.offsetHeight;
-    chatEntries.map((chatEntry) => this.addOne(chatEntry));
+    for (let chatEntry of chatEntries) {
+      if (this.getSize() >= this.playerSettings.displaySettings.numLimit) {
+        break;
+      }
+      this.addOne(chatEntry, this.elementsIdle.pop());
+    }
   }
 
-  private addOne(chatEntry: ChatEntry): void {
-    let danmakuElementComponent = this.elementsIdle.pop();
+  private addOne(
+    chatEntry: ChatEntry,
+    danmakuElementComponent: DanmakuElementComponent
+  ): void {
     danmakuElementComponent.setContent(chatEntry);
-
     let elementHeight = danmakuElementComponent.height;
     while (this.occupied.length < Math.max(elementHeight, this.canvasHeight)) {
       this.occupied.push(0);
@@ -102,7 +131,7 @@ export class DanmakuCanvasController {
 
   public addOneForce(chatEntry: ChatEntry): void {
     this.createOneIdleElement();
-    this.addOne(chatEntry);
+    this.addOne(chatEntry, this.elementsIdle.pop());
   }
 
   public moveOneFrame(deltaTime: number /* ms */): void {

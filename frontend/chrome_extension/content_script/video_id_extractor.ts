@@ -62,6 +62,10 @@ export class CrunchyrollVideoIdExtractor implements VideoIdExtractor {
 }
 
 export class NoopVideoIdExtractor implements VideoIdExtractor {
+  public static create(): NoopVideoIdExtractor {
+    return new NoopVideoIdExtractor();
+  }
+
   public extract(): string | undefined {
     return undefined;
   }

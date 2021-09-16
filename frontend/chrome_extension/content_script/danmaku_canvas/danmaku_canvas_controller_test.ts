@@ -77,7 +77,7 @@ PUPPETEER_TEST_RUNNER.run({
       },
     },
     {
-      name: "AddSeveralWithOverlapping",
+      name: "AddSeveralWithOverlappingAndOverLimit",
       execute: () => {
         // Prepare
         let counter = new Counter<string>();
@@ -197,6 +197,15 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(counter.get("setContent4"), eq(1), "setContent4 called");
         assertThat(counter.get("startMoving4"), eq(1), "startMoving4 called");
+
+        // Execute
+        danmakuCanvasController.addPerCycle([{}]);
+
+        // Verify
+        assertThat(counter.get("setContent"), eq(1), "setContent not called");
+        assertThat(counter.get("setContent2"), eq(1), "setContent2 not called");
+        assertThat(counter.get("setContent3"), eq(1), "setContent3 not called");
+        assertThat(counter.get("setContent4"), eq(1), "setContent4 not called");
 
         // Cleanup
         canvas.remove();

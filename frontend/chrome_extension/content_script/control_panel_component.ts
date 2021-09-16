@@ -121,34 +121,6 @@ export class ControlPanelComponent extends EventEmitter {
     );
   }
 
-  public static createHulu(
-    globalDocuments: GlobalDocuments,
-    playerSettings: PlayerSettings
-  ): ControlPanelComponent {
-    return ControlPanelComponent.create(
-      `position: absolute; width: 3.2rem; height: 3.2rem;`,
-      "white",
-      "bottom: 3.2rem; right: 0;",
-      true,
-      globalDocuments,
-      playerSettings
-    );
-  }
-
-  public static createFunimation(
-    globalDocuments: GlobalDocuments,
-    playerSettings: PlayerSettings
-  ): ControlPanelComponent {
-    return ControlPanelComponent.create(
-      `position: relative; width: 6rem; height: 6rem;`,
-      "white",
-      "bottom: 6rem; right: 0;",
-      true,
-      globalDocuments,
-      playerSettings
-    );
-  }
-
   private static create(
     elementStyle: string,
     controlPanelButtonColor: string,
