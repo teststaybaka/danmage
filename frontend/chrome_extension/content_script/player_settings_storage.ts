@@ -133,5 +133,3 @@ export class PlayerSettingsStorage {
     }
   }
 }
-
-export let PLAYER_SETTINGS_STORAGE = PlayerSettingsStorage.create();
