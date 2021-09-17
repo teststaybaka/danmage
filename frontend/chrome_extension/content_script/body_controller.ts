@@ -313,4 +313,16 @@ export class BodyController {
   private refreshBlocked(): void {
     this.danmakuCanvasController.refreshBlocked();
   }
+
+  public remove(): void {
+    this.video.onplay = undefined;
+    this.video.onpause = undefined;
+    this.video.onended = undefined;
+    this.video.onloadedmetadata = undefined;
+    this.video.onseeking = undefined;
+    this.video.onseeked = undefined;
+    this.reset();
+    this.controlPanelComponent.remove();
+    this.danmakuCanvasController.remove();
+  }
 }

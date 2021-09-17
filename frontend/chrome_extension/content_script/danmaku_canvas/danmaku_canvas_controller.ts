@@ -255,4 +255,10 @@ export class DanmakuCanvasController {
     }
     linkedList.clear();
   }
+
+  public remove(): void {
+    while (this.elementsIdle.length > 0) {
+      this.elementsIdle.pop().remove();
+    }
+  }
 }
