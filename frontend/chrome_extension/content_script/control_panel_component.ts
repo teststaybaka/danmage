@@ -7,7 +7,10 @@ import { BlockSettingsTabComponent } from "./block_settings_tab/block_settings_t
 import { ChatListTabComponent } from "./chat_list_tab/chat_list_tab_component";
 import { DisplaySettingsTabComponent } from "./display_settings_tab/display_settings_tab_component";
 import { GlobalDocuments } from "./global_documents";
-import { PlayerSettingsStorage } from "./player_settings_storage";
+import {
+  PLAYER_SETTINGS_STORAGE,
+  PlayerSettingsStorage,
+} from "./player_settings_storage";
 import { E } from "@selfage/element/factory";
 import { TabsSwitcher } from "@selfage/element/tabs_switcher";
 import { Ref } from "@selfage/ref";
@@ -151,7 +154,7 @@ export class ControlPanelComponent extends EventEmitter {
       ),
       globalDocuments,
       playerSettings,
-      PlayerSettingsStorage.create()
+      PLAYER_SETTINGS_STORAGE
     ).init();
   }
 
