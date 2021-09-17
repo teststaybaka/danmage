@@ -51,7 +51,7 @@ export class BodyController {
 
   public static createYouTubeStructured(
     video: HTMLVideoElement,
-    canvas: HTMLDivElement,
+    canvas: HTMLElement,
     buttonsContainer: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
@@ -72,7 +72,7 @@ export class BodyController {
 
   public static createYouTubeChat(
     video: HTMLVideoElement,
-    canvas: HTMLDivElement,
+    canvas: HTMLElement,
     buttonsContainer: Element,
     chatContainer: Element,
     globalDocuments: GlobalDocuments,
@@ -90,7 +90,7 @@ export class BodyController {
 
   public static createTwitchVideo(
     video: HTMLVideoElement,
-    canvas: HTMLDivElement,
+    canvas: HTMLElement,
     buttonsContainer: Element,
     chatContainer: Element,
     globalDocuments: GlobalDocuments,
@@ -108,7 +108,7 @@ export class BodyController {
 
   public static createTwitchLive(
     video: HTMLVideoElement,
-    canvas: HTMLDivElement,
+    canvas: HTMLElement,
     buttonsContainer: Element,
     chatContainer: Element,
     globalDocuments: GlobalDocuments,
@@ -126,7 +126,7 @@ export class BodyController {
 
   public static createCrunchyroll(
     video: HTMLVideoElement,
-    canvas: HTMLDivElement,
+    canvas: HTMLElement,
     buttonsContainer: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
