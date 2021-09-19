@@ -51,6 +51,6 @@
     ".jpg"
   ],
   "scripts": {
-    "local": "bundage bws backend/main backend/main_bin -ec frontend/web/entries.json -b frontend/web/ -e environment_local; node backend/main_bin"
+    "local": "bundage bws backend/main backend/main_bin -ec frontend/web/entries.json -e environment_local; node backend/main_bin"
   }
 }
