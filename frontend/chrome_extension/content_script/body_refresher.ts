@@ -1,11 +1,11 @@
 import { PlayerSettings } from "../../../interface/player_settings";
-import { BodyController } from "./body_controller";
 import {
-  CrunchyrollBodyAssembler,
   BodyAssembler,
+  CrunchyrollBodyAssembler,
   TwitchBodyAssembler,
   YouTubeBodyAssembler,
 } from "./body_assembler";
+import { BodyController } from "./body_controller";
 
 enum ElementsComparisonResult {
   UNCHANGED,
@@ -39,12 +39,12 @@ export class BodyRefresher {
   }
 
   private static create(bodyAssembler: BodyAssembler): BodyRefresher {
-    let playerRefresher = new BodyRefresher(bodyAssembler, window);
-    window.setTimeout(
-      playerRefresher.refresh,
-      BodyRefresher.REFRESH_INTERVAL
-    );
-    return playerRefresher;
+    return new BodyRefresher(bodyAssembler, window).init();
+  }
+
+  public init(): this {
+    this.window.setTimeout(this.refresh, BodyRefresher.REFRESH_INTERVAL);
+    return this;
   }
 
   private refresh = (): void => {

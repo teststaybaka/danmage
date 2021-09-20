@@ -73,11 +73,11 @@ export class BlockSettingsTabComponent extends EventEmitter {
     let blockEntryListRef = new Ref<HTMLDivElement>();
     let body = E.div(
       `class="block-settings-tab-container" style="display: flex; ` +
-        `flow-flow: column nowrap; height: 100%;"`,
+        `flex-flow: column nowrap; height: 100%;"`,
       E.div(
         `class="block-settings-tab-input-container" ` +
           `style="display: flex; flex-flow: row nowrap; align-items: center; ` +
-          `margin-top: 1.5rem; width: 100%; ` +
+          `margin-top: .7rem; width: 100%; ` +
           `color: ${ColorScheme.getContent()};"`,
         E.divRef(
           optionContainerRef,
@@ -91,7 +91,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
               `align-items: center;"`,
             E.div(
               `class="block-settings-tab-option-selected-text" ` +
-                `style="flex-grow: 1; padding: .5rem 0; font-size: 1.4rem; ` +
+                `style="flex-grow: 1; padding: .8rem 0; font-size: 1.4rem; ` +
                 `line-height: 100%; font-family: initial !important;"`,
               E.textRef(optionSelectedTextRef)
             ),
@@ -104,10 +104,9 @@ export class BlockSettingsTabComponent extends EventEmitter {
           ),
           E.divRef(
             optionListRef,
-            `class="block-settings-tab-options-list" ` +
-              `style="position: absolute; width: 100%; ` +
-              `box-shadow: .1rem .1rem .3rem ${ColorScheme.getPopupShadow()}; ` +
-              `background-color: ${ColorScheme.getBackground()};`,
+            `class="block-settings-tab-options-list" style="` +
+              `position: absolute; width: 100%; ` +
+              `background-color: ${ColorScheme.getBackground()};"`,
             blockOptionKeyword.body,
             blockOptionRegExp.body
           )
@@ -115,10 +114,10 @@ export class BlockSettingsTabComponent extends EventEmitter {
         E.inputRef(
           patternInputRef,
           `class="block-settings-tab-pattern-input" style="padding: 0; ` +
-            `margin: 0; outline: none; border: 0; flex-grow: 3; ` +
-            `margin-left: 1rem; line-height: 2.4rem; font-size: 1.4rem; ` +
-            `font-family: initial !important; ` +
-            `border-bottom: .1rem solid ${ColorScheme.getInputBorder()}; ` +
+            `margin: 0; outline: none; border: 0; min-width: 0; ` +
+            `flex-grow: 3; margin: 0 1rem; line-height: 3rem; ` +
+            `font-size: 1.4rem; font-family: initial !important; ` +
+            `border-bottom: .1rem solid ${ColorScheme.getInputBorder()};" ` +
             `placeHolder="New block rule"`
         ),
         submitButton.body
@@ -126,7 +125,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
       E.divRef(
         blockEntryListRef,
         `class="block-settings-tab-block-entry-list" style="flex-grow: 1; ` +
-          `width: 100%; margin-top: 1.5rem; overflow-y: auto;"`
+          `width: 100%; margin-top: .7rem; overflow-y: auto;"`
       )
     );
     return [

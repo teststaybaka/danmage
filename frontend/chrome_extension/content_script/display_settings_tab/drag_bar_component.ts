@@ -68,7 +68,7 @@ export class DragBarComponent extends EventEmitter {
           `flex-flow: row nowrap; align-items: center;"`,
         E.div(
           `class="drag-bar-min-value-label" style="font-size: 1.4rem; ` +
-            `margin-right: .5rem; font-family: initial !important; ` +
+            `margin-right: 1rem; font-family: initial !important; ` +
             `color: ${ColorScheme.getContent()};"`,
           E.text(`${numberRange.minValue}`)
         ),
@@ -92,7 +92,7 @@ export class DragBarComponent extends EventEmitter {
         ),
         E.div(
           `class="drag-bar-min-value-label" style="font-size: 1.4rem; ` +
-            `margin-left: .5rem; font-family: initial !important;` +
+            `margin-left: 1rem; font-family: initial !important;` +
             `color: ${ColorScheme.getContent()};"`,
           E.text(`${numberRange.maxValue}`)
         )
@@ -102,6 +102,9 @@ export class DragBarComponent extends EventEmitter {
   }
 
   public init(): this {
+    let value = parseInt(this.valueInput.value);
+    this.moveCursor(value);
+
     this.barWrapper.addEventListener("mousedown", (event) =>
       this.startMove(event)
     );

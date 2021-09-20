@@ -34,8 +34,9 @@ export class SignInComponent extends EventEmitter {
         `flex-flow: column nowrap; justify-content: center; ` +
         `align-items: center; height: 100%;"`,
       E.div(
-        `class="sign-in-text" style="font-size: 1.4rem; margin-bottom: 2rem; ` +
-          `color: ${ColorScheme.getContent()};"`,
+        `class="sign-in-text" style="font-size: 1.4rem; ` +
+          `font-family: initial !important; text-align: center; ` +
+          `margin-bottom: 2rem; color: ${ColorScheme.getContent()};"`,
         E.text("Sign in "),
         E.a(
           `class="sign-in-link" style="` +
@@ -44,8 +45,8 @@ export class SignInComponent extends EventEmitter {
           E.text("www.danmage.com")
         ),
         E.text(
-          " Chrome/Google account to be able to sync settings cross devices " +
-            "and post chats on certain video sites."
+          " with your Chrome/Google account to be able to sync settings " +
+            "cross devices and post chats on certain video sites."
         )
       ),
       button.body

@@ -25,6 +25,7 @@ export class ControlPanelComponent extends EventEmitter {
   private static TAB_BUTTON_WIDTH = 2.4;
   private static WIDTH_TRANSITION_STYLE = "width .3s";
 
+  private controlPanelPopupDisplayStyle: string;
   private tabsSwitcher = TabsSwitcher.create();
 
   public constructor(
@@ -56,7 +57,7 @@ export class ControlPanelComponent extends EventEmitter {
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
     return ControlPanelComponent.create(
-      `position: relative; width: 3.6rem; height: 3.6rem;`,
+      `position: relative; height: 100%;`,
       "currentColor",
       "bottom: 3.6rem; right: 0;",
       true,
@@ -70,7 +71,7 @@ export class ControlPanelComponent extends EventEmitter {
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
     return ControlPanelComponent.create(
-      `position: relative; width: 4rem; height: 4rem;`,
+      `position: relative; height: 4rem;`,
       "var(--yt-live-chat-header-button-color)",
       "top: 4rem; right: 0;",
       false,
@@ -84,7 +85,7 @@ export class ControlPanelComponent extends EventEmitter {
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
     return ControlPanelComponent.create(
-      `position: absolute; width: 3rem; height: 3rem; right: 0;`,
+      `position: absolute; height: 3rem; right: 1rem;`,
       "currentColor",
       "top: 3rem; right: 0;",
       false,
@@ -98,7 +99,7 @@ export class ControlPanelComponent extends EventEmitter {
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
     return ControlPanelComponent.create(
-      `position: relative; width: 3rem; height: 3rem;`,
+      `position: relative; height: 3rem;`,
       "currentColor",
       "bottom: 3rem; right: 0;",
       false,
@@ -222,13 +223,13 @@ export class ControlPanelComponent extends EventEmitter {
     let body = E.div(
       `class="control-panel-container" style="display: inline-block; ` +
         `text-align: left; text-shadow: none; vertical-align: top; ` +
-        `${elementStyle}"`,
+        `font-size: 0; ${elementStyle}"`,
       E.divRef(
         controlPanelButtonRef,
-        `class="control-panel-button" style="width: 100%; height: 100%; ` +
-          `padding: 25%; box-sizing: border-box; cursor: pointer;"`,
+        `class="control-panel-button" style="height: 100%; padding: 22%; ` +
+          `box-sizing: border-box; cursor: pointer;"`,
         E.svg(
-          `class="control-panel-svg" style="width: 100%; height: 100%; ` +
+          `class="control-panel-svg" style="display: block; height: 100%; ` +
             `fill: ${controlPanelButtonColor};" viewBox="0 0 200 200"`,
           E.path(
             `class="control-panel-control-panel-path" d="M99 0 L99 97 L49 49 z  M120 17 L149 17 L149 80 L120 80 z  M171 17 L200 17 L200 80 L171 80 z  M50 103 L50 200 L0 152 z  M71 120 L100 120 L100 183 L71 183 z  M122 120 L151 120 L151 183 L122 183 z"`
@@ -239,17 +240,19 @@ export class ControlPanelComponent extends EventEmitter {
         controlPanelPopupRef,
         `class="control-panel-control-panel-popup" style="` +
           `position: absolute; display: flex; flex-flow: column nowrap; ` +
-          `width: 28rem; height: 37rem; box-sizing: content-box; ` +
+          `width: 28rem; height: 38rem; padding: .3rem; ` +
+          `box-sizing: content-box; ` +
           `background-color: ${ColorScheme.getBackground()}; ` +
           `box-shadow: 0.1rem 0.1rem 0.3rem ${ColorScheme.getPopupShadow()}; ` +
-          `z-index: 100; ${controlPanelPopupStyle}`,
+          `z-index: 100; ${controlPanelPopupStyle}"`,
         E.divRef(
           tabHeadLineRef,
           `class="control-panel-tab-head-line" style="width: 100%;"`,
           ...tabHeads
         ),
         E.div(
-          `class="control-panel-tabs" style="flex-grow: 1; width: 100%;"`,
+          `class="control-panel-tabs" style="flex-grow: 1; width: 100%; ` +
+            `padding: 0 1rem;"`,
           ...tabBodies
         )
       )
@@ -283,20 +286,25 @@ export class ControlPanelComponent extends EventEmitter {
     return E.divRef(
       tabHead,
       `class="control-panel-tab-head" style="display: inline-flex; ` +
-        `height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; ` +
-        `align-items: center; padding-top: 1rem; ` +
+        `align-items: center; border-radius: .5rem .5rem 0 0; ` +
         `transition: ${ControlPanelComponent.WIDTH_TRANSITION_STYLE}; ` +
         `overflow: hidden;"`,
       E.divRef(
         tabButton,
-        `class="control-panel-tab-button-svg" style="width: 1.6rem; ` +
-          `height: 1.6rem; cursor: pointer; ` +
-          `fill: ${ColorScheme.getContent()};" viewBox="0 0 200 200"`,
-        E.path(`class="control-panel-tab-button-path" d="${svgPath}"`)
+        `class="control-panel-tab-button" style="flex-shrink: 0; ` +
+          `height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; ` +
+          `padding: .5rem; cursor: pointer;" `,
+        E.svg(
+          `class="control-panel-tab-button-svg" style="display: block; ` +
+            `height: 100%; fill: ${ColorScheme.getHintContent()};" ` +
+            `viewBox="0 0 200 200"`,
+          E.path(`class="control-panel-tab-button-path" d="${svgPath}"`)
+        )
       ),
       E.div(
-        `class="control-panel-title" style="flex-grow: 1; font-size: 1.4rem; ` +
-          `font-family: initial !important; ` +
+        `class="control-panel-title" style="flex-grow: 1; ` +
+          `font-size: 1.4rem; font-family: initial !important; ` +
+          `text-align: center; white-space: nowrap; ` +
           `color: ${ColorScheme.getContent()};"`,
         E.text(titleText)
       )
@@ -304,6 +312,7 @@ export class ControlPanelComponent extends EventEmitter {
   }
 
   public init(): this {
+    this.controlPanelPopupDisplayStyle = this.controlPanelPopup.style.display;
     this.hidePopup();
     this.controlPanelButton.addEventListener("click", () => this.showPopup());
     this.globalDocuments.hideWhenMousedown(this.body, () => this.hidePopup());
@@ -345,7 +354,7 @@ export class ControlPanelComponent extends EventEmitter {
   }
 
   private showPopup(): void {
-    this.controlPanelPopup.style.display = "block";
+    this.controlPanelPopup.style.display = this.controlPanelPopupDisplayStyle;
   }
 
   private showChatListTab(): void {
@@ -425,17 +434,23 @@ export class ControlPanelComponent extends EventEmitter {
   }
 
   private async updateBlocked(): Promise<void> {
-    this.chatListTabComponent.refreshBlocked();
+    if (this.chatListTabComponent) {
+      this.chatListTabComponent.refreshBlocked();
+    }
     this.emit("updateBlocked");
     await this.playerSettingsStorage.save(this.playerSettings);
   }
 
   public addChat(chatEntries: ChatEntry[]): void {
-    this.chatListTabComponent.add(chatEntries);
+    if (this.chatListTabComponent) {
+      this.chatListTabComponent.add(chatEntries);
+    }
   }
 
   public clearChat(): void {
-    this.chatListTabComponent.clear();
+    if (this.chatListTabComponent) {
+      this.chatListTabComponent.clear();
+    }
   }
 
   public remove(): void {

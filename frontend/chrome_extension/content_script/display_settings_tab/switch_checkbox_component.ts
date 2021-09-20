@@ -78,7 +78,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
           switchCircleRef,
           `class="switch-checkbox-circle" style="position: absolute; ` +
             `height: 1.8rem; width: 1.8rem; ` +
-            `left: -${SwitchCheckboxComponent.RADIUS}; ` +
+            `top: 0; left: -${SwitchCheckboxComponent.RADIUS}; ` +
             `background-color: ${ColorScheme.getBackground()}; ` +
             `border: .1rem solid ${ColorScheme.getInputBorder()}; ` +
             `border-radius: 50%; ` +

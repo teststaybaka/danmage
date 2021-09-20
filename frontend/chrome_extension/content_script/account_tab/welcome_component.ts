@@ -47,20 +47,23 @@ export class WelcomeComponent extends EventEmitter {
         `flex-flow: column nowrap; justify-content: center; ` +
         `align-items: center; width: 100%; height: 100%;"`,
       E.div(
-        `class="welcome-text" style="font-size: 1.4rem; margin-bottom: 2rem; ` +
+        `class="welcome-text" style="font-size: 1.4rem; ` +
+          `font-family: initial !important; margin-bottom: 2rem; ` +
           `color: ${ColorScheme.getContent()};"`,
         E.textRef(welcomeTextRef)
       ),
       E.div(
         `class="welcome-promo" style="font-size: 1.4rem; ` +
-          `margin-bottom: 2rem; color: ${ColorScheme.getContent()};"`,
+          `font-family: initial !important; margin-bottom: 2rem; ` +
+          `color: ${ColorScheme.getContent()};"`,
         E.text("Your settings are being synced via "),
         E.a(
           `class="weclome-promo-link" style="` +
             `color: ${ColorScheme.getLinkContent()};" ` +
             `href="https://www.danmage.com" target="_blank"`,
-          E.text("www.danmage.com.")
-        )
+          E.text("www.danmage.com")
+        ),
+        E.text(".")
       ),
       signOutButton.body
     );

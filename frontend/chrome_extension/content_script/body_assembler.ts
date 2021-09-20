@@ -11,8 +11,8 @@ export class YouTubeBodyAssembler implements BodyAssembler {
   public assemble: () => BodyController;
   private canvas: HTMLElement;
   private video: HTMLVideoElement;
-  private chatContainer: HTMLElement;
-  private buttonsContainer: HTMLElement;
+  private chatContainer: Element;
+  private anchorButtonElement: Element;
   private iframeDocument: Document;
 
   public constructor(private playerSettings: PlayerSettings) {}
@@ -22,21 +22,23 @@ export class YouTubeBodyAssembler implements BodyAssembler {
     this.video = document.getElementsByTagName("video")[0];
     let chatFrame = document.getElementById("chatframe") as HTMLIFrameElement;
     if (!chatFrame) {
-      this.buttonsContainer = document.querySelector(".ytp-right-controls");
+      this.anchorButtonElement = document.querySelector(
+        ".ytp-right-controls > .ytp-settings-button"
+      );
       this.assemble = this.assembleStructured;
-      return [this.canvas, this.video, this.buttonsContainer];
+      return [this.canvas, this.video, this.anchorButtonElement];
     } else {
       this.iframeDocument = chatFrame.contentDocument;
       this.chatContainer = this.iframeDocument.querySelector("#chat #items");
-      this.buttonsContainer = this.iframeDocument.querySelector(
-        "#chat-messages > yt-live-chat-header-renderer"
+      this.anchorButtonElement = this.iframeDocument.querySelector(
+        "#chat-messages yt-icon-button#overflow"
       );
       this.assemble = this.assembleChat;
       return [
         this.canvas,
         this.video,
         this.chatContainer,
-        this.buttonsContainer,
+        this.anchorButtonElement,
       ];
     }
   }
@@ -45,7 +47,7 @@ export class YouTubeBodyAssembler implements BodyAssembler {
     return BodyController.createYouTubeStructured(
       this.video,
       this.canvas,
-      this.buttonsContainer,
+      this.anchorButtonElement,
       new GlobalDocuments([document]),
       this.playerSettings
     );
@@ -55,7 +57,7 @@ export class YouTubeBodyAssembler implements BodyAssembler {
     return BodyController.createYouTubeChat(
       this.video,
       this.canvas,
-      this.buttonsContainer,
+      this.anchorButtonElement,
       this.chatContainer,
       new GlobalDocuments([document, this.iframeDocument]),
       this.playerSettings
@@ -67,8 +69,8 @@ export class TwitchBodyAssembler implements BodyAssembler {
   public assemble: () => BodyController;
   private canvas: HTMLElement;
   private video: HTMLVideoElement;
-  private chatContainer: HTMLElement;
-  private buttonsContainer: HTMLElement;
+  private chatContainer: Element;
+  private anchorButtonElement: Element;
 
   public constructor(private playerSettings: PlayerSettings) {
     document.documentElement.style.fontSize = "62.5%";
@@ -82,22 +84,29 @@ export class TwitchBodyAssembler implements BodyAssembler {
       this.chatContainer = document.querySelector(
         ".video-chat__message-list-wrapper ul"
       );
-      this.buttonsContainer = document.querySelector(".video-chat__header");
+      this.anchorButtonElement = document.querySelector(
+        ".video-chat__header > span"
+      );
       this.assemble = this.assembleVideo;
     } else {
-      this.buttonsContainer = document.querySelector(
-        ".chat-input__buttons-container > .tw-align-content-center"
+      this.anchorButtonElement = document.querySelector(
+        ".chat-input__buttons-container > div:last-child > div:last-child"
       );
       this.assemble = this.assembleLive;
     }
-    return [this.canvas, this.video, this.chatContainer, this.buttonsContainer];
+    return [
+      this.canvas,
+      this.video,
+      this.chatContainer,
+      this.anchorButtonElement,
+    ];
   }
 
   public assembleVideo(): BodyController {
     return BodyController.createTwitchVideo(
       this.video,
       this.canvas,
-      this.buttonsContainer,
+      this.anchorButtonElement,
       this.chatContainer,
       new GlobalDocuments([document]),
       this.playerSettings
@@ -108,7 +117,7 @@ export class TwitchBodyAssembler implements BodyAssembler {
     return BodyController.createTwitchLive(
       this.video,
       this.canvas,
-      this.buttonsContainer,
+      this.anchorButtonElement,
       this.chatContainer,
       new GlobalDocuments([document]),
       this.playerSettings
@@ -119,7 +128,7 @@ export class TwitchBodyAssembler implements BodyAssembler {
 export class CrunchyrollBodyAssembler implements BodyAssembler {
   private canvas: HTMLElement;
   private video: HTMLVideoElement;
-  private buttonsContainer: HTMLElement;
+  private anchorButtonElement: Element;
 
   public constructor(private playerSettings: PlayerSettings) {
     document.documentElement.style.fontSize = "62.5%";
@@ -130,15 +139,16 @@ export class CrunchyrollBodyAssembler implements BodyAssembler {
     this.video = document.getElementById(
       "player_html5_api"
     ) as HTMLVideoElement;
-    this.buttonsContainer = document.querySelector(".vjs-control-bar");
-    return [this.canvas, this.video, this.buttonsContainer];
+    this.anchorButtonElement =
+      document.querySelector(".vjs-control-bar").firstElementChild;
+    return [this.canvas, this.video, this.anchorButtonElement];
   }
 
   public assemble(): BodyController {
     return BodyController.createCrunchyroll(
       this.video,
       this.canvas,
-      this.buttonsContainer,
+      this.anchorButtonElement,
       new GlobalDocuments([document]),
       this.playerSettings
     );
