@@ -2,8 +2,10 @@ import { ColorScheme } from "../../../color_scheme";
 
 export let ENTRY_MARGIN_TOP_STYLE = `margin-top: .7rem;`;
 export let LABEL_STYLE =
-  `flex-grow: 1; font-size: 1.4rem; font-family: initial !important; ` +
-  `text-overflow: ellipsis; color: ${ColorScheme.getContent()};`;
+  `flex-grow: 1; font-size: 1.4rem; line-height: 100%; ` +
+  `font-family: initial !important; overflow: hidden; ` +
+  `text-overflow: ellipsis; white-space: nowrap; ` +
+  `color: ${ColorScheme.getContent()};`;
 export let INPUT_WIDTH = 4;
 export let INPUT_WIDTH_STYLE = `width: ${INPUT_WIDTH}rem;`;
 export let TEXT_INPUT_STYLE =

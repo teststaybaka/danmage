@@ -34,7 +34,7 @@ export class SignInComponent extends EventEmitter {
         `flex-flow: column nowrap; justify-content: center; ` +
         `align-items: center; height: 100%;"`,
       E.div(
-        `class="sign-in-text" style="font-size: 1.4rem; ` +
+        `class="sign-in-text" style="font-size: 1.4rem; line-height: 120%; ` +
           `font-family: initial !important; text-align: center; ` +
           `margin-bottom: 2rem; color: ${ColorScheme.getContent()};"`,
         E.text("Sign in "),

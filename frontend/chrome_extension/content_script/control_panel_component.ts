@@ -223,7 +223,7 @@ export class ControlPanelComponent extends EventEmitter {
     let body = E.div(
       `class="control-panel-container" style="display: inline-block; ` +
         `text-align: left; text-shadow: none; vertical-align: top; ` +
-        `font-size: 0; ${elementStyle}"`,
+        `font-size: 0; line-height: 0; ${elementStyle}"`,
       E.divRef(
         controlPanelButtonRef,
         `class="control-panel-button" style="height: 100%; padding: 22%; ` +
@@ -251,8 +251,8 @@ export class ControlPanelComponent extends EventEmitter {
           ...tabHeads
         ),
         E.div(
-          `class="control-panel-tabs" style="flex-grow: 1; width: 100%; ` +
-            `padding: 0 1rem;"`,
+          `class="control-panel-tabs" style="flex-grow: 1; ` +
+            `box-sizing: border-box; width: 100%; padding: 0 1rem;"`,
           ...tabBodies
         )
       )
@@ -293,7 +293,7 @@ export class ControlPanelComponent extends EventEmitter {
         tabButton,
         `class="control-panel-tab-button" style="flex-shrink: 0; ` +
           `height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; ` +
-          `padding: .5rem; cursor: pointer;" `,
+          `padding: .5rem; box-sizing: border-box; cursor: pointer;" `,
         E.svg(
           `class="control-panel-tab-button-svg" style="display: block; ` +
             `height: 100%; fill: ${ColorScheme.getHintContent()};" ` +
@@ -303,9 +303,9 @@ export class ControlPanelComponent extends EventEmitter {
       ),
       E.div(
         `class="control-panel-title" style="flex-grow: 1; ` +
-          `font-size: 1.4rem; font-family: initial !important; ` +
-          `text-align: center; white-space: nowrap; ` +
-          `color: ${ColorScheme.getContent()};"`,
+          `font-size: 1.4rem; line-height: 100%; ` +
+          `font-family: initial !important; text-align: center; ` +
+          `white-space: nowrap; color: ${ColorScheme.getContent()};"`,
         E.text(titleText)
       )
     );

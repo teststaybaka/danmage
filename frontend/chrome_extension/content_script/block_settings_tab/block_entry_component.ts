@@ -44,12 +44,12 @@ export class BlockEntryComponent extends EventEmitter {
       ),
       E.divRef(
         removeButtonRef,
-        `class="block-entry-remove-button" style="flex-shrink: 0; `+
+        `class="block-entry-remove-button" style="flex-shrink: 0; ` +
           `height: 1rem; margin-left: .5rem; cursor: pointer; ` +
           `fill: ${ColorScheme.getContent()};"`,
         E.svg(
-          `class="block-entry-remove-button-svg" style="height: 100%;" ` +
-            `viewBox="0 0 200 200"`,
+          `class="block-entry-remove-button-svg" style="display: block; ` +
+            `height: 100%;" viewBox="0 0 200 200"`,
           E.path(
             `class="block-entry-remove-button-path" ` +
               `d="M45 0 L100 55 L155 0 L200 45 L145 100 L200 155 L155 200 L100 145 L45 200 L0 155 L55 100 L0 45 z"`
