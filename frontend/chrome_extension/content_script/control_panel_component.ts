@@ -299,12 +299,12 @@ export class ControlPanelComponent extends EventEmitter {
         tabButton,
         {
           class: "control-panel-tab-button",
-          style: `flex-shrink: 0; height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; padding: .5rem; box-sizing: border-box; cursor: pointer;`,
+          style: `flex-shrink: 0; height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; padding: .3rem; box-sizing: border-box; cursor: pointer;`,
         },
         E.svg(
           {
             class: "control-panel-tab-button-svg",
-            style: `display: block; height: 100%; fill: ${ColorScheme.getHintContent()};`,
+            style: `display: block; height: 100%; fill: ${ColorScheme.getSvgContent()};`,
             viewBox: "0 0 200 200",
           },
           E.path({ class: "control-panel-tab-button-path", d: svgPath })

@@ -33,7 +33,7 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     private speedComponent: DragBarComponent,
     private fontFamilyComponent: TextInputComponent,
     private showUserNameComponent: SwitchCheckboxComponent,
-    private resetButton: SVGSVGElement,
+    private resetButton: HTMLDivElement,
     private displaySettings: DisplaySettings
   ) {
     super();
@@ -95,7 +95,7 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     showUserNameComponent: SwitchCheckboxComponent,
     displaySettings: DisplaySettings
   ) {
-    let resetButtonRef = new Ref<SVGSVGElement>();
+    let resetButtonRef = new Ref<HTMLDivElement>();
     let body = E.div(
       { class: "display-settings-tab-container" },
       enableComponent.body,
@@ -118,19 +118,25 @@ export class DisplaySettingsTabComponent extends EventEmitter {
           },
           E.text("Reset display settings")
         ),
-        E.svgRef(
+        E.divRef(
           resetButtonRef,
           {
-            class: "display-settings-tab-reset-button-svg",
-            style: `width: 2.4rem; height: 2.4rem; padding: 0 ${
-              (INPUT_WIDTH - 2.4) / 2
-            }rem; cursor: pointer; fill: ${ColorScheme.getContent()};`,
-            viewBox: "0 0 200 200",
+            class: "display-settings-tab-reset-button",
+            style: `width: 1.8rem; height: 1.8rem; padding: 0 ${
+              (INPUT_WIDTH - 1.8) / 2
+            }rem; box-sizing: content-box; cursor: pointer;`,
           },
-          E.path({
-            class: "display-settings-tab-reset-button-path",
-            d: "M0 49 L56 0 L56 31 L131 31 A69 69 0 0 1 131 169 L40 169 L40 136 L131 136 A33 33 0 0 0 131 64 L56 64 L56 98 z",
-          })
+          E.svg(
+            {
+              class: "display-settings-tab-reset-button-svg",
+              style: `display: block; width: 100%; height: 100%; fill: ${ColorScheme.getSvgContent()};`,
+              viewBox: "0 0 200 200",
+            },
+            E.path({
+              class: "display-settings-tab-reset-button-path",
+              d: "M0 49 L56 0 L56 31 L131 31 A69 69 0 0 1 131 169 L40 169 L40 136 L131 136 A33 33 0 0 0 131 64 L56 64 L56 98 z",
+            })
+          )
         )
       )
     );

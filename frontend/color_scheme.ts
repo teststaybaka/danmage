@@ -19,7 +19,7 @@ enum Purpose {
   HIGHLIGH_CONTENT,
   ERROR_CONTENT,
   LINK_CONTENT,
-  HINT_CONTENT,
+  SVG_CONTENT,
   BLOCK_SEPARATOR,
   INPUT_BORDER, // Includes button/dropdown/text input
   DISABLED_INPUT_CONTENT,
@@ -41,7 +41,7 @@ export let CLASSIC_COLOR_SCHEME: Map<Purpose, string> = new Map([
   [Purpose.HIGHLIGH_CONTENT, BLUE],
   [Purpose.ERROR_CONTENT, RED],
   [Purpose.LINK_CONTENT, BLUE],
-  [Purpose.HINT_CONTENT, DARK_GREY],
+  [Purpose.SVG_CONTENT, DARK_GREY],
   [Purpose.BLOCK_SEPARATOR, DARK_GREY],
   [Purpose.INPUT_BORDER, GREY],
   [Purpose.DISABLED_INPUT_CONTENT, LIGHT_GREY],
@@ -86,8 +86,8 @@ export class ColorScheme {
     return ColorScheme.SCHEME.get(Purpose.LINK_CONTENT);
   }
 
-  public static getHintContent(): string {
-    return ColorScheme.SCHEME.get(Purpose.HINT_CONTENT);
+  public static getSvgContent(): string {
+    return ColorScheme.SCHEME.get(Purpose.SVG_CONTENT);
   }
 
   public static getBlockSeparator(): string {
