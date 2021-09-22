@@ -21,9 +21,10 @@ export class BlockOptionEntryComponent extends EventEmitter {
 
   public static createView(kind: BlockKind) {
     return E.div(
-      `class="block-option-entry" style="padding: .4rem 0; ` +
-        `font-size: 1.4rem; line-height: 100%; ` +
-        `font-family: initial !important;"`,
+      {
+        class: "block-option-entry",
+        style: `padding: .4rem 0; font-size: 1.4rem; line-height: 100%; font-family: initial !important;`,
+      },
       E.text(BlockKind[kind])
     );
   }

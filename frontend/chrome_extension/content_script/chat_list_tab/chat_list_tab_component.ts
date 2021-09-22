@@ -53,29 +53,30 @@ export class ChatListTabComponent extends EventEmitter {
     let entryListRef = new Ref<HTMLDivElement>();
     let chatInputRef = new Ref<HTMLInputElement>();
     let body = E.div(
-      `class="chat-list-tab-container" style="display: flex; ` +
-        `flex-flow: column nowrap; height: 100%;"`,
+      {
+        class: "chat-list-tab-container",
+        style: `display: flex; flex-flow: column nowrap; height: 100%;`,
+      },
       E.div(
-        `class="chat-list-tab-entry-list-container" style="flex-grow: 1; ` +
-          `width: 100%; position: relative;"`,
-        E.divRef(
-          entryListRef,
-          `class="chat-list-tab-entry-list" style="position: absolute; ` +
-            `bottom: 0; max-height: 100%; width: 100%; overflow: auto;"`
-        )
+        {
+          class: "chat-list-tab-entry-list-container",
+          style: `flex-grow: 1; width: 100%; position: relative;`,
+        },
+        E.divRef(entryListRef, {
+          class: "chat-list-tab-entry-list",
+          style: `position: absolute; bottom: 0; max-height: 100%; width: 100%; overflow: auto;`,
+        })
       ),
       E.div(
-        `class="chat-list-tab-fire-form" style="display: flex; ` +
-          `flex-flow: row nowrap; align-items: center; width: 100%;"`,
-        E.inputRef(
-          chatInputRef,
-          `class="chat-list-tab-input" style="padding: 0; margin: 0; ` +
-            `outline: none; border: 0; min-width: 0; flex-grow: 1; `+
-            `margin-right: 1rem; font-size: 1.4rem; line-height: 3rem; ` +
-            `border-bottom: .1rem solid ${ColorScheme.getInputBorder()};` +
-            `font-family: initial !important; ` +
-            `color: ${ColorScheme.getContent()};" placeholder="Locak & load!"`
-        ),
+        {
+          class: "chat-list-tab-fire-form",
+          style: `display: flex; flex-flow: row nowrap; align-items: center; width: 100%;`,
+        },
+        E.inputRef(chatInputRef, {
+          class: "chat-list-tab-input",
+          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin-right: 1rem; font-size: 1.4rem; line-height: 3rem; border-bottom: .1rem solid ${ColorScheme.getInputBorder()}; font-family: initial !important; color: ${ColorScheme.getContent()};`,
+          placeholder: "Lock & load!",
+        }),
         fireButton.body
       )
     );

@@ -48,52 +48,54 @@ export class DragBarComponent extends EventEmitter {
     let barWrapperRef = new Ref<HTMLDivElement>();
     let cursorRef = new Ref<HTMLDivElement>();
     let body = E.div(
-      `class="drab-bar-container" style="${ENTRY_MARGIN_TOP_STYLE}"`,
+      { class: "drab-bar-container", style: ENTRY_MARGIN_TOP_STYLE },
       E.div(
-        `class="drag-bar-input-line" style="display: flex; ` +
-          `flex-flow: row nowrap; justify-content: space-between; ` +
-          `align-items: center;"`,
+        {
+          class: "drag-bar-input-line",
+          style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center;`,
+        },
         E.div(
-          `class="drag-bar-label" style="${LABEL_STYLE}" title="${label}"`,
+          { class: "drag-bar-label", style: LABEL_STYLE, title: label },
           E.text(label)
         ),
-        E.inputRef(
-          valueInputRef,
-          `class="drag-bar-value-input" style="${TEXT_INPUT_STYLE}" ` +
-            `value="${value}"`
-        )
+        E.inputRef(valueInputRef, {
+          class: "drag-bar-value-input",
+          style: TEXT_INPUT_STYLE,
+          value: `${value}`,
+        })
       ),
       E.div(
-        `class="drag-bar-bar-line" style="display: flex; ` +
-          `flex-flow: row nowrap; align-items: center;"`,
+        {
+          class: "drag-bar-bar-line",
+          style: `display: flex; flex-flow: row nowrap; align-items: center;`,
+        },
         E.div(
-          `class="drag-bar-min-value-label" style="font-size: 1.4rem; ` +
-            `line-height: 100%; font-family: initial !important; ` +
-            `margin-right: 1rem; color: ${ColorScheme.getContent()};"`,
+          {
+            class: "drag-bar-min-value-label",
+            style: `font-size: 1.4rem; line-height: 100%; font-family: initial !important; margin-right: 1rem; color: ${ColorScheme.getContent()};`,
+          },
           E.text(`${numberRange.minValue}`)
         ),
         E.divRef(
           barWrapperRef,
-          `class="drag-bar-bar-wrapper" style="position: relative; ` +
-            `flex-grow: 1; cursor: pointer; user-select: none;"`,
-          E.div(
-            `class="drag-bar-bar" style="height: .4rem; margin: 1rem 0;` +
-              `background-color: ${ColorScheme.getInputBorder()};` +
-              `border-radius: .2rem;"`
-          ),
-          E.divRef(
-            cursorRef,
-            `class="drag-bar-cursor" style="position: absolute; width: 1rem;` +
-              `height: 1rem; border-radius: 50%; left: -.5rem; top: .7rem;` +
-              `background-color: ${ColorScheme.getBackground()};` +
-              `border: .1rem solid ${ColorScheme.getInputBorder()};` +
-              `pointer-events: none;"`
-          )
+          {
+            class: "drag-bar-bar-wrapper",
+            style: `position: relative; flex-grow: 1; cursor: pointer; user-select: none;`,
+          },
+          E.div({
+            class: "drag-bar-bar",
+            style: `height: .4rem; margin: 1rem 0; background-color: ${ColorScheme.getInputBorder()}; border-radius: .2rem;`,
+          }),
+          E.divRef(cursorRef, {
+            class: "drag-bar-cursor",
+            style: `position: absolute; width: 1rem; height: 1rem; border-radius: 50%; left: -.5rem; top: .7rem; background-color: ${ColorScheme.getBackground()}; border: .1rem solid ${ColorScheme.getInputBorder()}; pointer-events: none;`,
+          })
         ),
         E.div(
-          `class="drag-bar-min-value-label" style="font-size: 1.4rem; ` +
-            `line-height: 100%; font-family: initial !important; ` +
-            `margin-left: 1rem; color: ${ColorScheme.getContent()};"`,
+          {
+            class: "drag-bar-min-value-label",
+            style: `font-size: 1.4rem; line-height: 100%; font-family: initial !important; margin-left: 1rem; color: ${ColorScheme.getContent()};`,
+          },
           E.text(`${numberRange.maxValue}`)
         )
       )

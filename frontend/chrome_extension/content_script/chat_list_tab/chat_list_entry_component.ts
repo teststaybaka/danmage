@@ -28,9 +28,10 @@ export class ChatListEntryComponent extends EventEmitter {
 
   public static createView(chatEntry: ChatEntry) {
     return E.div(
-      `class="chat-list-entry" style="position: relative; padding: .3rem 0; ` +
-        `line-height: 1.6rem; font-size: 1.4rem; ` +
-        `font-family: initial !important; word-break: break-all;"`,
+      {
+        class: "chat-list-entry",
+        style: `position: relative; padding: .3rem 0; line-height: 1.6rem; font-size: 1.4rem; font-family: initial !important; word-break: break-all;`,
+      },
       E.text(
         `${chatEntry.userNickname}${USERNAME_SEPARATOR}${chatEntry.content}`
       )

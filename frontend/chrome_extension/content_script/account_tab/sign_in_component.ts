@@ -30,18 +30,23 @@ export class SignInComponent extends EventEmitter {
 
   public static createView(button: FillButtonComponent) {
     let body = E.div(
-      `class="sign-in-container" style="display: flex; ` +
-        `flex-flow: column nowrap; justify-content: center; ` +
-        `align-items: center; height: 100%;"`,
+      {
+        class: "sign-in-container",
+        style: `display: flex; flex-flow: column nowrap; justify-content: center; align-items: center; height: 100%;`,
+      },
       E.div(
-        `class="sign-in-text" style="font-size: 1.4rem; line-height: 120%; ` +
-          `font-family: initial !important; text-align: center; ` +
-          `margin-bottom: 2rem; color: ${ColorScheme.getContent()};"`,
+        {
+          class: "sign-in-text",
+          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; text-align: center; margin-bottom: 2rem; color: ${ColorScheme.getContent()};`,
+        },
         E.text("Sign in "),
         E.a(
-          `class="sign-in-link" style="` +
-            `color: ${ColorScheme.getLinkContent()};" ` +
-            `href="https://www.danmage.com" target="_blank"`,
+          {
+            class: "sign-in-link",
+            style: `color: ${ColorScheme.getLinkContent()};`,
+            href: "https://www.danmage.com",
+            target: "_blank",
+          },
           E.text("www.danmage.com")
         ),
         E.text(

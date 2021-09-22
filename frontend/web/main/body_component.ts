@@ -88,77 +88,99 @@ export class BodyComponent {
     let signedInButtonsContainerRef = new Ref<HTMLDivElement>();
     let tabsContainerRef = new Ref<HTMLDivElement>();
     let body = E.div(
-      `class="body" style="display: flex; flex-flow: column nowrap; ` +
-        `min-height: 100vh; overflow-y: auto;"`,
+      {
+        class: "body",
+        style: `display: flex; flex-flow: column nowrap; min-height: 100vh; overflow-y: auto;`,
+      },
       E.div(
-        `class="body-header" style="display: flex; flex-flow: row nowrap; ` +
-          `align-items: center; padding: 1rem ${SIDE_PADDING}rem; ` +
-          `border-bottom: .1rem solid ${ColorScheme.getBlockSeparator()};"`,
+        {
+          class: "body-header",
+          style: `display: flex; flex-flow: row nowrap; align-items: center; padding: 1rem ${SIDE_PADDING}rem; border-bottom: .1rem solid ${ColorScheme.getBlockSeparator()};`,
+        },
         E.divRef(
           logoRef,
-          `class="body-logo" style="font-size: 3rem; font-weight: bold; ` +
-            `font-family: Comic Sans MS, cursive, sans-serif; ` +
-            `cursor: pointer;"`,
+          {
+            class: "body-logo",
+            style: `font-size: 3rem; font-weight: bold; font-family: Comic Sans MS, cursive, sans-serif; cursor: pointer;`,
+          },
           E.div(
-            `class="body-logo-left" style="display: inline; color: ${ORANGE};"`,
+            {
+              class: "body-logo-left",
+              style: `display: inline; color: ${ORANGE};`,
+            },
             E.text("Dan")
           ),
           E.div(
-            `class="body-logo-right" style="display: inline; color: ${BLUE};"`,
+            {
+              class: "body-logo-right",
+              style: `display: inline; color: ${BLUE};`,
+            },
             E.text("Mage")
           )
         ),
-        E.div(`style="flex: 1;"`),
+        E.div({ style: `flex: 1;` }),
         E.divRef(
           signInButtonRef,
-          `class="body-header-sign-in-button" style="display: flex; ` +
-            `flex-flow: row nowrap; align-items: center; ` +
-            `border: .1rem solid ${ColorScheme.getPrimaryButtonBackground()}; ` +
-            `background-color: ${ColorScheme.getPrimaryButtonBackground()}; ` +
-            `cursor: pointer;"`,
-          E.svgRef(
-            googleIconSvgRef,
-            `class="body-header-google-icon" viewBox="0 0 46 46" ` +
-              `style="width: 3.5rem; height: 3.5rem; background-color: white;"`
-          ),
+          {
+            class: "body-header-sign-in-button",
+            style: `display: flex; flex-flow: row nowrap; align-items: center; border: .1rem solid ${ColorScheme.getPrimaryButtonBackground()}; background-color: ${ColorScheme.getPrimaryButtonBackground()}; cursor: pointer;`,
+          },
+          E.svgRef(googleIconSvgRef, {
+            class: "body-header-google-icon",
+            style: `width: 3.5rem; height: 3.5rem; background-color: white;`,
+            viewBox: "0 0 46 46",
+          }),
           E.div(
-            `class="body-header-sign-in-text" style="padding: 0 1rem; ` +
-              `font-size: 1.6rem; color: white;"`,
+            {
+              class: "body-header-sign-in-text",
+              style: `padding: 0 1rem; font-size: 1.6rem; color: white;`,
+            },
             E.text("Sign in with Google")
           )
         ),
         E.divRef(
           signedInButtonsContainerRef,
-          `class="body-header-signed-in-tab-buttons-container" style="` +
-            `display: flex; flex-flow: row nowrap; align-items: center;"`,
+          {
+            class: "body-header-signed-in-tab-buttons-container",
+            style: `display: flex; flex-flow: row nowrap; align-items: center;`,
+          },
           E.div(
-            `class="body-header-nickname-button-wrapper" style="` +
-              `margin-right: 2rem;"`,
+            {
+              class: "body-header-nickname-button-wrapper",
+              style: `margin-right: 2rem;`,
+            },
             nicknameButton.body
           ),
           E.div(
-            `class="body-header-history-button-wrapper" style="` +
-              `margin-right: 2rem;"`,
+            {
+              class: "body-header-history-button-wrapper",
+              style: `margin-right: 2rem;`,
+            },
             historyButton.body
           ),
-          E.div(`class="body-heaer-history-button-wrapper"`, signOutButton.body)
+          E.div(
+            { class: "body-heaer-history-button-wrapper" },
+            signOutButton.body
+          )
         )
       ),
-      E.divRef(tabsContainerRef, `class="body-tab-container" style="flex: 1;"`),
+      E.divRef(tabsContainerRef, {
+        class: "body-tab-container",
+        style: "flex: 1;",
+      }),
       E.div(
-        `class="body-footer" style="display: flex; flex-flow: row nowrap; ` +
-          `align-items: center; justify-content: center; padding: 2rem 0; ` +
-          `border-top: .1rem solid ${ColorScheme.getBlockSeparator()};"`,
+        {
+          class: "body-footer",
+          style: `display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; padding: 2rem 0; border-top: .1rem solid ${ColorScheme.getBlockSeparator()};`,
+        },
         termsButton.body,
-        E.div(
-          `style="height: 2rem; margin: 0 .2rem; width: .1rem; ` +
-            `background-color: ${ColorScheme.getBlockSeparator()}"`
-        ),
+        E.div({
+          style: `height: 2rem; margin: 0 .2rem; width: .1rem; background-color: ${ColorScheme.getBlockSeparator()}`,
+        }),
         privacyButton.body,
-        E.div(
-          `style="height: 2rem; margin: 0 .2rem; width: .1rem; ` +
-            `background-color: ${ColorScheme.getBlockSeparator()};"`
-        ),
+        E.div({
+          style: `height: 2rem; margin: 0 .2rem; width: .1rem; background-color: ${ColorScheme.getBlockSeparator()};`,
+        }),
         feedbackButton.body
       )
     );

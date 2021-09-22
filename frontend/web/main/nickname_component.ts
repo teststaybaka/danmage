@@ -32,24 +32,26 @@ export class NicknameComponent {
   public static createView(setButton: FillButtonComponent) {
     let input = new Ref<HTMLInputElement>();
     let body = E.div(
-      `class="nickname-container" style="display: flex; ` +
-        `flex-flow: column nowrap; width: 100%; align-items: center; ` +
-        `padding: 5rem;"`,
+      {
+        class: "nickname-container",
+        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem;`,
+      },
       E.div(
-        `class="nickname-input-line" style="display: flex; ` +
-          `flex-flow: row nowrap; width: 100%; align-items: center; ` +
-          `justify-content: center; padding-bottom: 6rem;"`,
-        E.div(`style="flex: 2;"`),
+        {
+          class: "nickname-input-line",
+          style: `display: flex; flex-flow: row nowrap; width: 100%; align-items: center; justify-content: center; padding-bottom: 6rem;`,
+        },
+        E.div({ style: "flex: 2;" }),
         E.div(
-          `class="nickname-label" style="${LABEL_STYLE}"`,
+          { class: "nickname-label", style: LABEL_STYLE },
           E.text("Nickname")
         ),
-        E.inputRef(
-          input,
-          `class="nickname-input" placeholder="You can only set it once."` +
-            `style="${INPUT_STYLE}"`
-        ),
-        E.div(`style="flex: 2;"`)
+        E.inputRef(input, {
+          class: "nickname-input",
+          placeholder: "You can only set it once.",
+          style: INPUT_STYLE,
+        }),
+        E.div({ style: "flex: 2;" })
       ),
       setButton.body
     );

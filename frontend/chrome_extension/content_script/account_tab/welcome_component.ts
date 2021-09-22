@@ -43,24 +43,30 @@ export class WelcomeComponent extends EventEmitter {
   public static createView(signOutButton: FillButtonComponent) {
     let welcomeTextRef = new Ref<Text>();
     let body = E.div(
-      `class="welcome-container" style="display: flex; ` +
-        `flex-flow: column nowrap; justify-content: center; ` +
-        `align-items: center; width: 100%; height: 100%;"`,
+      {
+        class: "welcome-container",
+        style: `display: flex; flex-flow: column nowrap; justify-content: center; align-items: center; width: 100%; height: 100%;`,
+      },
       E.div(
-        `class="welcome-text" style="font-size: 1.4rem; line-height: 120%; ` +
-          `font-family: initial !important; margin-bottom: 2rem; ` +
-          `color: ${ColorScheme.getContent()};"`,
+        {
+          class: "welcome-text",
+          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()};`,
+        },
         E.textRef(welcomeTextRef)
       ),
       E.div(
-        `class="welcome-promo" style="font-size: 1.4rem; line-height: 120%; ` +
-          `font-family: initial !important; margin-bottom: 2rem; ` +
-          `color: ${ColorScheme.getContent()};"`,
+        {
+          class: "welcome-promo",
+          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()};`,
+        },
         E.text("Your settings are being synced via "),
         E.a(
-          `class="weclome-promo-link" style="` +
-            `color: ${ColorScheme.getLinkContent()};" ` +
-            `href="https://www.danmage.com" target="_blank"`,
+          {
+            class: "weclome-promo-link",
+            style: `color: ${ColorScheme.getLinkContent()};`,
+            href: "https://www.danmage.com",
+            target: "_blank",
+          },
           E.text("www.danmage.com")
         ),
         E.text(".")

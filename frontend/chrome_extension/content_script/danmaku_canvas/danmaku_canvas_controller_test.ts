@@ -16,7 +16,7 @@ PUPPETEER_TEST_RUNNER.run({
       execute: () => {
         // Prepare
         let counter = new Counter<string>();
-        let canvas = E.div("");
+        let canvas = E.div({});
         let playerSettings: PlayerSettings = {
           displaySettings: { numLimit: 10 },
         };
@@ -25,7 +25,7 @@ PUPPETEER_TEST_RUNNER.run({
         ) => {
           counter.increment("danmakuElementComponentFactoryFn");
           assertThat(settings, eq(playerSettings), "playerSettings");
-          return new MockDanmakuElementComponent(E.div(""));
+          return new MockDanmakuElementComponent(E.div({}));
         };
 
         // Execute
@@ -86,7 +86,7 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public height = 10;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               counter.increment("setContent");
@@ -102,7 +102,7 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public height = 10;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               counter.increment("setContent2");
@@ -118,7 +118,7 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public height = 25;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               counter.increment("setContent3");
@@ -134,7 +134,7 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public height = 15;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               counter.increment("setContent4");
@@ -145,7 +145,7 @@ PUPPETEER_TEST_RUNNER.run({
               assertThat(posY, eq(15), "posY4");
             }
           })();
-        let canvas = E.div(`style="height: 30px;"`);
+        let canvas = E.div({ style: "height: 30px;" });
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
           displaySettings: { enable: true, numLimit: 4 },
@@ -221,7 +221,7 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public height = 10;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               counter.increment("setContent");
@@ -232,7 +232,7 @@ PUPPETEER_TEST_RUNNER.run({
               assertThat(posY, eq(0), "posY");
             }
           })();
-        let canvas = E.div(`style="height: 5px;"`);
+        let canvas = E.div({ style: "height: 5px;" });
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
           displaySettings: { enable: true, numLimit: 1 },
@@ -265,7 +265,7 @@ PUPPETEER_TEST_RUNNER.run({
             public height = 10;
             public posY: number;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               if (counter.increment("setContent") === 2) {
@@ -308,7 +308,7 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public height = 10;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {}
             public startMoving(posY: number) {
@@ -319,7 +319,7 @@ PUPPETEER_TEST_RUNNER.run({
               return MoveResult.OccupyAndDisplay;
             }
           })();
-        let canvas = E.div(`style="height: 30px; width: 30px;"`);
+        let canvas = E.div({ style: "height: 30px; width: 30px;" });
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
           displaySettings: { enable: true, numLimit: 2 },
@@ -412,7 +412,7 @@ PUPPETEER_TEST_RUNNER.run({
             public height = 10;
             public posY: number;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               if (counter.increment("setContent") === 2) {
@@ -437,7 +437,7 @@ PUPPETEER_TEST_RUNNER.run({
               counter.increment("hide");
             }
           })();
-        let canvas = E.div(`style="height: 30px; width: 30px;"`);
+        let canvas = E.div({ style: "height: 30px; width: 30px;" });
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
           displaySettings: { enable: true, numLimit: 1 },
@@ -482,7 +482,7 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public height = 10;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               if (counter.increment("setContent") === 2) {
@@ -509,7 +509,7 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public height = 10;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               if (counter.increment("setContent2") === 2) {
@@ -531,7 +531,7 @@ PUPPETEER_TEST_RUNNER.run({
               counter.increment("hide2");
             }
           })();
-        let canvas = E.div(`style="height: 30px; width: 30px;"`);
+        let canvas = E.div({ style: "height: 30px; width: 30px;" });
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
           displaySettings: { enable: true, numLimit: 2 },
@@ -639,7 +639,7 @@ PUPPETEER_TEST_RUNNER.run({
             public height = 10;
             public posY: number;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               if (counter.increment("setContent") === 2) {
@@ -669,7 +669,7 @@ PUPPETEER_TEST_RUNNER.run({
             public height = 10;
             public posY: number;
             public constructor() {
-              super(E.div(``));
+              super(E.div({}));
             }
             public setContent(entry: ChatEntry) {
               if (counter.increment("setContent2") === 2) {
@@ -693,7 +693,7 @@ PUPPETEER_TEST_RUNNER.run({
               counter.increment("hide2");
             }
           })();
-        let canvas = E.div(`style="height: 30px; width: 30px;"`);
+        let canvas = E.div({ style: "height: 30px; width: 30px;" });
         document.body.appendChild(canvas);
         let playerSettings: PlayerSettings = {
           displaySettings: { enable: true, numLimit: 2 },

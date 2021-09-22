@@ -16,10 +16,10 @@ function main(): void {
     throw new Error("Unsupported environment.");
   }
 
-  let body = E.div(
-    `class="privacy" style="padding: 5rem; font-size: 1.7rem; ` +
-      `color: ${ColorScheme.getContent()};"`
-  );
+  let body = E.div({
+    class: "privacy",
+    style: `padding: 5rem; font-size: 1.7rem; color: ${ColorScheme.getContent()};`,
+  });
   document.body.appendChild(body);
   body.innerHTML = `
 <h1>Terms and Conditions ("Terms")</h1>

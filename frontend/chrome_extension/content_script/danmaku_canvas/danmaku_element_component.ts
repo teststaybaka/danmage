@@ -153,10 +153,10 @@ export enum MoveResult {
 }
 
 export class DanmakuElementComponent {
-  private static DANMAKU_ELEMENT_ATTRIBUTES =
-    `class="danmaku-element" style="display: none; flex-flow: row nowrap; ` +
-    `align-items: center; position: absolute; top: 0; right: 0; ` +
-    `padding: .2rem; z-index: 10; pointer-events: none;"`;
+  private static DANMAKU_ELEMENT_ATTRIBUTES = {
+    class: "danmaku-element",
+    style: `display: none; flex-flow: row nowrap; align-items: center; position: absolute; top: 0; right: 0; padding: .2rem; z-index: 10; pointer-events: none;`,
+  };
   private static OPACITY_SCALE = 1 / 100;
   private static SPEED_SCALE = 1 / 1000; // Scale for time in milliseconds.
 

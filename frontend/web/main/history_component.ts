@@ -31,11 +31,16 @@ export class HistoryComponent {
   public static createView(showMoreButton: TextButtonComponent) {
     let entryListContainer = new Ref<HTMLDivElement>();
     let body = E.div(
-      `class="history-container" style="display: flex; ` +
-        `flex-flow: column nowrap; width: 100%; align-items: center;"`,
+      {
+        class: "history-container",
+        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center;`,
+      },
       E.divRef(
         entryListContainer,
-        `class="history-entry-list" style="width: 100%; margin-bottom: 1rem;"`,
+        {
+          class: "history-entry-list",
+          style: `width: 100%; margin-bottom: 1rem;`,
+        },
         HistoryComponent.createEntryView(
           0,
           "Video site",
@@ -65,37 +70,48 @@ export class HistoryComponent {
       backgroundColor = ColorScheme.getAlternativeBackground();
     }
     return E.div(
-      `class="history-entry-container" style="display: flex; ` +
-        `flex-flow: row nowrap; width: 100%; padding: .8rem; ` +
-        `font-size: 1.6rem; color: ${ColorScheme.getContent()}; ` +
-        `background-color: ${backgroundColor};"`,
+      {
+        class: "history-entry-container",
+        style: `display: flex; flex-flow: row nowrap; width: 100%; padding: .8rem; font-size: 1.6rem; color: ${ColorScheme.getContent()}; background-color: ${backgroundColor};`,
+      },
       E.div(
-        `class="history-entry-host-app" style="flex: 1 0 0; ` +
-          `padding-right: .5rem; word-break: break-all;" ` +
-          `title="${hostAppStr}"`,
+        {
+          class: "history-entry-host-app",
+          style: `flex: 1 0 0; padding-right: .5rem; word-break: break-all;`,
+          title: hostAppStr,
+        },
         E.text(hostAppStr)
       ),
       E.div(
-        `class="history-entry-host-content-id" style="flex: 1 0 0; ` +
-          `padding-right: .5rem; word-break: break-all;" ` +
-          `title="${hostContentIdStr}"`,
+        {
+          class: "history-entry-host-content-id",
+          style: `flex: 1 0 0; padding-right: .5rem; word-break: break-all;`,
+          title: hostContentIdStr,
+        },
         E.text(hostContentIdStr)
       ),
       E.div(
-        `class="histroy-entry-timestamp" style="flex: 1 0 0; ` +
-          `padding-right: .5rem; word-break: break-all;" ` +
-          `title="${timestampStr}"`,
+        {
+          class: "histroy-entry-timestamp",
+          style: `flex: 1 0 0; padding-right: .5rem; word-break: break-all;`,
+          title: timestampStr,
+        },
         E.text(timestampStr)
       ),
       E.div(
-        `class="histroy-entry-content" style="flex: 7 0 0; ` +
-          `padding-right: .5rem; word-break: break-all;" ` +
-          `title="${contentStr}"`,
+        {
+          class: "histroy-entry-content",
+          style: `flex: 7 0 0; padding-right: .5rem; word-break: break-all;`,
+          title: contentStr,
+        },
         E.text(contentStr)
       ),
       E.div(
-        `class="history-entry-created" style="flex: 3 0 0; ` +
-          `word-break: break-all;" title="${createdStr}"`,
+        {
+          class: "history-entry-created",
+          style: `flex: 3 0 0; word-break: break-all;`,
+          title: createdStr,
+        },
         E.text(createdStr)
       )
     );

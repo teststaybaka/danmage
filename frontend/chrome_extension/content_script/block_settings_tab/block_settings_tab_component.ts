@@ -72,61 +72,60 @@ export class BlockSettingsTabComponent extends EventEmitter {
     let patternInputRef = new Ref<HTMLInputElement>();
     let blockEntryListRef = new Ref<HTMLDivElement>();
     let body = E.div(
-      `class="block-settings-tab-container" style="display: flex; ` +
-        `flex-flow: column nowrap; height: 100%;"`,
+      {
+        class: "block-settings-tab-container",
+        style: `display: flex; flex-flow: column nowrap; height: 100%;`,
+      },
       E.div(
-        `class="block-settings-tab-input-container" ` +
-          `style="display: flex; flex-flow: row nowrap; align-items: center; ` +
-          `margin-top: .7rem; width: 100%; ` +
-          `color: ${ColorScheme.getContent()};"`,
+        {
+          class: "block-settings-tab-input-container",
+          style: `display: flex; flex-flow: row nowrap; align-items: center; margin-top: .7rem; width: 100%; color: ${ColorScheme.getContent()};`,
+        },
         E.divRef(
           optionContainerRef,
-          `class="block-settings-tab-option-container" style="flex-grow: 1; ` +
-            `position: relative; cursor: pointer; ` +
-            `border-bottom: .1rem solid ${ColorScheme.getInputBorder()};"`,
+          {
+            class: "block-settings-tab-option-container",
+            style: `flex-grow: 1; position: relative; cursor: pointer; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
+          },
           E.divRef(
             optionSelectedRef,
-            `class="block-settings-tab-option-selected" ` +
-              `style="display: flex; flex-flow: row nowrap; ` +
-              `align-items: center;"`,
+            {
+              class: "block-settings-tab-option-selected",
+              style: `display: flex; flex-flow: row nowrap; align-items: center;`,
+            },
             E.div(
-              `class="block-settings-tab-option-selected-text" ` +
-                `style="flex-grow: 1; padding: .8rem 0; font-size: 1.4rem; ` +
-                `line-height: 100%; font-family: initial !important;"`,
+              {
+                class: "block-settings-tab-option-selected-text",
+                style: `flex-grow: 1; padding: .8rem 0; font-size: 1.4rem; line-height: 100%; font-family: initial !important;`,
+              },
               E.textRef(optionSelectedTextRef)
             ),
-            E.div(
-              `class="block-settings-tab-option-arrow" ` +
-                `style="border-left: .4rem solid transparent; ` +
-                `border-right: .4rem solid transparent; ` +
-                `border-top: .8rem solid ${ColorScheme.getInputBorder()};"`
-            )
+            E.div({
+              class: "block-settings-tab-option-arrow",
+              style: `border-left: .4rem solid transparent; border-right: .4rem solid transparent; border-top: .8rem solid ${ColorScheme.getInputBorder()};`,
+            })
           ),
           E.divRef(
             optionListRef,
-            `class="block-settings-tab-options-list" style="` +
-              `position: absolute; width: 100%; ` +
-              `background-color: ${ColorScheme.getBackground()};"`,
+            {
+              class: "block-settings-tab-options-list",
+              style: `position: absolute; width: 100%; background-color: ${ColorScheme.getBackground()};`,
+            },
             blockOptionKeyword.body,
             blockOptionRegExp.body
           )
         ),
-        E.inputRef(
-          patternInputRef,
-          `class="block-settings-tab-pattern-input" style="padding: 0; ` +
-            `margin: 0; outline: none; border: 0; min-width: 0; ` +
-            `flex-grow: 3; margin: 0 1rem; line-height: 3rem; ` +
-            `font-size: 1.4rem; font-family: initial !important; ` +
-            `border-bottom: .1rem solid ${ColorScheme.getInputBorder()};" ` +
-            `placeHolder="New block rule"`
-        ),
+        E.inputRef(patternInputRef, {
+          class: "block-settings-tab-pattern-input",
+          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 3; margin: 0 1rem; line-height: 3rem; font-size: 1.4rem; font-family: initial !important; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
+          placeHolder: "New block rule",
+        }),
         submitButton.body
       ),
-      E.divRef(
-        blockEntryListRef,
-        `class="block-settings-tab-block-entry-list" style="flex-grow: 1; ` +
-          `width: 100%; margin-top: .7rem; overflow-y: auto;"`
-      )
+      E.divRef(blockEntryListRef, {
+        class: "block-settings-tab-block-entry-list",
+        style: `flex-grow: 1; width: 100%; margin-top: .7rem; overflow-y: auto;`,
+      })
     );
     return [
       body,

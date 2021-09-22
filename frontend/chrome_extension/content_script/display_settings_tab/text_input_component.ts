@@ -38,17 +38,19 @@ export class TextInputComponent extends EventEmitter {
   public static createView(label: string, value: string) {
     let inputRef = new Ref<HTMLInputElement>();
     let body = E.div(
-      `class="text-input-container" style="display: flex; ` +
-        `flex-flow: row nowrap; justify-content: space-between; ` +
-        `align-items: center; ${ENTRY_MARGIN_TOP_STYLE}"`,
+      {
+        class: "text-input-container",
+        style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_MARGIN_TOP_STYLE}`,
+      },
       E.div(
-        `class="text-input-label" style="${LABEL_STYLE}" title="${label}"`,
+        { class: "text-input-label", style: LABEL_STYLE, title: label },
         E.text(label)
       ),
-      E.inputRef(
-        inputRef,
-        `class="text-input" style="${TEXT_INPUT_STYLE}" value="${value}"`
-      )
+      E.inputRef(inputRef, {
+        class: "text-input",
+        style: TEXT_INPUT_STYLE,
+        value: value,
+      })
     );
     return [body, inputRef.val] as const;
   }

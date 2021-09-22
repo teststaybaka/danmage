@@ -35,7 +35,7 @@ export class AccountTabComponent {
     welcomeComponent: WelcomeComponent
   ) {
     let body = E.div(
-      `class="account-tab" style="width: 100%; height: 100%;"`,
+      { class: "account-tab", style: `width: 100%; height: 100%;` },
       signInComponent.body,
       welcomeComponent.body
     );

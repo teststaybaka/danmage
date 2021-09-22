@@ -22,7 +22,7 @@ export class HomeView {
     let chromeStoreUrl =
       "https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm";
     return E.div(
-      `class="home-container"`,
+      { class: "home-container" },
       HomeView.paragraph(
         1,
         HomeView.textElement(
@@ -32,9 +32,11 @@ export class HomeView {
             `Twitch, YouTube and Crunchyroll. Get it here:`
         ),
         E.a(
-          `href="${chromeStoreUrl}" target="_blank" style="display: block; ` +
-            `color: ${ColorScheme.getLinkContent()}; word-break: break-all; ` +
-            `margin-bottom: 1rem; text-decoration: none;"`,
+          {
+            style: `display: block; color: ${ColorScheme.getLinkContent()}; word-break: break-all; margin-bottom: 1rem; text-decoration: none;`,
+            href: chromeStoreUrl,
+            target: "_blank",
+          },
           E.text(chromeStoreUrl)
         )
       ),
@@ -128,22 +130,22 @@ export class HomeView {
       backgroundColor = ColorScheme.getAlternativeBackground();
       direction = "row-reverse";
     }
-    let paragraph = E.div(
-      `class="home-paragraph" style="display: flex; ` +
-        `flex-flow: ${direction} wrap; justify-content: center; ` +
-        `align-items: flex-start; padding: 2.5rem ${SIDE_PADDING / 2}rem; ` +
-        `background-color: ${backgroundColor};"`
-    );
+    let paragraph = E.div({
+      class: "home-paragraph",
+      style: `display: flex; flex-flow: ${direction} wrap; justify-content: center; align-items: flex-start; padding: 2.5rem ${
+        SIDE_PADDING / 2
+      }rem; background-color: ${backgroundColor};`,
+    });
     paragraph.appendChild(HomeView.picture(HomeView.IMAGE_PATHS[index - 1]));
     paragraph.appendChild(HomeView.textContainer(index, textElements));
     return paragraph;
   }
 
   private static picture(imagePath: string): HTMLElement {
-    let pic = E.image(
-      `class="home-picture" style="width: 70rem; ` +
-        `padding: 2.5rem ${SIDE_PADDING / 2}rem;"`
-    );
+    let pic = E.image({
+      class: "home-picture",
+      style: `width: 70rem; padding: 2.5rem ${SIDE_PADDING / 2}rem;`,
+    });
     pic.src = imagePath;
     return pic;
   }
@@ -153,16 +155,19 @@ export class HomeView {
     textElements: Array<HTMLElement>
   ): HTMLElement {
     return E.div(
-      `class="home-text-container" style="flex: 1 0 20rem; ` +
-        `padding: 2.5rem ${SIDE_PADDING / 2}rem 1.5rem; font-size: 1.6rem; ` +
-        `color: ${ColorScheme.getContent()};"`,
+      {
+        class: "home-text-container",
+        style: `flex: 1 0 20rem; padding: 2.5rem ${
+          SIDE_PADDING / 2
+        }rem 1.5rem; font-size: 1.6rem; color: ${ColorScheme.getContent()};`,
+      },
       ...textElements
     );
   }
 
   private static textElement(text: string): HTMLElement {
     return E.div(
-      `class="home-text" style="margin-bottom: 1rem;"`,
+      { class: "home-text", style: `margin-bottom: 1rem;` },
       E.text(text)
     );
   }

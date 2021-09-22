@@ -30,37 +30,39 @@ export class FeedbackComponent {
     let textareaRef = new Ref<HTMLTextAreaElement>();
     let inputRef = new Ref<HTMLInputElement>();
     let body = E.div(
-      `class="feedback-body" style="display: flex; ` +
-        `flex-flow: column nowrap; width: 100%; align-items: center; ` +
-        `padding: 5rem;"`,
+      {
+        class: "feedback-body",
+        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem;`,
+      },
       E.div(
-        `class="feedback-line" style="display: flex; flex-flow: row nowrap; ` +
-          `width: 100%; justify-content: center; padding-bottom: 6rem;"`,
-        E.div(`style="flex: 2;"`),
+        {
+          class: "feedback-line",
+          style: `display: flex; flex-flow: row nowrap; width: 100%; justify-content: center; padding-bottom: 6rem;`,
+        },
+        E.div({ style: "flex: 2;" }),
         E.div(
-          `class="feedback-label" style="${LABEL_STYLE}"`,
+          { class: "feedback-label", style: LABEL_STYLE },
           E.text("Description")
         ),
-        E.textareaRef(
-          textareaRef,
-          `class="feedback-textarea" style="${INPUT_STYLE} min-height: 3rem; ` +
-            `resize: vertical;"`
-        ),
-        E.div(`style="flex: 2;"`)
+        E.textareaRef(textareaRef, {
+          class: "feedback-textarea",
+          style: `${INPUT_STYLE} min-height: 3rem; resize: vertical;`,
+        }),
+        E.div({ style: "flex: 2;" })
       ),
       E.div(
-        `class="feedback-line" style="display: flex; flex-flow: row nowrap; ` +
-          `width: 100%; align-items: center; justify-content: center; ` +
-          `padding-bottom: 6rem;"`,
-        E.div(`style="flex: 2;"`),
-        E.div(`class="feedback-label" style="${LABEL_STYLE}"`, E.text("Email")),
-        E.inputRef(
-          inputRef,
-          `class="feedback-input" ` +
-            `placeholder="Leave your email if you want to hear back."` +
-            `style="${INPUT_STYLE}"`
-        ),
-        E.div(`style="flex: 2;"`)
+        {
+          class: "feedback-line",
+          style: `display: flex; flex-flow: row nowrap; width: 100%; align-items: center; justify-content: center; padding-bottom: 6rem;`,
+        },
+        E.div({ style: "flex: 2;" }),
+        E.div({ class: "feedback-label", style: LABEL_STYLE }, E.text("Email")),
+        E.inputRef(inputRef, {
+          class: "feedback-input",
+          placeholder: `Leave your email if you want to hear back.`,
+          style: INPUT_STYLE,
+        }),
+        E.div({ style: "flex: 2;" })
       ),
       button.body
     );

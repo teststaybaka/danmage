@@ -97,7 +97,7 @@ export class DisplaySettingsTabComponent extends EventEmitter {
   ) {
     let resetButtonRef = new Ref<SVGSVGElement>();
     let body = E.div(
-      `class="display-settings-tab-container"`,
+      { class: "display-settings-tab-container" },
       enableComponent.body,
       opacityComponent.body,
       fontSizeComponent.body,
@@ -106,24 +106,31 @@ export class DisplaySettingsTabComponent extends EventEmitter {
       fontFamilyComponent.body,
       showUserNameComponent.body,
       E.div(
-        `class="display-settings-tab-reset-entry" style="display: flex; ` +
-          `flex-flow: row nowrap: justify-content: space-between; ` +
-          `align-items: center; ${ENTRY_MARGIN_TOP_STYLE}"`,
+        {
+          class: "display-settings-tab-reset-entry",
+          style: `display: flex; flex-flow: row nowrap: justify-content: space-between; align-items: center; ${ENTRY_MARGIN_TOP_STYLE}`,
+        },
         E.div(
-          `class="display-settings-tab-reset-label" style="${LABEL_STYLE}" ` +
-            `title="Reset display settings"`,
+          {
+            class: "display-settings-tab-reset-label",
+            style: LABEL_STYLE,
+            title: "Reset display settings",
+          },
           E.text("Reset display settings")
         ),
         E.svgRef(
           resetButtonRef,
-          `class="display-settings-tab-reset-button-svg" ` +
-            `style="width: 2.4rem; height: 2.4rem; ` +
-            `padding: 0 ${(INPUT_WIDTH - 2.4) / 2}rem; cursor: pointer; ` +
-            `fill: ${ColorScheme.getContent()};" viewBox="0 0 200 200"`,
-          E.path(
-            `class="display-settings-tab-reset-button-path" ` +
-              `d="M0 49 L56 0 L56 31 L131 31 A69 69 0 0 1 131 169 L40 169 L40 136 L131 136 A33 33 0 0 0 131 64 L56 64 L56 98 z"`
-          )
+          {
+            class: "display-settings-tab-reset-button-svg",
+            style: `width: 2.4rem; height: 2.4rem; padding: 0 ${
+              (INPUT_WIDTH - 2.4) / 2
+            }rem; cursor: pointer; fill: ${ColorScheme.getContent()};`,
+            viewBox: "0 0 200 200",
+          },
+          E.path({
+            class: "display-settings-tab-reset-button-path",
+            d: "M0 49 L56 0 L56 31 L131 31 A69 69 0 0 1 131 169 L40 169 L40 136 L131 136 A33 33 0 0 0 131 64 L56 64 L56 98 z",
+          })
         )
       )
     );

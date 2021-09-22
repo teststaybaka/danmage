@@ -125,7 +125,7 @@ PUPPETEER_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
-        let input = E.input("");
+        let input = E.input({});
         let inputController = new (class extends TextInputController {
           public constructor() {
             super(undefined);
@@ -156,7 +156,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         let nicknameComponent = new NicknameComponent(
-          E.div(""),
+          E.div({}),
           input,
           setButton,
           inputController,
@@ -189,7 +189,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         new NicknameComponent(
-          E.div(""),
+          E.div({}),
           undefined,
           setButton,
           inputController,

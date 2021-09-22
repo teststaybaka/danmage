@@ -32,8 +32,10 @@ export class FillButtonComponent extends EventEmitter {
 
   public static createView(...childNodes: Array<Node>): HTMLButtonElement {
     return E.button(
-      `class="fill-button" style="${COMMON_BUTTON_STYLE} ` +
-        `color: ${ColorScheme.getPrimaryButtonContent()};"`,
+      {
+        class: "fill-button",
+        style: `${COMMON_BUTTON_STYLE} color: ${ColorScheme.getPrimaryButtonContent()};`,
+      },
       ...childNodes
     );
   }
@@ -113,7 +115,7 @@ export class TextButtonComponent extends EventEmitter {
 
   public static createView(...childNodes: Array<Node>): HTMLButtonElement {
     return E.button(
-      `class="text-button" style="${COMMON_BUTTON_STYLE}"`,
+      { class: "text-button", style: COMMON_BUTTON_STYLE },
       ...childNodes
     );
   }

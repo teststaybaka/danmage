@@ -221,38 +221,44 @@ export class ControlPanelComponent extends EventEmitter {
     );
 
     let body = E.div(
-      `class="control-panel-container" style="display: inline-block; ` +
-        `text-align: left; text-shadow: none; vertical-align: top; ` +
-        `font-size: 0; line-height: 0; ${elementStyle}"`,
+      {
+        class: "control-panel-container",
+        style: `display: inline-block; text-align: left; text-shadow: none; vertical-align: top; font-size: 0; line-height: 0; ${elementStyle}`,
+      },
       E.divRef(
         controlPanelButtonRef,
-        `class="control-panel-button" style="height: 100%; padding: 22%; ` +
-          `box-sizing: border-box; cursor: pointer;"`,
+        {
+          class: "control-panel-button",
+          style: `height: 100%; padding: 22%; box-sizing: border-box; cursor: pointer;`,
+        },
         E.svg(
-          `class="control-panel-svg" style="display: block; height: 100%; ` +
-            `fill: ${controlPanelButtonColor};" viewBox="0 0 200 200"`,
-          E.path(
-            `class="control-panel-control-panel-path" d="M99 0 L99 97 L49 49 z  M120 17 L149 17 L149 80 L120 80 z  M171 17 L200 17 L200 80 L171 80 z  M50 103 L50 200 L0 152 z  M71 120 L100 120 L100 183 L71 183 z  M122 120 L151 120 L151 183 L122 183 z"`
-          )
+          {
+            class: "control-panel-svg",
+            style: `display: block; height: 100%; fill: ${controlPanelButtonColor};`,
+            viewBox: "0 0 200 200",
+          },
+          E.path({
+            class: "control-panel-control-panel-path",
+            d: "M99 0 L99 97 L49 49 z  M120 17 L149 17 L149 80 L120 80 z  M171 17 L200 17 L200 80 L171 80 z  M50 103 L50 200 L0 152 z  M71 120 L100 120 L100 183 L71 183 z  M122 120 L151 120 L151 183 L122 183 z",
+          })
         )
       ),
       E.divRef(
         controlPanelPopupRef,
-        `class="control-panel-control-panel-popup" style="` +
-          `position: absolute; display: flex; flex-flow: column nowrap; ` +
-          `width: 28rem; height: 38rem; padding: .3rem; ` +
-          `box-sizing: content-box; ` +
-          `background-color: ${ColorScheme.getBackground()}; ` +
-          `box-shadow: 0.1rem 0.1rem 0.3rem ${ColorScheme.getPopupShadow()}; ` +
-          `z-index: 100; ${controlPanelPopupStyle}"`,
+        {
+          class: "control-panel-control-panel-popup",
+          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 28rem; height: 38rem; padding: .3rem; box-sizing: content-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 0.1rem 0.1rem 0.3rem ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
+        },
         E.divRef(
           tabHeadLineRef,
-          `class="control-panel-tab-head-line" style="width: 100%;"`,
+          { class: "control-panel-tab-head-line", style: `width: 100%;` },
           ...tabHeads
         ),
         E.div(
-          `class="control-panel-tabs" style="flex-grow: 1; ` +
-            `box-sizing: border-box; width: 100%; padding: 0 1rem;"`,
+          {
+            class: "control-panel-tabs",
+            style: `flex-grow: 1; box-sizing: border-box; width: 100%; padding: 0 1rem;`,
+          },
           ...tabBodies
         )
       )
@@ -285,27 +291,30 @@ export class ControlPanelComponent extends EventEmitter {
   ): HTMLDivElement {
     return E.divRef(
       tabHead,
-      `class="control-panel-tab-head" style="display: inline-flex; ` +
-        `align-items: center; border-radius: .5rem .5rem 0 0; ` +
-        `transition: ${ControlPanelComponent.WIDTH_TRANSITION_STYLE}; ` +
-        `overflow: hidden;"`,
+      {
+        class: "control-panel-tab-head",
+        style: `display: inline-flex; align-items: center; border-radius: .5rem .5rem 0 0; transition: ${ControlPanelComponent.WIDTH_TRANSITION_STYLE}; overflow: hidden;`,
+      },
       E.divRef(
         tabButton,
-        `class="control-panel-tab-button" style="flex-shrink: 0; ` +
-          `height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; ` +
-          `padding: .5rem; box-sizing: border-box; cursor: pointer;" `,
+        {
+          class: "control-panel-tab-button",
+          style: `flex-shrink: 0; height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; padding: .5rem; box-sizing: border-box; cursor: pointer;`,
+        },
         E.svg(
-          `class="control-panel-tab-button-svg" style="display: block; ` +
-            `height: 100%; fill: ${ColorScheme.getHintContent()};" ` +
-            `viewBox="0 0 200 200"`,
-          E.path(`class="control-panel-tab-button-path" d="${svgPath}"`)
+          {
+            class: "control-panel-tab-button-svg",
+            style: `display: block; height: 100%; fill: ${ColorScheme.getHintContent()};`,
+            viewBox: "0 0 200 200",
+          },
+          E.path({ class: "control-panel-tab-button-path", d: svgPath })
         )
       ),
       E.div(
-        `class="control-panel-title" style="flex-grow: 1; ` +
-          `font-size: 1.4rem; line-height: 100%; ` +
-          `font-family: initial !important; text-align: center; ` +
-          `white-space: nowrap; color: ${ColorScheme.getContent()};"`,
+        {
+          class: "control-panel-title",
+          style: `flex-grow: 1; font-size: 1.4rem; line-height: 100%; font-family: initial !important; text-align: center; white-space: nowrap; color: ${ColorScheme.getContent()};`,
+        },
         E.text(titleText)
       )
     );
