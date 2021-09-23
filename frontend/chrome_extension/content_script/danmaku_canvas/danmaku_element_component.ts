@@ -68,8 +68,9 @@ class TwitchChatCustomizer implements DanmakuElementCustomizer {
   ): void {
     body.innerHTML = chatEntry.content.replace(
       TwitchChatCustomizer.COLON_REPLACER,
-      `></`
+      `> </`
     );
+    removeSelectedChildElements(body, ".vod-message__header");
 
     if (displaySettings.showUserName) {
       let nameElement = body.querySelector(
@@ -155,7 +156,7 @@ export enum MoveResult {
 export class DanmakuElementComponent {
   private static DANMAKU_ELEMENT_ATTRIBUTES = {
     class: "danmaku-element",
-    style: `display: none; flex-flow: row nowrap; align-items: center; position: absolute; top: 0; right: 0; padding: .2rem; z-index: 10; pointer-events: none;`,
+    style: `display: none; position: absolute; top: 0; right: 0; padding: .2rem; z-index: 10; pointer-events: none; white-space: nowrap;`,
   };
   private static OPACITY_SCALE = 1 / 100;
   private static SPEED_SCALE = 1 / 1000; // Scale for time in milliseconds.
@@ -209,7 +210,7 @@ export class DanmakuElementComponent {
   public setContent(chatEntry: ChatEntry): void {
     this.chatEntry = chatEntry;
     this.body.style.visibility = "hidden";
-    this.body.style.display = "flex";
+    this.body.style.display = "block";
     this.render();
     this.height = this.body.offsetHeight;
   }

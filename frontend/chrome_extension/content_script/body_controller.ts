@@ -11,8 +11,7 @@ import {
 import {
   ChatPool,
   StructuredChatPool,
-  TwitchLiveChatPool,
-  TwitchVideoChatPool,
+  TwitchChatPool,
   YouTubeChatPool,
 } from "./chat_pool";
 import { ControlPanelComponent } from "./control_panel_component";
@@ -101,7 +100,7 @@ export class BodyController {
       anchorButtonElement,
       DanmakuCanvasController.createTwitch(canvas, playerSettings),
       ControlPanelComponent.createTwitchVideo(globalDocuments, playerSettings),
-      TwitchVideoChatPool.create(chatContainer, playerSettings.blockSettings),
+      TwitchChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create()
     );
   }
@@ -119,7 +118,7 @@ export class BodyController {
       anchorButtonElement,
       DanmakuCanvasController.createTwitch(canvas, playerSettings),
       ControlPanelComponent.createTwitchLive(globalDocuments, playerSettings),
-      TwitchLiveChatPool.create(chatContainer, playerSettings.blockSettings),
+      TwitchChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create()
     );
   }
