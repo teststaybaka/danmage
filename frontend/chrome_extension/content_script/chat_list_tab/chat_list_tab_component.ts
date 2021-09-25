@@ -85,6 +85,9 @@ export class ChatListTabComponent extends EventEmitter {
 
   public init(): this {
     this.displayStyle = this.body.style.display;
+    this.chatInput.addEventListener("keydown", (event) =>
+      event.stopPropagation()
+    );
     this.chatInputController.on("enter", () => this.enterToFire());
     this.fireButton.on("click", () => this.fire());
     return this;
