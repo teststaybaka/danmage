@@ -33,6 +33,19 @@ function removeSelectedChildElements(
   }
 }
 
+function resizeSelectedChildElements(
+  container: HTMLElement,
+  selector: string,
+  fontSize: number
+): void {
+  let children = container.querySelectorAll(selector);
+  for (let i = children.length - 1; i >= 0; i--) {
+    let child = children.item(i) as HTMLElement;
+    child.style.width = `${fontSize * FONT_SIZE_SCALE}rem`;
+    child.style.height = `${fontSize * FONT_SIZE_SCALE}rem`;
+  }
+}
+
 export interface DanmakuElementCustomizer {
   render: (
     body: HTMLDivElement,
@@ -47,18 +60,87 @@ class StructuredCustomizer implements DanmakuElementCustomizer {
     chatEntry: ChatEntry,
     displaySettings: DisplaySettings
   ): void {
+    let textShadow = reverseColorAsTextShadow(255, 255, 255);
+    let contentHTML = `<span style="color: white; text-shadow: ${textShadow};">${chatEntry.content}</span>`;
     if (displaySettings.showUserName) {
-      body.innerHTML = `${chatEntry.userNickname}${USERNAME_SEPARATOR}${chatEntry.content}`;
+      body.innerHTML = `<span style="color: white;">${chatEntry.userNickname}</span> ${contentHTML}`;
     } else {
-      body.innerHTML = chatEntry.content;
+      body.innerHTML = contentHTML;
     }
-    body.style.color = "white";
-    body.style.textShadow = reverseColorAsTextShadow(255, 255, 255);
+  }
+}
+
+class YouTubeChatCustomizer implements DanmakuElementCustomizer {
+  private static CUSTOM_TAG_OPEN = /<yt-.*? /g;
+  private static CUSTOM_TAG_CLOSE = /<\/yt-.*?>/g;
+
+  public render(
+    body: HTMLDivElement,
+    chatEntry: ChatEntry,
+    displaySettings: DisplaySettings
+  ): void {
+    body.innerHTML = chatEntry.content
+      .replace(YouTubeChatCustomizer.CUSTOM_TAG_OPEN, "<div ")
+      .replace(YouTubeChatCustomizer.CUSTOM_TAG_CLOSE, "</div>");
+    removeSelectedChildElements(body, "#timestamp");
+    removeSelectedChildElements(body, "#deleted-state");
+    removeSelectedChildElements(body, "#menu");
+    removeSelectedChildElements(body, "#inline-action-button-container");
+    if (!displaySettings.showUserName) {
+      removeSelectedChildElements(body, "#author-photo");
+      removeSelectedChildElements(body, "#author-name");
+      removeSelectedChildElements(body, "#chat-badges");
+    }
+
+    for (let content of body.querySelectorAll("#content")) {
+      (content as HTMLElement).style.display = "flex";
+    }
+    for (let message of body.querySelectorAll("#message")) {
+      (message as HTMLElement).style.lineHeight = "100%";
+      (message as HTMLElement).style.color = "white";
+      (message as HTMLElement).style.textShadow = reverseColorAsTextShadow(
+        255,
+        255,
+        255
+      );
+    }
+    for (let authorName of body.querySelectorAll("#author-name")) {
+      (authorName as HTMLElement).style.display = "flex";
+      (authorName as HTMLElement).style.fontSize = `${
+        displaySettings.fontSize * FONT_SIZE_SCALE
+      }rem`;
+      (authorName as HTMLElement).style.lineHeight = "100%";
+      (authorName as HTMLElement).parentElement.style.display = "flex";
+      (authorName as HTMLElement).parentElement.style.marginRight = ".8rem";
+    }
+    for (let subtext of body.querySelectorAll("#header-subtext")) {
+      (subtext as HTMLElement).style.fontSize = `${
+        displaySettings.fontSize * FONT_SIZE_SCALE
+      }rem`;
+      (subtext as HTMLElement).style.lineHeight = "100%";
+    }
+    resizeSelectedChildElements(body, ".emoji", displaySettings.fontSize);
+    resizeSelectedChildElements(
+      body,
+      "#author-photo > img",
+      displaySettings.fontSize
+    );
+    resizeSelectedChildElements(body, "#chip-badges", displaySettings.fontSize);
+    resizeSelectedChildElements(
+      body,
+      "#chat-badges div#image",
+      displaySettings.fontSize
+    );
+    resizeSelectedChildElements(
+      body,
+      "#chat-badges img",
+      displaySettings.fontSize
+    );
+    resizeSelectedChildElements(body, "#icon", displaySettings.fontSize);
   }
 }
 
 class TwitchChatCustomizer implements DanmakuElementCustomizer {
-  private static COLOR_EXTRACTION_REGEX = /^rgb\((.*),(.*),(.*)\)$/;
   private static COLON_REPLACER = />: ?<\//;
 
   public render(
@@ -71,27 +153,7 @@ class TwitchChatCustomizer implements DanmakuElementCustomizer {
       `> </`
     );
     removeSelectedChildElements(body, ".vod-message__header");
-
-    if (displaySettings.showUserName) {
-      let nameElement = body.querySelector(
-        ".chat-author__display-name"
-      ) as HTMLElement;
-      if (nameElement) {
-        let matched = body.style.color.match(
-          TwitchChatCustomizer.COLOR_EXTRACTION_REGEX
-        );
-        if (matched) {
-          let red = parseInt(matched[1].trim());
-          let green = parseInt(matched[2].trim());
-          let blue = parseInt(matched[3].trim());
-          nameElement.style.textShadow = reverseColorAsTextShadow(
-            red,
-            green,
-            blue
-          );
-        }
-      }
-    } else {
+    if (!displaySettings.showUserName) {
       removeSelectedChildElements(body, ".chat-badge");
       removeSelectedChildElements(body, ".chat-author__display-name");
     }
@@ -102,6 +164,17 @@ class TwitchChatCustomizer implements DanmakuElementCustomizer {
     TwitchChatCustomizer.setContentStyle(mentions, displaySettings);
     let links = body.querySelectorAll(".link-fragment");
     TwitchChatCustomizer.setContentStyle(links, displaySettings);
+    resizeSelectedChildElements(body, ".chat-badge", displaySettings.fontSize);
+    resizeSelectedChildElements(
+      body,
+      ".chat-image__container",
+      displaySettings.fontSize
+    );
+    resizeSelectedChildElements(
+      body,
+      ".chat-line__message--emote",
+      displaySettings.fontSize
+    );
   }
 
   private static setContentStyle(
@@ -117,36 +190,6 @@ class TwitchChatCustomizer implements DanmakuElementCustomizer {
   }
 }
 
-class YouTubeChatCustomizer implements DanmakuElementCustomizer {
-  public render(
-    body: HTMLDivElement,
-    chatEntry: ChatEntry,
-    displaySettings: DisplaySettings
-  ): void {
-    if (displaySettings.showUserName) {
-      body.innerHTML = `${chatEntry.userNickname}${USERNAME_SEPARATOR}${chatEntry.content}`;
-    } else {
-      body.innerHTML = chatEntry.content;
-    }
-
-    removeSelectedChildElements(body, "#chip-badges");
-
-    body.style.color = "white";
-    body.style.textShadow = reverseColorAsTextShadow(255, 255, 255);
-
-    let emojis = body.querySelectorAll(".emoji");
-    for (let i = 0; i < emojis.length; i++) {
-      let emoji = emojis.item(i) as HTMLElement;
-      emoji.style.width = `${displaySettings.fontSize * FONT_SIZE_SCALE}rem`;
-      emoji.style.height = `${displaySettings.fontSize * FONT_SIZE_SCALE}rem`;
-      emoji.style.marginLeft = ".2rem";
-      emoji.style.marginRight = ".2rem";
-      emoji.style.display = "inline-block";
-      emoji.style.verticalAlign = "bottom";
-    }
-  }
-}
-
 export enum MoveResult {
   OccupyAndDisplay,
   Display,
@@ -156,7 +199,7 @@ export enum MoveResult {
 export class DanmakuElementComponent {
   private static DANMAKU_ELEMENT_ATTRIBUTES = {
     class: "danmaku-element",
-    style: `display: none; position: absolute; top: 0; right: 0; padding: .2rem; z-index: 10; pointer-events: none; white-space: nowrap;`,
+    style: `display: none; flex-flow: row nowrap; align-items: center; position: absolute; top: 0; right: 0; padding: .2rem 1.5rem .2rem 0; z-index: 10; pointer-events: none; white-space: nowrap;`,
   };
   private static OPACITY_SCALE = 1 / 100;
   private static SPEED_SCALE = 1 / 1000; // Scale for time in milliseconds.
@@ -210,7 +253,7 @@ export class DanmakuElementComponent {
   public setContent(chatEntry: ChatEntry): void {
     this.chatEntry = chatEntry;
     this.body.style.visibility = "hidden";
-    this.body.style.display = "block";
+    this.body.style.display = "flex";
     this.render();
     this.height = this.body.offsetHeight;
   }

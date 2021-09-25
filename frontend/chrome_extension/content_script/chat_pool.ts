@@ -150,42 +150,8 @@ export class YouTubeChatPool implements ChatPool {
       this.lastLogElement = logElementPointer,
         logElementPointer = logElementPointer.nextElementSibling
     ) {
-      let htmlContent = "";
-      let messageElement = logElementPointer.querySelector("#message");
-      if (messageElement) {
-        htmlContent = messageElement.innerHTML;
-      }
-      let headerSubtextElement =
-        logElementPointer.querySelector("#header-subtext");
-      if (headerSubtextElement) {
-        htmlContent = headerSubtextElement.innerHTML;
-      }
-      let purchaseAmountElemnt =
-        logElementPointer.querySelector("#purchase-amount");
-      if (purchaseAmountElemnt) {
-        htmlContent =
-          "Purchased " + purchaseAmountElemnt.textContent + " " + htmlContent;
-      }
-      let purchaseAmountChipElement = logElementPointer.querySelector(
-        "#purchase-amount-chip"
-      );
-      if (purchaseAmountChipElement) {
-        htmlContent =
-          "Purhcased " +
-          purchaseAmountChipElement.textContent +
-          " " +
-          htmlContent;
-      }
-
-      let htmlUserName = "";
-      let authorNameElement = logElementPointer.querySelector("#author-name");
-      if (authorNameElement) {
-        htmlUserName = authorNameElement.innerHTML;
-      }
-
       let chatEntry: ChatEntry = {
-        content: htmlContent,
-        userNickname: htmlUserName,
+        content: logElementPointer.innerHTML,
       };
       if (this.blockTester.test(chatEntry)) {
         continue;
