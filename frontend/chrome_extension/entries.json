@@ -1,0 +1,13 @@
+{
+  "entries": [{
+    "source": "./background/main",
+    "output": "./background/index"
+  }, {
+    "source": "./content_script/main",
+    "output": "./content_script/index"
+  }],
+  "extraAssets": [
+    "./manifest.json",
+    "./image/app_icon.png"
+  ]
+}

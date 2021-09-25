@@ -1,7 +1,10 @@
 node_modules/
 bin/
+chrome_extension_bin/
+web_app_resources.json
 *.d.ts
 *.js
 *.tsbuildinfo
 *.html
 *.gz
+*.zip
