@@ -3,7 +3,6 @@ import { ChatEntry } from "../../../../interface/chat_entry";
 import { BlockSettings } from "../../../../interface/player_settings";
 import { ColorScheme } from "../../../color_scheme";
 import { BlockPatternTester } from "../block_pattern_tester";
-import { USERNAME_SEPARATOR } from "../common";
 import { E } from "@selfage/element/factory";
 
 export class ChatListEntryComponent extends EventEmitter {
@@ -32,9 +31,7 @@ export class ChatListEntryComponent extends EventEmitter {
         class: "chat-list-entry",
         style: `position: relative; padding: .3rem 0; line-height: 1.6rem; font-size: 1.4rem; font-family: initial !important; word-break: break-all;`,
       },
-      E.text(
-        `${chatEntry.userNickname}${USERNAME_SEPARATOR}${chatEntry.content}`
-      )
+      E.text(`${chatEntry.userNickname}: ${chatEntry.content}`)
     );
   }
 

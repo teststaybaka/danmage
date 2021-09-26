@@ -1,7 +1,5 @@
 import {
-  EmptyMessage,
   GET_CHAT,
-  GET_DANMAKU,
   GetChatRequest,
   GetChatResponse,
 } from "../interface/service";
@@ -11,7 +9,8 @@ import { DatastoreClient } from "@selfage/datastore_client";
 import { UnauthedServiceHandler } from "@selfage/service_handler";
 
 export class GetChatHandler
-  implements UnauthedServiceHandler<GetChatRequest, GetChatResponse> {
+  implements UnauthedServiceHandler<GetChatRequest, GetChatResponse>
+{
   public serviceDescriptor = GET_CHAT;
 
   public constructor(private datastoreClient: DatastoreClient) {}
@@ -32,20 +31,5 @@ export class GetChatHandler
     return {
       chatEntries: values,
     };
-  }
-}
-
-// Legacy handler
-export class GetDanmakuHandler
-  implements UnauthedServiceHandler<EmptyMessage, EmptyMessage> {
-  public serviceDescriptor = GET_DANMAKU;
-
-  public constructor() {}
-
-  public async handle(
-    logContext: string,
-    request: EmptyMessage
-  ): Promise<EmptyMessage> {
-    return {};
   }
 }

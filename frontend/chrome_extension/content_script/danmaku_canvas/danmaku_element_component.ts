@@ -4,7 +4,6 @@ import {
   PlayerSettings,
 } from "../../../../interface/player_settings";
 import { BlockPatternTester } from "../block_pattern_tester";
-import { USERNAME_SEPARATOR } from "../common";
 import { E } from "@selfage/element/factory";
 
 let GREYNESS_THRESHOLD = 120;
