@@ -33,18 +33,18 @@ export class ControlPanelComponent extends EventEmitter {
     private controlPanelButton: HTMLDivElement,
     private controlPanelPopup: HTMLDivElement,
     private tabHeadLine: HTMLDivElement,
+    private accountTabHead: HTMLDivElement,
+    private accountTabButton: HTMLDivElement,
     private chatListTabHead: HTMLDivElement | undefined,
     private chatListTabButton: HTMLDivElement | undefined,
     private displaySettingsTabHead: HTMLDivElement,
     private displaySettingsTabButton: HTMLDivElement,
     private blockSettingsTabHead: HTMLDivElement,
     private blockSettingsTabButton: HTMLDivElement,
-    private accountTabHead: HTMLDivElement,
-    private accountTabButton: HTMLDivElement,
+    private accountTabComponent: AccountTabComponent,
     private chatListTabComponent: ChatListTabComponent | undefined,
     private displaySettingsTabComponent: DisplaySettingsTabComponent,
     private blockSettingsTabComponent: BlockSettingsTabComponent,
-    private accountTabComponent: AccountTabComponent,
     private globalDocuments: GlobalDocuments,
     private playerSettings: PlayerSettings,
     private playerSettingsStorage: PlayerSettingsStorage
@@ -142,12 +142,12 @@ export class ControlPanelComponent extends EventEmitter {
         controlPanelButtonColor,
         controlPanelPopupStyle,
         playerSettings,
+        AccountTabComponent.create(),
         DisplaySettingsTabComponent.create(playerSettings.displaySettings),
         BlockSettingsTabComponent.create(
           playerSettings.blockSettings,
           globalDocuments
         ),
-        AccountTabComponent.create(),
         chatListTabComponent
       ),
       globalDocuments,
@@ -161,24 +161,32 @@ export class ControlPanelComponent extends EventEmitter {
     controlPanelButtonColor: string,
     controlPanelPopupStyle: string,
     playerSettings: PlayerSettings,
+    accountTabComponent: AccountTabComponent,
     displaySettingsTabComponent: DisplaySettingsTabComponent,
     blockSettingsTabComponent: BlockSettingsTabComponent,
-    accountTabComponent: AccountTabComponent,
     chatListTabComponent?: ChatListTabComponent
   ) {
     let controlPanelButtonRef = new Ref<HTMLDivElement>();
     let controlPanelPopupRef = new Ref<HTMLDivElement>();
     let tabHeadLineRef = new Ref<HTMLDivElement>();
+    let accountTabHeadRef = new Ref<HTMLDivElement>();
+    let accountTabButtonRef = new Ref<HTMLDivElement>();
     let chatListTabHeadRef = new Ref<HTMLDivElement>();
     let chatListTabButtonRef = new Ref<HTMLDivElement>();
     let displaySettingsTabHeadRef = new Ref<HTMLDivElement>();
     let displaySettingsTabButtonRef = new Ref<HTMLDivElement>();
     let blockSettingsTabHeadRef = new Ref<HTMLDivElement>();
     let blockSettingsTabButtonRef = new Ref<HTMLDivElement>();
-    let accountTabHeadRef = new Ref<HTMLDivElement>();
-    let accountTabButtonRef = new Ref<HTMLDivElement>();
 
     let tabHeads = new Array<HTMLDivElement>();
+    tabHeads.push(
+      ControlPanelComponent.createTabHead(
+        accountTabHeadRef,
+        accountTabButtonRef,
+        "Account",
+        `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`
+      )
+    );
     if (chatListTabComponent) {
       tabHeads.push(
         ControlPanelComponent.createTabHead(
@@ -201,23 +209,17 @@ export class ControlPanelComponent extends EventEmitter {
         blockSettingsTabButtonRef,
         "Block settings",
         `M100 0 A100 100 0 0 1 100 200 A100 100 0 0 1 100 0 z  M159 138 A70 70 0 0 0 62 41 z  M41 62 A70 70 0 0 0 138 159 z`
-      ),
-      ControlPanelComponent.createTabHead(
-        accountTabHeadRef,
-        accountTabButtonRef,
-        "Account",
-        `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`
       )
     );
 
     let tabBodies = new Array<HTMLDivElement>();
+    tabBodies.push(accountTabComponent.body);
     if (chatListTabComponent) {
       tabBodies.push(chatListTabComponent.body);
     }
     tabBodies.push(
       displaySettingsTabComponent.body,
-      blockSettingsTabComponent.body,
-      accountTabComponent.body
+      blockSettingsTabComponent.body
     );
 
     let body = E.div(
@@ -268,18 +270,18 @@ export class ControlPanelComponent extends EventEmitter {
       controlPanelButtonRef.val,
       controlPanelPopupRef.val,
       tabHeadLineRef.val,
+      accountTabHeadRef.val,
+      accountTabButtonRef.val,
       chatListTabHeadRef.val,
       chatListTabButtonRef.val,
       displaySettingsTabHeadRef.val,
       displaySettingsTabButtonRef.val,
       blockSettingsTabHeadRef.val,
       blockSettingsTabButtonRef.val,
-      accountTabHeadRef.val,
-      accountTabButtonRef.val,
+      accountTabComponent,
       chatListTabComponent,
       displaySettingsTabComponent,
       blockSettingsTabComponent,
-      accountTabComponent,
     ] as const;
   }
 
@@ -326,17 +328,15 @@ export class ControlPanelComponent extends EventEmitter {
     this.controlPanelButton.addEventListener("click", () => this.showPopup());
     this.globalDocuments.hideWhenMousedown(this.body, () => this.hidePopup());
 
+    this.showAccountTab();
     if (this.chatListTabComponent) {
-      this.showChatListTab();
-      this.lowlightTabHead(this.displaySettingsTabHead);
-      this.displaySettingsTabComponent.hide();
-    } else {
-      this.showDisplaySettingsTab();
+      this.lowlightTabHead(this.chatListTabHead);
+      this.chatListTabComponent.hide();
     }
+    this.lowlightTabHead(this.displaySettingsTabHead);
+    this.displaySettingsTabComponent.hide();
     this.lowlightTabHead(this.blockSettingsTabHead);
     this.blockSettingsTabComponent.hide();
-    this.lowlightTabHead(this.accountTabHead);
-    this.accountTabComponent.hide();
 
     this.displaySettingsTabButton.addEventListener("click", () =>
       this.showDisplaySettingsTab()
