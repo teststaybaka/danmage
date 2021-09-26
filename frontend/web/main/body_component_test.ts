@@ -83,14 +83,14 @@ PUPPETEER_TEST_RUNNER.run({
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
-              __dirname + "/page_shell_component_home.png",
+              __dirname + "/body_component_home.png",
               {
                 delay: 500,
                 fullPage: true,
               }
             ),
             globalThis.readFile(
-              __dirname + "/golden/page_shell_component_home.png"
+              __dirname + "/golden/body_component_home.png"
             ),
           ]);
           assertThat(rendered, eq(golden), "home screenshot");
@@ -138,14 +138,14 @@ PUPPETEER_TEST_RUNNER.run({
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
-              __dirname + "/page_shell_component_feedback.png",
+              __dirname + "/body_component_feedback.png",
               {
                 delay: 500,
                 fullPage: true,
               }
             ),
             globalThis.readFile(
-              __dirname + "/golden/page_shell_component_feedback.png"
+              __dirname + "/golden/body_component_feedback.png"
             ),
           ]);
           assertThat(rendered, eq(golden), "feedback screenshot");
@@ -153,9 +153,9 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Cleanup
         await Promise.all([
-          globalThis.deleteFile(__dirname + "/page_shell_component_home.png"),
+          globalThis.deleteFile(__dirname + "/body_component_home.png"),
           globalThis.deleteFile(
-            __dirname + "/page_shell_component_feedback.png"
+            __dirname + "/body_component_feedback.png"
           ),
         ]);
         bodyComponent.body.remove();
@@ -230,14 +230,14 @@ PUPPETEER_TEST_RUNNER.run({
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
-              __dirname + "/page_shell_component_home_signed_in.png",
+              __dirname + "/body_component_home_signed_in.png",
               {
                 delay: 500,
                 fullPage: true,
               }
             ),
             globalThis.readFile(
-              __dirname + "/golden/page_shell_component_home_signed_in.png"
+              __dirname + "/golden/body_component_home_signed_in.png"
             ),
           ]);
           assertThat(rendered, eq(golden), "home screenshot");
@@ -259,14 +259,14 @@ PUPPETEER_TEST_RUNNER.run({
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
-              __dirname + "/page_shell_component_nickname.png",
+              __dirname + "/body_component_nickname.png",
               {
                 delay: 500,
                 fullPage: true,
               }
             ),
             globalThis.readFile(
-              __dirname + "/golden/page_shell_component_nickname.png"
+              __dirname + "/golden/body_component_nickname.png"
             ),
           ]);
           assertThat(rendered, eq(golden), "nickname screenshot");
@@ -288,14 +288,14 @@ PUPPETEER_TEST_RUNNER.run({
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
-              __dirname + "/page_shell_component_history.png",
+              __dirname + "/body_component_history.png",
               {
                 delay: 500,
                 fullPage: true,
               }
             ),
             globalThis.readFile(
-              __dirname + "/golden/page_shell_component_history.png"
+              __dirname + "/golden/body_component_history.png"
             ),
           ]);
           assertThat(rendered, eq(golden), "history screenshot");
@@ -304,13 +304,13 @@ PUPPETEER_TEST_RUNNER.run({
         // Cleanup
         await Promise.all([
           globalThis.deleteFile(
-            __dirname + "/page_shell_component_home_signed_in.png"
+            __dirname + "/body_component_home_signed_in.png"
           ),
           globalThis.deleteFile(
-            __dirname + "/page_shell_component_nickname.png"
+            __dirname + "/body_component_nickname.png"
           ),
           globalThis.deleteFile(
-            __dirname + "/page_shell_component_history.png"
+            __dirname + "/body_component_history.png"
           ),
         ]);
         bodyComponent.body.remove();
@@ -413,14 +413,14 @@ PUPPETEER_TEST_RUNNER.run({
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
-              __dirname + "/page_shell_component_signed_in.png",
+              __dirname + "/body_component_signed_in.png",
               {
                 delay: 500,
                 fullPage: true,
               }
             ),
             globalThis.readFile(
-              __dirname + "/golden/page_shell_component_signed_in.png"
+              __dirname + "/golden/body_component_signed_in.png"
             ),
           ]);
           assertThat(rendered, eq(golden), "successfuly signed in screenshot");
@@ -436,14 +436,14 @@ PUPPETEER_TEST_RUNNER.run({
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
-              __dirname + "/page_shell_component_signed_out.png",
+              __dirname + "/body_component_signed_out.png",
               {
                 delay: 500,
                 fullPage: true,
               }
             ),
             globalThis.readFile(
-              __dirname + "/golden/page_shell_component_signed_out.png"
+              __dirname + "/golden/body_component_signed_out.png"
             ),
           ]);
           assertThat(rendered, eq(golden), "successfuly signed out screenshot");
@@ -462,14 +462,14 @@ PUPPETEER_TEST_RUNNER.run({
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(
-              __dirname + "/page_shell_component_handle_unauth.png",
+              __dirname + "/body_component_handle_unauth.png",
               {
                 delay: 500,
                 fullPage: true,
               }
             ),
             globalThis.readFile(
-              __dirname + "/golden/page_shell_component_handle_unauth.png"
+              __dirname + "/golden/body_component_handle_unauth.png"
             ),
           ]);
           assertThat(rendered, eq(golden), "handle unauth error screenshot");
@@ -478,13 +478,13 @@ PUPPETEER_TEST_RUNNER.run({
         // Cleanup
         await Promise.all([
           globalThis.deleteFile(
-            __dirname + "/page_shell_component_signed_in.png"
+            __dirname + "/body_component_signed_in.png"
           ),
           globalThis.deleteFile(
-            __dirname + "/page_shell_component_signed_out.png"
+            __dirname + "/body_component_signed_out.png"
           ),
           globalThis.deleteFile(
-            __dirname + "/page_shell_component_handle_unauth.png"
+            __dirname + "/body_component_handle_unauth.png"
           ),
         ]);
         bodyComponent.body.remove();
