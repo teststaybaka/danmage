@@ -46,7 +46,7 @@ async function main(): Promise<void> {
       reader.read("ca_g2.crt"),
       reader.read("session.key"),
       reader.read("google_oauth_web_client_id.key"),
-      reader.read("google_oauth_chrome_extenstion_master_client_id.key"),
+      reader.read("google_oauth_chrome_extension_master_client_id.key"),
     ]);
 
     let redirectApp = express();
@@ -82,7 +82,7 @@ async function main(): Promise<void> {
     ] = await Promise.all([
       reader.read("session.key"),
       reader.read("google_oauth_web_client_id.key"),
-      reader.read("google_oauth_chrome_extenstion_master_client_id.key"),
+      reader.read("google_oauth_chrome_extension_master_client_id.key"),
     ]);
 
     let app = registerHandlers(sessionKey, [
