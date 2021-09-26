@@ -34,7 +34,7 @@ export class NicknameComponent {
     let body = E.div(
       {
         class: "nickname-container",
-        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem;`,
+        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem; box-sizing: border-box;`,
       },
       E.div(
         {

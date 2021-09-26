@@ -32,7 +32,7 @@ export class FeedbackComponent {
     let body = E.div(
       {
         class: "feedback-body",
-        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem;`,
+        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem; box-sizing: border-box;`,
       },
       E.div(
         {

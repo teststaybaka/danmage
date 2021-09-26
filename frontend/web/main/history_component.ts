@@ -72,7 +72,7 @@ export class HistoryComponent {
     return E.div(
       {
         class: "history-entry-container",
-        style: `display: flex; flex-flow: row nowrap; width: 100%; padding: .8rem; font-size: 1.6rem; color: ${ColorScheme.getContent()}; background-color: ${backgroundColor};`,
+        style: `display: flex; flex-flow: row nowrap; width: 100%; padding: .8rem; box-sizing: border-box; font-size: 1.6rem; color: ${ColorScheme.getContent()}; background-color: ${backgroundColor};`,
       },
       E.div(
         {
