@@ -4,7 +4,7 @@ import getStream = require("get-stream");
 import http = require("http");
 import https = require("https");
 import { ORIGIN_PROD } from "../common";
-import { GetChatHandler } from "./get_chat_handler";
+import { GetChatHandler, GetDanmakuHandler } from "./get_chat_handler";
 import { GetChatHistoryHandler } from "./get_chat_history_handler";
 import { GetPlayerSettingsHandler } from "./get_player_settings_handler";
 import { GetUserHandler } from "./get_user_handler";
@@ -12,7 +12,10 @@ import { PostChatHandler } from "./post_chat_handler";
 import { ReportUserIssueHandler } from "./report_user_issue_handler";
 import { SignInHandler } from "./sign_in_handler";
 import { UpdateNicknameHandler } from "./update_nickname_handler";
-import { UpdatePlayerSettingsHandler } from "./update_player_settings_handler";
+import {
+  ChangePlayerSettingsHandler,
+  UpdatePlayerSettingsHandler,
+} from "./update_player_settings_handler";
 import { Storage } from "@google-cloud/storage";
 import { registerCorsAllowedPreflightHandler } from "@selfage/service_handler/preflight_handler";
 import {
@@ -104,6 +107,8 @@ function registerHandlers(
   registerAuthed(app, GetPlayerSettingsHandler.create());
   registerAuthed(app, UpdateNicknameHandler.create());
   registerUnauthed(app, ReportUserIssueHandler.create());
+  registerUnauthed(app, GetDanmakuHandler.create());
+  registerAuthed(app, ChangePlayerSettingsHandler.create());
   app.use(
     "/",
     expressStaticGzip(globalThis.WEB_APP_BASE_DIR, {

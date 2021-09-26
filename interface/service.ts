@@ -401,3 +401,29 @@ export let REPORT_USER_ISSUE: UnauthedServiceDescriptor<ReportUserIssueRequest, 
   requestDescriptor: REPORT_USER_ISSUE_REQUEST,
   responseDescriptor: REPORT_USER_ISSUE_RESPONSE,
 };
+
+export interface EmptyMessage {
+}
+
+export let EMPTY_MESSAGE: MessageDescriptor<EmptyMessage> = {
+  name: 'EmptyMessage',
+  factoryFn: () => {
+    return new Object();
+  },
+  fields: [
+  ]
+};
+
+export let GET_DANMAKU: UnauthedServiceDescriptor<EmptyMessage, EmptyMessage> = {
+  name: "GetDanmaku",
+  path: "/GetDanmaku",
+  requestDescriptor: EMPTY_MESSAGE,
+  responseDescriptor: EMPTY_MESSAGE,
+};
+
+export let CHANGE_PLAYER_SETTINGS: AuthedServiceDescriptor<UpdatePlayerSettingsRequest, UpdatePlayerSettingsResponse> = {
+  name: "ChangePlayerSettings",
+  path: "/ChangePlayerSettings",
+  requestDescriptor: UPDATE_PLAYER_SETTINGS_REQUEST,
+  responseDescriptor: UPDATE_PLAYER_SETTINGS_RESPONSE,
+};
