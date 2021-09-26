@@ -36,7 +36,8 @@ async function main(): Promise<void> {
       ca1,
       ca2,
       sessionKey,
-      googleOauthClientId,
+      googleOauthWebClientId,
+      googleOauthChromeExtensionMasterClientId,
     ] = await Promise.all([
       reader.read("danmage.key"),
       reader.read("danmage.crt"),
@@ -44,7 +45,8 @@ async function main(): Promise<void> {
       reader.read("ca_g1.crt"),
       reader.read("ca_g2.crt"),
       reader.read("session.key"),
-      reader.read("google_oauth_client_id.key"),
+      reader.read("google_oauth_web_client_id.key"),
+      reader.read("google_oauth_chrome_extenstion_master_client_id"),
     ]);
 
     let redirectApp = express();
@@ -56,7 +58,10 @@ async function main(): Promise<void> {
       console.log("Http server started at 80.");
     });
 
-    let app = registerHandlers(sessionKey, googleOauthClientId);
+    let app = registerHandlers(sessionKey, [
+      googleOauthWebClientId,
+      googleOauthChromeExtensionMasterClientId,
+    ]);
     let httpsServer = https.createServer(
       {
         key: privateKey,
@@ -70,18 +75,26 @@ async function main(): Promise<void> {
     });
   } else if (globalThis.ENVIRONMENT === "dev") {
     let reader = new BucketReader(new Storage(), "danmage-dev-keys");
-    let [sessionKey, googleOauthClientId] = await Promise.all([
+    let [
+      sessionKey,
+      googleOauthWebClientId,
+      googleOauthChromeExtensionMasterClientId,
+    ] = await Promise.all([
       reader.read("session.key"),
-      reader.read("google_oauth_client_id.key"),
+      reader.read("google_oauth_web_client_id.key"),
+      reader.read("google_oauth_chrome_extenstion_master_client_id.key"),
     ]);
 
-    let app = registerHandlers(sessionKey, googleOauthClientId);
+    let app = registerHandlers(sessionKey, [
+      googleOauthWebClientId,
+      googleOauthChromeExtensionMasterClientId,
+    ]);
     let httpServer = http.createServer(app);
     httpServer.listen(80, () => {
       console.log("Http server started at 80.");
     });
   } else if (globalThis.ENVIRONMENT === "local") {
-    let app = registerHandlers("randomlocalkey", "randomclientid");
+    let app = registerHandlers("randomlocalkey", ["randomclientid"]);
     let httpServer = http.createServer(app);
     httpServer.listen(8080, () => {
       console.log("Http server started at 8080.");
@@ -93,12 +106,12 @@ async function main(): Promise<void> {
 
 function registerHandlers(
   sessionKey: string,
-  googleOauthClientId: string
+  googleOauthClientIds: Array<string>
 ): express.Express {
   SessionSigner.SECRET_KEY = sessionKey;
   let app = express();
   registerCorsAllowedPreflightHandler(app);
-  registerUnauthed(app, SignInHandler.create(googleOauthClientId));
+  registerUnauthed(app, SignInHandler.create(new Set(googleOauthClientIds)));
   registerAuthed(app, GetUserHandler.create());
   registerAuthed(app, PostChatHandler.create());
   registerUnauthed(app, GetChatHandler.create());

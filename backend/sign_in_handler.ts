@@ -20,7 +20,7 @@ export class SignInHandler
   public serviceDescriptor = SIGN_IN;
 
   public constructor(
-    private googleOauthClientId: string,
+    private googleOauthClientIds: Set<string>,
     private datastoreClient: DatastoreClient,
     private sessionBuilder: SessionBuilder,
     private getNow: () => number,
@@ -30,9 +30,9 @@ export class SignInHandler
     ) => Promise<NodeFetchResponse>
   ) {}
 
-  public static create(googleOauthClientId: string): SignInHandler {
+  public static create(googleOauthClientIds: Set<string>): SignInHandler {
     return new SignInHandler(
-      googleOauthClientId,
+      googleOauthClientIds,
       DATASTORE_CLIENT,
       SessionBuilder.create(),
       () => Date.now(),
@@ -58,7 +58,7 @@ export class SignInHandler
     }
 
     let data = await response.json();
-    if (data.aud !== this.googleOauthClientId) {
+    if (!this.googleOauthClientIds.has(data.aud)) {
       throw new Error("Unexpected aud from Google access token.");
     }
     let googleId = data.sub;

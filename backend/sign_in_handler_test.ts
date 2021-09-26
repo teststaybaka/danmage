@@ -25,7 +25,7 @@ NODE_TEST_RUNNER.run({
         // Prepare
         let counter = new Counter<string>();
         let handler = new SignInHandler(
-          "some client id",
+          new Set(["some client id"]),
           new (class extends DatastoreClient {
             public constructor() {
               super(undefined);
@@ -68,7 +68,7 @@ NODE_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let handler = new SignInHandler(
-          "some client id",
+          new Set(["some client id"]),
           new (class extends DatastoreClient {
             public constructor() {
               super(undefined);
@@ -106,7 +106,7 @@ NODE_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let handler = new SignInHandler(
-          "some client id",
+          new Set(["some client id", "some other id"]),
           new (class extends DatastoreClient {
             public constructor() {
               super(undefined);
@@ -145,7 +145,7 @@ NODE_TEST_RUNNER.run({
         // Prepare
         let counter = new Counter<string>();
         let handler = new SignInHandler(
-          "some client id",
+          new Set(["some client id", "some other id"]),
           new (class extends DatastoreClient {
             public constructor() {
               super(undefined);
@@ -229,7 +229,7 @@ NODE_TEST_RUNNER.run({
         // Prepare
         let counter = new Counter<string>();
         let handler = new SignInHandler(
-          "some client id",
+          new Set(["some client id", "some other id"]),
           new (class extends DatastoreClient {
             public constructor() {
               super(undefined);
