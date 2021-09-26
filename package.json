@@ -38,7 +38,7 @@
     "@selfage/ref": "^1.0.2",
     "@selfage/service_client": "^3.1.0",
     "@selfage/service_descriptor": "^2.0.0",
-    "@selfage/service_handler": "^2.0.0",
+    "@selfage/service_handler": "^2.0.1",
     "@selfage/web_app_base_dir": "^1.0.0",
     "big-integer": "^1.6.48",
     "express": "^4.17.1",
