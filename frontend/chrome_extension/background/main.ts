@@ -1,3 +1,4 @@
+import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { SIGN_IN } from "../../../interface/service";
 import {
   BACKGROUND_REQUEST,
@@ -11,6 +12,7 @@ import {
 import { parseMessage } from "@selfage/message/parser";
 import { ServiceClient } from "@selfage/service_client";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
+import "../../../environment";
 
 let PLAYER_SETTINGS_STORAGE_KEY = "player_settings";
 let LOCAL_SESSION_STORAGE = new LocalSessionStorage();
@@ -66,6 +68,14 @@ async function handle(
 }
 
 function main(): void {
+  if (globalThis.ENVIRONMENT === "prod") {
+    SERVICE_CLIENT.origin = ORIGIN_PROD;
+  } else if (globalThis.ENVIRONMENT === "local") {
+    SERVICE_CLIENT.origin = ORIGIN_LOCAL;
+  } else {
+    throw new Error("Unsupported environment.");
+  }
+
   chrome.runtime.onMessage.addListener(
     (data, sender, sendResponse): boolean => {
       if (sender.id !== chrome.runtime.id) {
