@@ -50,14 +50,14 @@ export class WelcomeComponent extends EventEmitter {
       E.div(
         {
           class: "welcome-text",
-          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()};`,
+          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()}; text-align: center;`,
         },
         E.textRef(welcomeTextRef)
       ),
       E.div(
         {
           class: "welcome-promo",
-          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()};`,
+          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()}; text-align: center;`,
         },
         E.text("Your settings are being synced via "),
         E.a(

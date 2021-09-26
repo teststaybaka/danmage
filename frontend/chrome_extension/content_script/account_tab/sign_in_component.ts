@@ -68,7 +68,9 @@ export class SignInComponent extends EventEmitter {
   private async signIn(): Promise<void> {
     let request: BackgroundRequest = { signInRequest: {} };
     await this.chromeRuntime.sendMessage(request);
-    await Promise.all(this.listeners("click").map((callback) => callback()));
+    await Promise.all(
+      this.listeners("checkStatus").map((callback) => callback())
+    );
   }
 
   public show(): void {
