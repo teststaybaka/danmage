@@ -52,7 +52,6 @@
   ],
   "scripts": {
     "local": "bundage bws backend/main backend/main_bin -ec frontend/web/entries.json -e environment_local; node backend/main_bin",
-    "bext": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin",
-    "dlext": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin; cd chrome_extension_bin/; zip -r ../extension.zip *; cd ../; cloudshell dl extension.zip"
+    "bext": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin; cd chrome_extension_bin/; find . \\( -iname '*.gz' -o -iname '*.html' \\) -type f -delete; zip -r ../extension.zip *; cd ../"
   }
 }
