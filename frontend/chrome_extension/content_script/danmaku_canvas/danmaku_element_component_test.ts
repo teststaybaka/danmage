@@ -3,7 +3,7 @@ import {
   MoveResult,
   reverseColorAsTextShadow,
 } from "./danmaku_element_component";
-import { MockDanmakuElementCustomizer } from "./mocks";
+import { MockDanmakuElementContentBuilder } from "./mocks";
 import { assertThat, eq } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 
@@ -53,7 +53,7 @@ PUPPETEER_TEST_RUNNER.run({
           element as any,
           { speed: 10 },
           undefined,
-          new MockDanmakuElementCustomizer()
+          new MockDanmakuElementContentBuilder()
         );
         danmakuElementComponent.setContent({});
 
@@ -135,7 +135,7 @@ PUPPETEER_TEST_RUNNER.run({
           element as any,
           settings,
           undefined,
-          new MockDanmakuElementCustomizer()
+          new MockDanmakuElementContentBuilder()
         );
         danmakuElementComponent.setContent({});
         danmakuElementComponent.startMoving(20);

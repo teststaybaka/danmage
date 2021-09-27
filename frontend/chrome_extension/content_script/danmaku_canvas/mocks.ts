@@ -1,10 +1,14 @@
 import {
   DanmakuElementComponent,
-  DanmakuElementCustomizer,
+  DanmakuElementContentBuilder,
 } from "./danmaku_element_component";
 
-export class MockDanmakuElementCustomizer implements DanmakuElementCustomizer {
-  public render() {}
+export class MockDanmakuElementContentBuilder
+  implements DanmakuElementContentBuilder
+{
+  public build() {
+    return "";
+  }
 }
 
 export class MockDanmakuElementComponent extends DanmakuElementComponent {
