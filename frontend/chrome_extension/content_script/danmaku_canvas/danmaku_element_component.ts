@@ -54,7 +54,7 @@ class StructuredContentBuilder implements DanmakuElementContentBuilder {
     let textShadow = reverseColorAsTextShadow(255, 255, 255);
     let contentHTML = `<span style="color: white; text-shadow: ${textShadow};">${chatEntry.content}</span>`;
     if (displaySettings.showUserName) {
-      return `<span style="color: white;">${chatEntry.userNickname}</span> ${contentHTML}`;
+      return `<span style="color: white; margin-right: .7rem;">${chatEntry.userNickname}</span>${contentHTML}`;
     } else {
       return contentHTML;
     }
