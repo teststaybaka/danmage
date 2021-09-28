@@ -31,9 +31,9 @@ export class GetChatHistoryHandler extends UserAuthedServiceHandler<
     let queryBuilder = new UserHistoryQueryBuilder()
       .filterByUserId("=", session.userId)
       .limit(20);
-    if (request.hostApp) {
-      queryBuilder.filterByHostApp("=", request.hostApp);
-    }
+//    if (request.hostApp) {
+      queryBuilder.filterByHostApp("=", 1);
+    // }
     if (request.cursor) {
       queryBuilder.start(request.cursor);
     }
