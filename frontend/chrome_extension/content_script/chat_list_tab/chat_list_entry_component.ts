@@ -36,6 +36,7 @@ export class ChatListEntryComponent extends EventEmitter {
   }
 
   public init(): this {
+    this.leave();
     this.body.addEventListener("mouseenter", () => this.hover());
     this.body.addEventListener("mouseleave", () => this.leave());
     return this;
