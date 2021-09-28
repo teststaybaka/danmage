@@ -298,7 +298,7 @@ export class DanmakuElementComponent {
   }
 
   private transform(): void {
-    this.body.style.transform = `translate(${this.posX}px, ${this.posY}px)`;
+    this.body.style.transform = `translate3d(${this.posX}px, ${this.posY}px, 0)`;
   }
 
   public moveOneFrame(
