@@ -1,10 +1,10 @@
 indexes:
   - kind: ChatEntry
     properties:
-      - name: created
-        direction: desc
       - name: hostApp
       - name: userId
+      - name: created
+        direction: desc
   - kind: ChatEntry
     properties:
       - name: hostApp
