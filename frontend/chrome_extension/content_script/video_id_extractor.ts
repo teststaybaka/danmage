@@ -12,7 +12,6 @@ export interface VideoIdExtractor {
 export class YouTubeVideoIdExtractor implements VideoIdExtractor {
   private static AD_SHOWING_CLASSNAME = "ad-showing";
   private static AD_OVERLAY_CLASSNAME = "ytp-ad-overlay-open";
-  private static VIDEO_ID_EXTRACTION = /^.*?v=(.+?)(?:&.*?|)$/;
 
   public constructor(private canvas: HTMLElement, private location: Location) {}
 
@@ -31,10 +30,7 @@ export class YouTubeVideoIdExtractor implements VideoIdExtractor {
     ) {
       return undefined;
     }
-    let videoIdMatched = this.location.href.match(
-      YouTubeVideoIdExtractor.VIDEO_ID_EXTRACTION
-    );
-    return videoIdMatched[1];
+    return new URLSearchParams(this.location.search).get("v");
   }
 }
 

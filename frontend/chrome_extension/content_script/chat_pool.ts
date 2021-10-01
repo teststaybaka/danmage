@@ -3,17 +3,17 @@ import { BlockSettings } from "../../../interface/player_settings";
 import { BlockPatternTester } from "./block_pattern_tester";
 
 export interface ChatPool {
-  fill: (chatEntries: ChatEntry[]) => void;
+  fill: (chatEntries: Array<ChatEntry>) => void;
   clear: () => void;
   start: (timestamp: number) => void;
-  read: (timestamp: number) => ChatEntry[];
+  read: (timestamp: number) => Array<ChatEntry>;
 }
 
 export class StructuredChatPool implements ChatPool {
   private static ANONYMOUS = "Anonymous";
 
   private lastTimestamp: number = 0; // ms
-  private chatEntries: ChatEntry[] = [];
+  private chatEntries = new Array<ChatEntry>();
   private lastIndex = 0;
 
   public constructor(private blockTester: BlockPatternTester) {}
@@ -24,7 +24,7 @@ export class StructuredChatPool implements ChatPool {
     );
   }
 
-  public fill(newChatEntries: ChatEntry[]): void {
+  public fill(newChatEntries: Array<ChatEntry>): void {
     for (let newChatEntry of newChatEntries) {
       if (!newChatEntry.userNickname) {
         newChatEntry.userNickname = StructuredChatPool.ANONYMOUS;
@@ -86,8 +86,8 @@ export class StructuredChatPool implements ChatPool {
     this.binarySearchReadPointer();
   }
 
-  public read(currentTimestamp: number /* ms */): ChatEntry[] {
-    let returnChatEntries: ChatEntry[] = [];
+  public read(currentTimestamp: number /* ms */): Array<ChatEntry> {
+    let returnChatEntries = new Array<ChatEntry>();
     for (
       ;
       this.lastIndex < this.chatEntries.length &&
@@ -135,7 +135,7 @@ export class YouTubeChatPool implements ChatPool {
     this.lastLogElement = this.chatContainer.lastElementChild;
   }
 
-  public read(): ChatEntry[] {
+  public read(): Array<ChatEntry> {
     let logElementPointer: Element;
     if (this.chatContainer.contains(this.lastLogElement)) {
       logElementPointer = this.lastLogElement.nextElementSibling;
@@ -143,7 +143,7 @@ export class YouTubeChatPool implements ChatPool {
       logElementPointer = this.chatContainer.firstElementChild;
     }
 
-    let returnChatEntries: ChatEntry[] = [];
+    let returnChatEntries = new Array<ChatEntry>();
     for (
       ;
       logElementPointer;
@@ -195,7 +195,7 @@ export class TwitchChatPool implements ChatPool {
     this.logElementPointer = this.chatContainer.lastElementChild;
   }
 
-  public read(): ChatEntry[] {
+  public read(): Array<ChatEntry> {
     let nextLogElementPointer: Element;
     if (this.chatContainer.contains(this.logElementPointer)) {
       nextLogElementPointer = this.logElementPointer.nextElementSibling;
@@ -203,7 +203,7 @@ export class TwitchChatPool implements ChatPool {
       nextLogElementPointer = this.chatContainer.firstElementChild;
     }
 
-    let returnChatEntries: ChatEntry[] = [];
+    let returnChatEntries = new Array<ChatEntry>();
     for (
       ;
       nextLogElementPointer;
