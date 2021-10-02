@@ -57,6 +57,7 @@ export class DanmakuCanvasController {
 
   public init(): this {
     this.refreshIdleElements();
+    this.refreshSizeCache();
     return this;
   }
 
@@ -82,26 +83,27 @@ export class DanmakuCanvasController {
     this.elementsIdle.push(newDanmakuElement);
   }
 
-  public addPerCycle(chatEntries: Array<ChatEntry>): void {
-    // Store width & height to save extra reflows.
+  public refreshSizeCache(): void {
+    // Cache width & height to save extra reflows.
     this.canvasWidth = this.canvas.offsetWidth;
     this.canvasHeight = this.canvas.offsetHeight;
+  }
+
+  public addEntries(chatEntries: Array<ChatEntry>): void {
     if (!this.playerSettings.displaySettings.enable) {
       return;
     }
-
     for (let chatEntry of chatEntries) {
       if (this.getSize() >= this.playerSettings.displaySettings.numLimit) {
         break;
       }
-      this.addOne(chatEntry, this.elementsIdle.pop());
+      this.tryAddToMove(chatEntry);
     }
   }
 
-  private addOne(
-    chatEntry: ChatEntry,
-    danmakuElementComponent: DanmakuElementComponent
-  ): void {
+  private tryAddToMove(chatEntry: ChatEntry): void {
+    let danmakuElementComponent =
+      this.elementsIdle[this.elementsIdle.length - 1];
     danmakuElementComponent.setContent(chatEntry);
     let elementHeight = danmakuElementComponent.height;
     while (this.occupied.length < Math.max(elementHeight, this.canvasHeight)) {
@@ -109,33 +111,34 @@ export class DanmakuCanvasController {
     }
 
     let score = 0;
-    for (let i = 0; i < elementHeight; i++) {
+    let i = 0;
+    for (; i < elementHeight; i++) {
       score += this.occupied[i];
     }
-
-    let minScore = score;
-    let minY = elementHeight - 1;
-    for (let i = elementHeight; i < this.canvasHeight; i++) {
+    for (; i < this.canvasHeight && score > 0; i++) {
       score -= this.occupied[i - elementHeight];
       score += this.occupied[i];
-      if (score < minScore) {
-        minScore = score;
-        minY = i;
-      }
+    }
+    if (score > 0) {
+      danmakuElementComponent.hide();
+      return;
     }
 
-    let posY = minY - elementHeight + 1;
-    for (let i = posY; i < posY + elementHeight; i++) {
-      this.occupied[i]++;
+    let posY = i - elementHeight;
+    for (let j = posY; j < posY + elementHeight; j++) {
+      this.occupied[j]++;
     }
-
     danmakuElementComponent.startMoving(posY);
+    this.elementsIdle.pop();
     this.elementsOccupying.pushBack(danmakuElementComponent);
   }
 
-  public addOneForce(chatEntry: ChatEntry): void {
+  public addExtraEntry(chatEntry: ChatEntry): void {
+    if (!this.playerSettings.displaySettings.enable) {
+      return;
+    }
     this.createOneIdleElement();
-    this.addOne(chatEntry, this.elementsIdle.pop());
+    this.tryAddToMove(chatEntry);
   }
 
   public moveOneFrame(deltaTime: number /* ms */): void {

@@ -28,7 +28,7 @@ import { ServiceClient } from "@selfage/service_client";
 
 export class BodyController {
   private static HAVE_NOTHING = 0;
-  private static CYCLE_INTERVAL = 200; // ms
+  private static CYCLE_INTERVAL = 1000; // ms
 
   private videoId: string;
   private nextCycleId: number;
@@ -211,24 +211,26 @@ export class BodyController {
 
   private requestNextCyle(): void {
     this.nextCycleId = this.window.setTimeout(
-      this.cycle,
+      this.cacheCycle,
       BodyController.CYCLE_INTERVAL
     );
   }
 
-  private cycle = (): void => {
-    let videoTimestamp = this.getCurrentTimestamp();
-    let chatEntries = this.chatPool.read(videoTimestamp);
-    this.controlPanelComponent.addChat(chatEntries);
-    this.danmakuCanvasController.addPerCycle(chatEntries);
+  private cacheCycle = (): void => {
+    this.danmakuCanvasController.refreshSizeCache();
     this.requestNextCyle();
   };
 
   private requestNextFrame(): void {
-    this.nextFrameId = this.window.requestAnimationFrame(this.moveOneFrame);
+    this.nextFrameId = this.window.requestAnimationFrame(this.animationCycle);
   }
 
-  private moveOneFrame = (): void => {
+  private animationCycle = (): void => {
+    let videoTimestamp = this.getCurrentTimestamp();
+    let chatEntries = this.chatPool.read(videoTimestamp);
+    this.controlPanelComponent.addChat(chatEntries);
+    this.danmakuCanvasController.addEntries(chatEntries);
+
     let currentTime = this.date.now();
     let deltaTime = currentTime - this.lastTime;
     this.danmakuCanvasController.moveOneFrame(deltaTime);
@@ -305,7 +307,7 @@ export class BodyController {
 
     this.chatPool.fill([response.chatEntry]);
     this.controlPanelComponent.addChat([response.chatEntry]);
-    this.danmakuCanvasController.addOneForce(response.chatEntry);
+    this.danmakuCanvasController.addExtraEntry(response.chatEntry);
   }
 
   private refreshDisplay(): void {
