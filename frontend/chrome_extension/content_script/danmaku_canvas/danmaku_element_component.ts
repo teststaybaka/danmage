@@ -208,7 +208,7 @@ export enum MoveResult {
 export class DanmakuElementComponent {
   private static DANMAKU_ELEMENT_ATTRIBUTES = {
     class: "danmaku-element",
-    style: `display: none; flex-flow: row nowrap; align-items: center; position: absolute; top: 0; right: 0; padding: .2rem 1.5rem .2rem 0; z-index: 10; pointer-events: none; white-space: nowrap;`,
+    style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; top: 0; right: 0; padding: .2rem 1.5rem .2rem 0; z-index: 10; pointer-events: none; white-space: nowrap; visibility: hidden;`,
   };
   private static OPACITY_SCALE = 1 / 100;
   private static SPEED_SCALE = 1 / 1000; // Scale for time in milliseconds.
@@ -261,8 +261,6 @@ export class DanmakuElementComponent {
 
   public setContent(chatEntry: ChatEntry): void {
     this.chatEntry = chatEntry;
-    this.body.style.visibility = "hidden";
-    this.body.style.display = "flex";
     this.render();
     this.height = this.body.offsetHeight;
   }
@@ -321,7 +319,7 @@ export class DanmakuElementComponent {
   }
 
   public hide(): void {
-    this.body.style.display = "none";
+    this.body.style.visibility = "hidden";
   }
 
   public remove(): void {
