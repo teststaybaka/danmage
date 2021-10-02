@@ -1,10 +1,10 @@
 {
-  "name": "danmage_web_server",
+  "name": "danmage",
   "version": "0.0.1",
-  "description": "The backend server for DanMage.",
+  "description": "Backend server, web apps and chrome extension for DanMage.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/teststaybaka/danmage_web_server.git"
+    "url": "git+https://github.com/teststaybaka/danmage.git"
   },
   "keywords": [
     "Danmage",
@@ -13,9 +13,9 @@
   "author": "Yuxuan Xie <teststaybaka@gmail.com> (http://www.yuxuanxie.com)",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/teststaybaka/danmage_web_server/issues"
+    "url": "https://github.com/teststaybaka/danmage/issues"
   },
-  "homepage": "https://github.com/teststaybaka/danmage_web_server#readme",
+  "homepage": "https://github.com/teststaybaka/danmage#readme",
   "devDependencies": {
     "@selfage/bundler_cli": "^2.1.1",
     "@selfage/counter": "^1.0.9",
