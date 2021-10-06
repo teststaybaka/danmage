@@ -1,5 +1,6 @@
 import EventEmitter = require("events");
 import { ColorScheme } from "../../../color_scheme";
+import { ContainedTextInputController } from "../contained_text_input_controller";
 import { NumberRange } from "../number_range";
 import {
   ENTRY_MARGIN_TOP_STYLE,
@@ -7,7 +8,6 @@ import {
   TEXT_INPUT_STYLE,
 } from "./common";
 import { E } from "@selfage/element/factory";
-import { TextInputController } from "@selfage/element/text_input_controller";
 import { Ref } from "@selfage/ref";
 
 export interface DragBarComponent {
@@ -20,7 +20,7 @@ export class DragBarComponent extends EventEmitter {
     private valueInput: HTMLInputElement,
     private barWrapper: HTMLDivElement,
     private cursor: HTMLDivElement,
-    private textInputController: TextInputController,
+    private textInputController: ContainedTextInputController,
     private numberRange: NumberRange
   ) {
     super();
@@ -34,7 +34,7 @@ export class DragBarComponent extends EventEmitter {
     let views = DragBarComponent.createView(label, numberRange, value);
     return new DragBarComponent(
       ...views,
-      TextInputController.create(views[1]),
+      ContainedTextInputController.create(views[1]),
       numberRange
     ).init();
   }

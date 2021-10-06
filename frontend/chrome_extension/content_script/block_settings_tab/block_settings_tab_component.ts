@@ -6,11 +6,11 @@ import {
 } from "../../../../interface/player_settings";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
+import { ContainedTextInputController } from "../contained_text_input_controller";
 import { GlobalDocuments } from "../global_documents";
 import { BlockEntryComponent } from "./block_entry_component";
 import { BlockOptionEntryComponent } from "./block_option_entry_component";
 import { E } from "@selfage/element/factory";
-import { TextInputController } from "@selfage/element/text_input_controller";
 import { Ref } from "@selfage/ref";
 
 export interface BlockSettingsTabComponent {
@@ -32,7 +32,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
     private blockOptionKeyword: BlockOptionEntryComponent,
     private blockOptionRegExp: BlockOptionEntryComponent,
     private submitButton: FillButtonComponent,
-    private patternInputController: TextInputController,
+    private patternInputController: ContainedTextInputController,
     private blockEntryComponentFactoryFn: (
       blockPattern: BlockPattern
     ) => BlockEntryComponent,
@@ -53,7 +53,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
     );
     return new BlockSettingsTabComponent(
       ...views,
-      TextInputController.create(views[5]),
+      ContainedTextInputController.create(views[5]),
       BlockEntryComponent.create,
       blockSettings,
       globalDocuments

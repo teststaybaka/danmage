@@ -1,11 +1,11 @@
 import EventEmitter = require("events");
+import { ContainedTextInputController } from "../text_input_controller";
 import {
   ENTRY_MARGIN_TOP_STYLE,
   LABEL_STYLE,
   TEXT_INPUT_STYLE,
 } from "./common";
 import { E } from "@selfage/element/factory";
-import { TextInputController } from "@selfage/element/text_input_controller";
 import { Ref } from "@selfage/ref";
 
 export interface TextInputComponent {
@@ -16,7 +16,7 @@ export class TextInputComponent extends EventEmitter {
   public constructor(
     public body: HTMLDivElement,
     private input: HTMLInputElement,
-    private textInputController: TextInputController,
+    private textInputController: ContainedTextInputController,
     private defaultValue: string
   ) {
     super();
@@ -30,7 +30,7 @@ export class TextInputComponent extends EventEmitter {
     let views = TextInputComponent.createView(label, value);
     return new TextInputComponent(
       ...views,
-      TextInputController.create(views[1]),
+      ContainedTextInputController.create(views[1]),
       defaultValue
     ).init();
   }

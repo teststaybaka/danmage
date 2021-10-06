@@ -3,10 +3,10 @@ import { ChatEntry } from "../../../../interface/chat_entry";
 import { BlockSettings } from "../../../../interface/player_settings";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
+import { ContainedTextInputController } from "../contained_text_input_controller";
 import { LinkedList } from "../linked_list";
 import { ChatListEntryComponent } from "./chat_list_entry_component";
 import { E } from "@selfage/element/factory";
-import { TextInputController } from "@selfage/element/text_input_controller";
 import { Ref } from "@selfage/ref";
 
 export interface ChatListTabComponent {
@@ -27,7 +27,7 @@ export class ChatListTabComponent extends EventEmitter {
     private entryList: HTMLDivElement,
     private chatInput: HTMLInputElement,
     private fireButton: FillButtonComponent,
-    private chatInputController: TextInputController,
+    private chatInputController: ContainedTextInputController,
     private blockSettings: BlockSettings,
     private chatListEntryComponentFactoryFn: (
       chatEntry: ChatEntry,
@@ -43,7 +43,7 @@ export class ChatListTabComponent extends EventEmitter {
     );
     return new ChatListTabComponent(
       ...views,
-      TextInputController.create(views[2]),
+      ContainedTextInputController.create(views[2]),
       blockSettings,
       ChatListEntryComponent.create
     ).init();
@@ -85,9 +85,6 @@ export class ChatListTabComponent extends EventEmitter {
 
   public init(): this {
     this.displayStyle = this.body.style.display;
-    this.chatInput.addEventListener("keydown", (event) =>
-      event.stopPropagation()
-    );
     this.chatInputController.on("enter", () => this.enterToFire());
     this.fireButton.on("click", () => this.fire());
     return this;
