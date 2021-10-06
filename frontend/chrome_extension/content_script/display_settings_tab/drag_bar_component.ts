@@ -159,10 +159,10 @@ export class DragBarComponent extends EventEmitter {
   }
 
   private changeByInput(): void {
-    if (!this.valueInput.value) {
-      this.valueInput.value = `${this.numberRange.defaultValue}`;
-    }
-    let value = parseInt(this.valueInput.value);
+    let value = this.numberRange.getValidValueWithDefault(
+      parseInt(this.valueInput.value)
+    );
+    this.valueInput.value = `${value}`;
     this.moveCursor(value);
     this.emit("change", value);
   }

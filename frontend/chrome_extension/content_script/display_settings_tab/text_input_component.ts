@@ -1,5 +1,5 @@
 import EventEmitter = require("events");
-import { ContainedTextInputController } from "../text_input_controller";
+import { ContainedTextInputController } from "../contained_text_input_controller";
 import {
   ENTRY_MARGIN_TOP_STYLE,
   LABEL_STYLE,
