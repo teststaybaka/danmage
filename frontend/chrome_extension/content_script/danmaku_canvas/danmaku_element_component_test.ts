@@ -1,157 +1,199 @@
-import {
-  DanmakuElementComponent,
-  MoveResult,
-  reverseColorAsTextShadow,
-} from "./danmaku_element_component";
+import { DanmakuElementComponent } from "./danmaku_element_component";
 import { MockDanmakuElementContentBuilder } from "./mocks";
-import { assertThat, eq } from "@selfage/test_matcher";
+import { Counter } from "@selfage/counter";
+import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
-
-class MockElement {
-  public style: any = { setProperty: () => {} };
-  public offsetWidth: any;
-}
 
 PUPPETEER_TEST_RUNNER.run({
   name: "DanmakuElementComponentTest",
   cases: [
     {
-      name: "ReverseForBlackBorder",
-      execute: () => {
-        // Execute
-        let textShadow = reverseColorAsTextShadow(119, 120, 122);
-
-        // Verify
-        assertThat(
-          textShadow,
-          eq("-.2rem 0 black, 0 .2rem black, .2rem 0 black, 0 -.2rem black"),
-          "shadow"
-        );
-      },
-    },
-    {
-      name: "ReverseForWhiteBorder",
-      execute: () => {
-        // Execute
-        let textShadow = reverseColorAsTextShadow(119, 121, 120);
-
-        // Verify
-        assertThat(
-          textShadow,
-          eq("-.2rem 0 white, 0 .2rem white, .2rem 0 white, 0 -.2rem white"),
-          "shadow"
-        );
-      },
-    },
-    {
-      name: "MoveToEnd",
+      name: "StartAndEnd",
       execute: () => {
         // Prepare
-        let element = new MockElement();
-        element.offsetWidth = 40;
+        let mockElement = new (class {
+          public offsetWidth = 11;
+          public offsetHeight = 22;
+          public style: any = { setProperty: () => {} };
+        })() as any;
+        let mockWindow = new (class {
+          public callbacks = new Array<[Function, number]>();
+          public setTimeout(callback: Function, time: number) {
+            this.callbacks.push([callback, time]);
+          }
+          public getComputedStyle() {
+            return { transform: "matrix(1,0,0,1,10,0)" };
+          }
+        })() as any;
+        let counter = new Counter<string>();
         let danmakuElementComponent = new DanmakuElementComponent(
-          element as any,
+          mockElement,
           { speed: 10 },
           undefined,
-          new MockDanmakuElementContentBuilder()
+          new MockDanmakuElementContentBuilder(),
+          mockWindow
         );
-        danmakuElementComponent.setContent({});
-
-        {
-          // Execute
-          danmakuElementComponent.startMoving(20);
-
-          // Verify
-          assertThat(
-            element.style.transform,
-            eq("translate(40px, 20px)"),
-            "transform 1"
-          );
-        }
-
-        {
-          // Execute
-          let res = danmakuElementComponent.moveOneFrame(500, 30);
-
-          // Verify
-          assertThat(
-            element.style.transform,
-            eq("translate(35px, 20px)"),
-            "transform 2"
-          );
-          assertThat(res, eq(MoveResult.OccupyAndDisplay), "move result 2");
-        }
-
-        {
-          // Execute
-          let res = danmakuElementComponent.moveOneFrame(1000, 30);
-
-          // Verify
-          assertThat(
-            element.style.transform,
-            eq("translate(25px, 20px)"),
-            "transform 3"
-          );
-          assertThat(res, eq(MoveResult.OccupyAndDisplay), "move result 3");
-        }
-
-        {
-          // Execute
-          let res = danmakuElementComponent.moveOneFrame(3000, 30);
-
-          // Verify
-          assertThat(
-            element.style.transform,
-            eq("translate(-5px, 20px)"),
-            "transform 4"
-          );
-          assertThat(res, eq(MoveResult.Display), "move result 4");
-        }
-
-        {
-          // Execute
-          let res = danmakuElementComponent.moveOneFrame(3000, 30);
-
-          // Verify
-          assertThat(
-            element.style.transform,
-            eq("translate(-35px, 20px)"),
-            "transform 5"
-          );
-          assertThat(res, eq(MoveResult.End), "move result 5");
-        }
-      },
-    },
-    {
-      name: "ChangeSpeedAfterStartedMoving",
-      execute: () => {
-        // Prepare
-        let element = new MockElement();
-        element.offsetWidth = 40;
-        let settings = {
-          speed: 10,
-        };
-        let danmakuElementComponent = new DanmakuElementComponent(
-          element as any,
-          settings,
-          undefined,
-          new MockDanmakuElementContentBuilder()
-        );
-        danmakuElementComponent.setContent({});
-        danmakuElementComponent.startMoving(20);
-        settings.speed = 20;
+        danmakuElementComponent.on("occupationEnded", () => {
+          counter.increment("occupationEnded");
+        });
+        danmakuElementComponent.on("displayEnded", () => {
+          counter.increment("displayEnded");
+        });
 
         // Execute
-        danmakuElementComponent.render();
-        let res = danmakuElementComponent.moveOneFrame(1100, 30);
+        danmakuElementComponent.setContent({});
 
         // Verify
         assertThat(
-          element.style.transform,
-          eq("translate(18px, 20px)"),
-          "transform"
+          danmakuElementComponent.heightOriginal,
+          eq(22),
+          "rendered height"
         );
-        assertThat(res, eq(MoveResult.OccupyAndDisplay), "move result");
+
+        // Execute
+        danmakuElementComponent.start(100, 200);
+
+        // Verify
+        assertThat(
+          danmakuElementComponent.posYOriginal,
+          eq(100),
+          "original posY"
+        );
+        assertThat(mockElement.style.visibility, eq("visible"), "visible");
+        assertThat(
+          mockElement.style.transition,
+          eq("transform 21s linear"),
+          "started transition"
+        );
+        assertThat(
+          mockElement.style.transform,
+          eq("translate3d(-200px, 100px, 0)"),
+          "target transform"
+        );
+        assertThat(
+          mockWindow.callbacks[0][1],
+          eq(1000),
+          "time to end occupation"
+        );
+        assertThat(
+          mockWindow.callbacks[1][1],
+          eq(21000),
+          "time to end display"
+        );
+        assertThat(
+          counter.get("occupationEnded"),
+          eq(0),
+          "occupation not ended"
+        );
+        assertThat(counter.get("displayEnded"), eq(0), "display not ended");
+
+        // Execute
+        mockWindow.callbacks[0][0]();
+
+        // Verify
+        assertThat(counter.get("occupationEnded"), eq(1), "occupation ended");
+        assertThat(counter.get("displayEnded"), eq(0), "display not ended");
+
+        // Execute
+        mockWindow.callbacks[1][0]();
+
+        // Verify
+        assertThat(mockElement.style.visibility, eq("hidden"), "not visible");
+        assertThat(
+          counter.get("occupationEnded"),
+          eq(1),
+          "occupation already ended"
+        );
+        assertThat(counter.get("displayEnded"), eq(1), "display ended");
+      },
+    },
+    {
+      name: "StartAndPauseAndEndAndClear",
+      execute: () => {
+        // Prepare
+        let mockElement = new (class {
+          public offsetWidth = 11;
+          public offsetHeight = 22;
+          public style: any = { setProperty: () => {} };
+        })() as any;
+        let mockWindow = new (class {
+          public id = 0;
+          public callbacks = new Array<[Function, number]>();
+          public setTimeout(callback: Function, time: number) {
+            this.callbacks.push([callback, time]);
+            this.id++;
+            return this.id;
+          }
+          public clearedIds = new Array<number>();
+          public clearTimeout(id: number) {
+            this.clearedIds.push(id);
+          }
+          public posX = 10;
+          public getComputedStyle() {
+            return { transform: `matrix(1,0,0,1,${this.posX},0)` };
+          }
+        })() as any;
+        let counter = new Counter<string>();
+        let danmakuElementComponent = new DanmakuElementComponent(
+          mockElement,
+          { speed: 10 },
+          undefined,
+          new MockDanmakuElementContentBuilder(),
+          mockWindow
+        );
+        danmakuElementComponent.on("occupationEnded", () => {
+          counter.increment("occupationEnded");
+        });
+        danmakuElementComponent.on("displayEnded", () => {
+          counter.increment("displayEnded");
+        });
+        danmakuElementComponent.setContent({});
+        danmakuElementComponent.start(100, 200);
+        mockWindow.posX = -250;
+
+        // Execute
+        danmakuElementComponent.pause();
+
+        // Verify
+        assertThat(
+          mockWindow.clearedIds,
+          eqArray([eq(1), eq(2)]),
+          "cleared ids when paused"
+        );
+        assertThat(
+          mockElement.style.transition,
+          eq("none"),
+          "paused transition"
+        );
+        assertThat(
+          mockElement.style.transform,
+          eq("translate3d(-250px, 100px, 0)"),
+          "paused transform"
+        );
+        assertThat(
+          counter.get("occupationEnded"),
+          eq(0),
+          "occupation not ended"
+        );
+        assertThat(counter.get("displayEnded"), eq(0), "display not ended");
+
+        // Execute
+        danmakuElementComponent.play(220);
+
+        // Verify
+        assertThat(counter.get("occupationEnded"), eq(1), "occupation ended");
+        assertThat(counter.get("displayEnded"), eq(1), "display ended");
+
+        // Execute
+        danmakuElementComponent.clear();
+
+        // Verify
+        assertThat(
+          counter.get("occupationEnded"),
+          eq(1),
+          "occupation already ended"
+        );
+        assertThat(counter.get("displayEnded"), eq(1), "display already ended");
       },
     },
   ],

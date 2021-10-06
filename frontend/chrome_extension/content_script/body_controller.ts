@@ -28,12 +28,9 @@ import { ServiceClient } from "@selfage/service_client";
 
 export class BodyController {
   private static HAVE_NOTHING = 0;
-  private static CYCLE_INTERVAL = 1000; // ms
 
   private videoId: string;
-  private nextCycleId: number;
   private nextFrameId: number;
-  private lastTime: number = 0; // ms
 
   public constructor(
     private video: HTMLVideoElement,
@@ -44,7 +41,6 @@ export class BodyController {
     private videoIdExtractor: VideoIdExtractor,
     private serviceClient: ServiceClient,
     private window: Window,
-    private date: DateConstructor,
     private hostApp?: HostApp
   ) {}
 
@@ -159,7 +155,6 @@ export class BodyController {
       videoIdExtractor,
       SERVICE_CLIENT,
       window,
-      Date,
       hostApp
     ).init();
   }
@@ -170,13 +165,13 @@ export class BodyController {
       this.anchorButtonElement
     );
 
-    this.video.onplay = () => this.start();
+    this.video.onplay = () => this.play();
     this.video.onpause = () => this.pause();
     this.video.onended = () => this.reset();
     if (this.hostApp) {
       this.video.onloadedmetadata = () => this.switchVideo();
       this.video.onseeking = () => this.reset();
-      this.video.onseeked = () => this.start();
+      this.video.onseeked = () => this.play();
       this.controlPanelComponent.on("fire", (chatEntry) =>
         this.fire(chatEntry)
       );
@@ -189,37 +184,24 @@ export class BodyController {
       this.window.setTimeout(() => this.switchVideo(), 0);
     }
     if (!this.video.paused && !this.video.ended && !this.video.seeking) {
-      this.window.setTimeout(() => this.start(), 0);
+      this.window.setTimeout(() => this.play(), 0);
     }
     return this;
   }
 
-  private start(): void {
-    if (this.nextCycleId !== undefined || this.nextFrameId !== undefined) {
+  private play(): void {
+    if (this.nextFrameId !== undefined) {
       return;
     }
 
     this.chatPool.start(this.getCurrentTimestamp());
-    this.lastTime = this.date.now();
-    this.requestNextCyle();
     this.requestNextFrame();
+    this.danmakuCanvasController.play();
   }
 
   private getCurrentTimestamp(): number {
     return this.video.currentTime * 1000;
   }
-
-  private requestNextCyle(): void {
-    this.nextCycleId = this.window.setTimeout(
-      this.cacheCycle,
-      BodyController.CYCLE_INTERVAL
-    );
-  }
-
-  private cacheCycle = (): void => {
-    this.danmakuCanvasController.refreshSizeCache();
-    this.requestNextCyle();
-  };
 
   private requestNextFrame(): void {
     this.nextFrameId = this.window.requestAnimationFrame(this.animationCycle);
@@ -230,19 +212,13 @@ export class BodyController {
     let chatEntries = this.chatPool.read(videoTimestamp);
     this.controlPanelComponent.addChat(chatEntries);
     this.danmakuCanvasController.addEntries(chatEntries);
-
-    let currentTime = this.date.now();
-    let deltaTime = currentTime - this.lastTime;
-    this.danmakuCanvasController.moveOneFrame(deltaTime);
-    this.lastTime = currentTime;
     this.requestNextFrame();
   };
 
   private pause(): void {
-    this.window.clearTimeout(this.nextCycleId);
     this.window.cancelAnimationFrame(this.nextFrameId);
-    this.nextCycleId = undefined;
     this.nextFrameId = undefined;
+    this.danmakuCanvasController.pause();
   }
 
   private reset(): void {
@@ -325,7 +301,7 @@ export class BodyController {
     this.video.onloadedmetadata = undefined;
     this.video.onseeking = undefined;
     this.video.onseeked = undefined;
-    this.reset();
+    this.window.cancelAnimationFrame(this.nextFrameId);
     this.controlPanelComponent.remove();
     this.danmakuCanvasController.remove();
   }

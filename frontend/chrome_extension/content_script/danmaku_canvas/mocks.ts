@@ -1,7 +1,5 @@
-import {
-  DanmakuElementComponent,
-  DanmakuElementContentBuilder,
-} from "./danmaku_element_component";
+import { DanmakuElementComponent } from "./danmaku_element_component";
+import { DanmakuElementContentBuilder } from "./danmaku_element_content_builder";
 
 export class MockDanmakuElementContentBuilder
   implements DanmakuElementContentBuilder
@@ -13,6 +11,6 @@ export class MockDanmakuElementContentBuilder
 
 export class MockDanmakuElementComponent extends DanmakuElementComponent {
   public constructor(body: HTMLDivElement) {
-    super(body, undefined, undefined, undefined);
+    super(body, undefined, undefined, undefined, undefined);
   }
 }

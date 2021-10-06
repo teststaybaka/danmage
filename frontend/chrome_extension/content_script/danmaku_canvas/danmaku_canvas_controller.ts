@@ -1,17 +1,16 @@
 import { ChatEntry } from "../../../../interface/chat_entry";
 import { PlayerSettings } from "../../../../interface/player_settings";
-import { LinkedList } from "../linked_list";
-import {
-  DanmakuElementComponent,
-  MoveResult,
-} from "./danmaku_element_component";
+import { LinkedList, LinkedNode } from "../linked_list";
+import { DanmakuElementComponent } from "./danmaku_element_component";
 
 export class DanmakuCanvasController {
+  private static REFRESH_INTERVAL = 1000; // ms
+
   private canvasWidth: number;
   private canvasHeight: number;
+  private refreshCanvasSizeCycleId: number;
   private occupied = new Array<number>();
   private elementsIdle = new Array<DanmakuElementComponent>();
-  private elementsOccupying = new LinkedList<DanmakuElementComponent>();
   private elementsDisplaying = new LinkedList<DanmakuElementComponent>();
 
   public constructor(
@@ -19,7 +18,8 @@ export class DanmakuCanvasController {
     private playerSettings: PlayerSettings,
     private danmakuElementComponentFactoryFn: (
       playerSettings: PlayerSettings
-    ) => DanmakuElementComponent
+    ) => DanmakuElementComponent,
+    private window: Window
   ) {}
 
   public static createStructured(
@@ -29,7 +29,8 @@ export class DanmakuCanvasController {
     return new DanmakuCanvasController(
       canvas,
       playerSettings,
-      DanmakuElementComponent.createStructured
+      DanmakuElementComponent.createStructured,
+      window
     ).init();
   }
 
@@ -40,7 +41,8 @@ export class DanmakuCanvasController {
     return new DanmakuCanvasController(
       canvas,
       playerSettings,
-      DanmakuElementComponent.createYouTube
+      DanmakuElementComponent.createYouTube,
+      window
     ).init();
   }
 
@@ -51,19 +53,22 @@ export class DanmakuCanvasController {
     return new DanmakuCanvasController(
       canvas,
       playerSettings,
-      DanmakuElementComponent.createTwitch
+      DanmakuElementComponent.createTwitch,
+      window
     ).init();
   }
 
   public init(): this {
+    this.canvasWidth = this.canvas.offsetWidth;
+    this.canvasHeight = this.canvas.offsetHeight;
     this.refreshIdleElements();
-    this.refreshSizeCache();
+    this.requestRefreshCanvasSizeCycle();
     return this;
   }
 
   private refreshIdleElements(): void {
     for (
-      let i = this.getSize() + this.elementsIdle.length;
+      let i = this.elementsDisplaying.getSize() + this.elementsIdle.length;
       i < this.playerSettings.displaySettings.numLimit;
       i++
     ) {
@@ -71,41 +76,53 @@ export class DanmakuCanvasController {
     }
   }
 
-  private getSize(): number {
-    return this.elementsOccupying.getSize() + this.elementsDisplaying.getSize();
-  }
-
   private createOneIdleElement(): void {
-    let newDanmakuElement = this.danmakuElementComponentFactoryFn(
+    let newDanmakuElementComponent = this.danmakuElementComponentFactoryFn(
       this.playerSettings
     );
-    this.canvas.appendChild(newDanmakuElement.body);
-    this.elementsIdle.push(newDanmakuElement);
+    this.canvas.appendChild(newDanmakuElementComponent.body);
+    this.elementsIdle.push(newDanmakuElementComponent);
   }
 
-  public refreshSizeCache(): void {
-    // Cache width & height to save extra reflows.
-    this.canvasWidth = this.canvas.offsetWidth;
-    this.canvasHeight = this.canvas.offsetHeight;
+  private requestRefreshCanvasSizeCycle(): void {
+    this.refreshCanvasSizeCycleId = this.window.setTimeout(
+      this.refreshCanvasSizeCycle,
+      DanmakuCanvasController.REFRESH_INTERVAL
+    );
   }
+
+  // Cache width & height to save extra reflows.
+  private refreshCanvasSizeCycle = (): void => {
+    if (this.canvasWidth != this.canvas.offsetWidth) {
+      this.canvasWidth = this.canvas.offsetWidth;
+      this.elementsDisplaying.forEach((danmakuElementComponent) => {
+        danmakuElementComponent.refreshCanvasSize(this.canvasWidth);
+      });
+    }
+    this.canvasHeight = this.canvas.offsetHeight;
+    this.requestRefreshCanvasSizeCycle();
+  };
 
   public addEntries(chatEntries: Array<ChatEntry>): void {
     if (!this.playerSettings.displaySettings.enable) {
       return;
     }
     for (let chatEntry of chatEntries) {
-      if (this.getSize() >= this.playerSettings.displaySettings.numLimit) {
+      if (
+        this.elementsDisplaying.getSize() >=
+        this.playerSettings.displaySettings.numLimit
+      ) {
         break;
       }
-      this.tryAddToMove(chatEntry);
+      this.tryStartDisplaying(chatEntry);
     }
   }
 
-  private tryAddToMove(chatEntry: ChatEntry): void {
+  private tryStartDisplaying(chatEntry: ChatEntry): void {
     let danmakuElementComponent =
       this.elementsIdle[this.elementsIdle.length - 1];
     danmakuElementComponent.setContent(chatEntry);
-    let elementHeight = danmakuElementComponent.height;
+    let elementHeight = danmakuElementComponent.heightOriginal;
     while (this.occupied.length < Math.max(elementHeight, this.canvasHeight)) {
       this.occupied.push(0);
     }
@@ -120,7 +137,7 @@ export class DanmakuCanvasController {
       score += this.occupied[i];
     }
     if (score > 0) {
-      danmakuElementComponent.hide();
+      danmakuElementComponent.clear();
       return;
     }
 
@@ -128,9 +145,32 @@ export class DanmakuCanvasController {
     for (let j = posY; j < posY + elementHeight; j++) {
       this.occupied[j]++;
     }
-    danmakuElementComponent.startMoving(posY);
     this.elementsIdle.pop();
-    this.elementsOccupying.pushBack(danmakuElementComponent);
+    let node = this.elementsDisplaying.pushBack(danmakuElementComponent);
+    danmakuElementComponent.start(posY, this.canvasWidth);
+    danmakuElementComponent.once("occupationEnded", () =>
+      this.releaseOccupied(danmakuElementComponent)
+    );
+    danmakuElementComponent.once("displayEnded", () => this.returnToIdle(node));
+  }
+
+  private releaseOccupied(
+    danmakuElementComponent: DanmakuElementComponent
+  ): void {
+    for (
+      let i = danmakuElementComponent.posYOriginal;
+      i <
+      danmakuElementComponent.posYOriginal +
+        danmakuElementComponent.heightOriginal;
+      i++
+    ) {
+      this.occupied[i]--;
+    }
+  }
+
+  private returnToIdle(node: LinkedNode<DanmakuElementComponent>): void {
+    node.remove();
+    this.elementsIdle.push(node.value);
   }
 
   public addExtraEntry(chatEntry: ChatEntry): void {
@@ -138,130 +178,53 @@ export class DanmakuCanvasController {
       return;
     }
     this.createOneIdleElement();
-    this.tryAddToMove(chatEntry);
+    this.tryStartDisplaying(chatEntry);
   }
 
-  public moveOneFrame(deltaTime: number /* ms */): void {
-    for (let it = this.elementsDisplaying.createLeftIterator(); !it.isEnd(); ) {
-      let danmakuElementComponent = it.getValue();
-      let result = danmakuElementComponent.moveOneFrame(
-        deltaTime,
-        this.canvasWidth
-      );
-      if (result === MoveResult.End) {
-        danmakuElementComponent.hide();
-        this.elementsIdle.push(danmakuElementComponent);
-        it.removeAndNext();
-      } else {
-        it.next();
-      }
-    }
-    for (let it = this.elementsOccupying.createLeftIterator(); !it.isEnd(); ) {
-      let danmakuElementComponent = it.getValue();
-      let result = danmakuElementComponent.moveOneFrame(
-        deltaTime,
-        this.canvasWidth
-      );
-      if (result === MoveResult.End || result === MoveResult.Display) {
-        for (
-          let i = danmakuElementComponent.posY;
-          i < danmakuElementComponent.posY + danmakuElementComponent.height;
-          i++
-        ) {
-          this.occupied[i]--;
-        }
-      }
+  public play(): void {
+    this.refreshCanvasSizeCycle();
+    this.elementsDisplaying.forEach((danmakuElementComponent) => {
+      danmakuElementComponent.play(this.canvasWidth);
+    });
+  }
 
-      if (result === MoveResult.End) {
-        danmakuElementComponent.hide();
-        this.elementsIdle.push(danmakuElementComponent);
-        it.removeAndNext();
-      } else if (result === MoveResult.Display) {
-        this.elementsDisplaying.pushBack(danmakuElementComponent);
-        it.removeAndNext();
-      } else {
-        it.next();
-      }
-    }
+  public pause(): void {
+    this.window.clearTimeout(this.refreshCanvasSizeCycleId);
+    this.elementsDisplaying.forEach((danmakuElementComponent) => {
+      danmakuElementComponent.pause();
+    });
   }
 
   public refreshDisplay(): void {
     this.refreshIdleElements();
 
     if (this.playerSettings.displaySettings.enable) {
-      DanmakuCanvasController.renderList(this.elementsOccupying);
-      DanmakuCanvasController.renderList(this.elementsDisplaying);
+      this.elementsDisplaying.forEach((danmakuElementComponent) => {
+        danmakuElementComponent.refreshDisplay(this.canvasWidth);
+      });
     } else {
       this.clear();
     }
   }
 
-  private static renderList(
-    linkedList: LinkedList<DanmakuElementComponent>
-  ): void {
-    for (
-      let iter = linkedList.createLeftIterator();
-      !iter.isEnd();
-      iter.next()
-    ) {
-      iter.getValue().render();
-    }
-  }
-
   public refreshBlocked(): void {
-    for (let it = this.elementsOccupying.createLeftIterator(); !it.isEnd(); ) {
-      let danmakuElementComponent = it.getValue();
-      if (danmakuElementComponent.isBlocked()) {
-        for (
-          let i = danmakuElementComponent.posY;
-          i < danmakuElementComponent.posY + danmakuElementComponent.height;
-          i++
-        ) {
-          this.occupied[i]--;
-        }
-        danmakuElementComponent.hide();
-        this.elementsIdle.push(danmakuElementComponent);
-        it.removeAndNext();
-      } else {
-        it.next();
-      }
-    }
-    for (let it = this.elementsDisplaying.createLeftIterator(); !it.isEnd(); ) {
-      let danmakuElementComponent = it.getValue();
-      if (danmakuElementComponent.isBlocked()) {
-        danmakuElementComponent.hide();
-        this.elementsIdle.push(danmakuElementComponent);
-        it.removeAndNext();
-      } else {
-        it.next();
-      }
-    }
+    this.elementsDisplaying.forEach((danmakuElementComponent) => {
+      danmakuElementComponent.refreshBlocked();
+    });
   }
 
   public clear(): void {
-    for (let i = 0; i < this.occupied.length; i++) {
-      this.occupied[i] = 0;
-    }
-    this.clearList(this.elementsOccupying);
-    this.clearList(this.elementsDisplaying);
-  }
-
-  private clearList(linkedList: LinkedList<DanmakuElementComponent>): void {
-    for (
-      let iter = linkedList.createLeftIterator();
-      !iter.isEnd();
-      iter.next()
-    ) {
-      let danmakuElementComponent = iter.getValue();
-      danmakuElementComponent.hide();
-      this.elementsIdle.push(danmakuElementComponent);
-    }
-    linkedList.clear();
+    this.elementsDisplaying.forEach((danmakuElementComponent) => {
+      danmakuElementComponent.clear();
+    });
   }
 
   public remove(): void {
-    while (this.elementsIdle.length > 0) {
-      this.elementsIdle.pop().remove();
-    }
+    this.elementsDisplaying.forEach((danmakuElementComponent) => {
+      danmakuElementComponent.remove();
+    });
+    this.elementsIdle.forEach((danmakuElementComponent) => {
+      danmakuElementComponent.remove();
+    });
   }
 }

@@ -1,230 +1,50 @@
+import EventEmitter = require("events");
 import { ChatEntry } from "../../../../interface/chat_entry";
 import {
   DisplaySettings,
   PlayerSettings,
 } from "../../../../interface/player_settings";
 import { BlockPatternTester } from "../block_pattern_tester";
+import {
+  DanmakuElementContentBuilder,
+  StructuredContentBuilder,
+  TwitchChatContentBuilder,
+  YouTubeChatContentBuilder,
+} from "./danmaku_element_content_builder";
 import { E } from "@selfage/element/factory";
 
-let GREYNESS_THRESHOLD = 120;
-let FONT_SIZE_SCALE = 1 / 10;
-
-export function reverseColorAsTextShadow(
-  red: number,
-  green: number,
-  blue: number
-): string {
-  let greyness = (red + green + blue) / 3;
-  if (greyness > GREYNESS_THRESHOLD) {
-    return "-.2rem 0 black, 0 .2rem black, .2rem 0 black, 0 -.2rem black";
-  } else {
-    return "-.2rem 0 white, 0 .2rem white, .2rem 0 white, 0 -.2rem white";
-  }
+export interface DanmakuElementComponent {
+  on(event: "occupationEnded", listener: () => void): this;
+  on(event: "displayEnded", listener: () => void): this;
 }
 
-function removeSelectedChildElements(
-  container: HTMLElement | DocumentFragment,
-  selector: string
-): void {
-  let children = container.querySelectorAll(selector);
-  for (let i = children.length - 1; i >= 0; i--) {
-    children.item(i).remove();
-  }
-}
-
-function resizeSelectedChildElements(
-  container: HTMLElement | DocumentFragment,
-  selector: string,
-  fontSize: number
-): void {
-  let children = container.querySelectorAll(selector);
-  for (let i = children.length - 1; i >= 0; i--) {
-    let child = children.item(i) as HTMLElement;
-    child.style.width = `${fontSize * FONT_SIZE_SCALE}rem`;
-    child.style.height = `${fontSize * FONT_SIZE_SCALE}rem`;
-  }
-}
-
-export interface DanmakuElementContentBuilder {
-  build: (chatEntry: ChatEntry, displaySettings: DisplaySettings) => string;
-}
-
-class StructuredContentBuilder implements DanmakuElementContentBuilder {
-  public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
-    let textShadow = reverseColorAsTextShadow(255, 255, 255);
-    let contentHTML = `<span style="color: white; text-shadow: ${textShadow};">${chatEntry.content}</span>`;
-    if (displaySettings.showUserName) {
-      return `<span style="color: white; margin-right: .7rem;">${chatEntry.userNickname}</span>${contentHTML}`;
-    } else {
-      return contentHTML;
-    }
-  }
-}
-
-class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
-  private static CUSTOM_TAG_OPEN = /<yt-.*? /g;
-  private static CUSTOM_TAG_CLOSE = /<\/yt-.*?>/g;
-
-  public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
-    let template = document.createElement("template");
-    template.innerHTML = chatEntry.content
-      .replace(YouTubeChatContentBuilder.CUSTOM_TAG_OPEN, "<div ")
-      .replace(YouTubeChatContentBuilder.CUSTOM_TAG_CLOSE, "</div>");
-    removeSelectedChildElements(template.content, "#timestamp");
-    removeSelectedChildElements(template.content, "#deleted-state");
-    removeSelectedChildElements(template.content, "#menu");
-    removeSelectedChildElements(
-      template.content,
-      "#inline-action-button-container"
-    );
-    if (!displaySettings.showUserName) {
-      removeSelectedChildElements(template.content, "#author-photo");
-      removeSelectedChildElements(template.content, "#author-name");
-      removeSelectedChildElements(template.content, "#chat-badges");
-    }
-
-    for (let content of template.content.querySelectorAll("#content")) {
-      (content as HTMLElement).style.display = "flex";
-    }
-    for (let message of template.content.querySelectorAll("#message")) {
-      (message as HTMLElement).style.lineHeight = "100%";
-      (message as HTMLElement).style.color = "white";
-      (message as HTMLElement).style.textShadow = reverseColorAsTextShadow(
-        255,
-        255,
-        255
-      );
-    }
-    for (let authorName of template.content.querySelectorAll("#author-name")) {
-      (authorName as HTMLElement).style.display = "flex";
-      (authorName as HTMLElement).style.fontSize = `${
-        displaySettings.fontSize * FONT_SIZE_SCALE
-      }rem`;
-      (authorName as HTMLElement).style.lineHeight = "100%";
-      (authorName as HTMLElement).parentElement.style.display = "flex";
-      (authorName as HTMLElement).parentElement.style.marginRight = ".8rem";
-    }
-    for (let subtext of template.content.querySelectorAll("#header-subtext")) {
-      (subtext as HTMLElement).style.fontSize = `${
-        displaySettings.fontSize * FONT_SIZE_SCALE
-      }rem`;
-      (subtext as HTMLElement).style.lineHeight = "100%";
-    }
-    resizeSelectedChildElements(
-      template.content,
-      ".emoji",
-      displaySettings.fontSize
-    );
-    resizeSelectedChildElements(
-      template.content,
-      "#author-photo > img",
-      displaySettings.fontSize
-    );
-    resizeSelectedChildElements(
-      template.content,
-      "#chip-badges",
-      displaySettings.fontSize
-    );
-    resizeSelectedChildElements(
-      template.content,
-      "#chat-badges div#image",
-      displaySettings.fontSize
-    );
-    resizeSelectedChildElements(
-      template.content,
-      "#chat-badges img",
-      displaySettings.fontSize
-    );
-    resizeSelectedChildElements(
-      template.content,
-      "#icon",
-      displaySettings.fontSize
-    );
-    return template.innerHTML;
-  }
-}
-
-class TwitchChatContentBuilder implements DanmakuElementContentBuilder {
-  private static COLON_REPLACER = />: ?<\//;
-
-  public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
-    let template = document.createElement("template");
-    template.innerHTML = chatEntry.content.replace(
-      TwitchChatContentBuilder.COLON_REPLACER,
-      `> </`
-    );
-    removeSelectedChildElements(template.content, ".vod-message__header");
-    if (!displaySettings.showUserName) {
-      removeSelectedChildElements(template.content, ".chat-badge");
-      removeSelectedChildElements(
-        template.content,
-        ".chat-author__display-name"
-      );
-    }
-
-    let texts = template.content.querySelectorAll(".text-fragment");
-    TwitchChatContentBuilder.setContentStyle(texts, displaySettings);
-    let mentions = template.content.querySelectorAll(".mention-fragment");
-    TwitchChatContentBuilder.setContentStyle(mentions, displaySettings);
-    let links = template.content.querySelectorAll(".link-fragment");
-    TwitchChatContentBuilder.setContentStyle(links, displaySettings);
-    resizeSelectedChildElements(
-      template.content,
-      ".chat-badge",
-      displaySettings.fontSize
-    );
-    resizeSelectedChildElements(
-      template.content,
-      ".chat-image__container",
-      displaySettings.fontSize
-    );
-    resizeSelectedChildElements(
-      template.content,
-      ".chat-line__message--emote",
-      displaySettings.fontSize
-    );
-    return template.innerHTML;
-  }
-
-  private static setContentStyle(
-    texts: NodeListOf<Element>,
-    displaySettings: DisplaySettings
-  ): void {
-    for (let i = 0; i < texts.length; i++) {
-      let text = texts.item(i) as HTMLElement;
-      text.style.color = "white";
-      text.style.textShadow = reverseColorAsTextShadow(255, 255, 255);
-      text.style.fontFamily = displaySettings.fontFamily;
-    }
-  }
-}
-
-export enum MoveResult {
-  OccupyAndDisplay,
-  Display,
-  End,
-}
-
-export class DanmakuElementComponent {
+export class DanmakuElementComponent extends EventEmitter {
   private static DANMAKU_ELEMENT_ATTRIBUTES = {
     class: "danmaku-element",
     style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; top: 0; right: 0; padding: .2rem 1.5rem .2rem 0; z-index: 10; pointer-events: none; white-space: nowrap; visibility: hidden;`,
   };
   private static OPACITY_SCALE = 1 / 100;
-  private static SPEED_SCALE = 1 / 1000; // Scale for time in milliseconds.
+  private static FONT_SIZE_SCALE = 1 / 10;
 
-  public height: number;
-  public posY: number;
-  private posX: number;
+  public heightOriginal: number;
+  public posYOriginal: number;
   private chatEntry: ChatEntry;
-  private speed: number;
+  private emitOccupationEndedTimeoutId: number;
+  private emitDisplayEndedTimeoutId: number;
+  private emitOccupationEndedNoop = (): void => {};
+  private emitOccupationEnded = this.emitOccupationEndedNoop;
+  private emitDisplayEndedNoop = (): void => {};
+  private emitDisplayEnded = this.emitDisplayEndedNoop;
 
   public constructor(
     public body: HTMLDivElement,
     private displaySettings: DisplaySettings,
     private blockPatternTester: BlockPatternTester,
-    private danmakuElementContentBuilder: DanmakuElementContentBuilder
-  ) {}
+    private danmakuElementContentBuilder: DanmakuElementContentBuilder,
+    private window: Window
+  ) {
+    super();
+  }
 
   public static createStructured(
     playerSettings: PlayerSettings
@@ -233,7 +53,8 @@ export class DanmakuElementComponent {
       E.div(DanmakuElementComponent.DANMAKU_ELEMENT_ATTRIBUTES),
       playerSettings.displaySettings,
       BlockPatternTester.createIdentity(playerSettings.blockSettings),
-      new StructuredContentBuilder()
+      new StructuredContentBuilder(),
+      window
     );
   }
 
@@ -244,7 +65,8 @@ export class DanmakuElementComponent {
       E.div(DanmakuElementComponent.DANMAKU_ELEMENT_ATTRIBUTES),
       playerSettings.displaySettings,
       BlockPatternTester.createHtml(playerSettings.blockSettings),
-      new TwitchChatContentBuilder()
+      new TwitchChatContentBuilder(),
+      window
     );
   }
 
@@ -255,27 +77,26 @@ export class DanmakuElementComponent {
       E.div(DanmakuElementComponent.DANMAKU_ELEMENT_ATTRIBUTES),
       playerSettings.displaySettings,
       BlockPatternTester.createHtml(playerSettings.blockSettings),
-      new YouTubeChatContentBuilder()
+      new YouTubeChatContentBuilder(),
+      window
     );
   }
 
   public setContent(chatEntry: ChatEntry): void {
     this.chatEntry = chatEntry;
     this.render();
-    this.height = this.body.offsetHeight;
+    this.heightOriginal = this.body.offsetHeight;
   }
 
-  public render(): void {
-    this.speed =
-      this.displaySettings.speed * DanmakuElementComponent.SPEED_SCALE;
+  private render(): void {
     this.body.style.opacity = `${
       this.displaySettings.opacity * DanmakuElementComponent.OPACITY_SCALE
     }`;
     this.body.style.fontSize = `${
-      this.displaySettings.fontSize * FONT_SIZE_SCALE
+      this.displaySettings.fontSize * DanmakuElementComponent.FONT_SIZE_SCALE
     }rem`;
     this.body.style.lineHeight = `${
-      this.displaySettings.fontSize * FONT_SIZE_SCALE
+      this.displaySettings.fontSize * DanmakuElementComponent.FONT_SIZE_SCALE
     }rem`;
     this.body.style.setProperty(
       "fontFamily",
@@ -288,41 +109,94 @@ export class DanmakuElementComponent {
     );
   }
 
-  public startMoving(posY: number): void {
-    this.posX = this.body.offsetWidth;
-    this.posY = posY;
-    this.transform();
+  public start(posY: number, canvasWidth: number): void {
+    this.emitOccupationEnded = this.emitOccupationEndedAction;
+    this.emitDisplayEnded = this.emitDisplayEndedAction;
+    this.posYOriginal = posY;
+    this.transform(this.body.offsetWidth);
+    this.body.style.transition = `none`;
     this.body.style.visibility = "visible";
+    this.play(canvasWidth);
   }
 
-  private transform(): void {
-    this.body.style.transform = `translate3d(${this.posX}px, ${this.posY}px, 0)`;
+  private transform(posX: number): void {
+    this.body.style.transform = `translate3d(${posX}px, ${this.posYOriginal}px, 0)`;
   }
 
-  public moveOneFrame(
-    deltaTime: number /* ms */,
-    videoWidth: number
-  ): MoveResult {
-    this.posX -= this.speed * deltaTime;
-    this.transform();
-    if (this.posX < -videoWidth) {
-      return MoveResult.End;
-    } else if (this.posX < 0) {
-      return MoveResult.Display;
+  private getPosXComputed(): number {
+    return new DOMMatrix(this.window.getComputedStyle(this.body).transform).m41;
+  }
+
+  private emitOccupationEndedAction = (): void => {
+    this.emit("occupationEnded");
+    this.emitOccupationEnded = this.emitOccupationEndedNoop;
+  };
+
+  private emitDisplayEndedAction = (): void => {
+    this.body.style.visibility = "hidden";
+    this.emit("displayEnded");
+    this.emitDisplayEnded = this.emitDisplayEndedNoop;
+  };
+
+  public play(canvasWidth: number): void {
+    let posXComputed = this.getPosXComputed();
+    if (posXComputed > 0) {
+      let remainingDuration = posXComputed / this.displaySettings.speed;
+      this.emitOccupationEndedTimeoutId = this.window.setTimeout(() => {
+        this.emitOccupationEnded();
+      }, remainingDuration * 1000);
     } else {
-      return MoveResult.OccupyAndDisplay;
+      this.emitOccupationEnded();
+    }
+    if (posXComputed > -canvasWidth) {
+      let duration = (canvasWidth + posXComputed) / this.displaySettings.speed;
+      this.body.style.transition = `transform ${duration}s linear`;
+      this.transform(-canvasWidth);
+      this.emitDisplayEndedTimeoutId = this.window.setTimeout(() => {
+        this.emitDisplayEnded();
+      }, duration * 1000);
+    } else {
+      this.emitDisplayEnded();
     }
   }
 
-  public isBlocked(): boolean {
-    return this.blockPatternTester.test(this.chatEntry);
+  public pause(): void {
+    this.clearTimeouts();
+    this.transform(this.getPosXComputed());
+    this.body.style.transition = `none`;
   }
 
-  public hide(): void {
+  private clearTimeouts(): void {
+    this.window.clearTimeout(this.emitOccupationEndedTimeoutId);
+    this.window.clearTimeout(this.emitDisplayEndedTimeoutId);
+  }
+
+  public refreshDisplay(canvasWidth: number): void {
+    this.pause();
+    this.render();
+    this.play(canvasWidth);
+  }
+
+  public refreshBlocked(): void {
+    if (this.blockPatternTester.test(this.chatEntry)) {
+      this.clear();
+    }
+  }
+
+  public refreshCanvasSize(canvasWidth: number): void {
+    this.pause();
+    this.play(canvasWidth);
+  }
+
+  public clear(): void {
+    this.clearTimeouts();
     this.body.style.visibility = "hidden";
+    this.emitOccupationEnded();
+    this.emitDisplayEnded();
   }
 
   public remove(): void {
+    this.clearTimeouts();
     this.body.remove();
   }
 }

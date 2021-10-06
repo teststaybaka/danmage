@@ -138,30 +138,16 @@ export class ChatListTabComponent extends EventEmitter {
   }
 
   public refreshBlocked(): void {
-    for (
-      let iter = this.chatListEntries.createRightIterator();
-      !iter.isStart();
-
-    ) {
-      let entry = iter.getValue();
-      if (entry.isBlocked()) {
-        entry.remove();
-        iter.removeAndPrev();
-      } else {
-        iter.prev();
-      }
-    }
+    this.chatListEntries.forEachNodeReverse((chatListEntryNode) => {
+      chatListEntryNode.value.remove();
+      chatListEntryNode.remove();
+    });
   }
 
   public clear(): void {
-    for (
-      let iter = this.chatListEntries.createRightIterator();
-      !iter.isStart();
-      iter.prev()
-    ) {
-      let entry = iter.getValue();
-      entry.remove();
-    }
+    this.chatListEntries.forEachReverse((chatListEntry) =>
+      chatListEntry.remove()
+    );
     this.chatListEntries.clear();
   }
 
