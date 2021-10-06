@@ -145,6 +145,7 @@ export class HistoryComponent {
     }
 
     this.cursor = response.cursor;
+    console.log("cursor:" + this.cursor);
     if (!this.cursor) {
       this.showMoreButton.hide();
     }
