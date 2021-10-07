@@ -8,7 +8,8 @@ import "../../../environment";
 
 function main(): void {
   normalizeBody();
-  document.title = "DanMage";
+  document.title =
+    "DanMage - Bring NicoNico-style chats to Twitch, YouTube and Crunchyroll";
 
   let origin = "";
   if (globalThis.ENVIRONMENT === "prod") {
