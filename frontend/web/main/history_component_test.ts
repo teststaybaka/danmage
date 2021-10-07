@@ -38,12 +38,6 @@ PUPPETEER_TEST_RUNNER.run({
               `enable button`
             );
           }
-          public show() {
-            counter.increment("show");
-          }
-          public hide() {
-            counter.increment("hide");
-          }
         })();
         let serviceClient = new (class extends ServiceClientMock {
           public fetchAuthedAny(request: any, serviceDescriptor: any): any {
@@ -122,7 +116,6 @@ PUPPETEER_TEST_RUNNER.run({
         await historyComponent.show();
 
         // Verify
-        assertThat(counter.get("show"), eq(1), "show called");
         assertThat(counter.get("click"), eq(1), "click called");
         assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
         {
@@ -142,7 +135,6 @@ PUPPETEER_TEST_RUNNER.run({
         await historyComponent.show();
 
         // Verify
-        assertThat(counter.get("show"), eq(2), "2nd show called");
         assertThat(counter.get("click"), eq(2), "2nd click called");
         assertThat(counter.get("fetchAuthed"), eq(2), `2nd fetchAuthed called`);
         {
@@ -166,7 +158,6 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Verify
         assertThat(counter.get("fetchAuthed"), eq(3), `2nd fetchAuthed called`);
-        assertThat(counter.get("hide"), eq(1), `hide button called`);
         {
           let [rendered, golden] = await Promise.all([
             globalThis.screenshot(

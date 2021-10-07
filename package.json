@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^5.8.5",
-    "@selfage/datastore_client": "^2.0.0",
+    "@selfage/datastore_client": "^2.0.1",
     "@selfage/element": "^3.0.0",
     "@selfage/http_error": "^1.1.0",
     "@selfage/message": "^2.0.1",

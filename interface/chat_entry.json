@@ -36,7 +36,8 @@
       "comment": "If absent, the chat entry is essentially a comment."
     }, {
       "name": "created",
-      "type": "number"
+      "type": "number",
+      "comment": "Seconds since epoch."
     }],
     "datastore": {
       "output": "../backend/datastore/chat_entry_model",

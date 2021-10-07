@@ -28,6 +28,7 @@ export interface ChatEntry {
   content?: string,
 /* If absent, the chat entry is essentially a comment. */
   timestamp?: number,
+/* Seconds since epoch. */
   created?: number,
 }
 
