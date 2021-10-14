@@ -26,8 +26,8 @@ export class GetChatHandler
     request: GetChatRequest
   ): Promise<GetChatResponse> {
     let query = new HostContentQueryBuilder()
-      .filterByHostApp("=", request.hostApp)
-      .filterByHostContentId("=", request.hostContentId)
+      .equalToHostApp(request.hostApp)
+      .equalToHostContentId(request.hostContentId)
       .build();
     let { values } = await this.datastoreClient.query(query);
     return {

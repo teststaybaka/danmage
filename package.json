@@ -26,11 +26,11 @@
     "@types/chrome": "^0.0.154",
     "@types/express": "^4.17.11",
     "@types/node": "^16.3.3",
-    "@types/node-fetch": "^2.5.10",
-    "http-server": "^0.12.3"
+    "@types/node-fetch": "^2.5.10"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.8.5",
+    "@selfage/cli": "^2.3.2",
     "@selfage/datastore_client": "^2.0.1",
     "@selfage/element": "^3.0.0",
     "@selfage/http_error": "^1.1.0",

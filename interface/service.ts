@@ -184,8 +184,6 @@ export let GET_CHAT: UnauthedServiceDescriptor<GetChatRequest, GetChatResponse> 
 
 export interface GetChatHistoryRequest {
   signedSession?: string,
-/* Optional. */
-  hostApp?: HostApp,
 /* If absent, query from the beginning. */
   cursor?: string,
 }
@@ -199,10 +197,6 @@ export let GET_CHAT_HISTORY_REQUEST: MessageDescriptor<GetChatHistoryRequest> = 
     {
       name: 'signedSession',
       primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'hostApp',
-      enumDescriptor: HOST_APP,
     },
     {
       name: 'cursor',

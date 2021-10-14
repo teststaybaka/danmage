@@ -1,4 +1,4 @@
-import { DatastoreQuery, DatastoreFilter, Operator, DatastoreModelDescriptor } from '@selfage/datastore_client/model_descriptor';
+import { DatastoreQuery, DatastoreFilter, DatastoreModelDescriptor } from '@selfage/datastore_client/model_descriptor';
 import { HostApp, ChatEntry, CHAT_ENTRY } from '../../interface/chat_entry';
 
 export let CHAT_ENTRY_MODEL: DatastoreModelDescriptor<ChatEntry> = {
@@ -9,20 +9,17 @@ export let CHAT_ENTRY_MODEL: DatastoreModelDescriptor<ChatEntry> = {
 }
 
 export class UserHistoryQueryBuilder {
-  private datastoreQuery: DatastoreQuery<ChatEntry>;
+  private datastoreQuery: DatastoreQuery<ChatEntry> = {
+    modelDescriptor: CHAT_ENTRY_MODEL,
+    filters: new Array<DatastoreFilter>(),
+    orderings: [
+      {
+        fieldName: "created",
+        descending: true
+      },
+    ]
+  };
 
-  public constructor() {
-    this.datastoreQuery = {
-      modelDescriptor: CHAT_ENTRY_MODEL,
-      filters: new Array<DatastoreFilter>(),
-      orderings: [
-        {
-          fieldName: "created",
-          descending: true
-        },
-      ]
-    }
-  }
   public start(cursor: string): this {
     this.datastoreQuery.startCursor = cursor;
     return this;
@@ -31,27 +28,11 @@ export class UserHistoryQueryBuilder {
     this.datastoreQuery.limit = num;
     return this;
   }
-  public filterByUserId(operator: Operator, value: string): this {
+  public equalToUserId(value: string): this {
     this.datastoreQuery.filters.push({
       fieldName: "userId",
       fieldValue: value,
-      operator: operator,
-    });
-    return this;
-  }
-  public filterByHostApp(operator: Operator, value: HostApp): this {
-    this.datastoreQuery.filters.push({
-      fieldName: "hostApp",
-      fieldValue: value,
-      operator: operator,
-    });
-    return this;
-  }
-  public filterByCreated(operator: Operator, value: number): this {
-    this.datastoreQuery.filters.push({
-      fieldName: "created",
-      fieldValue: value,
-      operator: operator,
+      operator: "=",
     });
     return this;
   }
@@ -61,16 +42,13 @@ export class UserHistoryQueryBuilder {
 }
 
 export class HostContentQueryBuilder {
-  private datastoreQuery: DatastoreQuery<ChatEntry>;
+  private datastoreQuery: DatastoreQuery<ChatEntry> = {
+    modelDescriptor: CHAT_ENTRY_MODEL,
+    filters: new Array<DatastoreFilter>(),
+    orderings: [
+    ]
+  };
 
-  public constructor() {
-    this.datastoreQuery = {
-      modelDescriptor: CHAT_ENTRY_MODEL,
-      filters: new Array<DatastoreFilter>(),
-      orderings: [
-      ]
-    }
-  }
   public start(cursor: string): this {
     this.datastoreQuery.startCursor = cursor;
     return this;
@@ -79,19 +57,19 @@ export class HostContentQueryBuilder {
     this.datastoreQuery.limit = num;
     return this;
   }
-  public filterByHostApp(operator: Operator, value: HostApp): this {
+  public equalToHostApp(value: HostApp): this {
     this.datastoreQuery.filters.push({
       fieldName: "hostApp",
       fieldValue: value,
-      operator: operator,
+      operator: "=",
     });
     return this;
   }
-  public filterByHostContentId(operator: Operator, value: string): this {
+  public equalToHostContentId(value: string): this {
     this.datastoreQuery.filters.push({
       fieldName: "hostContentId",
       fieldValue: value,
-      operator: operator,
+      operator: "=",
     });
     return this;
   }

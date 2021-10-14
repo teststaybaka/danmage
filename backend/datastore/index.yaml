@@ -2,10 +2,12 @@ indexes:
   - kind: ChatEntry
     properties:
       - name: hostApp
-      - name: userId
-      - name: created
-        direction: desc
+        direction: asc
+      - name: hostContentId
+        direction: asc
   - kind: ChatEntry
     properties:
-      - name: hostApp
-      - name: hostContentId
+      - name: userId
+        direction: asc
+      - name: created
+        direction: desc

@@ -109,10 +109,6 @@
       "name": "signedSession",
       "type": "string"
     }, {
-      "name": "hostApp",
-      "type": "HostApp",
-      "comment": "Optional."
-    }, {
       "name": "cursor",
       "type": "string",
       "comment": "If absent, query from the beginning."

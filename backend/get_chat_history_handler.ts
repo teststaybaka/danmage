@@ -29,16 +29,12 @@ export class GetChatHistoryHandler extends UserAuthedServiceHandler<
     session: UserSession
   ): Promise<GetChatHistoryResponse> {
     let queryBuilder = new UserHistoryQueryBuilder()
-      .filterByUserId("=", session.userId)
+      .equalToUserId(session.userId)
       .limit(20);
-//    if (request.hostApp) {
-      queryBuilder.filterByHostApp("=", 1);
-    // }
     if (request.cursor) {
       queryBuilder.start(request.cursor);
     }
     let query = queryBuilder.build();
-    console.log(JSON.stringify(query));
     let { values, cursor } = await this.datastoreClient.query(query);
     return {
       chatEntries: values,

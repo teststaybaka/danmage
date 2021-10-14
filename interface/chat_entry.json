@@ -42,22 +42,24 @@
     "datastore": {
       "output": "../backend/datastore/chat_entry_model",
       "key": "id",
-      "indexes": [{
+      "queries": [{
         "name": "UserHistory",
-        "fields": [{
-          "fieldName": "userId"
-        }, {
-          "fieldName": "hostApp"
-        }, {
+        "filters": [{
+          "fieldName": "userId",
+          "operator": "="
+        }],
+        "orderings": [{
           "fieldName": "created",
           "descending": true
         }]
       }, {
         "name": "HostContent",
-        "fields": [{
-          "fieldName": "hostApp"
+        "filters": [{
+          "fieldName": "hostApp",
+          "operator": "="
         }, {
-          "fieldName": "hostContentId"
+          "fieldName": "hostContentId",
+          "operator": "="
         }]
       }]
     }
