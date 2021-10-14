@@ -18,6 +18,7 @@
   "homepage": "https://github.com/teststaybaka/danmage#readme",
   "devDependencies": {
     "@selfage/bundler_cli": "^2.1.1",
+    "@selfage/cli": "^2.3.2",
     "@selfage/counter": "^1.0.9",
     "@selfage/puppeteer_executor_api": "^1.1.1",
     "@selfage/test_matcher": "^1.0.6",
@@ -30,7 +31,6 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^5.8.5",
-    "@selfage/cli": "^2.3.2",
     "@selfage/datastore_client": "^2.0.1",
     "@selfage/element": "^3.0.0",
     "@selfage/http_error": "^1.1.0",
