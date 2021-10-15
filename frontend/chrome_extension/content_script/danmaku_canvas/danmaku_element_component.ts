@@ -37,6 +37,8 @@ export class DanmakuElementComponent extends EventEmitter {
   private tryEmitDisplayEnded = this.emitDisplayEndedNoop;
   private startTransitionNoop = (): void => {};
   private tryStartTransition: (canvasWidth: number) => void;
+  private pauseTransitionNoop = (): void => {};
+  private tryPauseTransition: () => void;
 
   public constructor(
     public body: HTMLDivElement,
@@ -142,6 +144,7 @@ export class DanmakuElementComponent extends EventEmitter {
 
   public play(canvasWidth: number): void {
     this.tryStartTransition = this.startTransition;
+    this.tryPauseTransition = this.pauseTransition;
     this.tryStartTransition(canvasWidth);
   }
 
@@ -168,8 +171,9 @@ export class DanmakuElementComponent extends EventEmitter {
   }
 
   public pause(): void {
-    this.pauseTransition();
+    this.tryPauseTransition();
     this.tryStartTransition = this.startTransitionNoop;
+    this.tryPauseTransition = this.pauseTransitionNoop;
   }
 
   private pauseTransition(): void {
@@ -184,7 +188,7 @@ export class DanmakuElementComponent extends EventEmitter {
   }
 
   public refreshDisplay(canvasWidth: number): void {
-    this.pauseTransition();
+    this.tryPauseTransition();
     this.render();
     this.tryStartTransition(canvasWidth);
   }
@@ -196,7 +200,7 @@ export class DanmakuElementComponent extends EventEmitter {
   }
 
   public refreshCanvasSize(canvasWidth: number): void {
-    this.pauseTransition();
+    this.tryPauseTransition();
     this.tryStartTransition(canvasWidth);
   }
 
