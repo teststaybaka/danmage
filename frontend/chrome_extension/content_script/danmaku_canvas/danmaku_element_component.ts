@@ -32,9 +32,11 @@ export class DanmakuElementComponent extends EventEmitter {
   private emitOccupationEndedTimeoutId: number;
   private emitDisplayEndedTimeoutId: number;
   private emitOccupationEndedNoop = (): void => {};
-  private emitOccupationEnded = this.emitOccupationEndedNoop;
+  private tryEmitOccupationEnded = this.emitOccupationEndedNoop;
   private emitDisplayEndedNoop = (): void => {};
-  private emitDisplayEnded = this.emitDisplayEndedNoop;
+  private tryEmitDisplayEnded = this.emitDisplayEndedNoop;
+  private startTransitionNoop = (): void => {};
+  private tryStartTransition: (canvasWidth: number) => void;
 
   public constructor(
     public body: HTMLDivElement,
@@ -110,8 +112,8 @@ export class DanmakuElementComponent extends EventEmitter {
   }
 
   public start(posY: number, canvasWidth: number): void {
-    this.emitOccupationEnded = this.emitOccupationEndedAction;
-    this.emitDisplayEnded = this.emitDisplayEndedAction;
+    this.tryEmitOccupationEnded = this.emitOccupationEnded;
+    this.tryEmitDisplayEnded = this.emitDisplayEnded;
     this.posYOriginal = posY;
     this.transform(this.body.offsetWidth);
     this.body.style.transition = `none`;
@@ -127,40 +129,50 @@ export class DanmakuElementComponent extends EventEmitter {
     return new DOMMatrix(this.window.getComputedStyle(this.body).transform).m41;
   }
 
-  private emitOccupationEndedAction = (): void => {
+  private emitOccupationEnded = (): void => {
     this.emit("occupationEnded");
-    this.emitOccupationEnded = this.emitOccupationEndedNoop;
+    this.tryEmitOccupationEnded = this.emitOccupationEndedNoop;
   };
 
-  private emitDisplayEndedAction = (): void => {
+  private emitDisplayEnded = (): void => {
     this.body.style.visibility = "hidden";
     this.emit("displayEnded");
-    this.emitDisplayEnded = this.emitDisplayEndedNoop;
+    this.tryEmitDisplayEnded = this.emitDisplayEndedNoop;
   };
 
   public play(canvasWidth: number): void {
+    this.tryStartTransition = this.startTransition;
+    this.tryStartTransition(canvasWidth);
+  }
+
+  private startTransition(canvasWidth: number): void {
     let posXComputed = this.getPosXComputed();
     if (posXComputed > 0) {
       let remainingDuration = posXComputed / this.displaySettings.speed;
       this.emitOccupationEndedTimeoutId = this.window.setTimeout(() => {
-        this.emitOccupationEnded();
+        this.tryEmitOccupationEnded();
       }, remainingDuration * 1000);
     } else {
-      this.emitOccupationEnded();
+      this.tryEmitOccupationEnded();
     }
     if (posXComputed > -canvasWidth) {
       let duration = (canvasWidth + posXComputed) / this.displaySettings.speed;
       this.body.style.transition = `transform ${duration}s linear`;
       this.transform(-canvasWidth);
       this.emitDisplayEndedTimeoutId = this.window.setTimeout(() => {
-        this.emitDisplayEnded();
+        this.tryEmitDisplayEnded();
       }, duration * 1000);
     } else {
-      this.emitDisplayEnded();
+      this.tryEmitDisplayEnded();
     }
   }
 
   public pause(): void {
+    this.pauseTransition();
+    this.tryStartTransition = this.startTransitionNoop;
+  }
+
+  private pauseTransition(): void {
     this.clearTimeouts();
     this.transform(this.getPosXComputed());
     this.body.style.transition = `none`;
@@ -172,9 +184,9 @@ export class DanmakuElementComponent extends EventEmitter {
   }
 
   public refreshDisplay(canvasWidth: number): void {
-    this.pause();
+    this.pauseTransition();
     this.render();
-    this.play(canvasWidth);
+    this.tryStartTransition(canvasWidth);
   }
 
   public refreshBlocked(): void {
@@ -184,15 +196,15 @@ export class DanmakuElementComponent extends EventEmitter {
   }
 
   public refreshCanvasSize(canvasWidth: number): void {
-    this.pause();
-    this.play(canvasWidth);
+    this.pauseTransition();
+    this.tryStartTransition(canvasWidth);
   }
 
   public clear(): void {
     this.clearTimeouts();
     this.body.style.visibility = "hidden";
-    this.emitOccupationEnded();
-    this.emitDisplayEnded();
+    this.tryEmitOccupationEnded();
+    this.tryEmitDisplayEnded();
   }
 
   public remove(): void {
