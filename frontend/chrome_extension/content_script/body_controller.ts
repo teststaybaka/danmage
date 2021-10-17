@@ -34,7 +34,6 @@ export class BodyController {
 
   public constructor(
     private video: HTMLVideoElement,
-    private anchorButtonElement: Element,
     private danmakuCanvasController: DanmakuCanvasController,
     private controlPanelComponent: ControlPanelComponent,
     private chatPool: ChatPool,
@@ -53,9 +52,9 @@ export class BodyController {
   ): BodyController {
     return BodyController.create(
       video,
-      anchorButtonElement,
       DanmakuCanvasController.createStructured(canvas, playerSettings),
       ControlPanelComponent.createYouTubeStructured(
+        anchorButtonElement,
         globalDocuments,
         playerSettings
       ),
@@ -75,9 +74,12 @@ export class BodyController {
   ): BodyController {
     return BodyController.create(
       video,
-      anchorButtonElement,
       DanmakuCanvasController.createYouTube(canvas, playerSettings),
-      ControlPanelComponent.createYouTubeChat(globalDocuments, playerSettings),
+      ControlPanelComponent.createYouTubeChat(
+        anchorButtonElement,
+        globalDocuments,
+        playerSettings
+      ),
       YouTubeChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create()
     );
@@ -93,9 +95,12 @@ export class BodyController {
   ): BodyController {
     return BodyController.create(
       video,
-      anchorButtonElement,
       DanmakuCanvasController.createTwitch(canvas, playerSettings),
-      ControlPanelComponent.createTwitchVideo(globalDocuments, playerSettings),
+      ControlPanelComponent.createTwitchVideo(
+        anchorButtonElement,
+        globalDocuments,
+        playerSettings
+      ),
       TwitchChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create()
     );
@@ -111,9 +116,12 @@ export class BodyController {
   ): BodyController {
     return BodyController.create(
       video,
-      anchorButtonElement,
       DanmakuCanvasController.createTwitch(canvas, playerSettings),
-      ControlPanelComponent.createTwitchLive(globalDocuments, playerSettings),
+      ControlPanelComponent.createTwitchLive(
+        anchorButtonElement,
+        globalDocuments,
+        playerSettings
+      ),
       TwitchChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create()
     );
@@ -122,15 +130,18 @@ export class BodyController {
   public static createCrunchyroll(
     video: HTMLVideoElement,
     canvas: HTMLElement,
-    anchorButtonElement: Element,
+    anchorButtonSelector: string,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): BodyController {
     return BodyController.create(
       video,
-      anchorButtonElement,
       DanmakuCanvasController.createStructured(canvas, playerSettings),
-      ControlPanelComponent.createCrunchyroll(globalDocuments, playerSettings),
+      ControlPanelComponent.createCrunchyroll(
+        anchorButtonSelector,
+        globalDocuments,
+        playerSettings
+      ),
       StructuredChatPool.create(playerSettings.blockSettings),
       CrunchyrollVideoIdExtractor.create(),
       HostApp.Crunchyroll
@@ -139,7 +150,6 @@ export class BodyController {
 
   private static create(
     video: HTMLVideoElement,
-    anchorButtonElement: Element,
     danmakuCanvasController: DanmakuCanvasController,
     controlPanelComponent: ControlPanelComponent,
     chatPool: ChatPool,
@@ -148,7 +158,6 @@ export class BodyController {
   ): BodyController {
     return new BodyController(
       video,
-      anchorButtonElement,
       danmakuCanvasController,
       controlPanelComponent,
       chatPool,
@@ -160,11 +169,6 @@ export class BodyController {
   }
 
   public init(): this {
-    this.anchorButtonElement.parentElement.insertBefore(
-      this.controlPanelComponent.body,
-      this.anchorButtonElement
-    );
-
     this.video.onplay = () => this.play();
     this.video.onpause = () => this.pause();
     this.video.onended = () => this.reset();

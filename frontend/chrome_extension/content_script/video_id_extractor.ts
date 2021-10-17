@@ -36,7 +36,7 @@ export class YouTubeVideoIdExtractor implements VideoIdExtractor {
 
 export class CrunchyrollVideoIdExtractor implements VideoIdExtractor {
   private static VIDEO_ID_EXTRACTION =
-    /^.*?www\.crunchyroll\.com\/(.+?)(?:\?.*?|)$/;
+    /^.*?\.crunchyroll\.com\/(?:watch\/){0,1}(.+?)(?:\?.*$|$)/;
 
   public constructor(private chromeRuntime: ChromeRuntime) {}
 

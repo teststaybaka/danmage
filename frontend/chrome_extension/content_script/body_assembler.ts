@@ -128,7 +128,6 @@ export class TwitchBodyAssembler implements BodyAssembler {
 export class CrunchyrollBodyAssembler implements BodyAssembler {
   private canvas: HTMLElement;
   private video: HTMLVideoElement;
-  private anchorButtonElement: Element;
 
   public constructor(private playerSettings: PlayerSettings) {
     document.documentElement.style.fontSize = "62.5%";
@@ -136,19 +135,15 @@ export class CrunchyrollBodyAssembler implements BodyAssembler {
 
   public queryElements(): Element[] {
     this.canvas = document.body;
-    this.video = document.getElementById(
-      "player_html5_api"
-    ) as HTMLVideoElement;
-    this.anchorButtonElement =
-      document.querySelector(".vjs-control-bar").firstElementChild;
-    return [this.canvas, this.video, this.anchorButtonElement];
+    this.video = document.querySelector("#player0") as HTMLVideoElement;
+    return [this.canvas, this.video];
   }
 
   public assemble(): BodyController {
     return BodyController.createCrunchyroll(
       this.video,
       this.canvas,
-      this.anchorButtonElement,
+      "#settingsControl",
       new GlobalDocuments([document]),
       this.playerSettings
     );

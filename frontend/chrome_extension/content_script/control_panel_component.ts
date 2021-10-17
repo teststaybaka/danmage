@@ -5,6 +5,11 @@ import { ColorScheme } from "../../color_scheme";
 import { AccountTabComponent } from "./account_tab/account_tab_component";
 import { BlockSettingsTabComponent } from "./block_settings_tab/block_settings_tab_component";
 import { ChatListTabComponent } from "./chat_list_tab/chat_list_tab_component";
+import {
+  ControlPanelDocker,
+  ControlPanelOneTimePrepender,
+  ControlPanelPeriodicPrepender,
+} from "./control_panel_docker";
 import { DisplaySettingsTabComponent } from "./display_settings_tab/display_settings_tab_component";
 import { GlobalDocuments } from "./global_documents";
 import { PlayerSettingsStorage } from "./player_settings_storage";
@@ -45,6 +50,7 @@ export class ControlPanelComponent extends EventEmitter {
     private chatListTabComponent: ChatListTabComponent | undefined,
     private displaySettingsTabComponent: DisplaySettingsTabComponent,
     private blockSettingsTabComponent: BlockSettingsTabComponent,
+    private controlPanelDocker: ControlPanelDocker,
     private globalDocuments: GlobalDocuments,
     private playerSettings: PlayerSettings,
     private playerSettingsStorage: PlayerSettingsStorage
@@ -53,20 +59,23 @@ export class ControlPanelComponent extends EventEmitter {
   }
 
   public static createYouTubeStructured(
+    anchorButtonElement: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
     return ControlPanelComponent.create(
       `position: relative; height: 100%;`,
       "currentColor",
-      "bottom: 3.6rem; right: 0;",
+      "bottom: 100%; right: 0;",
       true,
+      (body) => ControlPanelOneTimePrepender.create(body, anchorButtonElement),
       globalDocuments,
       playerSettings
     );
   }
 
   public static createYouTubeChat(
+    anchorButtonElement: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
@@ -75,12 +84,14 @@ export class ControlPanelComponent extends EventEmitter {
       "var(--yt-live-chat-header-button-color)",
       "top: 4rem; right: 0;",
       false,
+      (body) => ControlPanelOneTimePrepender.create(body, anchorButtonElement),
       globalDocuments,
       playerSettings
     );
   }
 
   public static createTwitchVideo(
+    anchorButtonElement: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
@@ -89,12 +100,14 @@ export class ControlPanelComponent extends EventEmitter {
       "currentColor",
       "top: 3rem; right: 0;",
       false,
+      (body) => ControlPanelOneTimePrepender.create(body, anchorButtonElement),
       globalDocuments,
       playerSettings
     );
   }
 
   public static createTwitchLive(
+    anchorButtonElement: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
@@ -103,20 +116,24 @@ export class ControlPanelComponent extends EventEmitter {
       "currentColor",
       "bottom: 3rem; right: 0;",
       false,
+      (body) => ControlPanelOneTimePrepender.create(body, anchorButtonElement),
       globalDocuments,
       playerSettings
     );
   }
 
   public static createCrunchyroll(
+    anchorButtonSelector: string,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
     return ControlPanelComponent.create(
-      `position: absolute; width: 4rem; height: 4rem; right: 10rem;`,
+      `position: relative; height: 4rem;`,
       "white",
       "bottom: 4rem; right: 0;",
       true,
+      (body) =>
+        ControlPanelPeriodicPrepender.create(body, anchorButtonSelector),
       globalDocuments,
       playerSettings
     );
@@ -127,6 +144,7 @@ export class ControlPanelComponent extends EventEmitter {
     controlPanelButtonColor: string,
     controlPanelPopupStyle: string,
     hasChatListTab: boolean,
+    controlPanelDockerFactoryFn: (body: HTMLDivElement) => ControlPanelDocker,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
@@ -136,20 +154,23 @@ export class ControlPanelComponent extends EventEmitter {
         playerSettings.blockSettings
       );
     }
-    return new ControlPanelComponent(
-      ...ControlPanelComponent.createView(
-        elementStyle,
-        controlPanelButtonColor,
-        controlPanelPopupStyle,
-        playerSettings,
-        AccountTabComponent.create(),
-        DisplaySettingsTabComponent.create(playerSettings.displaySettings),
-        BlockSettingsTabComponent.create(
-          playerSettings.blockSettings,
-          globalDocuments
-        ),
-        chatListTabComponent
+    let views = ControlPanelComponent.createView(
+      elementStyle,
+      controlPanelButtonColor,
+      controlPanelPopupStyle,
+      playerSettings,
+      AccountTabComponent.create(),
+      DisplaySettingsTabComponent.create(playerSettings.displaySettings),
+      BlockSettingsTabComponent.create(
+        playerSettings.blockSettings,
+        globalDocuments
       ),
+      chatListTabComponent
+    );
+    let controlPanelDocker = controlPanelDockerFactoryFn(views[0]);
+    return new ControlPanelComponent(
+      ...views,
+      controlPanelDocker,
       globalDocuments,
       playerSettings,
       PlayerSettingsStorage.create()
@@ -323,6 +344,10 @@ export class ControlPanelComponent extends EventEmitter {
   }
 
   public init(): this {
+    this.body.addEventListener("click", (event) => event.stopPropagation());
+    this.body.addEventListener("mousedown", (event) => event.stopPropagation());
+    this.body.addEventListener("mouseup", (event) => event.stopPropagation());
+
     this.controlPanelPopupDisplayStyle = this.controlPanelPopup.style.display;
     this.hidePopup();
     this.controlPanelButton.addEventListener("click", () => this.showPopup());
@@ -463,6 +488,6 @@ export class ControlPanelComponent extends EventEmitter {
   }
 
   public remove(): void {
-    this.body.remove();
+    this.controlPanelDocker.remove();
   }
 }
