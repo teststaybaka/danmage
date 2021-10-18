@@ -134,7 +134,7 @@ export class CrunchyrollBodyAssembler implements BodyAssembler {
   }
 
   public queryElements(): Element[] {
-    this.canvas = document.body;
+    this.canvas = document.querySelector("#velocity-player-package");
     this.video = document.querySelector("#player0") as HTMLVideoElement;
     return [this.canvas, this.video];
   }
