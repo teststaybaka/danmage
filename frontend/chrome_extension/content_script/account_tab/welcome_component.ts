@@ -90,14 +90,13 @@ export class WelcomeComponent extends EventEmitter {
 
   public async show(): Promise<void> {
     this.body.style.display = this.displayStyle;
+    this.welcomeText.textContent = "Welcome!";
     let response = await this.serviceClient.fetchAuthed<
       GetUserRequest,
       GetUserResponse
     >({}, GET_USER);
     if (response.user.nickname) {
       this.welcomeText.textContent = `Welcome, ${response.user.nickname}!`;
-    } else {
-      this.welcomeText.textContent = "Welcome!";
     }
   }
 
