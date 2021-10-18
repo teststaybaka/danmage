@@ -113,14 +113,13 @@ export class DanmakuElementComponent extends EventEmitter {
     );
   }
 
-  public start(posY: number, canvasWidth: number): void {
+  public setStartPosition(posY: number): void {
     this.tryEmitOccupationEnded = this.emitOccupationEnded;
     this.tryEmitDisplayEnded = this.emitDisplayEnded;
     this.posYOriginal = posY;
     this.transform(this.body.offsetWidth);
     this.body.style.transition = `none`;
     this.body.style.visibility = "visible";
-    this.play(canvasWidth);
   }
 
   private transform(posX: number): void {

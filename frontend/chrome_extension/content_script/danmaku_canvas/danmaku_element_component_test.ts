@@ -51,7 +51,7 @@ PUPPETEER_TEST_RUNNER.run({
         );
 
         // Execute
-        danmakuElementComponent.start(100, 200);
+        danmakuElementComponent.setStartPosition(100);
 
         // Verify
         assertThat(
@@ -59,7 +59,22 @@ PUPPETEER_TEST_RUNNER.run({
           eq(100),
           "original posY"
         );
+        assertThat(
+          mockElement.style.transform,
+          eq("translate3d(11px, 100px, 0)"),
+          "target transform"
+        );
+        assertThat(
+          mockElement.style.transition,
+          eq("none"),
+          "transition at start"
+        );
         assertThat(mockElement.style.visibility, eq("visible"), "visible");
+
+        // Execute
+        danmakuElementComponent.play(200);
+
+        // Verify
         assertThat(
           mockElement.style.transition,
           eq("transform 21s linear"),
@@ -148,7 +163,8 @@ PUPPETEER_TEST_RUNNER.run({
           counter.increment("displayEnded");
         });
         danmakuElementComponent.setContent({});
-        danmakuElementComponent.start(100, 200);
+        danmakuElementComponent.setStartPosition(100);
+        danmakuElementComponent.play(200);
         mockWindow.posX = -250;
 
         // Execute

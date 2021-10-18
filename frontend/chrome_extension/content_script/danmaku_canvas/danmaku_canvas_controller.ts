@@ -9,6 +9,10 @@ export class DanmakuCanvasController {
   private canvasWidth: number;
   private canvasHeight: number;
   private refreshCanvasSizeCycleId: number;
+  private notPlaying = (): void => {};
+  private tryStartPlaying: (
+    danmakuElementComponent: DanmakuElementComponent
+  ) => void = this.notPlaying;
   private occupied = new Array<number>();
   private elementsIdle = new Array<DanmakuElementComponent>();
   private elementsDisplaying = new LinkedList<DanmakuElementComponent>();
@@ -62,7 +66,6 @@ export class DanmakuCanvasController {
     this.canvasWidth = this.canvas.offsetWidth;
     this.canvasHeight = this.canvas.offsetHeight;
     this.refreshIdleElements();
-    this.requestRefreshCanvasSizeCycle();
     return this;
   }
 
@@ -147,11 +150,12 @@ export class DanmakuCanvasController {
     }
     this.elementsIdle.pop();
     let node = this.elementsDisplaying.pushBack(danmakuElementComponent);
-    danmakuElementComponent.start(posY, this.canvasWidth);
     danmakuElementComponent.once("occupationEnded", () =>
       this.releaseOccupied(danmakuElementComponent)
     );
     danmakuElementComponent.once("displayEnded", () => this.returnToIdle(node));
+    danmakuElementComponent.setStartPosition(posY);
+    this.tryStartPlaying(danmakuElementComponent);
   }
 
   private releaseOccupied(
@@ -183,13 +187,19 @@ export class DanmakuCanvasController {
 
   public play(): void {
     this.refreshCanvasSizeCycle();
+    this.tryStartPlaying = this.startPlaying;
     this.elementsDisplaying.forEach((danmakuElementComponent) => {
       danmakuElementComponent.play(this.canvasWidth);
     });
   }
 
+  private startPlaying(danmakuElementComponent: DanmakuElementComponent): void {
+    danmakuElementComponent.play(this.canvasWidth);
+  }
+
   public pause(): void {
     this.window.clearTimeout(this.refreshCanvasSizeCycleId);
+    this.tryStartPlaying = this.notPlaying;
     this.elementsDisplaying.forEach((danmakuElementComponent) => {
       danmakuElementComponent.pause();
     });
