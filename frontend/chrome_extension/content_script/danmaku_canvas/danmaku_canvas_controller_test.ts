@@ -384,7 +384,7 @@ PUPPETEER_TEST_RUNNER.run({
         assertThat(
           counter.get("setStartPosition"),
           eq(1),
-          "setStartPositionMoving called for preparation"
+          "setStartPosition called for preparation"
         );
         assertThat(
           counter.get("setStartPosition2"),
