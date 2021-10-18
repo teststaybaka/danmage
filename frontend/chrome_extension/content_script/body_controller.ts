@@ -15,6 +15,11 @@ import {
   YouTubeChatPool,
 } from "./chat_pool";
 import { ControlPanelComponent } from "./control_panel_component";
+import {
+  ControlPanelDocker,
+  ControlPanelOneTimePrepender,
+  ControlPanelPeriodicPrepender,
+} from "./control_panel_docker";
 import { DanmakuCanvasController } from "./danmaku_canvas/danmaku_canvas_controller";
 import { GlobalDocuments } from "./global_documents";
 import { SERVICE_CLIENT } from "./service_client";
@@ -36,6 +41,7 @@ export class BodyController {
     private video: HTMLVideoElement,
     private danmakuCanvasController: DanmakuCanvasController,
     private controlPanelComponent: ControlPanelComponent,
+    private controlPanelDocker: ControlPanelDocker,
     private chatPool: ChatPool,
     private videoIdExtractor: VideoIdExtractor,
     private serviceClient: ServiceClient,
@@ -50,13 +56,17 @@ export class BodyController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): BodyController {
+    let controlPanelComponent = ControlPanelComponent.createYouTubeStructured(
+      globalDocuments,
+      playerSettings
+    );
     return BodyController.create(
       video,
       DanmakuCanvasController.createStructured(canvas, playerSettings),
-      ControlPanelComponent.createYouTubeStructured(
-        anchorButtonElement,
-        globalDocuments,
-        playerSettings
+      controlPanelComponent,
+      ControlPanelOneTimePrepender.create(
+        controlPanelComponent.body,
+        anchorButtonElement
       ),
       StructuredChatPool.create(playerSettings.blockSettings),
       YouTubeVideoIdExtractor.create(canvas),
@@ -72,13 +82,17 @@ export class BodyController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): BodyController {
+    let controlPanelComponent = ControlPanelComponent.createYouTubeChat(
+      globalDocuments,
+      playerSettings
+    );
     return BodyController.create(
       video,
       DanmakuCanvasController.createYouTube(canvas, playerSettings),
-      ControlPanelComponent.createYouTubeChat(
-        anchorButtonElement,
-        globalDocuments,
-        playerSettings
+      controlPanelComponent,
+      ControlPanelOneTimePrepender.create(
+        controlPanelComponent.body,
+        anchorButtonElement
       ),
       YouTubeChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create()
@@ -93,13 +107,17 @@ export class BodyController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): BodyController {
+    let controlPanelComponent = ControlPanelComponent.createTwitchVideo(
+      globalDocuments,
+      playerSettings
+    );
     return BodyController.create(
       video,
       DanmakuCanvasController.createTwitch(canvas, playerSettings),
-      ControlPanelComponent.createTwitchVideo(
-        anchorButtonElement,
-        globalDocuments,
-        playerSettings
+      controlPanelComponent,
+      ControlPanelOneTimePrepender.create(
+        controlPanelComponent.body,
+        anchorButtonElement
       ),
       TwitchChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create()
@@ -114,13 +132,17 @@ export class BodyController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): BodyController {
+    let controlPanelComponent = ControlPanelComponent.createTwitchLive(
+      globalDocuments,
+      playerSettings
+    );
     return BodyController.create(
       video,
       DanmakuCanvasController.createTwitch(canvas, playerSettings),
-      ControlPanelComponent.createTwitchLive(
-        anchorButtonElement,
-        globalDocuments,
-        playerSettings
+      controlPanelComponent,
+      ControlPanelOneTimePrepender.create(
+        controlPanelComponent.body,
+        anchorButtonElement
       ),
       TwitchChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create()
@@ -134,13 +156,17 @@ export class BodyController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): BodyController {
+    let controlPanelComponent = ControlPanelComponent.createCrunchyroll(
+      globalDocuments,
+      playerSettings
+    );
     return BodyController.create(
       video,
       DanmakuCanvasController.createStructured(canvas, playerSettings),
-      ControlPanelComponent.createCrunchyroll(
-        anchorButtonSelector,
-        globalDocuments,
-        playerSettings
+      controlPanelComponent,
+      ControlPanelPeriodicPrepender.create(
+        controlPanelComponent.body,
+        anchorButtonSelector
       ),
       StructuredChatPool.create(playerSettings.blockSettings),
       CrunchyrollVideoIdExtractor.create(),
@@ -152,6 +178,7 @@ export class BodyController {
     video: HTMLVideoElement,
     danmakuCanvasController: DanmakuCanvasController,
     controlPanelComponent: ControlPanelComponent,
+    controlPanelDocker: ControlPanelDocker,
     chatPool: ChatPool,
     videoIdExtractor: VideoIdExtractor,
     hostApp?: HostApp
@@ -160,6 +187,7 @@ export class BodyController {
       video,
       danmakuCanvasController,
       controlPanelComponent,
+      controlPanelDocker,
       chatPool,
       videoIdExtractor,
       SERVICE_CLIENT,
@@ -306,7 +334,7 @@ export class BodyController {
     this.video.onseeking = undefined;
     this.video.onseeked = undefined;
     this.window.cancelAnimationFrame(this.nextFrameId);
-    this.controlPanelComponent.remove();
     this.danmakuCanvasController.remove();
+    this.controlPanelDocker.remove();
   }
 }
