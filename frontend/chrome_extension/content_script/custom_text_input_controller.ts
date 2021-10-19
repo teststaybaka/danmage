@@ -1,11 +1,11 @@
 import EventEmitter = require("events");
 import { TextInputController } from "@selfage/element/text_input_controller";
 
-export declare interface ContainedTextInputController {
+export declare interface CustomTextInputController {
   on(event: "enter", listener: () => Promise<void> | void): this;
 }
 
-export class ContainedTextInputController extends EventEmitter {
+export class CustomTextInputController extends EventEmitter {
   public constructor(
     private input: HTMLInputElement,
     private textInputController: TextInputController
@@ -13,8 +13,8 @@ export class ContainedTextInputController extends EventEmitter {
     super();
   }
 
-  public static create(input: HTMLInputElement): ContainedTextInputController {
-    return new ContainedTextInputController(
+  public static create(input: HTMLInputElement): CustomTextInputController {
+    return new CustomTextInputController(
       input,
       TextInputController.create(input)
     ).init();
@@ -29,6 +29,13 @@ export class ContainedTextInputController extends EventEmitter {
   }
 
   private keydown(event: KeyboardEvent): void {
+    this.input.dispatchEvent(
+      new MouseEvent("mousemove", {
+        bubbles: true,
+        clientX: Math.random() * 10,
+        clientY: Math.random() * 10,
+      })
+    );
     event.stopPropagation();
   }
 

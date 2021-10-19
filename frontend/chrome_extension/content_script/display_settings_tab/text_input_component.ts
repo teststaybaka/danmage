@@ -1,5 +1,5 @@
 import EventEmitter = require("events");
-import { ContainedTextInputController } from "../contained_text_input_controller";
+import { CustomTextInputController } from "../custom_text_input_controller";
 import {
   ENTRY_MARGIN_TOP_STYLE,
   LABEL_STYLE,
@@ -16,7 +16,7 @@ export class TextInputComponent extends EventEmitter {
   public constructor(
     public body: HTMLDivElement,
     private input: HTMLInputElement,
-    private textInputController: ContainedTextInputController,
+    private textInputController: CustomTextInputController,
     private defaultValue: string
   ) {
     super();
@@ -30,7 +30,7 @@ export class TextInputComponent extends EventEmitter {
     let views = TextInputComponent.createView(label, value);
     return new TextInputComponent(
       ...views,
-      ContainedTextInputController.create(views[1]),
+      CustomTextInputController.create(views[1]),
       defaultValue
     ).init();
   }

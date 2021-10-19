@@ -3,7 +3,7 @@ import { ChatEntry } from "../../../../interface/chat_entry";
 import { BlockSettings } from "../../../../interface/player_settings";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
-import { ContainedTextInputController } from "../contained_text_input_controller";
+import { CustomTextInputController } from "../custom_text_input_controller";
 import { LinkedList } from "../linked_list";
 import { ChatListEntryComponent } from "./chat_list_entry_component";
 import { E } from "@selfage/element/factory";
@@ -27,7 +27,7 @@ export class ChatListTabComponent extends EventEmitter {
     private entryList: HTMLDivElement,
     private chatInput: HTMLInputElement,
     private fireButton: FillButtonComponent,
-    private chatInputController: ContainedTextInputController,
+    private chatInputController: CustomTextInputController,
     private blockSettings: BlockSettings,
     private chatListEntryComponentFactoryFn: (
       chatEntry: ChatEntry,
@@ -43,7 +43,7 @@ export class ChatListTabComponent extends EventEmitter {
     );
     return new ChatListTabComponent(
       ...views,
-      ContainedTextInputController.create(views[2]),
+      CustomTextInputController.create(views[2]),
       blockSettings,
       ChatListEntryComponent.create
     ).init();

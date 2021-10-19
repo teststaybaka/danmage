@@ -6,7 +6,7 @@ import {
 } from "../../../../interface/player_settings";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
-import { ContainedTextInputController } from "../contained_text_input_controller";
+import { CustomTextInputController } from "../custom_text_input_controller";
 import { GlobalDocuments } from "../global_documents";
 import { BlockEntryComponent } from "./block_entry_component";
 import { BlockOptionEntryComponent } from "./block_option_entry_component";
@@ -32,7 +32,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
     private blockOptionKeyword: BlockOptionEntryComponent,
     private blockOptionRegExp: BlockOptionEntryComponent,
     private submitButton: FillButtonComponent,
-    private patternInputController: ContainedTextInputController,
+    private patternInputController: CustomTextInputController,
     private blockEntryComponentFactoryFn: (
       blockPattern: BlockPattern
     ) => BlockEntryComponent,
@@ -53,7 +53,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
     );
     return new BlockSettingsTabComponent(
       ...views,
-      ContainedTextInputController.create(views[5]),
+      CustomTextInputController.create(views[5]),
       BlockEntryComponent.create,
       blockSettings,
       globalDocuments
