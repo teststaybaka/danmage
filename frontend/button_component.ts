@@ -10,8 +10,10 @@ let COMMON_BUTTON_STYLE =
   `border-radius: .5rem; padding: .8rem 1.2rem; cursor: pointer;`;
 
 export declare interface FillButtonComponent {
-  on(event: "click", listener: () => Promise<boolean | undefined>): this;
-  on(event: string, listener: Function): this;
+  on(
+    event: "click",
+    listener: () => boolean | void | Promise<boolean | void>
+  ): this;
 }
 
 export class FillButtonComponent extends EventEmitter {
@@ -93,8 +95,10 @@ export class FillButtonComponent extends EventEmitter {
 }
 
 export declare interface TextButtonComponent {
-  on(event: "click", listener: () => Promise<boolean | undefined>): this;
-  on(event: string, listener: Function): this;
+  on(
+    event: "click",
+    listener: () => boolean | void | Promise<boolean | void>
+  ): this;
 }
 
 export class TextButtonComponent extends EventEmitter {

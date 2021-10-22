@@ -6,7 +6,6 @@ export interface State {
   on(event: 'showNickname', listener: (newValue: boolean, oldValue: boolean) => void): this;
   on(event: 'showHistory', listener: (newValue: boolean, oldValue: boolean) => void): this;
   on(event: 'showFeedback', listener: (newValue: boolean, oldValue: boolean) => void): this;
-  on(event: string, listener: Function): this;
 }
 
 export class State extends EventEmitter {
