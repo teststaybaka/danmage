@@ -35,6 +35,7 @@
     "@selfage/element": "^3.0.0",
     "@selfage/http_error": "^1.1.0",
     "@selfage/message": "^2.0.1",
+    "@selfage/once": "^1.0.1",
     "@selfage/ref": "^1.0.2",
     "@selfage/service_client": "^3.1.0",
     "@selfage/service_descriptor": "^2.0.0",

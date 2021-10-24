@@ -29,6 +29,7 @@ import {
   VideoIdExtractor,
   YouTubeVideoIdExtractor,
 } from "./video_id_extractor";
+import { OnceCaller } from "@selfage/once/caller";
 import { ServiceClient } from "@selfage/service_client";
 
 export class BodyController {
@@ -36,6 +37,7 @@ export class BodyController {
 
   private videoId: string;
   private nextFrameId: number;
+  private playerOnce = new OnceCaller(() => this.play());
 
   public constructor(
     private video: HTMLVideoElement,
@@ -197,13 +199,13 @@ export class BodyController {
   }
 
   public init(): this {
-    this.video.onplay = () => this.play();
+    this.video.onplay = () => this.playerOnce.call();
     this.video.onpause = () => this.pause();
     this.video.onended = () => this.reset();
     if (this.hostApp) {
       this.video.onloadedmetadata = () => this.switchVideo();
       this.video.onseeking = () => this.reset();
-      this.video.onseeked = () => this.play();
+      this.video.onseeked = () => this.playerOnce.call();
       this.controlPanelComponent.on("fire", (chatEntry) =>
         this.fire(chatEntry)
       );
@@ -216,16 +218,12 @@ export class BodyController {
       this.window.setTimeout(() => this.switchVideo(), 0);
     }
     if (!this.video.paused && !this.video.ended && !this.video.seeking) {
-      this.window.setTimeout(() => this.play(), 0);
+      this.window.setTimeout(() => this.playerOnce.call(), 0);
     }
     return this;
   }
 
   private play(): void {
-    if (this.nextFrameId !== undefined) {
-      return;
-    }
-
     this.chatPool.start(this.getCurrentTimestamp());
     this.requestNextFrame();
     this.danmakuCanvasController.play();
@@ -249,7 +247,7 @@ export class BodyController {
 
   private pause(): void {
     this.window.cancelAnimationFrame(this.nextFrameId);
-    this.nextFrameId = undefined;
+    this.playerOnce.reset();
     this.danmakuCanvasController.pause();
   }
 

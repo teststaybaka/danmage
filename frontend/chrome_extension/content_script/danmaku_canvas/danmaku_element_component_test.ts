@@ -41,24 +41,15 @@ PUPPETEER_TEST_RUNNER.run({
         });
 
         // Execute
-        danmakuElementComponent.setContent({});
+        let height = danmakuElementComponent.setContentAndGetHeight({});
 
         // Verify
-        assertThat(
-          danmakuElementComponent.heightOriginal,
-          eq(22),
-          "rendered height"
-        );
+        assertThat(height, eq(22), "rendered height");
 
         // Execute
         danmakuElementComponent.setStartPosition(100);
 
         // Verify
-        assertThat(
-          danmakuElementComponent.posYOriginal,
-          eq(100),
-          "original posY"
-        );
         assertThat(
           mockElement.style.transform,
           eq("translate3d(11px, 100px, 0)"),
@@ -162,7 +153,7 @@ PUPPETEER_TEST_RUNNER.run({
         danmakuElementComponent.on("displayEnded", () => {
           counter.increment("displayEnded");
         });
-        danmakuElementComponent.setContent({});
+        danmakuElementComponent.setContentAndGetHeight({});
         danmakuElementComponent.setStartPosition(100);
         danmakuElementComponent.play(200);
         mockWindow.posX = -250;

@@ -87,25 +87,6 @@ export class DanmakuCanvasController {
     this.elementsIdle.push(newDanmakuElementComponent);
   }
 
-  private requestRefreshCanvasSizeCycle(): void {
-    this.refreshCanvasSizeCycleId = this.window.setTimeout(
-      this.refreshCanvasSizeCycle,
-      DanmakuCanvasController.REFRESH_INTERVAL
-    );
-  }
-
-  // Cache width & height to save extra reflows.
-  private refreshCanvasSizeCycle = (): void => {
-    if (this.canvasWidth != this.canvas.offsetWidth) {
-      this.canvasWidth = this.canvas.offsetWidth;
-      this.elementsDisplaying.forEach((danmakuElementComponent) => {
-        danmakuElementComponent.refreshCanvasSize(this.canvasWidth);
-      });
-    }
-    this.canvasHeight = this.canvas.offsetHeight;
-    this.requestRefreshCanvasSizeCycle();
-  };
-
   public addEntries(chatEntries: Array<ChatEntry>): void {
     if (!this.playerSettings.displaySettings.enable) {
       return;
@@ -124,8 +105,8 @@ export class DanmakuCanvasController {
   private tryStartDisplaying(chatEntry: ChatEntry): void {
     let danmakuElementComponent =
       this.elementsIdle[this.elementsIdle.length - 1];
-    danmakuElementComponent.setContent(chatEntry);
-    let elementHeight = danmakuElementComponent.heightOriginal;
+    let elementHeight =
+      danmakuElementComponent.setContentAndGetHeight(chatEntry);
     while (this.occupied.length < Math.max(elementHeight, this.canvasHeight)) {
       this.occupied.push(0);
     }
@@ -151,23 +132,15 @@ export class DanmakuCanvasController {
     this.elementsIdle.pop();
     let node = this.elementsDisplaying.pushBack(danmakuElementComponent);
     danmakuElementComponent.once("occupationEnded", () =>
-      this.releaseOccupied(danmakuElementComponent)
+      this.releaseOccupied(posY, elementHeight)
     );
     danmakuElementComponent.once("displayEnded", () => this.returnToIdle(node));
     danmakuElementComponent.setStartPosition(posY);
     this.tryStartPlaying(danmakuElementComponent);
   }
 
-  private releaseOccupied(
-    danmakuElementComponent: DanmakuElementComponent
-  ): void {
-    for (
-      let i = danmakuElementComponent.posYOriginal;
-      i <
-      danmakuElementComponent.posYOriginal +
-        danmakuElementComponent.heightOriginal;
-      i++
-    ) {
+  private releaseOccupied(posY: number, elementHeight: number): void {
+    for (let i = posY; i < posY + elementHeight; i++) {
       this.occupied[i]--;
     }
   }
@@ -186,11 +159,26 @@ export class DanmakuCanvasController {
   }
 
   public play(): void {
-    this.refreshCanvasSizeCycle();
+    this.refreshCanvasSize();
+    this.refreshCanvasSizeCycleId = this.window.setInterval(
+      () => this.refreshCanvasSize(),
+      DanmakuCanvasController.REFRESH_INTERVAL
+    );
     this.tryStartPlaying = this.startPlaying;
     this.elementsDisplaying.forEach((danmakuElementComponent) => {
       danmakuElementComponent.play(this.canvasWidth);
     });
+  }
+
+  // Cache width & height to save extra reflows.
+  private refreshCanvasSize(): void {
+    if (this.canvasWidth != this.canvas.offsetWidth) {
+      this.canvasWidth = this.canvas.offsetWidth;
+      this.elementsDisplaying.forEach((danmakuElementComponent) => {
+        danmakuElementComponent.refreshCanvasSize(this.canvasWidth);
+      });
+    }
+    this.canvasHeight = this.canvas.offsetHeight;
   }
 
   private startPlaying(danmakuElementComponent: DanmakuElementComponent): void {
@@ -198,7 +186,7 @@ export class DanmakuCanvasController {
   }
 
   public pause(): void {
-    this.window.clearTimeout(this.refreshCanvasSizeCycleId);
+    this.window.clearInterval(this.refreshCanvasSizeCycleId);
     this.tryStartPlaying = this.notPlaying;
     this.elementsDisplaying.forEach((danmakuElementComponent) => {
       danmakuElementComponent.pause();

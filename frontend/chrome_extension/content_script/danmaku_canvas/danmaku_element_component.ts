@@ -12,6 +12,7 @@ import {
   YouTubeChatContentBuilder,
 } from "./danmaku_element_content_builder";
 import { E } from "@selfage/element/factory";
+import { OnceCaller } from "@selfage/once/caller";
 
 export interface DanmakuElementComponent {
   on(event: "occupationEnded", listener: () => void): this;
@@ -26,19 +27,20 @@ export class DanmakuElementComponent extends EventEmitter {
   private static OPACITY_SCALE = 1 / 100;
   private static FONT_SIZE_SCALE = 1 / 10;
 
-  public heightOriginal: number;
-  public posYOriginal: number;
   private chatEntry: ChatEntry;
+  private posY: number;
   private emitOccupationEndedTimeoutId: number;
   private emitDisplayEndedTimeoutId: number;
-  private emitOccupationEndedNoop = (): void => {};
-  private tryEmitOccupationEnded = this.emitOccupationEndedNoop;
-  private emitDisplayEndedNoop = (): void => {};
-  private tryEmitDisplayEnded = this.emitDisplayEndedNoop;
   private startTransitionNoop = (): void => {};
   private tryStartTransition: (canvasWidth: number) => void;
   private pauseTransitionNoop = (): void => {};
   private tryPauseTransition: () => void;
+  private occupationEndedEmitterOnce = new OnceCaller(() =>
+    this.emitOccupationEnded()
+  );
+  private displayEndedEmitterOnce = new OnceCaller(() =>
+    this.emitDisplayEnded()
+  );
 
   public constructor(
     public body: HTMLDivElement,
@@ -86,10 +88,10 @@ export class DanmakuElementComponent extends EventEmitter {
     );
   }
 
-  public setContent(chatEntry: ChatEntry): void {
+  public setContentAndGetHeight(chatEntry: ChatEntry): number {
     this.chatEntry = chatEntry;
     this.render();
-    this.heightOriginal = this.body.offsetHeight;
+    return this.body.offsetHeight;
   }
 
   private render(): void {
@@ -114,32 +116,26 @@ export class DanmakuElementComponent extends EventEmitter {
   }
 
   public setStartPosition(posY: number): void {
-    this.tryEmitOccupationEnded = this.emitOccupationEnded;
-    this.tryEmitDisplayEnded = this.emitDisplayEnded;
-    this.posYOriginal = posY;
+    this.occupationEndedEmitterOnce.reset();
+    this.displayEndedEmitterOnce.reset();
+    this.posY = posY;
     this.transform(this.body.offsetWidth);
     this.body.style.transition = `none`;
     this.body.style.visibility = "visible";
   }
 
   private transform(posX: number): void {
-    this.body.style.transform = `translate3d(${posX}px, ${this.posYOriginal}px, 0)`;
+    this.body.style.transform = `translate3d(${posX}px, ${this.posY}px, 0)`;
   }
 
-  private getPosXComputed(): number {
-    return new DOMMatrix(this.window.getComputedStyle(this.body).transform).m41;
-  }
-
-  private emitOccupationEnded = (): void => {
+  private emitOccupationEnded(): void {
     this.emit("occupationEnded");
-    this.tryEmitOccupationEnded = this.emitOccupationEndedNoop;
-  };
+  }
 
-  private emitDisplayEnded = (): void => {
+  private emitDisplayEnded(): void {
     this.body.style.visibility = "hidden";
     this.emit("displayEnded");
-    this.tryEmitDisplayEnded = this.emitDisplayEndedNoop;
-  };
+  }
 
   public play(canvasWidth: number): void {
     this.tryStartTransition = this.startTransition;
@@ -152,21 +148,25 @@ export class DanmakuElementComponent extends EventEmitter {
     if (posXComputed > 0) {
       let remainingDuration = posXComputed / this.displaySettings.speed;
       this.emitOccupationEndedTimeoutId = this.window.setTimeout(() => {
-        this.tryEmitOccupationEnded();
+        this.occupationEndedEmitterOnce.call();
       }, remainingDuration * 1000);
     } else {
-      this.tryEmitOccupationEnded();
+      this.occupationEndedEmitterOnce.call();
     }
     if (posXComputed > -canvasWidth) {
       let duration = (canvasWidth + posXComputed) / this.displaySettings.speed;
       this.body.style.transition = `transform ${duration}s linear`;
       this.transform(-canvasWidth);
       this.emitDisplayEndedTimeoutId = this.window.setTimeout(() => {
-        this.tryEmitDisplayEnded();
+        this.displayEndedEmitterOnce.call();
       }, duration * 1000);
     } else {
-      this.tryEmitDisplayEnded();
+      this.displayEndedEmitterOnce.call();
     }
+  }
+
+  private getPosXComputed(): number {
+    return new DOMMatrix(this.window.getComputedStyle(this.body).transform).m41;
   }
 
   public pause(): void {
@@ -206,8 +206,8 @@ export class DanmakuElementComponent extends EventEmitter {
   public clear(): void {
     this.clearTimeouts();
     this.body.style.visibility = "hidden";
-    this.tryEmitOccupationEnded();
-    this.tryEmitDisplayEnded();
+    this.occupationEndedEmitterOnce.call();
+    this.displayEndedEmitterOnce.call();
   }
 
   public remove(): void {

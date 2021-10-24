@@ -33,7 +33,7 @@ PUPPETEER_TEST_RUNNER.run({
           playerSettings,
           mockDanmakuElementComponentFactoryFn,
           new (class {
-            public setTimeout() {}
+            public setInterval() {}
           })() as any
         ).init();
 
@@ -88,11 +88,11 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public constructor() {
               super(E.div({}));
-              this.heightOriginal = 10;
             }
-            public setContent(entry: ChatEntry) {
-              counter.increment("setContent");
+            public setContentAndGetHeight(entry: ChatEntry) {
+              counter.increment("setContentAndGetHeight");
               assertThat(entry, eq(chatEntry), "chatEntry");
+              return 10;
             }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition");
@@ -108,11 +108,11 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public constructor() {
               super(E.div({}));
-              this.heightOriginal = 10;
             }
-            public setContent(entry: ChatEntry) {
-              counter.increment("setContent2");
+            public setContentAndGetHeight(entry: ChatEntry) {
+              counter.increment("setContentAndGetHeight2");
               assertThat(entry, eq(chatEntry2), "chatEntry2");
+              return 10;
             }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition2");
@@ -129,16 +129,14 @@ PUPPETEER_TEST_RUNNER.run({
             public constructor() {
               super(E.div({}));
             }
-            public setContent(entry: ChatEntry) {
-              switch (counter.increment("setContent3")) {
+            public setContentAndGetHeight(entry: ChatEntry) {
+              switch (counter.increment("setContentAndGetHeight3")) {
                 case 1:
-                  this.heightOriginal = 10;
                   assertThat(entry, eq(chatEntry3), "chatEntry3");
-                  break;
+                  return 10;
                 case 2:
-                  this.heightOriginal = 5;
                   assertThat(entry, eq(chatEntry4), "chatEntry4");
-                  break;
+                  return 5;
                 default:
                   throw new Error("Unexpected");
               }
@@ -176,7 +174,7 @@ PUPPETEER_TEST_RUNNER.run({
             }
           },
           new (class {
-            public setTimeout() {}
+            public setInterval() {}
           })() as any
         ).init();
         danmakuCanvasController.play();
@@ -185,14 +183,22 @@ PUPPETEER_TEST_RUNNER.run({
         danmakuCanvasController.addEntries([chatEntry, chatEntry2]);
 
         // Verify
-        assertThat(counter.get("setContent"), eq(1), "setContent called");
+        assertThat(
+          counter.get("setContentAndGetHeight"),
+          eq(1),
+          "setContentAndGetHeight called"
+        );
         assertThat(
           counter.get("setStartPosition"),
           eq(1),
           "setStartPosition called"
         );
         assertThat(counter.get("play"), eq(1), "play called");
-        assertThat(counter.get("setContent2"), eq(1), "setContent2 called");
+        assertThat(
+          counter.get("setContentAndGetHeight2"),
+          eq(1),
+          "setContentAndGetHeight2 called"
+        );
         assertThat(
           counter.get("setStartPosition2"),
           eq(1),
@@ -204,7 +210,11 @@ PUPPETEER_TEST_RUNNER.run({
         danmakuCanvasController.addEntries([chatEntry3]);
 
         // Verify
-        assertThat(counter.get("setContent3"), eq(1), "setContent3 called");
+        assertThat(
+          counter.get("setContentAndGetHeight3"),
+          eq(1),
+          "setContentAndGetHeight3 called"
+        );
         assertThat(
           counter.get("setStartPosition3"),
           eq(0),
@@ -217,7 +227,11 @@ PUPPETEER_TEST_RUNNER.run({
         danmakuCanvasController.addEntries([chatEntry4]);
 
         // Verify
-        assertThat(counter.get("setContent3"), eq(2), "setContent3 called");
+        assertThat(
+          counter.get("setContentAndGetHeight3"),
+          eq(2),
+          "setContentAndGetHeight3 called"
+        );
         assertThat(
           counter.get("setStartPosition3"),
           eq(1),
@@ -229,9 +243,21 @@ PUPPETEER_TEST_RUNNER.run({
         danmakuCanvasController.addEntries([{}]);
 
         // Verify
-        assertThat(counter.get("setContent"), eq(1), "setContent not called");
-        assertThat(counter.get("setContent2"), eq(1), "setContent2 not called");
-        assertThat(counter.get("setContent3"), eq(2), "setContent3 not called");
+        assertThat(
+          counter.get("setContentAndGetHeight"),
+          eq(1),
+          "setContentAndGetHeight not called"
+        );
+        assertThat(
+          counter.get("setContentAndGetHeight2"),
+          eq(1),
+          "setContentAndGetHeight2 not called"
+        );
+        assertThat(
+          counter.get("setContentAndGetHeight3"),
+          eq(2),
+          "setContentAndGetHeight3 not called"
+        );
 
         // Cleanup
         canvas.remove();
@@ -247,11 +273,11 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public constructor() {
               super(E.div({}));
-              this.heightOriginal = 10;
             }
-            public setContent(entry: ChatEntry) {
-              counter.increment("setContent");
+            public setContentAndGetHeight(entry: ChatEntry) {
+              counter.increment("setContentAndGetHeight");
               assertThat(entry, eq(chatEntry), "chatEntry");
+              return 10;
             }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition");
@@ -271,7 +297,7 @@ PUPPETEER_TEST_RUNNER.run({
           playerSettings,
           () => danmakuElementComponent,
           new (class {
-            public setTimeout() {}
+            public setInterval() {}
           })() as any
         ).init();
         danmakuCanvasController.play();
@@ -280,7 +306,11 @@ PUPPETEER_TEST_RUNNER.run({
         danmakuCanvasController.addEntries([chatEntry]);
 
         // Verify
-        assertThat(counter.get("setContent"), eq(1), "setContent called");
+        assertThat(
+          counter.get("setContentAndGetHeight"),
+          eq(1),
+          "setContentAndGetHeight called"
+        );
         assertThat(
           counter.get("setStartPosition"),
           eq(1),
@@ -302,12 +332,12 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public constructor() {
               super(E.div({}));
-              this.heightOriginal = 10;
             }
-            public setContent(entry: ChatEntry) {
-              if (counter.increment("setContent") === 2) {
+            public setContentAndGetHeight(entry: ChatEntry) {
+              if (counter.increment("setContentAndGetHeight") === 2) {
                 assertThat(entry, eq(chatEntry), "chatEntry");
               }
+              return 10;
             }
             public setStartPosition(posY: number) {
               switch (counter.increment("setStartPosition")) {
@@ -320,7 +350,6 @@ PUPPETEER_TEST_RUNNER.run({
                 default:
                   throw new Error("Unexpected");
               }
-              this.posYOriginal = posY;
             }
             public play() {}
           })();
@@ -328,9 +357,10 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public constructor() {
               super(E.div({}));
-              this.heightOriginal = 10;
             }
-            public setContent(entry: ChatEntry) {}
+            public setContentAndGetHeight(entry: ChatEntry) {
+              return 10;
+            }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition2");
               assertThat(posY, eq(10), "posY2");
@@ -341,9 +371,10 @@ PUPPETEER_TEST_RUNNER.run({
           new (class extends MockDanmakuElementComponent {
             public constructor() {
               super(E.div({}));
-              this.heightOriginal = 10;
             }
-            public setContent(entry: ChatEntry) {}
+            public setContentAndGetHeight(entry: ChatEntry) {
+              return 10;
+            }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition3");
               assertThat(posY, eq(0), "posY3");
@@ -371,15 +402,15 @@ PUPPETEER_TEST_RUNNER.run({
             }
           },
           new (class {
-            public setTimeout() {}
+            public setInterval() {}
           })() as any
         ).init();
         danmakuCanvasController.play();
         danmakuCanvasController.addEntries([{}, {}]);
         assertThat(
-          counter.get("setContent"),
+          counter.get("setContentAndGetHeight"),
           eq(1),
-          "setContent called for preparation"
+          "setContentAndGetHeight called for preparation"
         );
         assertThat(
           counter.get("setStartPosition"),
@@ -409,9 +440,9 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         danmakuCanvasController.addEntries([chatEntry]);
         assertThat(
-          counter.get("setContent"),
+          counter.get("setContentAndGetHeight"),
           eq(2),
-          "setContent called when reused"
+          "setContentAndGetHeight called when reused"
         );
         assertThat(
           counter.get("setStartPosition"),

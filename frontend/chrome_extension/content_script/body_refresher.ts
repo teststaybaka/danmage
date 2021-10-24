@@ -43,11 +43,14 @@ export class BodyRefresher {
   }
 
   public init(): this {
-    this.window.setTimeout(this.refresh, BodyRefresher.REFRESH_INTERVAL);
+    this.window.setInterval(
+      () => this.refresh(),
+      BodyRefresher.REFRESH_INTERVAL
+    );
     return this;
   }
 
-  private refresh = (): void => {
+  private refresh(): void {
     let newElements = this.bodyAssembler.queryElements();
     let comparisonResult = this.checkNewElements(newElements);
     switch (comparisonResult) {
@@ -69,9 +72,7 @@ export class BodyRefresher {
       default:
         break;
     }
-
-    this.window.setTimeout(this.refresh, BodyRefresher.REFRESH_INTERVAL);
-  };
+  }
 
   private checkNewElements(newElements: Element[]): ElementsComparisonResult {
     for (let element of newElements) {
