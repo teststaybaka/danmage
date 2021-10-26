@@ -2,7 +2,7 @@
 
 ## Overview
 
-DanMage is a project that brings NicoNico-style danmaku (or scrolling chat) to various video sites as [a Chrome extension](https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm), now supporting YouTube, Twitch and Crunchyroll. It's also deployed as a [website](https://www.danmage.com/), which provides minimum backend support to Chrome Extension, such as storing posted chats and player settings.
+DanMage is a project that brings NicoNico-style danmaku (or scrolling chat) to various video sites as [a Chrome extension](https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm), now supporting YouTube, Twitch and Crunchyroll. It's also deployed as a [website](https://www.danmage.com/), which provides minimum backend support to the Chrome extension, such as storing posted chats and player settings.
 
 ## Build
 
