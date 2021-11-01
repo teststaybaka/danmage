@@ -7,6 +7,11 @@ import { SIDE_PADDING } from "./common_style";
 import { E } from "@selfage/element/factory";
 
 export class HomeView {
+  private static FONT_SIZE = "2rem";
+  private static MAX_WIDTH = "128rem";
+  private static TEXT_SHADOW =
+    "-.1rem 0 black, 0 .1rem black, .1rem 0 black, 0 -.1rem black";
+
   public static create(): HTMLDivElement {
     return E.div(
       { class: "home-container" },
@@ -78,7 +83,7 @@ export class HomeView {
     return E.div(
       {
         class: "home-paragraph",
-        style: `display: flex; flex-flow: column nowrap; padding: 0 ${SIDE_PADDING}rem; background-color: ${backgroundColor};`,
+        style: `display: flex; flex-flow: column nowrap; align-items: center; padding: 0 ${SIDE_PADDING}rem; background-color: ${backgroundColor};`,
       },
       HomeView.video(videoPath),
       ...textElements
@@ -88,7 +93,7 @@ export class HomeView {
   private static video(videoPath: string): HTMLElement {
     let v = E.video({
       class: "home-video",
-      style: `align-self: center; width: 100%; max-width: 128rem; min-width: 64rem; margin: ${
+      style: `width: 100%; max-width: ${HomeView.MAX_WIDTH}; margin: ${
         SIDE_PADDING / 2
       }rem 0;`,
       src: videoPath,
@@ -103,9 +108,11 @@ export class HomeView {
     return E.div(
       {
         class: "home-text",
-        style: `margin-bottom: ${
-          SIDE_PADDING / 2
-        }rem; font-size: 1.6rem; color: white; text-shadow: -.1rem 0 black, 0 .1rem black, .1rem 0 black, 0 -.1rem black;`,
+        style: `width: 100%; font-size: ${HomeView.FONT_SIZE}; max-width: ${
+          HomeView.MAX_WIDTH
+        }; margin-bottom: ${SIDE_PADDING / 2}rem; color: white; text-shadow: ${
+          HomeView.TEXT_SHADOW
+        };`,
       },
       E.text(text)
     );
@@ -114,9 +121,13 @@ export class HomeView {
   private static link(url: string): HTMLElement {
     return E.a(
       {
-        style: `display: block; font-size: 1.6rem; color: ${ColorScheme.getLinkContent()}; word-break: break-all; margin-bottom: ${
+        style: `width: 100%; font-size: ${HomeView.FONT_SIZE}; max-width: ${
+          HomeView.MAX_WIDTH
+        }; margin-bottom: ${
           SIDE_PADDING / 2
-        }rem; text-decoration: none;`,
+        }rem; color: ${ColorScheme.getLinkContent()}; text-shadow: ${
+          HomeView.TEXT_SHADOW
+        }; word-break: break-all; text-decoration: none;`,
         href: url,
         target: "_blank",
       },
