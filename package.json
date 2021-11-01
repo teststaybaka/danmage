@@ -32,7 +32,7 @@
   "dependencies": {
     "@google-cloud/storage": "^5.8.5",
     "@selfage/datastore_client": "^2.0.1",
-    "@selfage/element": "^3.0.0",
+    "@selfage/element": "^3.1.1",
     "@selfage/http_error": "^1.1.0",
     "@selfage/message": "^2.0.1",
     "@selfage/once": "^1.0.1",
@@ -49,7 +49,7 @@
   },
   "datastoreIndex": "./backend/datastore/index",
   "assetExts": [
-    ".jpg"
+    ".mp4"
   ],
   "scripts": {
     "local": "bundage bws backend/main backend/main_bin -ec frontend/web/entries.json -e environment_local; node backend/main_bin",
