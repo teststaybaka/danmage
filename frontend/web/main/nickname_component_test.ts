@@ -10,19 +10,21 @@ import { NicknameComponent } from "./nickname_component";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
 import { TextInputController } from "@selfage/element/text_input_controller";
+import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
 import { ServiceClientMock } from "@selfage/service_client/mocks";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
-import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
-import "@selfage/puppeteer_executor_api";
-
-normalizeBody();
+import { PUPPETEER_TEST_RUNNER, TestCase } from "@selfage/test_runner";
 
 PUPPETEER_TEST_RUNNER.run({
   name: "NicknameComponentTest",
+  environment: {
+    setUp: () => normalizeBody(),
+  },
   cases: [
-    {
-      name: "RenderWithoutNameThenClickToUpdate",
-      execute: async () => {
+    new (class implements TestCase {
+      public name = "RenderWithoutNameThenClickToUpdate";
+      private nicknameComponent: NicknameComponent;
+      public async execute() {
         // Prepare
         let counter = new Counter<string>();
         let setButton = new (class extends FillButtonComponentMock {
@@ -71,13 +73,13 @@ PUPPETEER_TEST_RUNNER.run({
         // Execute
         let views = NicknameComponent.createView(setButton);
         let input = views[1];
-        let nicknameComponent = new NicknameComponent(
+        this.nicknameComponent = new NicknameComponent(
           ...views,
           inputController,
           serviceClient
         ).init();
-        document.body.appendChild(nicknameComponent.body);
-        await nicknameComponent.show();
+        document.body.appendChild(this.nicknameComponent.body);
+        await this.nicknameComponent.show();
 
         // Verify
         assertThat(
@@ -85,18 +87,12 @@ PUPPETEER_TEST_RUNNER.run({
           eq(1),
           `first fetchAuthed called`
         );
-
         await globalThis.setViewport(1600, 400);
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(__dirname + "/nickname_component.png", {
-              delay: 500,
-              fullPage: true,
-            }),
-            globalThis.readFile(__dirname + "/golden/nickname_component.png"),
-          ]);
-          assertThat(rendered, eq(golden), "screenshot");
-        }
+        await asyncAssertScreenshot(
+          __dirname + "/nickname_component.png",
+          __dirname + "/golden/nickname_component.png",
+          __dirname + "/nickname_component_diff.png"
+        );
 
         // Prepare
         input.value = "new name";
@@ -114,12 +110,11 @@ PUPPETEER_TEST_RUNNER.run({
         );
         assertThat(keepDisableds, eqArray([eq(undefined)]), "enable button");
         assertThat(counter.get("hide"), eq(1), "hide button");
-
-        // Cleanup
-        await globalThis.deleteFile(__dirname + "/nickname_component.png");
-        nicknameComponent.body.remove();
-      },
-    },
+      }
+      public tearDown() {
+        this.nicknameComponent.body.remove();
+      }
+    })(),
     {
       name: "RenderWithName",
       execute: async () => {

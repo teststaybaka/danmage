@@ -12,20 +12,22 @@ import {
 import { State } from "./state";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
+import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
 import { ServiceClientMock } from "@selfage/service_client/mocks";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
-import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
-import "@selfage/puppeteer_executor_api";
-
-normalizeBody();
+import { PUPPETEER_TEST_RUNNER, TestCase } from "@selfage/test_runner";
 
 PUPPETEER_TEST_RUNNER.run({
   name: "BodyComponentTest",
+  environment: {
+    setUp: () => normalizeBody(),
+  },
   cases: [
-    {
-      name: "WithoutSignInRenderHomeAndFeedback",
-      execute: async () => {
+    new (class implements TestCase {
+      public name = "WithoutSignInRenderHomeAndFeedback";
+      private bodyComponent: BodyComponent;
+      public async execute() {
         // Prepare
         let counter = new Counter<string>();
         let nicknameButton = new TextButtonComponentMock(E.text("Nickname"));
@@ -57,7 +59,7 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(1280, 600);
 
         // Execute
-        let bodyComponent = new BodyComponent(
+        this.bodyComponent = new BodyComponent(
           ...BodyComponent.createView(
             nicknameButton,
             historyButton,
@@ -77,24 +79,15 @@ PUPPETEER_TEST_RUNNER.run({
           serviceClient,
           windowMock
         ).init();
-        document.body.appendChild(bodyComponent.body);
+        document.body.appendChild(this.bodyComponent.body);
 
         // Verify
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/body_component_home.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/body_component_home.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "home screenshot");
-        }
+        await asyncAssertScreenshot(
+          __dirname + "/body_component_home.png",
+          __dirname + "/golden/body_component_home.png",
+          __dirname + "/body_component_home_diff.png",
+          { fullPage: true }
+        );
 
         // Execute
         let termsKeepDisables = await Promise.all(
@@ -135,35 +128,21 @@ PUPPETEER_TEST_RUNNER.run({
         );
         assertThat(state.showFeedback, eq(true), "show feedback");
         assertThat(state.showHome, eq(undefined), "hide home");
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/body_component_feedback.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/body_component_feedback.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "feedback screenshot");
-        }
-
-        // Cleanup
-        await Promise.all([
-          globalThis.deleteFile(__dirname + "/body_component_home.png"),
-          globalThis.deleteFile(
-            __dirname + "/body_component_feedback.png"
-          ),
-        ]);
-        bodyComponent.body.remove();
-      },
-    },
-    {
-      name: "WithSignedInRenderHomeAndNicknameAndHistory",
-      execute: async () => {
+        await asyncAssertScreenshot(
+          __dirname + "/body_component_feedback.png",
+          __dirname + "/golden/body_component_feedback.png",
+          __dirname + "/body_component_feedback_diff.png",
+          { fullPage: true }
+        );
+      }
+      public tearDown() {
+        this.bodyComponent.body.remove();
+      }
+    })(),
+    new (class implements TestCase {
+      public name = "WithSignedInRenderHomeAndNicknameAndHistory";
+      private bodyComponent: BodyComponent;
+      public async execute() {
         // Prepare
         let counter = new Counter<string>();
         let nicknameButton = new TextButtonComponentMock(E.text("Nickname"));
@@ -204,7 +183,7 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(1280, 600);
 
         // Execute
-        let bodyComponent = new BodyComponent(
+        this.bodyComponent = new BodyComponent(
           ...BodyComponent.createView(
             nicknameButton,
             historyButton,
@@ -224,24 +203,15 @@ PUPPETEER_TEST_RUNNER.run({
           serviceClient,
           windowMock
         ).init();
-        document.body.appendChild(bodyComponent.body);
+        document.body.appendChild(this.bodyComponent.body);
 
         // Verify
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/body_component_home_signed_in.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/body_component_home_signed_in.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "home screenshot");
-        }
+        await asyncAssertScreenshot(
+          __dirname + "/body_component_home_signed_in.png",
+          __dirname + "/golden/body_component_home_signed_in.png",
+          __dirname + "/body_component_home_signed_in_diff.png",
+          { fullPage: true }
+        );
 
         // Execute
         let nicknameKeepDisables = await Promise.all(
@@ -256,21 +226,12 @@ PUPPETEER_TEST_RUNNER.run({
         );
         assertThat(state.showNickname, eq(true), "show nickname");
         assertThat(state.showHome, eq(undefined), "hide home");
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/body_component_nickname.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/body_component_nickname.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "nickname screenshot");
-        }
+        await asyncAssertScreenshot(
+          __dirname + "/body_component_nickname.png",
+          __dirname + "/golden/body_component_nickname.png",
+          __dirname + "/body_component_nickname_diff.png",
+          { fullPage: true }
+        );
 
         // Execute
         let historyKeepDisables = await Promise.all(
@@ -285,40 +246,22 @@ PUPPETEER_TEST_RUNNER.run({
         );
         assertThat(state.showHistory, eq(true), "show history");
         assertThat(state.showNickname, eq(undefined), "hide nickname");
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/body_component_history.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/body_component_history.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "history screenshot");
-        }
-
-        // Cleanup
-        await Promise.all([
-          globalThis.deleteFile(
-            __dirname + "/body_component_home_signed_in.png"
-          ),
-          globalThis.deleteFile(
-            __dirname + "/body_component_nickname.png"
-          ),
-          globalThis.deleteFile(
-            __dirname + "/body_component_history.png"
-          ),
-        ]);
-        bodyComponent.body.remove();
-      },
-    },
-    {
-      name: "SignInFailedAndSignInSuccessAndSignOutAndHandleUnauthError",
-      execute: async () => {
+        await asyncAssertScreenshot(
+          __dirname + "/body_component_history.png",
+          __dirname + "/golden/body_component_history.png",
+          __dirname + "/body_component_history_diff.png",
+          { fullPage: true }
+        );
+      }
+      public tearDown() {
+        this.bodyComponent.body.remove();
+      }
+    })(),
+    new (class implements TestCase {
+      public name =
+        "SignInFailedAndSignInSuccessAndSignOutAndHandleUnauthError";
+      private bodyComponent: BodyComponent;
+      public async execute() {
         // Prepare
         let counter = new Counter<string>();
         let nicknameButton = new TextButtonComponentMock(E.text("Nickname"));
@@ -373,7 +316,7 @@ PUPPETEER_TEST_RUNNER.run({
           feedbackButton
         );
         let signInButton = views[2];
-        let bodyComponent = new BodyComponent(
+        this.bodyComponent = new BodyComponent(
           ...views,
           () => HomeView.create(),
           () => nicknameComponent,
@@ -386,7 +329,7 @@ PUPPETEER_TEST_RUNNER.run({
           serviceClient,
           windowMock
         ).init();
-        document.body.appendChild(bodyComponent.body);
+        document.body.appendChild(this.bodyComponent.body);
         signInButton.click();
 
         // Verify
@@ -410,21 +353,12 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(counter.get("fetchUnauthed"), eq(1), "sign in called");
         assertThat(sessionStorage.read(), eq("some session"), "session stored");
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/body_component_signed_in.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/body_component_signed_in.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "successfuly signed in screenshot");
-        }
+        await asyncAssertScreenshot(
+          __dirname + "/body_component_signed_in.png",
+          __dirname + "/golden/body_component_signed_in.png",
+          __dirname + "/body_component_signed_in_diff.png",
+          { fullPage: true }
+        );
 
         // Execute
         await Promise.all(
@@ -433,21 +367,12 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Verify
         assertThat(sessionStorage.read(), eq(null), "session cleared");
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/body_component_signed_out.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/body_component_signed_out.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "successfuly signed out screenshot");
-        }
+        await asyncAssertScreenshot(
+          __dirname + "/body_component_signed_out.png",
+          __dirname + "/golden/body_component_signed_out.png",
+          __dirname + "/body_component_signed_out_diff.png",
+          { fullPage: true }
+        );
 
         // Prepare
         await windowMock.callback({
@@ -459,36 +384,16 @@ PUPPETEER_TEST_RUNNER.run({
         serviceClient.emit("unauthenticated");
 
         // Verify
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/body_component_handle_unauth.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/body_component_handle_unauth.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "handle unauth error screenshot");
-        }
-
-        // Cleanup
-        await Promise.all([
-          globalThis.deleteFile(
-            __dirname + "/body_component_signed_in.png"
-          ),
-          globalThis.deleteFile(
-            __dirname + "/body_component_signed_out.png"
-          ),
-          globalThis.deleteFile(
-            __dirname + "/body_component_handle_unauth.png"
-          ),
-        ]);
-        bodyComponent.body.remove();
-      },
-    },
+        await asyncAssertScreenshot(
+          __dirname + "/body_component_handle_unauth.png",
+          __dirname + "/golden/body_component_handle_unauth.png",
+          __dirname + "/body_component_handle_unauth_diff.png",
+          { fullPage: true }
+        );
+      }
+      public tearDown() {
+        this.bodyComponent.body.remove();
+      }
+    })(),
   ],
 });

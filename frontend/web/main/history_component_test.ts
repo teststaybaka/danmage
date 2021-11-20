@@ -9,19 +9,21 @@ import { TextButtonComponentMock } from "../../mocks";
 import { HistoryComponent } from "./history_component";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
+import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
 import { ServiceClientMock } from "@selfage/service_client/mocks";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
-import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
-import "@selfage/puppeteer_executor_api";
-
-normalizeBody();
+import { PUPPETEER_TEST_RUNNER, TestCase } from "@selfage/test_runner";
 
 PUPPETEER_TEST_RUNNER.run({
   name: "HistoryComponentTest",
+  environment: {
+    setUp: () => normalizeBody(),
+  },
   cases: [
-    {
-      name: "ShowAndShowAgainAndClickWithNoMore",
-      execute: async () => {
+    new (class implements TestCase {
+      public name = "ShowAndShowAgainAndClickWithNoMore";
+      private historyComponent: HistoryComponent;
+      public async execute() {
         // Prepare
         let counter = new Counter<string>();
         let button = new (class extends TextButtonComponentMock {
@@ -108,82 +110,51 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(1600, 400);
 
         // Execute
-        let historyComponent = new HistoryComponent(
+        this.historyComponent = new HistoryComponent(
           ...HistoryComponent.createView(button),
           serviceClient
         ).init();
-        document.body.appendChild(historyComponent.body);
-        await historyComponent.show();
+        document.body.appendChild(this.historyComponent.body);
+        await this.historyComponent.show();
 
         // Verify
         assertThat(counter.get("click"), eq(1), "click called");
         assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(__dirname + "/history_component_show.png", {
-              delay: 500,
-              fullPage: true,
-            }),
-            globalThis.readFile(
-              __dirname + "/golden/history_component_show.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "show screenshot");
-        }
+        await asyncAssertScreenshot(
+          __dirname + "/history_component_show.png",
+          __dirname + "/golden/history_component_show.png",
+          __dirname + "/history_component_show_diff.png",
+          { fullPage: true }
+        );
 
         // Execute
-        await historyComponent.show();
+        await this.historyComponent.show();
 
         // Verify
         assertThat(counter.get("click"), eq(2), "2nd click called");
         assertThat(counter.get("fetchAuthed"), eq(2), `2nd fetchAuthed called`);
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/history_component_show_again.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/history_component_show_again.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "show again screenshot");
-        }
+        await asyncAssertScreenshot(
+          __dirname + "/history_component_show_again.png",
+          __dirname + "/golden/history_component_show_again.png",
+          __dirname + "/history_component_show_again_diff.png",
+          { fullPage: true }
+        );
 
         // Execute
         await button.click();
 
         // Verify
         assertThat(counter.get("fetchAuthed"), eq(3), `2nd fetchAuthed called`);
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(
-              __dirname + "/history_component_no_more.png",
-              {
-                delay: 500,
-                fullPage: true,
-              }
-            ),
-            globalThis.readFile(
-              __dirname + "/golden/history_component_no_more.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "screenshot");
-        }
-
-        // Cleanup
-        await Promise.all([
-          globalThis.deleteFile(__dirname + "/history_component_show.png"),
-          globalThis.deleteFile(
-            __dirname + "/history_component_show_again.png"
-          ),
-          globalThis.deleteFile(__dirname + "/history_component_no_more.png"),
-        ]);
-        historyComponent.body.remove();
-      },
-    },
+        await asyncAssertScreenshot(
+          __dirname + "/history_component_no_more.png",
+          __dirname + "/golden/history_component_no_more.png",
+          __dirname + "/history_component_no_more_diff.png",
+          { fullPage: true }
+        );
+      }
+      public tearDown() {
+        this.historyComponent.body.remove();
+      }
+    })(),
   ],
 });

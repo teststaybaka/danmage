@@ -9,8 +9,6 @@ import { E } from "@selfage/element/factory";
 export class HomeView {
   private static FONT_SIZE = "2rem";
   private static MAX_WIDTH = "128rem";
-  private static TEXT_SHADOW =
-    "-.1rem 0 black, 0 .1rem black, .1rem 0 black, 0 -.1rem black";
 
   public static create(): HTMLDivElement {
     return E.div(
@@ -22,12 +20,16 @@ export class HomeView {
           `DanMage is a Chrome extension that introduces NicoNico-style ` +
             `chats (or Danmaku, bullet comments, scrolling comments) to ` +
             `video sites. It currently supports Twitch, YouTube and ` +
-            `Crunchyroll. Get it here:`
+            `Crunchyroll. Get it here:`,
+          ColorScheme.getContent()
         ),
         HomeView.link(
           "https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm"
         ),
-        HomeView.textElement(`It's also open-sourced at:`),
+        HomeView.textElement(
+          `It's also open-sourced at:`,
+          ColorScheme.getContent()
+        ),
         HomeView.link("https://github.com/teststaybaka/danmage")
       ),
       HomeView.paragraph(
@@ -37,7 +39,8 @@ export class HomeView {
           `On Twitch, it works on both live streams and recordings. Find ` +
             `customizable options around Twitch's chat room. Unfortunatley, ` +
             `you have to keep the chat room visible, or it will disconnet ` +
-            `from Twitch's chat server.`
+            `from Twitch's chat server.`,
+          "white"
         )
       ),
       HomeView.paragraph(
@@ -45,12 +48,14 @@ export class HomeView {
         YOUTUBE_VIDEO_PATH,
         HomeView.textElement(
           `On YouTube, it works on live streams, live recordings, premiere, ` +
-            `and regular videos.`
+            `and regular videos.`,
+          "white"
         ),
         HomeView.textElement(
           `For live streams, live recordings, and premiere, you need to ` +
             `enable YouTube chat. Then you can Find customizable options ` +
-            `around YouTube's chat room.`
+            `around YouTube's chat room.`,
+          "white"
         ),
         HomeView.textElement(
           `Unfortunatley for regular videos, you might not find any chats ` +
@@ -58,7 +63,8 @@ export class HomeView {
             `¯\\_(ツ)_/¯, but it's working technically. Find customizable ` +
             `options around video player controller, which can also be used ` +
             `to post chats, after signed in to the extension. Chats will be ` +
-            `stored in this site.`
+            `stored in this site.`,
+          "white"
         )
       ),
       HomeView.paragraph(
@@ -69,7 +75,8 @@ export class HomeView {
             `not find any chats because this extension hasn't gained enough ` +
             `popularity ¯\\_(ツ)_/¯. Find customizable options around video ` +
             `player controller, which can also be used to post chats, after ` +
-            `signed in to the extension. Chats will be stored in this site.`
+            `signed in to the extension. Chats will be stored in this site.`,
+          "white"
         )
       )
     );
@@ -104,15 +111,13 @@ export class HomeView {
     return v;
   }
 
-  private static textElement(text: string): HTMLElement {
+  private static textElement(text: string, color: string): HTMLElement {
     return E.div(
       {
         class: "home-text",
         style: `width: 100%; font-size: ${HomeView.FONT_SIZE}; max-width: ${
           HomeView.MAX_WIDTH
-        }; margin-bottom: ${SIDE_PADDING / 2}rem; color: white; text-shadow: ${
-          HomeView.TEXT_SHADOW
-        };`,
+        }; margin-bottom: ${SIDE_PADDING / 2}rem; color: ${color};`,
       },
       E.text(text)
     );
@@ -121,13 +126,13 @@ export class HomeView {
   private static link(url: string): HTMLElement {
     return E.a(
       {
-        style: `width: 100%; font-size: ${HomeView.FONT_SIZE}; max-width: ${
-          HomeView.MAX_WIDTH
-        }; margin-bottom: ${
-          SIDE_PADDING / 2
-        }rem; color: ${ColorScheme.getLinkContent()}; text-shadow: ${
-          HomeView.TEXT_SHADOW
-        }; word-break: break-all; text-decoration: none;`,
+        style:
+          `width: 100%; font-size: ${HomeView.FONT_SIZE}; max-width: ${
+            HomeView.MAX_WIDTH
+          }; margin-bottom: ${
+            SIDE_PADDING / 2
+          }rem; color: ${ColorScheme.getLinkContent()}; ` +
+          `word-break: break-all; text-decoration: none;`,
         href: url,
         target: "_blank",
       },

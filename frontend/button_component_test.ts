@@ -2,14 +2,14 @@ import { normalizeBody } from "./body_normalizer";
 import { FillButtonComponent, TextButtonComponent } from "./button_component";
 import { ButtonController } from "@selfage/element/button_controller";
 import { E } from "@selfage/element/factory";
-import { assertThat, eq } from "@selfage/test_matcher";
+import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
-import "@selfage/puppeteer_executor_api";
-
-normalizeBody();
 
 PUPPETEER_TEST_RUNNER.run({
   name: "ButtonComponentTest",
+  environment: {
+    setUp: () => normalizeBody(),
+  },
   cases: [
     {
       name: "FillButtonRender",
@@ -31,22 +31,17 @@ PUPPETEER_TEST_RUNNER.run({
         );
 
         // Verify
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(__dirname + "/button_component_fill.png", {
-              delay: 500,
-              fullPage: true,
-            }),
-            globalThis.readFile(
-              __dirname + "/golden/button_component_fill.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "screenshot");
+        await asyncAssertScreenshot(
+          __dirname + "/button_component_fill.png",
+          __dirname + "/golden/button_component_fill.png",
+          __dirname + "/button_component_fill_diff.png",
+          { fullPage: true }
+        );
+      },
+      tearDown: () => {
+        if (document.body.lastChild) {
+          document.body.removeChild(document.body.lastChild);
         }
-
-        // Cleanup
-        await globalThis.deleteFile(__dirname + "/button_component_fill.png");
-        document.body.removeChild(document.body.lastChild);
       },
     },
     {
@@ -69,22 +64,17 @@ PUPPETEER_TEST_RUNNER.run({
         );
 
         // Verify
-        {
-          let [rendered, golden] = await Promise.all([
-            globalThis.screenshot(__dirname + "/button_component_text.png", {
-              delay: 500,
-              fullPage: true,
-            }),
-            globalThis.readFile(
-              __dirname + "/golden/button_component_text.png"
-            ),
-          ]);
-          assertThat(rendered, eq(golden), "screenshot");
+        await asyncAssertScreenshot(
+          __dirname + "/button_component_text.png",
+          __dirname + "/golden/button_component_text.png",
+          __dirname + "/button_component_text_diff.png",
+          { fullPage: true }
+        );
+      },
+      tearDown: () => {
+        if (document.body.lastChild) {
+          document.body.removeChild(document.body.lastChild);
         }
-
-        // Cleanup
-        await globalThis.deleteFile(__dirname + "/button_component_text.png");
-        document.body.removeChild(document.body.lastChild);
       },
     },
   ],
