@@ -1,6 +1,6 @@
 import CRUNCHYROLL_VIDEO_PATH = require("../assets/crunchyroll.mp4");
+import INTRO_VIDEO_PATH = require("../assets/intro.mp4");
 import TWITCH_VIDEO_PATH = require("../assets/twitch.mp4");
-import INTRO_VIDEO_PATH = require("../assets/twitch_youtube.mp4");
 import YOUTUBE_VIDEO_PATH = require("../assets/youtube.mp4");
 import { ColorScheme } from "../../color_scheme";
 import { SIDE_PADDING } from "./common_style";
