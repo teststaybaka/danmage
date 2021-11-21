@@ -23,7 +23,8 @@ export class DanmakuCanvasController {
     private danmakuElementComponentFactoryFn: (
       playerSettings: PlayerSettings
     ) => DanmakuElementComponent,
-    private window: Window
+    private window: Window,
+    private random: () => number
   ) {}
 
   public static createStructured(
@@ -34,7 +35,8 @@ export class DanmakuCanvasController {
       canvas,
       playerSettings,
       DanmakuElementComponent.createStructured,
-      window
+      window,
+      Math.random
     ).init();
   }
 
@@ -46,7 +48,8 @@ export class DanmakuCanvasController {
       canvas,
       playerSettings,
       DanmakuElementComponent.createYouTube,
-      window
+      window,
+      Math.random
     ).init();
   }
 
@@ -58,7 +61,8 @@ export class DanmakuCanvasController {
       canvas,
       playerSettings,
       DanmakuElementComponent.createTwitch,
-      window
+      window,
+      Math.random
     ).init();
   }
 
@@ -111,21 +115,30 @@ export class DanmakuCanvasController {
       this.occupied.push(0);
     }
 
-    let score = 0;
-    let i = 0;
-    for (; i < elementHeight; i++) {
-      score += this.occupied[i];
+    let startScore = 0;
+    let startY = Math.floor(
+      this.random() * Math.max(0, this.canvasHeight - elementHeight)
+    );
+    for (let i = startY; i < startY + elementHeight; i++) {
+      startScore += this.occupied[i];
     }
-    for (; i < this.canvasHeight && score > 0; i++) {
-      score -= this.occupied[i - elementHeight];
-      score += this.occupied[i];
-    }
-    if (score > 0) {
+    let posYDown = this.findPosYDownward(startY, startScore, elementHeight);
+    let posYUp = this.findPosYUpward(startY, startScore, elementHeight);
+    if (posYDown === -1 && posYUp === -1) {
       danmakuElementComponent.clear();
       return;
     }
+    let posY: number;
+    if (posYDown === -1) {
+      posY = posYUp;
+    } else if (posYUp === -1) {
+      posY = posYDown;
+    } else if (posYDown - startY > startY - posYUp) {
+      posY = posYUp;
+    } else {
+      posY = posYDown;
+    }
 
-    let posY = i - elementHeight;
     for (let j = posY; j < posY + elementHeight; j++) {
       this.occupied[j]++;
     }
@@ -137,6 +150,36 @@ export class DanmakuCanvasController {
     danmakuElementComponent.once("displayEnded", () => this.returnToIdle(node));
     danmakuElementComponent.setStartPosition(posY);
     this.tryStartPlaying(danmakuElementComponent);
+  }
+
+  private findPosYDownward(posY: number, score: number, elementHeight: number): number {
+    while (score > 0 && posY < this.canvasHeight - elementHeight) {
+      posY++;
+      score -= this.occupied[posY - 1];
+      score += this.occupied[posY + elementHeight - 1];
+    }
+    if (score > 0) {
+      return -1;
+    } else {
+      return posY;
+    }
+  }
+
+  private findPosYUpward(
+    posY: number,
+    score: number,
+    elementHeight: number
+  ): number {
+    while (score > 0 && posY > 0) {
+      posY--;
+      score -= this.occupied[posY + elementHeight];
+      score += this.occupied[posY];
+    }
+    if (score > 0) {
+      return -1;
+    } else {
+      return posY;
+    }
   }
 
   private releaseOccupied(posY: number, elementHeight: number): void {
