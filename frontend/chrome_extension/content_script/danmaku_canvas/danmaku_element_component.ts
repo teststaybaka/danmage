@@ -22,7 +22,7 @@ export interface DanmakuElementComponent {
 export class DanmakuElementComponent extends EventEmitter {
   private static DANMAKU_ELEMENT_ATTRIBUTES = {
     class: "danmaku-element",
-    style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; top: 0; right: 0; padding: .2rem 1.5rem .2rem 0; z-index: 10; pointer-events: none; white-space: nowrap; visibility: hidden;`,
+    style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; top: 0; right: 0; padding: .2rem 1.5rem .2rem 0; line-height: normal; z-index: 10; pointer-events: none; white-space: nowrap; visibility: hidden;`,
   };
   private static OPACITY_SCALE = 1 / 100;
   private static FONT_SIZE_SCALE = 1 / 10;
@@ -99,9 +99,6 @@ export class DanmakuElementComponent extends EventEmitter {
       this.displaySettings.opacity * DanmakuElementComponent.OPACITY_SCALE
     }`;
     this.body.style.fontSize = `${
-      this.displaySettings.fontSize * DanmakuElementComponent.FONT_SIZE_SCALE
-    }rem`;
-    this.body.style.lineHeight = `${
       this.displaySettings.fontSize * DanmakuElementComponent.FONT_SIZE_SCALE
     }rem`;
     this.body.style.setProperty(
