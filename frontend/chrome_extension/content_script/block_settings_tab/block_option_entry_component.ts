@@ -25,7 +25,7 @@ export class BlockOptionEntryComponent extends EventEmitter {
         class: "block-option-entry",
         style: `padding: .4rem 0; font-size: 1.4rem; line-height: 100%; font-family: initial !important;`,
       },
-      E.text(BlockKind[kind])
+      E.text(chrome.i18n.getMessage(BlockKind[kind]))
     );
   }
 

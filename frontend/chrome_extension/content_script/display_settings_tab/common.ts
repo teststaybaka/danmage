@@ -2,7 +2,7 @@ import { ColorScheme } from "../../../color_scheme";
 
 export let ENTRY_MARGIN_TOP_STYLE = `margin-top: .7rem;`;
 export let LABEL_STYLE =
-  `flex-grow: 1; font-size: 1.4rem; line-height: 100%; ` +
+  `flex-grow: 1; font-size: 1.4rem; line-height: 120%; ` +
   `font-family: initial !important; overflow: hidden; ` +
   `text-overflow: ellipsis; white-space: nowrap; ` +
   `color: ${ColorScheme.getContent()};`;

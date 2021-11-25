@@ -1,0 +1,89 @@
+{
+  "extName": {
+    "message": "DanMage - コメントをニコニコ動画っぽく流す"
+  },
+  "extDescription": {
+    "message": "現在、この機能はYouTube、Twitch、Crunchyrollをサポートしています。"
+  },
+  "displaySettingsTitle": {
+    "message": "スタイル設定"
+  },
+  "blockSettingsTitle": {
+    "message": "ブロック設定"
+  },
+  "chatTitle": {
+    "message": "コメント"
+  },
+  "accountTitle": {
+    "message": "アカウント"
+  },
+  "enableScrollingOption": {
+    "message": "機能をオン／オフする"
+  },
+  "opacityOption": {
+    "message": "不透明度"
+  },
+  "fontSizeOption": {
+    "message": "フォントサイズ"
+  },
+  "maxNumOption": {
+    "message": "同じ画面上のコメントの最大数"
+  },
+  "speedOption": {
+    "message": "流速"
+  },
+  "fontFamilyOption": {
+    "message": "フォント"
+  },
+  "userNameOption": {
+    "message": "ユーザー名の表示／非表示"
+  },
+  "resetOption": {
+    "message": "スタイル設定をリセット"
+  },
+  "blockRuleInputPlaceHolder": {
+    "message": "新しいルール"
+  },
+  "addBlockRuleButton": {
+    "message": "追加"
+  },
+  "Keyword": {
+    "message": "キーワード"
+  },
+  "RegExp": {
+    "message": "正規表示式"
+  },
+  "submitNewChatButton": {
+    "message": "送信"
+  },
+  "chatInputPlaceHolder": {
+    "message": "ログイン後にコメントを送信可能"
+  },
+  "firstSignInReminder": {
+    "message": "Googleアカウントで "
+  },
+  "secondSignInReminder": {
+    "message": " にログインして、デバイス間で設定を同期し、特定のビデオサイトにコメントを送信します。"
+  },
+  "signInButton": {
+    "message": "ログイン"
+  },
+  "signOutButton": {
+    "message": "サインアウト"
+  },
+  "welcomeMessage": {
+    "message": "こんにちは！"
+  },
+  "welcomeWithNameMessage": {
+    "message": ""
+  },
+  "welcomeWithNameEndingMessage": {
+    "message": "、こんにちは！"
+  },
+  "firstExplanation": {
+    "message": "設定は "
+  },
+  "secondExplanation": {
+    "message": " を介して同期されています。"
+  }
+}

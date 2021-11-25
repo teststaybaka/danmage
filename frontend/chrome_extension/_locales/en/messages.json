@@ -1,0 +1,118 @@
+{
+  "extName": {
+    "message": "DanMage - NicoNico-style chat on multi sites",
+    "description": "Extension name."
+  },
+  "extDescription": {
+    "message": "Bring NicoNico-style chat/scrolling chat/danmaku/bullet comments/chat overlay to Twitch, YouTube and Crunchyroll!",
+    "description": "Extension description."
+  },
+  "displaySettingsTitle": {
+    "message": "Display settings",
+    "description": "Tab title for display settings."
+  },
+  "blockSettingsTitle": {
+    "message": "Block settings",
+    "description": "Tab title for block settings."
+  },
+  "chatTitle": {
+    "message": "Chat",
+    "description": "Tab title for showing chats."
+  },
+  "accountTitle": {
+    "message": "Account",
+    "description": "Tab title for account-related info."
+  },
+  "enableScrollingOption": {
+    "message": "Enable/Disable chat scrolling",
+    "description": "Explain the option to enable or disable chat scrolling."
+  },
+  "opacityOption": {
+    "message": "Opacity",
+    "description": "Explain the option to adjust danmaku opacity."
+  },
+  "fontSizeOption": {
+    "message": "Font size",
+    "description": "Explain the option to adjust the scale of font size."
+  },
+  "maxNumOption": {
+    "message": "Max number of scrolling chats",
+    "description": "Explain the option to adjusst maximum number of scrolling chats."
+  },
+  "speedOption": {
+    "message": "Speed for scrolling",
+    "description": "Explain the option to adjusst the speed for scrolling chats."
+  },
+  "fontFamilyOption": {
+    "message": "Font family",
+    "description": "Explain the option to set font family."
+  },
+  "userNameOption": {
+    "message": "Show/Hide user name",
+    "description": "Explain the option to show or hide user name."
+  },
+  "resetOption": {
+    "message": "Reset display settings",
+    "description": "Explain the option to reset all settings."
+  },
+  "blockRuleInputPlaceHolder": {
+    "message": "New block rule",
+    "description": "Place holder for the input to add new a block rule."
+  },
+  "addBlockRuleButton": {
+    "message": "Add",
+    "description": "Text on the button to add a new block rule."
+  },
+  "Keyword": {
+    "message": "Keyword",
+    "description": "An enum value for one type of block rules."
+  },
+  "RegExp": {
+    "message": "RegExp",
+    "description": "An enum value for one type of block rules."
+  },
+  "submitNewChatButton": {
+    "message": "Fire!",
+    "description": "Text on the button to submit a new chat."
+  },
+  "chatInputPlaceHolder": {
+    "message": "Sign in before posting chats",
+    "description": "Place holder for the input to submit a new chat."
+  },
+  "firstSignInReminder": {
+    "message": "Sign in ",
+    "description": "First part before URL in 'Sign in www.danmage.com with your Chrome/Google account to be able to sync settings across devices and post chats on certain video sites.'."
+  },
+  "secondSignInReminder": {
+    "message": " with your Google account to be able to sync settings across devices and post chats on certain video sites.",
+    "description": "Second part after URL in 'Sign in www.danmage.com with your Chrome/Google account to be able to sync settings across devices and post chats on certain video sites.'"
+  },
+  "signInButton": {
+    "message": "Sign in",
+    "description": "Text on the button to sign in."
+  },
+  "signOutButton": {
+    "message": "Sign out",
+    "description": "Text on the button to sign out."
+  },
+  "welcomeMessage": {
+    "message": "Welcome!",
+    "description": "The message to welcome a signed-in user."
+  },
+  "welcomeWithNameMessage": {
+    "message": "Welcome, ",
+    "description": "The message to welcome a signed-in user with name."
+  },
+  "welcomeWithNameEndingMessage": {
+    "message": "!",
+    "description": "The ending message to welcome a signed in user with name."
+  },
+  "firstExplanation": {
+    "message": "Your settings are being synced via ",
+    "description": "First part before URL in 'Your settings are being synced via www.danmage.com.'"
+  },
+  "secondExplanation": {
+    "message": ".",
+    "description": "Second part after URL in 'Your settings are being synced via www.danmage.com.'"
+  }
+}

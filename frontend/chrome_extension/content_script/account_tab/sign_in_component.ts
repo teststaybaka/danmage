@@ -21,7 +21,9 @@ export class SignInComponent extends EventEmitter {
   }
 
   public static create(): SignInComponent {
-    let button = FillButtonComponent.create(E.text("Sign in"));
+    let button = FillButtonComponent.create(
+      E.text(chrome.i18n.getMessage("signInButton"))
+    );
     return new SignInComponent(
       ...SignInComponent.createView(button),
       ChromeRuntime.create()
@@ -37,9 +39,9 @@ export class SignInComponent extends EventEmitter {
       E.div(
         {
           class: "sign-in-text",
-          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; text-align: center; margin-bottom: 2rem; color: ${ColorScheme.getContent()};`,
+          style: `font-size: 1.4rem; line-height: 140%; font-family: initial !important; text-align: center; margin-bottom: 2rem; color: ${ColorScheme.getContent()};`,
         },
-        E.text("Sign in "),
+        E.text(chrome.i18n.getMessage("firstSignInReminder")),
         E.a(
           {
             class: "sign-in-link",
@@ -49,10 +51,7 @@ export class SignInComponent extends EventEmitter {
           },
           E.text("www.danmage.com")
         ),
-        E.text(
-          " with your Chrome/Google account to be able to sync settings " +
-            "cross devices and post chats on certain video sites."
-        )
+        E.text(chrome.i18n.getMessage("secondSignInReminder"))
       ),
       button.body
     );

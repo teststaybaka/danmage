@@ -1,9 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "DanMage",
-  "description": "Bring chat overlay/bullet comments/danmaku to Twitch, YouTube and Crunchyroll!",
-  "version": "3.3.0",
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDescription__",
+  "version": "3.4.0",
   "icons": { "128": "image/app_icon.png" },
+  "default_locale": "en",
   "background": {
     "scripts": ["background/index.js"]
   },

@@ -1,0 +1,89 @@
+{
+  "extName": {
+    "message": "DanMage - 為多個視頻網站統一提供彈幕功能"
+  },
+  "extDescription": {
+    "message": "目前彈幕功能支持YouTube, Twitch和Crunchyroll。"
+  },
+  "displaySettingsTitle": {
+    "message": "樣式設置"
+  },
+  "blockSettingsTitle": {
+    "message": "屏蔽設置"
+  },
+  "chatTitle": {
+    "message": "評論"
+  },
+  "accountTitle": {
+    "message": "帳號"
+  },
+  "enableScrollingOption": {
+    "message": "開啟/關閉彈幕"
+  },
+  "opacityOption": {
+    "message": "不透明度"
+  },
+  "fontSizeOption": {
+    "message": "字體大小"
+  },
+  "maxNumOption": {
+    "message": "同屏最大彈幕數量"
+  },
+  "speedOption": {
+    "message": "滾動速度"
+  },
+  "fontFamilyOption": {
+    "message": "字體"
+  },
+  "userNameOption": {
+    "message": "顯示/隱藏用戶名"
+  },
+  "resetOption": {
+    "message": "重置樣式設置"
+  },
+  "blockRuleInputPlaceHolder": {
+    "message": "新的屏蔽規則"
+  },
+  "addBlockRuleButton": {
+    "message": "添加"
+  },
+  "Keyword": {
+    "message": "關鍵詞"
+  },
+  "RegExp": {
+    "message": "正則表達式"
+  },
+  "submitNewChatButton": {
+    "message": "發射！"
+  },
+  "chatInputPlaceHolder": {
+    "message": "登入後即可發送彈幕"
+  },
+  "firstSignInReminder": {
+    "message": "使用Google帳號登入 "
+  },
+  "secondSignInReminder": {
+    "message": " 即可在不同設備上同步設置並在特定視頻網站上發送彈幕。"
+  },
+  "signInButton": {
+    "message": "登入"
+  },
+  "signOutButton": {
+    "message": "登出"
+  },
+  "welcomeMessage": {
+    "message": "歡迎！"
+  },
+  "welcomeWithNameMessage": {
+    "message": "歡迎，"
+  },
+  "welcomeWithNameEndingMessage": {
+    "message": "！"
+  },
+  "firstExplanation": {
+    "message": "您的設置正在通過 "
+  },
+  "secondExplanation": {
+    "message": " 同步中。"
+  }
+}

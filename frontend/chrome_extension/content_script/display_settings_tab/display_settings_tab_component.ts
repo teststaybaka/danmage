@@ -45,37 +45,37 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     return new DisplaySettingsTabComponent(
       ...DisplaySettingsTabComponent.createView(
         SwitchCheckboxComponent.create(
-          "Enable/Disable chat scrolling",
+          chrome.i18n.getMessage("enableScrollingOption"),
           ENABLE_CHAT_SCROLLING_DEFAULT,
           displaySettings.enable
         ),
         DragBarComponent.create(
-          "Opacity",
+          chrome.i18n.getMessage("opacityOption"),
           OPACITY_RANGE,
           displaySettings.opacity
         ),
         DragBarComponent.create(
-          "Scale of font size",
+          chrome.i18n.getMessage("fontSizeOption"),
           FONT_SIZE_RANGE,
           displaySettings.fontSize
         ),
         DragBarComponent.create(
-          "Max number of scrolling chats",
+          chrome.i18n.getMessage("maxNumOption"),
           NUM_LIMIT_RANGE,
           displaySettings.numLimit
         ),
         DragBarComponent.create(
-          "Speed for scrolling",
+          chrome.i18n.getMessage("speedOption"),
           SPEED_RANGE,
           displaySettings.speed
         ),
         TextInputComponent.create(
-          "Font family",
+          chrome.i18n.getMessage("fontFamilyOption"),
           FONT_FAMILY_DEFAULT,
           displaySettings.fontFamily
         ),
         SwitchCheckboxComponent.create(
-          "Show/Hide user name",
+          chrome.i18n.getMessage("userNameOption"),
           SHOW_USER_NAME_DEFAULT,
           displaySettings.showUserName
         ),
@@ -116,7 +116,7 @@ export class DisplaySettingsTabComponent extends EventEmitter {
             style: LABEL_STYLE,
             title: "Reset display settings",
           },
-          E.text("Reset display settings")
+          E.text(chrome.i18n.getMessage("resetOption"))
         ),
         E.divRef(
           resetButtonRef,

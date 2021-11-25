@@ -34,14 +34,14 @@ export class BlockEntryComponent extends EventEmitter {
       E.div(
         {
           class: "block-entry-type",
-          style: `font-size: 1.4rem; line-height: 100%; font-family: initial !important; padding-right: .5rem;`,
+          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; padding-right: .5rem;`,
         },
-        E.text(BlockKind[blockPattern.kind])
+        E.text(chrome.i18n.getMessage(BlockKind[blockPattern.kind]))
       ),
       E.div(
         {
           class: "block-entry-content",
-          style: `flex-grow: 1; font-size: 1.4rem; line-height: 100%; font-family: initial !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;`,
+          style: `flex-grow: 1; font-size: 1.4rem; line-height: 120%; font-family: initial !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;`,
           title: blockPattern.content,
         },
         E.text(blockPattern.content)

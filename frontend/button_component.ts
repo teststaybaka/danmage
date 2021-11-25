@@ -5,9 +5,7 @@ import { E } from "@selfage/element/factory";
 
 // !important since some website will override it.
 let COMMON_BUTTON_STYLE =
-  `outline: none; border: 0; background-color: initial; ` +
-  `font-family: initial !important; font-size: 1.4rem; line-height: 100%; ` +
-  `border-radius: .5rem; padding: .8rem 1.2rem; cursor: pointer;`;
+  `outline: none; border: 0; flex: 0 0 auto; background-color: initial; font-family: initial !important; font-size: 1.4rem; line-height: 100%; border-radius: .5rem; padding: .8rem 1.2rem; cursor: pointer;`;
 
 export declare interface FillButtonComponent {
   on(

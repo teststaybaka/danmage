@@ -49,7 +49,9 @@ export class BlockSettingsTabComponent extends EventEmitter {
     let views = BlockSettingsTabComponent.createView(
       BlockOptionEntryComponent.create(BlockKind.Keyword),
       BlockOptionEntryComponent.create(BlockKind.RegExp),
-      FillButtonComponent.create(E.text("Add"))
+      FillButtonComponent.create(
+        E.text(chrome.i18n.getMessage("addBlockRuleButton"))
+      )
     );
     return new BlockSettingsTabComponent(
       ...views,
@@ -85,7 +87,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
           optionContainerRef,
           {
             class: "block-settings-tab-option-container",
-            style: `flex-grow: 1; position: relative; cursor: pointer; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
+            style: `flex: 0 0 auto; position: relative; cursor: pointer; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
           },
           E.divRef(
             optionSelectedRef,
@@ -96,7 +98,7 @@ export class BlockSettingsTabComponent extends EventEmitter {
             E.div(
               {
                 class: "block-settings-tab-option-selected-text",
-                style: `flex-grow: 1; padding: .8rem 0; font-size: 1.4rem; line-height: 100%; font-family: initial !important;`,
+                style: `padding: .8rem .4rem .8rem 0; font-size: 1.4rem; line-height: 100%; font-family: initial !important;`,
               },
               E.textRef(optionSelectedTextRef)
             ),
@@ -117,8 +119,8 @@ export class BlockSettingsTabComponent extends EventEmitter {
         ),
         E.inputRef(patternInputRef, {
           class: "block-settings-tab-pattern-input",
-          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 3; margin: 0 1rem; line-height: 3rem; font-size: 1.4rem; font-family: initial !important; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
-          placeHolder: "New block rule",
+          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin: 0 1rem; line-height: 3rem; font-size: 1.4rem; font-family: initial !important; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
+          placeHolder: chrome.i18n.getMessage("blockRuleInputPlaceHolder"),
         }),
         submitButton.body
       ),
@@ -172,7 +174,9 @@ export class BlockSettingsTabComponent extends EventEmitter {
 
   private selectOption(kind: BlockKind): void {
     this.selectedBlockKind = kind;
-    this.optionSelectedText.textContent = BlockKind[kind];
+    this.optionSelectedText.textContent = chrome.i18n.getMessage(
+      BlockKind[kind]
+    );
     this.optionList.style.display = "none";
   }
 

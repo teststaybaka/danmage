@@ -8,6 +8,10 @@
   }],
   "extraAssets": [
     "./manifest.json",
-    "./image/app_icon.png"
+    "./image/app_icon.png",
+    "./_locales/en/messages.json",
+    "./_locales/ja/messages.json",
+    "./_locales/zh_CN/messages.json",
+    "./_locales/zh_TW/messages.json"
   ]
 }

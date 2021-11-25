@@ -183,7 +183,7 @@ export class ControlPanelComponent extends EventEmitter {
       ControlPanelComponent.createTabHead(
         accountTabHeadRef,
         accountTabButtonRef,
-        "Account",
+        chrome.i18n.getMessage("accountTitle"),
         `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`
       )
     );
@@ -192,7 +192,7 @@ export class ControlPanelComponent extends EventEmitter {
         ControlPanelComponent.createTabHead(
           chatListTabHeadRef,
           chatListTabButtonRef,
-          "Chat",
+          chrome.i18n.getMessage("chatTitle"),
           `M0 0 L50 0 L50 50 L0 50 z  M0 75 L50 75 L50 125 L0 125 z  M0 150 L50 150 L50 200 L0 200 z  M75 0 L200 0 L200 50 L75 50 z  M75 75 L200 75 L200 125 L75 125 z  M75 150 L200 150 L200 200 L75 200 z`
         )
       );
@@ -201,13 +201,13 @@ export class ControlPanelComponent extends EventEmitter {
       ControlPanelComponent.createTabHead(
         displaySettingsTabHeadRef,
         displaySettingsTabButtonRef,
-        "Display settings",
+        chrome.i18n.getMessage("displaySettingsTitle"),
         `M83 0 L117 0 L117 29 A73 73 0 0 1 138 38 L159 17 L183 41 L162 62 A73 73 0 0 1 171 83 L200 83 L200 117 L171 117 A73 73 0 0 1 162 138 L183 158 L159 183 L138 162 A73 73 0 0 1 117 171 L117 200 L83 200 L83 171 A73 73 0 0 1 62 162 L41 183 L17 159 L38 138 A73 73 0 0 1 29 117 L0 117 L0 83 L29 83 A73 73 0 0 1 38 62 L17 41 L41 17 L63 38 A73 73 0 0 1 83 29 z  M100 60 A40 40 0 0 0 100 140 A40 40 0 0 0 100 60 z`
       ),
       ControlPanelComponent.createTabHead(
         blockSettingsTabHeadRef,
         blockSettingsTabButtonRef,
-        "Block settings",
+        chrome.i18n.getMessage("blockSettingsTitle"),
         `M100 0 A100 100 0 0 1 100 200 A100 100 0 0 1 100 0 z  M159 138 A70 70 0 0 0 62 41 z  M41 62 A70 70 0 0 0 138 159 z`
       )
     );
@@ -249,7 +249,7 @@ export class ControlPanelComponent extends EventEmitter {
         controlPanelPopupRef,
         {
           class: "control-panel-control-panel-popup",
-          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 28rem; height: 38rem; padding: .3rem; box-sizing: content-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 0.1rem 0.1rem 0.3rem ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
+          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 30rem; height: 38rem; padding: .3rem; box-sizing: content-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 0.1rem 0.1rem 0.3rem ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
         },
         E.divRef(
           tabHeadLineRef,

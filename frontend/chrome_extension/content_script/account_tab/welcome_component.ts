@@ -33,7 +33,9 @@ export class WelcomeComponent extends EventEmitter {
   public static create(): WelcomeComponent {
     return new WelcomeComponent(
       ...WelcomeComponent.createView(
-        FillButtonComponent.create(E.text("Sign out"))
+        FillButtonComponent.create(
+          E.text(chrome.i18n.getMessage("signOutButton"))
+        )
       ),
       ChromeRuntime.create(),
       SERVICE_CLIENT
@@ -50,16 +52,16 @@ export class WelcomeComponent extends EventEmitter {
       E.div(
         {
           class: "welcome-text",
-          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()}; text-align: center;`,
+          style: `font-size: 1.4rem; line-height: 140%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()}; text-align: center;`,
         },
         E.textRef(welcomeTextRef)
       ),
       E.div(
         {
           class: "welcome-promo",
-          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()}; text-align: center;`,
+          style: `font-size: 1.4rem; line-height: 140%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()}; text-align: center;`,
         },
-        E.text("Your settings are being synced via "),
+        E.text(chrome.i18n.getMessage("firstExplanation")),
         E.a(
           {
             class: "weclome-promo-link",
@@ -69,7 +71,7 @@ export class WelcomeComponent extends EventEmitter {
           },
           E.text("www.danmage.com")
         ),
-        E.text(".")
+        E.text(chrome.i18n.getMessage("secondExplanation"))
       ),
       signOutButton.body
     );
@@ -90,13 +92,16 @@ export class WelcomeComponent extends EventEmitter {
 
   public async show(): Promise<void> {
     this.body.style.display = this.displayStyle;
-    this.welcomeText.textContent = "Welcome!";
+    this.welcomeText.textContent = chrome.i18n.getMessage("welcomeMessage");
     let response = await this.serviceClient.fetchAuthed<
       GetUserRequest,
       GetUserResponse
     >({}, GET_USER);
     if (response.user.nickname) {
-      this.welcomeText.textContent = `Welcome, ${response.user.nickname}!`;
+      this.welcomeText.textContent =
+        chrome.i18n.getMessage("welcomeWithNameMessage") +
+        response.user.nickname +
+        chrome.i18n.getMessage("welcomeWithNameEndingMessage");
     }
   }
 
