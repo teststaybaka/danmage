@@ -7,6 +7,9 @@
     }, {
       "name": "Crunchyroll",
       "value": 2
+    }, {
+      "name": "Netflix",
+      "value": 3
     }]
   }
 }, {

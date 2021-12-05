@@ -3,6 +3,7 @@ import { EnumDescriptor, MessageDescriptor, PrimitiveType } from '@selfage/messa
 export enum HostApp {
   YouTube = 1,
   Crunchyroll = 2,
+  Netflix = 3,
 }
 
 export let HOST_APP: EnumDescriptor<HostApp> = {
@@ -15,6 +16,10 @@ export let HOST_APP: EnumDescriptor<HostApp> = {
     {
       name: 'Crunchyroll',
       value: 2,
+    },
+    {
+      name: 'Netflix',
+      value: 3,
     },
   ]
 }
