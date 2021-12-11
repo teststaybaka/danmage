@@ -1,19 +1,19 @@
 import { EnumDescriptor, MessageDescriptor, PrimitiveType } from '@selfage/message/descriptor';
 
 export enum BlockKind {
-  Keyword = 1,
-  RegExp = 3,
+  KeywordBlockKind = 1,
+  RegExpBlockKind = 3,
 }
 
 export let BLOCK_KIND: EnumDescriptor<BlockKind> = {
   name: 'BlockKind',
   values: [
     {
-      name: 'Keyword',
+      name: 'KeywordBlockKind',
       value: 1,
     },
     {
-      name: 'RegExp',
+      name: 'RegExpBlockKind',
       value: 3,
     },
   ]
@@ -61,6 +61,25 @@ export let BLOCK_SETTINGS: MessageDescriptor<BlockSettings> = {
   ]
 };
 
+export enum DistributionStyle {
+  RandomDistributionStyle = 1,
+  TopDownDistributionStyle = 2,
+}
+
+export let DISTRIBUTION_STYLE: EnumDescriptor<DistributionStyle> = {
+  name: 'DistributionStyle',
+  values: [
+    {
+      name: 'RandomDistributionStyle',
+      value: 1,
+    },
+    {
+      name: 'TopDownDistributionStyle',
+      value: 2,
+    },
+  ]
+}
+
 export interface DisplaySettings {
   enable?: boolean,
   speed?: number,
@@ -69,6 +88,9 @@ export interface DisplaySettings {
   numLimit?: number,
   fontFamily?: string,
   showUserName?: boolean,
+  topMargin?: number,
+  bottomMargin?: number,
+  distributionStyle?: DistributionStyle,
 }
 
 export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
@@ -104,6 +126,18 @@ export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
     {
       name: 'showUserName',
       primitiveType: PrimitiveType.BOOLEAN,
+    },
+    {
+      name: 'topMargin',
+      primitiveType: PrimitiveType.NUMBER,
+    },
+    {
+      name: 'bottomMargin',
+      primitiveType: PrimitiveType.NUMBER,
+    },
+    {
+      name: 'distributionStyle',
+      enumDescriptor: DISTRIBUTION_STYLE,
     },
   ]
 };

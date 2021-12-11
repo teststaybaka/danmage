@@ -2,10 +2,10 @@
   "enum": {
     "name": "BlockKind",
     "values": [{
-      "name": "Keyword",
+      "name": "KeywordBlockKind",
       "value": 1
     }, {
-      "name": "RegExp",
+      "name": "RegExpBlockKind",
       "value": 3
     }]
   }
@@ -27,6 +27,17 @@
       "name": "blockPatterns",
       "type": "BlockPattern",
       "isArray": true
+    }]
+  }
+}, {
+  "enum": {
+    "name": "DistributionStyle",
+    "values": [{
+      "name": "RandomDistributionStyle",
+      "value": 1
+    }, {
+      "name": "TopDownDistributionStyle",
+      "value": 2
     }]
   }
 }, {
@@ -53,6 +64,15 @@
     }, {
       "name": "showUserName",
       "type": "boolean"
+    }, {
+      "name": "topMargin",
+      "type": "number"
+    }, {
+      "name": "bottomMargin",
+      "type": "number"
+    }, {
+      "name": "distributionStyle",
+      "type": "DistributionStyle"
     }]
   }
 }, {
