@@ -1,8 +1,8 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { CLASSIC_COLOR_SCHEME, ColorScheme } from "../../color_scheme";
 import { BodyRefresher } from "./body_refresher";
+import { SERVICE_CLIENT } from "./common/service_client";
 import { PlayerSettingsStorage } from "./player_settings_storage";
-import { SERVICE_CLIENT } from "./service_client";
 import "../../../environment";
 
 async function main(): Promise<void> {

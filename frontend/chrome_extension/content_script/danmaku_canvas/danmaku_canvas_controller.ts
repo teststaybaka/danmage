@@ -1,6 +1,6 @@
 import { ChatEntry } from "../../../../interface/chat_entry";
 import { PlayerSettings } from "../../../../interface/player_settings";
-import { LinkedList, LinkedNode } from "../linked_list";
+import { LinkedList, LinkedNode } from "../common/linked_list";
 import { DanmakuElementComponent } from "./danmaku_element_component";
 
 export class DanmakuCanvasController {
@@ -152,7 +152,11 @@ export class DanmakuCanvasController {
     this.tryStartPlaying(danmakuElementComponent);
   }
 
-  private findPosYDownward(posY: number, score: number, elementHeight: number): number {
+  private findPosYDownward(
+    posY: number,
+    score: number,
+    elementHeight: number
+  ): number {
     while (score > 0 && posY < this.canvasHeight - elementHeight) {
       posY++;
       score -= this.occupied[posY - 1];

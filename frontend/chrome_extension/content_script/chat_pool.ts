@@ -1,6 +1,6 @@
 import { ChatEntry } from "../../../interface/chat_entry";
 import { BlockSettings } from "../../../interface/player_settings";
-import { BlockPatternTester } from "./block_pattern_tester";
+import { BlockPatternTester } from "./common/block_pattern_tester";
 
 export interface ChatPool {
   fill: (chatEntries: Array<ChatEntry>) => void;

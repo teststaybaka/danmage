@@ -2,9 +2,9 @@ import {
   BackgroundRequest,
   GET_SESSION_RESPONSE,
 } from "../../interface/background_service";
-import { ChromeRuntime } from "../chrome_runtime";
-import { TAB_SIDE_PADDING } from "../common";
-import { SERVICE_CLIENT } from "../service_client";
+import { ChromeRuntime } from "../common/chrome_runtime";
+import { SERVICE_CLIENT } from "../common/service_client";
+import { TAB_SIDE_PADDING } from "../common/styles";
 import { SignInComponent } from "./sign_in_component";
 import { WelcomeComponent } from "./welcome_component";
 import { E } from "@selfage/element/factory";

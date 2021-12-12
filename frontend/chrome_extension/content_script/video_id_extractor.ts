@@ -2,7 +2,7 @@ import {
   BackgroundRequest,
   GET_URL_RESPONSE,
 } from "../interface/background_service";
-import { ChromeRuntime } from "./chrome_runtime";
+import { ChromeRuntime } from "./common/chrome_runtime";
 import { parseMessage } from "@selfage/message/parser";
 
 export interface VideoIdExtractor {

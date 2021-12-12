@@ -14,6 +14,8 @@ import {
   TwitchChatPool,
   YouTubeChatPool,
 } from "./chat_pool";
+import { GlobalDocuments } from "./common/global_documents";
+import { SERVICE_CLIENT } from "./common/service_client";
 import { ControlPanelComponent } from "./control_panel_component";
 import {
   ControlPanelDocker,
@@ -21,8 +23,6 @@ import {
   ControlPanelPeriodicPrepender,
 } from "./control_panel_docker";
 import { DanmakuCanvasController } from "./danmaku_canvas/danmaku_canvas_controller";
-import { GlobalDocuments } from "./global_documents";
-import { SERVICE_CLIENT } from "./service_client";
 import {
   CrunchyrollVideoIdExtractor,
   NoopVideoIdExtractor,

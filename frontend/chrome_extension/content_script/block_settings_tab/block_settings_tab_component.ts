@@ -6,9 +6,9 @@ import {
 } from "../../../../interface/player_settings";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
-import { TAB_SIDE_PADDING } from "../common";
+import { CustomTextInputController } from "../common/custom_text_input_controller";
 import { DropdownListComponent } from "../common/dropdown_list_component";
-import { CustomTextInputController } from "../custom_text_input_controller";
+import { TAB_SIDE_PADDING } from "../common/styles";
 import { BlockEntryComponent } from "./block_entry_component";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";

@@ -1,6 +1,6 @@
 import { ChatEntry } from "../../../interface/chat_entry";
 import { StructuredChatPool } from "./chat_pool";
-import { MockBlockPatternTester } from "./mocks";
+import { MockBlockPatternTester } from "./common/mocks";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 

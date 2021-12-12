@@ -4,7 +4,7 @@ import {
   DisplaySettings,
   PlayerSettings,
 } from "../../../../interface/player_settings";
-import { BlockPatternTester } from "../block_pattern_tester";
+import { BlockPatternTester } from "../common/block_pattern_tester";
 import {
   DanmakuElementContentBuilder,
   StructuredContentBuilder,

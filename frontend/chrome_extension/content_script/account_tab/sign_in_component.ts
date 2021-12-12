@@ -2,7 +2,7 @@ import EventEmitter = require("events");
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
 import { BackgroundRequest } from "../../interface/background_service";
-import { ChromeRuntime } from "../chrome_runtime";
+import { ChromeRuntime } from "../common/chrome_runtime";
 import { E } from "@selfage/element/factory";
 
 export interface SignInComponent {

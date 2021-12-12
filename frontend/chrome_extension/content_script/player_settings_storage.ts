@@ -14,7 +14,7 @@ import {
   BackgroundRequest,
   READ_PLAYER_SETTINGS_RESPONSE,
 } from "../interface/background_service";
-import { ChromeRuntime } from "./chrome_runtime";
+import { ChromeRuntime } from "./common/chrome_runtime";
 import {
   BOTTOM_MARGIN_RANGE,
   DISTRIBUTION_STYLE_DEFAULT,
@@ -26,8 +26,8 @@ import {
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
   TOP_MARGIN_RANGE,
-} from "./common";
-import { SERVICE_CLIENT } from "./service_client";
+} from "./common/defaults";
+import { SERVICE_CLIENT } from "./common/service_client";
 import { parseMessage } from "@selfage/message/parser";
 import { ServiceClient } from "@selfage/service_client";
 

@@ -1,4 +1,4 @@
-import { DistributionStyle } from "../../../interface/player_settings";
+import { DistributionStyle } from "../../../../interface/player_settings";
 import { NumberRange } from "./number_range";
 
 export let SPEED_RANGE = new NumberRange(500, 100, 200);
@@ -12,5 +12,3 @@ export let ENABLE_CHAT_SCROLLING_DEFAULT = true;
 export let SHOW_USER_NAME_DEFAULT = false;
 export let DISTRIBUTION_STYLE_DEFAULT =
   DistributionStyle.RandomDistributionStyle;
-
-export let TAB_SIDE_PADDING = `1rem`

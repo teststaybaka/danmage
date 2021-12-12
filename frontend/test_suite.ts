@@ -1,9 +1,9 @@
 import "./button_component_test";
-import "./chrome_extension/content_script/block_pattern_tester_test";
 import "./chrome_extension/content_script/chat_pool_test";
+import "./chrome_extension/content_script/common/block_pattern_tester_test";
+import "./chrome_extension/content_script/common/linked_list_test";
 import "./chrome_extension/content_script/danmaku_canvas/danmaku_canvas_controller_test";
 import "./chrome_extension/content_script/danmaku_canvas/danmaku_element_component_test";
-import "./chrome_extension/content_script/linked_list_test";
 import "./web/main/body_component_test";
 import "./web/main/browser_history_pusher_test";
 import "./web/main/feedback_component_test";

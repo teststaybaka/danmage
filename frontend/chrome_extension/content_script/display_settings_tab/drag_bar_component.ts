@@ -1,12 +1,12 @@
 import EventEmitter = require("events");
 import { ColorScheme } from "../../../color_scheme";
-import { CustomTextInputController } from "../custom_text_input_controller";
-import { NumberRange } from "../number_range";
+import { CustomTextInputController } from "../common/custom_text_input_controller";
+import { NumberRange } from "../common/number_range";
 import {
   ENTRY_PADDING_TOP_STYLE,
   LABEL_STYLE,
   TEXT_INPUT_STYLE,
-} from "./common";
+} from "./styles";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 

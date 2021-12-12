@@ -1,6 +1,6 @@
 import { PlayerSettings } from "../../../interface/player_settings";
 import { BodyController } from "./body_controller";
-import { GlobalDocuments } from "./global_documents";
+import { GlobalDocuments } from "./common/global_documents";
 
 export interface BodyAssembler {
   queryElements: () => Element[];

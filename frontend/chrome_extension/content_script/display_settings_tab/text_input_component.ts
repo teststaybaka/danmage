@@ -1,10 +1,10 @@
 import EventEmitter = require("events");
-import { CustomTextInputController } from "../custom_text_input_controller";
+import { CustomTextInputController } from "../common/custom_text_input_controller";
 import {
   ENTRY_PADDING_TOP_STYLE,
   LABEL_STYLE,
   TEXT_INPUT_STYLE,
-} from "./common";
+} from "./styles";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 

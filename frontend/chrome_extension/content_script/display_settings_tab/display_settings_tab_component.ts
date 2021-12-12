@@ -14,12 +14,12 @@ import {
   OPACITY_RANGE,
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
-  TAB_SIDE_PADDING,
   TOP_MARGIN_RANGE,
-} from "../common";
-import { ENTRY_PADDING_TOP_STYLE, INPUT_WIDTH, LABEL_STYLE } from "./common";
+} from "../common/defaults";
+import { TAB_SIDE_PADDING } from "../common/styles";
 import { DragBarComponent } from "./drag_bar_component";
 import { DropdownComponent } from "./dropdown_component";
+import { ENTRY_PADDING_TOP_STYLE, INPUT_WIDTH, LABEL_STYLE } from "./styles";
 import { SwitchCheckboxComponent } from "./switch_checkbox_component";
 import { TextInputComponent } from "./text_input_component";
 import { E } from "@selfage/element/factory";

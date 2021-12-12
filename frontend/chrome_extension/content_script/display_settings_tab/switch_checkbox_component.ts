@@ -4,7 +4,7 @@ import {
   ENTRY_PADDING_TOP_STYLE,
   INPUT_WIDTH_STYLE,
   LABEL_STYLE,
-} from "./common";
+} from "./styles";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 

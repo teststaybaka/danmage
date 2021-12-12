@@ -1,7 +1,7 @@
 import {
   BackgroundRequest,
   GET_SESSION_RESPONSE,
-} from "../interface/background_service";
+} from "../../interface/background_service";
 import { ChromeRuntime } from "./chrome_runtime";
 import { parseMessage } from "@selfage/message/parser";
 import { SessionStorage } from "@selfage/service_client/session_storage";

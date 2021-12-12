@@ -1,5 +1,5 @@
-import { ChatEntry } from "../../../interface/chat_entry";
-import { BlockKind, BlockSettings } from "../../../interface/player_settings";
+import { ChatEntry } from "../../../../interface/chat_entry";
+import { BlockKind, BlockSettings } from "../../../../interface/player_settings";
 
 export interface ContentExtractor {
   extract: (content: string) => string;

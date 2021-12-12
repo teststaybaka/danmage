@@ -3,7 +3,7 @@ import {
   DropdownListComponent,
   OptionEntry,
 } from "../common/dropdown_list_component";
-import { ENTRY_PADDING_TOP_STYLE, LABEL_STYLE } from "./common";
+import { ENTRY_PADDING_TOP_STYLE, LABEL_STYLE } from "./styles";
 import { E } from "@selfage/element/factory";
 
 export interface DropdownComponent<T> {
