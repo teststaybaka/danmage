@@ -3,6 +3,7 @@ import {
   GET_SESSION_RESPONSE,
 } from "../../interface/background_service";
 import { ChromeRuntime } from "../chrome_runtime";
+import { TAB_SIDE_PADDING } from "../common";
 import { SERVICE_CLIENT } from "../service_client";
 import { SignInComponent } from "./sign_in_component";
 import { WelcomeComponent } from "./welcome_component";
@@ -35,7 +36,10 @@ export class AccountTabComponent {
     welcomeComponent: WelcomeComponent
   ) {
     let body = E.div(
-      { class: "account-tab", style: `width: 100%; height: 100%;` },
+      {
+        class: "account-tab",
+        style: `padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%; height: 100%;`,
+      },
       signInComponent.body,
       welcomeComponent.body
     );

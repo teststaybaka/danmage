@@ -44,9 +44,6 @@
   "message": {
     "name": "DisplaySettings",
     "fields": [{
-      "name": "enable",
-      "type": "boolean"
-    }, {
       "name": "speed",
       "type": "number"
     }, {
@@ -59,17 +56,20 @@
       "name": "numLimit",
       "type": "number"
     }, {
-      "name": "fontFamily",
-      "type": "string"
-    }, {
-      "name": "showUserName",
-      "type": "boolean"
-    }, {
       "name": "topMargin",
       "type": "number"
     }, {
       "name": "bottomMargin",
       "type": "number"
+    }, {
+      "name": "fontFamily",
+      "type": "string"
+    }, {
+      "name": "enable",
+      "type": "boolean"
+    }, {
+      "name": "showUserName",
+      "type": "boolean"
     }, {
       "name": "distributionStyle",
       "type": "DistributionStyle"

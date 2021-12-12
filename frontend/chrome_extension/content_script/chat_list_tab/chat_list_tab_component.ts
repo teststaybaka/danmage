@@ -3,6 +3,7 @@ import { ChatEntry } from "../../../../interface/chat_entry";
 import { BlockSettings } from "../../../../interface/player_settings";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
+import { TAB_SIDE_PADDING } from "../common";
 import { CustomTextInputController } from "../custom_text_input_controller";
 import { LinkedList } from "../linked_list";
 import { ChatListEntryComponent } from "./chat_list_entry_component";
@@ -62,17 +63,17 @@ export class ChatListTabComponent extends EventEmitter {
       E.div(
         {
           class: "chat-list-tab-entry-list-container",
-          style: `flex-grow: 1; width: 100%; position: relative;`,
+          style: `flex-grow: 1; position: relative;`,
         },
         E.divRef(entryListRef, {
           class: "chat-list-tab-entry-list",
-          style: `position: absolute; bottom: 0; max-height: 100%; width: 100%; overflow: auto;`,
+          style: `position: absolute; bottom: 0; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%; max-height: 100%; overflow-y: auto;`,
         })
       ),
       E.div(
         {
           class: "chat-list-tab-fire-form",
-          style: `display: flex; flex-flow: row nowrap; align-items: center; width: 100%;`,
+          style: `display: flex; flex-flow: row nowrap; align-items: center;  padding: 0 ${TAB_SIDE_PADDING};`,
         },
         E.inputRef(chatInputRef, {
           class: "chat-list-tab-input",

@@ -1,7 +1,7 @@
 import EventEmitter = require("events");
 import { ColorScheme } from "../../../color_scheme";
 import {
-  ENTRY_MARGIN_TOP_STYLE,
+  ENTRY_PADDING_TOP_STYLE,
   INPUT_WIDTH_STYLE,
   LABEL_STYLE,
 } from "./common";
@@ -48,7 +48,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
     let body = E.div(
       {
         class: "switch-checkbox-container",
-        style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_MARGIN_TOP_STYLE}`,
+        style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_PADDING_TOP_STYLE}`,
       },
       E.div(
         { class: "switch-checkbox-label", style: LABEL_STYLE, title: label },

@@ -3,7 +3,7 @@ import { ColorScheme } from "../../../color_scheme";
 import { CustomTextInputController } from "../custom_text_input_controller";
 import { NumberRange } from "../number_range";
 import {
-  ENTRY_MARGIN_TOP_STYLE,
+  ENTRY_PADDING_TOP_STYLE,
   LABEL_STYLE,
   TEXT_INPUT_STYLE,
 } from "./common";
@@ -48,7 +48,7 @@ export class DragBarComponent extends EventEmitter {
     let barWrapperRef = new Ref<HTMLDivElement>();
     let cursorRef = new Ref<HTMLDivElement>();
     let body = E.div(
-      { class: "drab-bar-container", style: ENTRY_MARGIN_TOP_STYLE },
+      { class: "drab-bar-container", style: ENTRY_PADDING_TOP_STYLE },
       E.div(
         {
           class: "drag-bar-input-line",

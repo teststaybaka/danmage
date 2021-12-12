@@ -81,15 +81,15 @@ export let DISTRIBUTION_STYLE: EnumDescriptor<DistributionStyle> = {
 }
 
 export interface DisplaySettings {
-  enable?: boolean,
   speed?: number,
   opacity?: number,
   fontSize?: number,
   numLimit?: number,
-  fontFamily?: string,
-  showUserName?: boolean,
   topMargin?: number,
   bottomMargin?: number,
+  fontFamily?: string,
+  enable?: boolean,
+  showUserName?: boolean,
   distributionStyle?: DistributionStyle,
 }
 
@@ -99,10 +99,6 @@ export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
     return new Object();
   },
   fields: [
-    {
-      name: 'enable',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
     {
       name: 'speed',
       primitiveType: PrimitiveType.NUMBER,
@@ -120,20 +116,24 @@ export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
       primitiveType: PrimitiveType.NUMBER,
     },
     {
-      name: 'fontFamily',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'showUserName',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-    {
       name: 'topMargin',
       primitiveType: PrimitiveType.NUMBER,
     },
     {
       name: 'bottomMargin',
       primitiveType: PrimitiveType.NUMBER,
+    },
+    {
+      name: 'fontFamily',
+      primitiveType: PrimitiveType.STRING,
+    },
+    {
+      name: 'enable',
+      primitiveType: PrimitiveType.BOOLEAN,
+    },
+    {
+      name: 'showUserName',
+      primitiveType: PrimitiveType.BOOLEAN,
     },
     {
       name: 'distributionStyle',

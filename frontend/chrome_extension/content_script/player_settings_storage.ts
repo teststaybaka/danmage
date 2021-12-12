@@ -16,6 +16,8 @@ import {
 } from "../interface/background_service";
 import { ChromeRuntime } from "./chrome_runtime";
 import {
+  BOTTOM_MARGIN_RANGE,
+  DISTRIBUTION_STYLE_DEFAULT,
   ENABLE_CHAT_SCROLLING_DEFAULT,
   FONT_FAMILY_DEFAULT,
   FONT_SIZE_RANGE,
@@ -23,6 +25,7 @@ import {
   OPACITY_RANGE,
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
+  TOP_MARGIN_RANGE,
 } from "./common";
 import { SERVICE_CLIENT } from "./service_client";
 import { parseMessage } from "@selfage/message/parser";
@@ -90,6 +93,12 @@ export class PlayerSettingsStorage {
     displaySettings.numLimit = NUM_LIMIT_RANGE.getValidValueWithDefault(
       displaySettings.numLimit
     );
+    displaySettings.topMargin = TOP_MARGIN_RANGE.getValidValueWithDefault(
+      displaySettings.topMargin
+    );
+    displaySettings.bottomMargin = BOTTOM_MARGIN_RANGE.getValidValueWithDefault(
+      displaySettings.bottomMargin
+    );
     if (!displaySettings.fontFamily) {
       displaySettings.fontFamily = FONT_FAMILY_DEFAULT;
     }
@@ -98,6 +107,9 @@ export class PlayerSettingsStorage {
     }
     if (displaySettings.enable === undefined) {
       displaySettings.enable = ENABLE_CHAT_SCROLLING_DEFAULT;
+    }
+    if (displaySettings.distributionStyle === undefined) {
+      displaySettings.distributionStyle = DISTRIBUTION_STYLE_DEFAULT;
     }
 
     if (!playerSettings.blockSettings) {

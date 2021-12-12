@@ -4,7 +4,7 @@
     "description": "Extension name."
   },
   "extDescription": {
-    "message": "Bring NicoNico-style chat/scrolling chat/danmaku/bullet comments/chat overlay to Twitch, YouTube and Crunchyroll!",
+    "message": "Bring NicoNico-style chat to Twitch, YouTube and Crunchyroll!",
     "description": "Extension description."
   },
   "displaySettingsTitle": {
@@ -23,12 +23,8 @@
     "message": "Account",
     "description": "Tab title for account-related info."
   },
-  "enableScrollingOption": {
-    "message": "Enable/Disable chat scrolling",
-    "description": "Explain the option to enable or disable chat scrolling."
-  },
   "opacityOption": {
-    "message": "Opacity",
+    "message": "Opacity - percentage",
     "description": "Explain the option to adjust danmaku opacity."
   },
   "fontSizeOption": {
@@ -43,13 +39,37 @@
     "message": "Speed for scrolling",
     "description": "Explain the option to adjusst the speed for scrolling chats."
   },
+  "topMarginOption": {
+    "message": "Top margin - percentage",
+    "description": "Explain the option to add top margins."
+  },
+  "bottomMarginOption": {
+    "message": "Bottom margin - percentage",
+    "description": "Explain the option to add bottom margins."
+  },
   "fontFamilyOption": {
     "message": "Font family",
     "description": "Explain the option to set font family."
   },
+  "enableScrollingOption": {
+    "message": "Enable/Disable chat scrolling",
+    "description": "Explain the option to enable or disable chat scrolling."
+  },
   "userNameOption": {
     "message": "Show/Hide user name",
     "description": "Explain the option to show or hide user name."
+  },
+  "distributionStyleOption": {
+    "message": "Method to distribute chats",
+    "description": "Explain the option to choose distribution style."
+  },
+  "RandomDistributionStyle": {
+    "message": "Random",
+    "description": "An enum value for one distribution style."
+  },
+  "TopDownDistributionStyle": {
+    "message": "Top down",
+    "description": "An enum value for one distribution style."
   },
   "resetOption": {
     "message": "Reset display settings",
@@ -63,11 +83,11 @@
     "message": "Add",
     "description": "Text on the button to add a new block rule."
   },
-  "Keyword": {
+  "KeywordBlockKind": {
     "message": "Keyword",
     "description": "An enum value for one type of block rules."
   },
-  "RegExp": {
+  "RegExpBlockKind": {
     "message": "RegExp",
     "description": "An enum value for one type of block rules."
   },

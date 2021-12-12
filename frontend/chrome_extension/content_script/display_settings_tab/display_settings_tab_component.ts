@@ -1,7 +1,12 @@
 import EventEmitter = require("events");
-import { DisplaySettings } from "../../../../interface/player_settings";
+import {
+  DisplaySettings,
+  DistributionStyle,
+} from "../../../../interface/player_settings";
 import { ColorScheme } from "../../../color_scheme";
 import {
+  BOTTOM_MARGIN_RANGE,
+  DISTRIBUTION_STYLE_DEFAULT,
   ENABLE_CHAT_SCROLLING_DEFAULT,
   FONT_FAMILY_DEFAULT,
   FONT_SIZE_RANGE,
@@ -9,9 +14,12 @@ import {
   OPACITY_RANGE,
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
+  TAB_SIDE_PADDING,
+  TOP_MARGIN_RANGE,
 } from "../common";
-import { ENTRY_MARGIN_TOP_STYLE, INPUT_WIDTH, LABEL_STYLE } from "./common";
+import { ENTRY_PADDING_TOP_STYLE, INPUT_WIDTH, LABEL_STYLE } from "./common";
 import { DragBarComponent } from "./drag_bar_component";
+import { DropdownComponent } from "./dropdown_component";
 import { SwitchCheckboxComponent } from "./switch_checkbox_component";
 import { TextInputComponent } from "./text_input_component";
 import { E } from "@selfage/element/factory";
@@ -26,13 +34,16 @@ export class DisplaySettingsTabComponent extends EventEmitter {
 
   public constructor(
     public body: HTMLDivElement,
-    private enableComponent: SwitchCheckboxComponent,
     private opacityComponent: DragBarComponent,
     private fontSizeComponent: DragBarComponent,
     private numLimitComponent: DragBarComponent,
     private speedComponent: DragBarComponent,
+    private topMarginComponent: DragBarComponent,
+    private bottomMarginComponent: DragBarComponent,
     private fontFamilyComponent: TextInputComponent,
+    private enableComponent: SwitchCheckboxComponent,
     private showUserNameComponent: SwitchCheckboxComponent,
+    private distributionStyleComponent: DropdownComponent<DistributionStyle>,
     private resetButton: HTMLDivElement,
     private displaySettings: DisplaySettings
   ) {
@@ -44,11 +55,6 @@ export class DisplaySettingsTabComponent extends EventEmitter {
   ): DisplaySettingsTabComponent {
     return new DisplaySettingsTabComponent(
       ...DisplaySettingsTabComponent.createView(
-        SwitchCheckboxComponent.create(
-          chrome.i18n.getMessage("enableScrollingOption"),
-          ENABLE_CHAT_SCROLLING_DEFAULT,
-          displaySettings.enable
-        ),
         DragBarComponent.create(
           chrome.i18n.getMessage("opacityOption"),
           OPACITY_RANGE,
@@ -69,52 +75,103 @@ export class DisplaySettingsTabComponent extends EventEmitter {
           SPEED_RANGE,
           displaySettings.speed
         ),
+        DragBarComponent.create(
+          chrome.i18n.getMessage("topMarginOption"),
+          TOP_MARGIN_RANGE,
+          displaySettings.topMargin
+        ),
+        DragBarComponent.create(
+          chrome.i18n.getMessage("bottomMarginOption"),
+          BOTTOM_MARGIN_RANGE,
+          displaySettings.bottomMargin
+        ),
         TextInputComponent.create(
           chrome.i18n.getMessage("fontFamilyOption"),
           FONT_FAMILY_DEFAULT,
           displaySettings.fontFamily
         ),
         SwitchCheckboxComponent.create(
+          chrome.i18n.getMessage("enableScrollingOption"),
+          ENABLE_CHAT_SCROLLING_DEFAULT,
+          displaySettings.enable
+        ),
+        SwitchCheckboxComponent.create(
           chrome.i18n.getMessage("userNameOption"),
           SHOW_USER_NAME_DEFAULT,
           displaySettings.showUserName
         ),
-        displaySettings
+        DropdownComponent.create(
+          chrome.i18n.getMessage("distributionStyleOption"),
+          {
+            kind: DISTRIBUTION_STYLE_DEFAULT,
+            localizedMsg: chrome.i18n.getMessage(
+              DistributionStyle[DISTRIBUTION_STYLE_DEFAULT]
+            ),
+          },
+          {
+            kind: displaySettings.distributionStyle,
+            localizedMsg: chrome.i18n.getMessage(
+              DistributionStyle[displaySettings.distributionStyle]
+            ),
+          },
+          [
+            {
+              kind: DistributionStyle.RandomDistributionStyle,
+              localizedMsg: chrome.i18n.getMessage(
+                DistributionStyle[DistributionStyle.RandomDistributionStyle]
+              ),
+            },
+            {
+              kind: DistributionStyle.TopDownDistributionStyle,
+              localizedMsg: chrome.i18n.getMessage(
+                DistributionStyle[DistributionStyle.TopDownDistributionStyle]
+              ),
+            },
+          ]
+        )
       ),
       displaySettings
     ).init();
   }
 
   public static createView(
-    enableComponent: SwitchCheckboxComponent,
     opacityComponent: DragBarComponent,
     fontSizeComponent: DragBarComponent,
     numLimitComponent: DragBarComponent,
     speedComponent: DragBarComponent,
+    topMarginComponent: DragBarComponent,
+    bottomMarginComponent: DragBarComponent,
     fontFamilyComponent: TextInputComponent,
+    enableComponent: SwitchCheckboxComponent,
     showUserNameComponent: SwitchCheckboxComponent,
-    displaySettings: DisplaySettings
+    distributionStyleComponent: DropdownComponent<DistributionStyle>
   ) {
     let resetButtonRef = new Ref<HTMLDivElement>();
     let body = E.div(
-      { class: "display-settings-tab-container" },
+      {
+        class: "display-settings-tab-container",
+        style: `padding: 0 ${TAB_SIDE_PADDING} 1rem; box-sizing: border-box; height: 100%; overflow-y: auto;`,
+      },
       enableComponent.body,
       opacityComponent.body,
+      speedComponent.body,
       fontSizeComponent.body,
       numLimitComponent.body,
-      speedComponent.body,
+      topMarginComponent.body,
+      bottomMarginComponent.body,
       fontFamilyComponent.body,
+      distributionStyleComponent.body,
       showUserNameComponent.body,
       E.div(
         {
           class: "display-settings-tab-reset-entry",
-          style: `display: flex; flex-flow: row nowrap: justify-content: space-between; align-items: center; ${ENTRY_MARGIN_TOP_STYLE}`,
+          style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_PADDING_TOP_STYLE}`,
         },
         E.div(
           {
             class: "display-settings-tab-reset-label",
             style: LABEL_STYLE,
-            title: "Reset display settings",
+            title: chrome.i18n.getMessage("resetOption"),
           },
           E.text(chrome.i18n.getMessage("resetOption"))
         ),
@@ -142,37 +199,44 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     );
     return [
       body,
-      enableComponent,
       opacityComponent,
       fontSizeComponent,
       numLimitComponent,
       speedComponent,
+      topMarginComponent,
+      bottomMarginComponent,
       fontFamilyComponent,
+      enableComponent,
       showUserNameComponent,
+      distributionStyleComponent,
       resetButtonRef.val,
     ] as const;
   }
 
   public init(): this {
     this.displayStyle = this.body.style.display;
-    this.enableComponent.on("change", (value) => this.enableChange(value));
     this.opacityComponent.on("change", (value) => this.opacityChange(value));
     this.fontSizeComponent.on("change", (value) => this.fontSizeChange(value));
     this.numLimitComponent.on("change", (value) => this.numLimitChange(value));
     this.speedComponent.on("change", (value) => this.speedChange(value));
+    this.topMarginComponent.on("change", (value) =>
+      this.topMarginChange(value)
+    );
+    this.bottomMarginComponent.on("change", (value) =>
+      this.bottomMarginChange(value)
+    );
     this.fontFamilyComponent.on("change", (value) =>
       this.fontFamilyChange(value)
     );
+    this.enableComponent.on("change", (value) => this.enableChange(value));
     this.showUserNameComponent.on("change", (value) =>
       this.showUserNameChange(value)
     );
+    this.distributionStyleComponent.on("change", (value) =>
+      this.distributionStyleChange(value)
+    );
     this.resetButton.addEventListener("click", () => this.resetSettings());
     return this;
-  }
-
-  public enableChange(value: boolean): void {
-    this.displaySettings.enable = value;
-    this.emit("update");
   }
 
   public opacityChange(value: number): void {
@@ -195,8 +259,23 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     this.emit("update");
   }
 
+  public topMarginChange(value: number): void {
+    this.displaySettings.topMargin = value;
+    this.emit("update");
+  }
+
+  public bottomMarginChange(value: number): void {
+    this.displaySettings.bottomMargin = value;
+    this.emit("update");
+  }
+
   public fontFamilyChange(value: string): void {
     this.displaySettings.fontFamily = value;
+    this.emit("update");
+  }
+
+  public enableChange(value: boolean): void {
+    this.displaySettings.enable = value;
     this.emit("update");
   }
 
@@ -205,14 +284,23 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     this.emit("update");
   }
 
+  public distributionStyleChange(value: DistributionStyle): void {
+    this.displaySettings.distributionStyle = value;
+    this.emit("update");
+  }
+
   public resetSettings(): void {
-    this.displaySettings.enable = this.enableComponent.reset();
     this.displaySettings.opacity = this.opacityComponent.reset();
     this.displaySettings.fontSize = this.fontSizeComponent.reset();
     this.displaySettings.numLimit = this.numLimitComponent.reset();
     this.displaySettings.speed = this.speedComponent.reset();
+    this.displaySettings.topMargin = this.topMarginComponent.reset();
+    this.displaySettings.bottomMargin = this.bottomMarginComponent.reset();
     this.displaySettings.fontFamily = this.fontFamilyComponent.reset();
+    this.displaySettings.enable = this.enableComponent.reset();
     this.displaySettings.showUserName = this.showUserNameComponent.reset();
+    this.displaySettings.distributionStyle =
+      this.distributionStyleComponent.reset();
     this.emit("update");
   }
 

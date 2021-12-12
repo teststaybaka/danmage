@@ -1,7 +1,7 @@
 import EventEmitter = require("events");
 import { CustomTextInputController } from "../custom_text_input_controller";
 import {
-  ENTRY_MARGIN_TOP_STYLE,
+  ENTRY_PADDING_TOP_STYLE,
   LABEL_STYLE,
   TEXT_INPUT_STYLE,
 } from "./common";
@@ -40,7 +40,7 @@ export class TextInputComponent extends EventEmitter {
     let body = E.div(
       {
         class: "text-input-container",
-        style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_MARGIN_TOP_STYLE}`,
+        style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_PADDING_TOP_STYLE}`,
       },
       E.div(
         { class: "text-input-label", style: LABEL_STYLE, title: label },

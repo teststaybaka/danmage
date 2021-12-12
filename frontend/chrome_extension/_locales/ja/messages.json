@@ -17,11 +17,8 @@
   "accountTitle": {
     "message": "アカウント"
   },
-  "enableScrollingOption": {
-    "message": "機能をオン／オフする"
-  },
   "opacityOption": {
-    "message": "不透明度"
+    "message": "不透明度　‐　パーセント"
   },
   "fontSizeOption": {
     "message": "フォントサイズ"
@@ -32,11 +29,29 @@
   "speedOption": {
     "message": "流速"
   },
+  "topMarginOption": {
+    "message": "上マージン　‐　パーセント"
+  },
+  "bottomMarginOption": {
+    "message": "下マージン　‐　パーセント"
+  },
   "fontFamilyOption": {
     "message": "フォント"
   },
+  "enableScrollingOption": {
+    "message": "機能をオン／オフする"
+  },
   "userNameOption": {
     "message": "ユーザー名の表示／非表示"
+  },
+  "distributionStyleOption": {
+    "message": "コメントの分布方法"
+  },
+  "RandomDistributionStyle": {
+    "message": "ランダム"
+  },
+  "TopDownDistributionStyle": {
+    "message": "トップダウン"
   },
   "resetOption": {
     "message": "スタイル設定をリセット"
@@ -47,10 +62,10 @@
   "addBlockRuleButton": {
     "message": "追加"
   },
-  "Keyword": {
+  "KeywordBlockKind": {
     "message": "キーワード"
   },
-  "RegExp": {
+  "RegExpBlockKind": {
     "message": "正規表示式"
   },
   "submitNewChatButton": {

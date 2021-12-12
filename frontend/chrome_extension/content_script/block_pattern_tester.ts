@@ -39,12 +39,12 @@ export class BlockPatternTester {
     for (let blockPattern of this.blockSettings.blockPatterns) {
       let content = this.contentExtractor.extract(chatEntry.content);
       switch (blockPattern.kind) {
-        case BlockKind.Keyword:
+        case BlockKind.KeywordBlockKind:
           if (content.indexOf(blockPattern.content) !== -1) {
             return true;
           }
           break;
-        case BlockKind.RegExp:
+        case BlockKind.RegExpBlockKind:
           let regExp = new RegExp(blockPattern.content);
           if (regExp.test(content)) {
             return true;

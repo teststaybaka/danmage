@@ -144,10 +144,7 @@ export class ControlPanelComponent extends EventEmitter {
         playerSettings,
         AccountTabComponent.create(),
         DisplaySettingsTabComponent.create(playerSettings.displaySettings),
-        BlockSettingsTabComponent.create(
-          playerSettings.blockSettings,
-          globalDocuments
-        ),
+        BlockSettingsTabComponent.create(playerSettings.blockSettings),
         chatListTabComponent
       ),
       globalDocuments,
@@ -259,7 +256,7 @@ export class ControlPanelComponent extends EventEmitter {
         E.div(
           {
             class: "control-panel-tabs",
-            style: `flex-grow: 1; box-sizing: border-box; width: 100%; padding: 0 1rem;`,
+            style: `flex-grow: 1; box-sizing: border-box; width: 100%; min-height: 0;`,
           },
           ...tabBodies
         )

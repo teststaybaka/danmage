@@ -17,11 +17,8 @@
   "accountTitle": {
     "message": "帳號"
   },
-  "enableScrollingOption": {
-    "message": "開啟/關閉彈幕"
-  },
   "opacityOption": {
-    "message": "不透明度"
+    "message": "不透明度 - 百分比"
   },
   "fontSizeOption": {
     "message": "字體大小"
@@ -32,11 +29,29 @@
   "speedOption": {
     "message": "滾動速度"
   },
+  "topMarginOption": {
+    "message": "頂部留白 - 百分比"
+  },
+  "bottomMarginOption": {
+    "message": "底部留白 - 百分比"
+  },
   "fontFamilyOption": {
     "message": "字體"
   },
+  "enableScrollingOption": {
+    "message": "開啟/關閉彈幕"
+  },
   "userNameOption": {
     "message": "顯示/隱藏用戶名"
+  },
+  "distributionStyleOption": {
+    "message": "彈幕分佈方法"
+  },
+  "RandomDistributionStyle": {
+    "message": "隨機"
+  },
+  "TopDownDistributionStyle": {
+    "message": "自上而下"
   },
   "resetOption": {
     "message": "重置樣式設置"
@@ -47,11 +62,11 @@
   "addBlockRuleButton": {
     "message": "添加"
   },
-  "Keyword": {
+  "KeywordBlockKind": {
     "message": "關鍵詞"
   },
-  "RegExp": {
-    "message": "正則表達式"
+  "RegExpBlockKind": {
+    "message": "正則"
   },
   "submitNewChatButton": {
     "message": "發射！"
