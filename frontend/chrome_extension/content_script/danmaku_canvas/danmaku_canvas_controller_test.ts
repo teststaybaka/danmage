@@ -1,5 +1,8 @@
 import { ChatEntry } from "../../../../interface/chat_entry";
-import { PlayerSettings } from "../../../../interface/player_settings";
+import {
+  DistributionStyle,
+  PlayerSettings,
+} from "../../../../interface/player_settings";
 import { DanmakuCanvasController } from "./danmaku_canvas_controller";
 import { MockDanmakuElementComponent } from "./mocks";
 import { Counter } from "@selfage/counter";
@@ -81,7 +84,7 @@ PUPPETEER_TEST_RUNNER.run({
         );
       },
     },
-    new class implements TestCase {
+    new (class implements TestCase {
       public name = "AddSeveralToExhaustSpaceAndIdleElements";
       private canvas: HTMLDivElement;
       public execute() {
@@ -100,7 +103,7 @@ PUPPETEER_TEST_RUNNER.run({
             }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition");
-              assertThat(posY, eq(10), "posY");
+              assertThat(posY, eq(15), "posY");
             }
             public play(canvasWidth: number) {
               counter.increment("play");
@@ -120,7 +123,7 @@ PUPPETEER_TEST_RUNNER.run({
             }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition2");
-              assertThat(posY, eq(0), "posY2");
+              assertThat(posY, eq(5), "posY2");
             }
             public play() {
               counter.increment("play2");
@@ -147,7 +150,7 @@ PUPPETEER_TEST_RUNNER.run({
             }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition3");
-              assertThat(posY, eq(20), "posY3");
+              assertThat(posY, eq(25), "posY3");
             }
             public play() {
               counter.increment("play3");
@@ -156,10 +159,16 @@ PUPPETEER_TEST_RUNNER.run({
               counter.increment("clear3");
             }
           })();
-        this.canvas = E.div({ style: "width: 1000px; height: 35px;" });
+        this.canvas = E.div({ style: "width: 1000px; height: 50px;" });
         document.body.appendChild(this.canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { enable: true, numLimit: 3 },
+          displaySettings: {
+            enable: true,
+            numLimit: 3,
+            topMargin: 10,
+            bottomMargin: 20,
+            distributionStyle: DistributionStyle.RandomDistributionStyle,
+          },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           this.canvas,
@@ -183,13 +192,13 @@ PUPPETEER_TEST_RUNNER.run({
           () => {
             switch (counter.increment("random")) {
               case 1:
-                return 10/25;
+                return 10 / 25;
               case 2:
-                return 8/25;
+                return 8 / 25;
               case 3:
-                return 14/15;
+                return 15 / 15;
               case 4:
-                return 15/20;
+                return 18 / 20;
               default:
                 throw new Error("Not expected.");
             }
@@ -280,8 +289,8 @@ PUPPETEER_TEST_RUNNER.run({
       public tearDown() {
         this.canvas.remove();
       }
-    },
-    new class implements TestCase {
+    })(),
+    new (class implements TestCase {
       public name = "AddOneWithLowCanvasHeight";
       private canvas: HTMLDivElement;
       public execute() {
@@ -300,16 +309,22 @@ PUPPETEER_TEST_RUNNER.run({
             }
             public setStartPosition(posY: number) {
               counter.increment("setStartPosition");
-              assertThat(posY, eq(0), "posY");
+              assertThat(posY, eq(5), "posY");
             }
             public play() {
               counter.increment("play");
             }
           })();
-        this.canvas = E.div({ style: "height: 5px;" });
+        this.canvas = E.div({ style: "height: 10px;" });
         document.body.appendChild(this.canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { enable: true, numLimit: 1 },
+          displaySettings: {
+            enable: true,
+            numLimit: 1,
+            topMargin: 50,
+            bottomMargin: 0,
+            distributionStyle: DistributionStyle.TopDownDistributionStyle,
+          },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           this.canvas,
@@ -319,7 +334,7 @@ PUPPETEER_TEST_RUNNER.run({
             public setInterval() {}
           })() as any,
           () => {
-            return .5;
+            throw new Error("Not expected!");
           }
         ).init();
         danmakuCanvasController.play();
@@ -343,8 +358,8 @@ PUPPETEER_TEST_RUNNER.run({
       public tearDown() {
         this.canvas.remove();
       }
-    },
-    new class implements TestCase {
+    })(),
+    new (class implements TestCase {
       public name = "MoveOneElementToEndAndFillGap";
       private canvas: HTMLDivElement;
       public execute() {
@@ -407,7 +422,13 @@ PUPPETEER_TEST_RUNNER.run({
         this.canvas = E.div({ style: "height: 30px; width: 30px;" });
         document.body.appendChild(this.canvas);
         let playerSettings: PlayerSettings = {
-          displaySettings: { enable: true, numLimit: 3 },
+          displaySettings: {
+            enable: true,
+            numLimit: 3,
+            topMargin: 0,
+            bottomMargin: 0,
+            distributionStyle: DistributionStyle.RandomDistributionStyle,
+          },
         };
         let danmakuCanvasController = new DanmakuCanvasController(
           this.canvas,
@@ -432,11 +453,11 @@ PUPPETEER_TEST_RUNNER.run({
               case 1:
                 return 0;
               case 2:
-                return 5/20;
+                return 5 / 20;
               case 3:
-                return 5/20;
+                return 5 / 20;
               case 4:
-                return 10/20;
+                return 10 / 20;
               default:
                 throw new Error("Not expected");
             }
@@ -490,6 +511,6 @@ PUPPETEER_TEST_RUNNER.run({
       public tearDown() {
         this.canvas.remove();
       }
-    },
+    })(),
   ],
 });
