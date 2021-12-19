@@ -1,6 +1,7 @@
 import { REPORT_USER_ISSUE } from "../../../interface/service";
 import { FillButtonComponent } from "../../button_component";
 import { INPUT_STYLE, LABEL_STYLE } from "./common_style";
+import { LOCALIZED_TEXT } from "./localized_text";
 import { SERVICE_CLIENT } from "./service_client";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
@@ -20,7 +21,7 @@ export class FeedbackComponent {
   public static create(): FeedbackComponent {
     return new FeedbackComponent(
       ...FeedbackComponent.createView(
-        FillButtonComponent.create(E.text("Submit"))
+        FillButtonComponent.create(E.text(LOCALIZED_TEXT.submitFeedbackButton))
       ),
       SERVICE_CLIENT
     ).init();
@@ -42,7 +43,7 @@ export class FeedbackComponent {
         E.div({ style: "flex: 2;" }),
         E.div(
           { class: "feedback-label", style: LABEL_STYLE },
-          E.text("Description")
+          E.text(LOCALIZED_TEXT.feedbackInputLabel)
         ),
         E.textareaRef(textareaRef, {
           class: "feedback-textarea",
@@ -56,10 +57,13 @@ export class FeedbackComponent {
           style: `display: flex; flex-flow: row nowrap; width: 100%; align-items: center; justify-content: center; padding-bottom: 6rem;`,
         },
         E.div({ style: "flex: 2;" }),
-        E.div({ class: "feedback-label", style: LABEL_STYLE }, E.text("Email")),
+        E.div(
+          { class: "feedback-label", style: LABEL_STYLE },
+          E.text(LOCALIZED_TEXT.emailInputLabel)
+        ),
         E.inputRef(inputRef, {
           class: "feedback-input",
-          placeholder: `Leave your email if you want to hear back.`,
+          placeholder: LOCALIZED_TEXT.emailInputPlaceholder,
           style: INPUT_STYLE,
         }),
         E.div({ style: "flex: 2;" })

@@ -1,6 +1,7 @@
 import { GET_USER, UPDATE_NICKNAME } from "../../../interface/service";
 import { FillButtonComponent } from "../../button_component";
 import { INPUT_STYLE, LABEL_STYLE } from "./common_style";
+import { LOCALIZED_TEXT } from "./localized_text";
 import { SERVICE_CLIENT } from "./service_client";
 import { E } from "@selfage/element/factory";
 import { TextInputController } from "@selfage/element/text_input_controller";
@@ -20,7 +21,7 @@ export class NicknameComponent {
 
   public static create(): NicknameComponent {
     let views = NicknameComponent.createView(
-      FillButtonComponent.create(E.text("Set"))
+      FillButtonComponent.create(E.text(LOCALIZED_TEXT.setNicknameButton))
     );
     return new NicknameComponent(
       ...views,
@@ -44,7 +45,7 @@ export class NicknameComponent {
         E.div({ style: "flex: 2;" }),
         E.div(
           { class: "nickname-label", style: LABEL_STYLE },
-          E.text("Nickname")
+          E.text(LOCALIZED_TEXT.nicknameInputLabel)
         ),
         E.inputRef(input, {
           class: "nickname-input",

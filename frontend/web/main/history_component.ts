@@ -3,6 +3,7 @@ import { GET_CHAT_HISTORY } from "../../../interface/service";
 import { TextButtonComponent } from "../../button_component";
 import { ColorScheme } from "../../color_scheme";
 import { formatTimestamp } from "../../timestamp_formatter";
+import { LOCALIZED_TEXT } from "./localized_text";
 import { SERVICE_CLIENT } from "./service_client";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
@@ -24,7 +25,7 @@ export class HistoryComponent {
   public static create(): HistoryComponent {
     return new HistoryComponent(
       ...HistoryComponent.createView(
-        TextButtonComponent.create(E.text("Show more"))
+        TextButtonComponent.create(E.text(LOCALIZED_TEXT.showMoreChatsButton))
       ),
       SERVICE_CLIENT
     ).init();
@@ -46,11 +47,11 @@ export class HistoryComponent {
         },
         HistoryComponent.createEntryView(
           0,
-          "Video site",
-          "Video id",
-          "Timestamp",
-          "Content",
-          "Posted date"
+          LOCALIZED_TEXT.chatVideoSiteLabel,
+          LOCALIZED_TEXT.chatVideoIdLabel,
+          LOCALIZED_TEXT.chatTimestampLabel,
+          LOCALIZED_TEXT.chatContentLabel,
+          LOCALIZED_TEXT.chatPostedDateLabel
         )
       ),
       E.divRef(

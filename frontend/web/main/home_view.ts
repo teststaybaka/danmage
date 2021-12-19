@@ -4,6 +4,7 @@ import TWITCH_VIDEO_PATH = require("../assets/twitch.mp4");
 import YOUTUBE_VIDEO_PATH = require("../assets/youtube.mp4");
 import { ColorScheme } from "../../color_scheme";
 import { SIDE_PADDING } from "./common_style";
+import { LOCALIZED_TEXT } from "./localized_text";
 import { E } from "@selfage/element/factory";
 
 export class HomeView {
@@ -16,68 +17,29 @@ export class HomeView {
       HomeView.paragraph(
         ColorScheme.getBackground(),
         INTRO_VIDEO_PATH,
-        HomeView.textElement(
-          `DanMage is a Chrome extension that introduces NicoNico-style ` +
-            `chats (or Danmaku, bullet comments, scrolling comments) to ` +
-            `video sites. It currently supports Twitch, YouTube and ` +
-            `Crunchyroll. Get it here:`,
-          ColorScheme.getContent()
-        ),
+        HomeView.textElement(LOCALIZED_TEXT.intro, ColorScheme.getContent()),
         HomeView.link(
           "https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm"
         ),
-        HomeView.textElement(
-          `It's also open-sourced at:`,
-          ColorScheme.getContent()
-        ),
+        HomeView.textElement(LOCALIZED_TEXT.intro2, ColorScheme.getContent()),
         HomeView.link("https://github.com/teststaybaka/danmage")
       ),
       HomeView.paragraph(
         `rgb(100,65,164)`,
         TWITCH_VIDEO_PATH,
-        HomeView.textElement(
-          `On Twitch, it works on both live streams and recordings. Find ` +
-            `customizable options around Twitch's chat room. Unfortunatley, ` +
-            `you have to keep the chat room visible, or it will disconnet ` +
-            `from Twitch's chat server.`,
-          "white"
-        )
+        HomeView.textElement(LOCALIZED_TEXT.introTwitch, "white")
       ),
       HomeView.paragraph(
         `rgb(255,0,0)`,
         YOUTUBE_VIDEO_PATH,
-        HomeView.textElement(
-          `On YouTube, it works on live streams, live recordings, premiere, ` +
-            `and regular videos.`,
-          "white"
-        ),
-        HomeView.textElement(
-          `For live streams, live recordings, and premiere, you need to ` +
-            `enable YouTube chat. Then you can Find customizable options ` +
-            `around YouTube's chat room.`,
-          "white"
-        ),
-        HomeView.textElement(
-          `Unfortunatley for regular videos, you might not find any chats ` +
-            `because this extension hasn't gained enough popularity ` +
-            `¯\\_(ツ)_/¯, but it's working technically. Find customizable ` +
-            `options around video player controller, which can also be used ` +
-            `to post chats, after signed in to the extension. Chats will be ` +
-            `stored in this site.`,
-          "white"
-        )
+        HomeView.textElement(LOCALIZED_TEXT.introYouTube, "white"),
+        HomeView.textElement(LOCALIZED_TEXT.introYouTube2, "white"),
+        HomeView.textElement(LOCALIZED_TEXT.introYouTube3, "white")
       ),
       HomeView.paragraph(
         `rgb(223,99,0)`,
         CRUNCHYROLL_VIDEO_PATH,
-        HomeView.textElement(
-          `It works on Crunchyroll videos, though unfortunatley you might ` +
-            `not find any chats because this extension hasn't gained enough ` +
-            `popularity ¯\\_(ツ)_/¯. Find customizable options around video ` +
-            `player controller, which can also be used to post chats, after ` +
-            `signed in to the extension. Chats will be stored in this site.`,
-          "white"
-        )
+        HomeView.textElement(LOCALIZED_TEXT.introCrunchyroll, "white")
       )
     );
   }
