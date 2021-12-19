@@ -13,6 +13,7 @@ export class HistoryComponent {
   private displayStyle: string;
   private buttonDisplayStyle: string;
   private cursor: string;
+  private dateFormatter: Intl.DateTimeFormat;
 
   public constructor(
     public body: HTMLDivElement,
@@ -20,7 +21,15 @@ export class HistoryComponent {
     private buttonContainer: HTMLDivElement,
     private showMoreButton: TextButtonComponent,
     private serviceClient: ServiceClient
-  ) {}
+  ) {
+    this.dateFormatter = new Intl.DateTimeFormat(navigator.language, {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    });
+  }
 
   public static create(): HistoryComponent {
     return new HistoryComponent(
@@ -148,7 +157,9 @@ export class HistoryComponent {
     for (let chatEntry of response.chatEntries) {
       let mod = this.entryListContainer.childElementCount % 2;
       let timestampStr = formatTimestamp(chatEntry.timestamp);
-      let createdStr = new Date(chatEntry.created * 1000).toISOString();
+      let createdStr = this.dateFormatter.format(
+        new Date(chatEntry.created * 1000)
+      );
       this.entryListContainer.appendChild(
         HistoryComponent.createEntryView(
           mod,
