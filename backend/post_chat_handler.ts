@@ -36,6 +36,7 @@ export class PostChatHandler extends UserAuthedServiceHandler<
     let user = users[0];
     request.chatEntry.userId = user.id;
     request.chatEntry.userNickname = user.nickname;
+    request.chatEntry.timestamp = Math.floor(request.chatEntry.timestamp);
     request.chatEntry.created = Math.floor(this.getNow() / 1000);
     let chatEntries = await this.datastoreClient.allocateKeys(
       [request.chatEntry],
