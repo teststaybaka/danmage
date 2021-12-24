@@ -1,6 +1,7 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { normalizeBody } from "../../body_normalizer";
 import { BodyComponent } from "./body_component";
+import { LOCALIZED_TEXT } from "./localized_text";
 import { SERVICE_CLIENT } from "./service_client";
 import { STATE, State } from "./state";
 import { createTrackerAndPusher } from "@selfage/stateful_navigator";
@@ -8,8 +9,7 @@ import "../../../environment";
 
 function main(): void {
   normalizeBody();
-  document.title =
-    "DanMage - Bring NicoNico-style chats to Twitch, YouTube and Crunchyroll";
+  document.title = LOCALIZED_TEXT.title;
 
   let origin = "";
   if (globalThis.ENVIRONMENT === "prod") {

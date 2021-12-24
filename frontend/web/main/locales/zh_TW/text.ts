@@ -4,6 +4,9 @@ export class TextZhTw extends TextEn {
   public get locale() {
     return "zh-TW";
   }
+  public get title() {
+    return `DanMage - 為多個視頻網站統一提供彈幕功能`;
+  }
   public get intro() {
     return `DanMage是一個Chrome擴展程序，它為多個視頻網站統一提供顯示彈幕的功能。目前支持的網站有Twitch， YouTube，和Crunchyroll。這裡安裝：`;
   }

@@ -4,6 +4,9 @@ export class TextJa extends TextEn {
   public get locale() {
     return "ja";
   }
+  public get title() {
+    return `DanMage - コメントをニコニコ動画っぽく流す`;
+  }
   public get intro() {
     return `DanMageは、コメントをニコニコ動画っぽく流するChrome拡張機能です。現在、Twitch、YouTube、Crunchyrollをサポートしています。 ここで入手してください：`;
   }
