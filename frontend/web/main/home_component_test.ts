@@ -1,40 +1,40 @@
 import { normalizeBody } from "../../body_normalizer";
-import { HomeView } from "./home_view";
+import { HomeComponent } from "./home_component";
 import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
 import { PUPPETEER_TEST_RUNNER, TestCase } from "@selfage/test_runner";
 
 PUPPETEER_TEST_RUNNER.run({
-  name: "HomeViewTest",
+  name: "HomeComponentTest",
   environment: {
     setUp: () => normalizeBody(),
   },
   cases: [
     new (class implements TestCase {
       public name = "Render";
-      private homeView: HTMLDivElement;
+      private homeComponent: HomeComponent;
       public async execute() {
         // Execute
-        this.homeView = HomeView.create();
-        document.body.appendChild(this.homeView);
+        this.homeComponent = HomeComponent.create();
+        document.body.appendChild(this.homeComponent.body);
 
         // Verify
         await globalThis.setViewport(1300, 1000);
         await asyncAssertScreenshot(
-          __dirname + "/home_view.png",
-          __dirname + "/golden/home_view.png",
-          __dirname + "/home_view_diff.png",
+          __dirname + "/home_component.png",
+          __dirname + "/golden/home_component.png",
+          __dirname + "/home_component_diff.png",
           { fullPage: true }
         );
         await globalThis.setViewport(900, 1000);
         await asyncAssertScreenshot(
-          __dirname + "/home_view_narrow.png",
-          __dirname + "/golden/home_view_narrow.png",
-          __dirname + "/home_view_narrow_diff.png",
+          __dirname + "/home_component_narrow.png",
+          __dirname + "/golden/home_component_narrow.png",
+          __dirname + "/home_component_narrow_diff.png",
           { fullPage: true }
         );
       }
       public tearDown() {
-        this.homeView.remove();
+        this.homeComponent.body.remove();
       }
     })(),
   ],

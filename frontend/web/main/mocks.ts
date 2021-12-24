@@ -1,13 +1,13 @@
 import { FillButtonComponentMock, TextButtonComponentMock } from "../../mocks";
-import { BrowserHistoryPusher } from "./browser_history_pusher";
 import { FeedbackComponent } from "./feedback_component";
 import { HistoryComponent } from "./history_component";
+import { HomeComponent } from "./home_component";
 import { NicknameComponent } from "./nickname_component";
 import { E } from "@selfage/element/factory";
 
-export class BrowserHistoryPusherMock extends BrowserHistoryPusher {
+export class HomeComponentMock extends HomeComponent {
   public constructor() {
-    super(undefined, undefined, undefined);
+    super(HomeComponent.createView());
   }
 }
 
@@ -17,7 +17,7 @@ export class FeedbackComponentMock extends FeedbackComponent {
       ...FeedbackComponent.createView(
         new FillButtonComponentMock(E.text("Submit"))
       ),
-      undefined,
+      undefined
     );
   }
 }

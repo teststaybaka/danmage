@@ -2,11 +2,10 @@ import { SIGN_IN } from "../../../interface/service";
 import { normalizeBody } from "../../body_normalizer";
 import { TextButtonComponentMock } from "../../mocks";
 import { BodyComponent } from "./body_component";
-import { HomeView } from "./home_view";
 import {
-  BrowserHistoryPusherMock,
   FeedbackComponentMock,
   HistoryComponentMock,
+  HomeComponentMock,
   NicknameComponentMock,
 } from "./mocks";
 import { State } from "./state";
@@ -15,8 +14,15 @@ import { E } from "@selfage/element/factory";
 import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
 import { ServiceClientMock } from "@selfage/service_client/mocks";
+import { BrowserHistoryPusher } from "@selfage/stateful_navigator/browser_history_pusher";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER, TestCase } from "@selfage/test_runner";
+
+export class BrowserHistoryPusherMock extends BrowserHistoryPusher {
+  public constructor() {
+    super(undefined, undefined, undefined);
+  }
+}
 
 PUPPETEER_TEST_RUNNER.run({
   name: "BodyComponentTest",
@@ -40,6 +46,7 @@ PUPPETEER_TEST_RUNNER.run({
           E.text("Privacy policy")
         );
         let feedbackButton = new TextButtonComponentMock(E.text("Feedback"));
+        let homeComponent = new HomeComponentMock();
         let nicknameComponent = new NicknameComponentMock();
         let historyComponent = new HistoryComponentMock();
         let feedbackComponent = new FeedbackComponentMock();
@@ -50,7 +57,6 @@ PUPPETEER_TEST_RUNNER.run({
         })();
         let sessionStorage = new LocalSessionStorage();
         let state = new State();
-        state.showHome = true;
         let serviceClient = new ServiceClientMock();
         let windowMock = new (class {
           public location = {};
@@ -68,7 +74,7 @@ PUPPETEER_TEST_RUNNER.run({
             privacyButton,
             feedbackButton
           ),
-          () => HomeView.create(),
+          () => homeComponent,
           () => nicknameComponent,
           () => historyComponent,
           () => feedbackComponent,
@@ -80,6 +86,7 @@ PUPPETEER_TEST_RUNNER.run({
           windowMock
         ).init();
         document.body.appendChild(this.bodyComponent.body);
+        state.showHome = true;
 
         // Verify
         await asyncAssertScreenshot(
@@ -155,6 +162,7 @@ PUPPETEER_TEST_RUNNER.run({
           E.text("Privacy policy")
         );
         let feedbackButton = new TextButtonComponentMock(E.text("Feedback"));
+        let homeComponent = new HomeComponentMock();
         let nicknameComponent = new (class extends NicknameComponentMock {
           public show() {
             return Promise.resolve();
@@ -174,7 +182,6 @@ PUPPETEER_TEST_RUNNER.run({
         let sessionStorage = new LocalSessionStorage();
         sessionStorage.save("some signed session");
         let state = new State();
-        state.showHome = true;
         let serviceClient = new ServiceClientMock();
         let windowMock = new (class {
           public location = {};
@@ -192,7 +199,7 @@ PUPPETEER_TEST_RUNNER.run({
             privacyButton,
             feedbackButton
           ),
-          () => HomeView.create(),
+          () => homeComponent,
           () => nicknameComponent,
           () => historyComponent,
           () => feedbackComponent,
@@ -204,6 +211,7 @@ PUPPETEER_TEST_RUNNER.run({
           windowMock
         ).init();
         document.body.appendChild(this.bodyComponent.body);
+        state.showHome = true;
 
         // Verify
         await asyncAssertScreenshot(
@@ -274,13 +282,13 @@ PUPPETEER_TEST_RUNNER.run({
           E.text("Privacy policy")
         );
         let feedbackButton = new TextButtonComponentMock(E.text("Feedback"));
+        let homeComponent = new HomeComponentMock();
         let nicknameComponent = new NicknameComponentMock();
         let historyComponent = new HistoryComponentMock();
         let feedbackComponent = new FeedbackComponentMock();
         let browserHistoryPusher = new BrowserHistoryPusherMock();
         let sessionStorage = new LocalSessionStorage();
         let state = new State();
-        state.showFeedback = true;
         let serviceClient = new (class extends ServiceClientMock {
           public fetchUnauthedAny(request: any, serviceDescriptor: any): any {
             counter.increment("fetchUnauthed");
@@ -318,7 +326,7 @@ PUPPETEER_TEST_RUNNER.run({
         let signInButton = views[2];
         this.bodyComponent = new BodyComponent(
           ...views,
-          () => HomeView.create(),
+          () => homeComponent,
           () => nicknameComponent,
           () => historyComponent,
           () => feedbackComponent,
@@ -330,6 +338,7 @@ PUPPETEER_TEST_RUNNER.run({
           windowMock
         ).init();
         document.body.appendChild(this.bodyComponent.body);
+        state.showFeedback = true;
         signInButton.click();
 
         // Verify

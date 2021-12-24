@@ -1,23 +1,23 @@
 import { SIGN_IN } from "../../../interface/service";
 import { TextButtonComponent } from "../../button_component";
 import { BLUE, ColorScheme, ORANGE } from "../../color_scheme";
-import { BrowserHistoryPusher } from "./browser_history_pusher";
 import { SIDE_PADDING } from "./common_style";
 import { FeedbackComponent } from "./feedback_component";
 import { HistoryComponent } from "./history_component";
-import { HomeView } from "./home_view";
+import { HomeComponent } from "./home_component";
 import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
 import { LOCALIZED_TEXT } from "./localized_text";
 import { NicknameComponent } from "./nickname_component";
 import { SERVICE_CLIENT } from "./service_client";
 import { State } from "./state";
-import { TabsNavigationController } from "./tabs_navigation_controller";
 import { E } from "@selfage/element/factory";
 import { HideableElementController } from "@selfage/element/hideable_element_controller";
 import { TabsSwitcher } from "@selfage/element/tabs_switcher";
 import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
+import { BrowserHistoryPusher } from "@selfage/stateful_navigator/browser_history_pusher";
+import { TabsNavigator } from "@selfage/stateful_navigator/tabs";
 
 export class BodyComponent {
   private signInButtonsSwitcher = TabsSwitcher.create();
@@ -36,7 +36,7 @@ export class BodyComponent {
     private termsButton: TextButtonComponent,
     private privacyButton: TextButtonComponent,
     private feedbackButton: TextButtonComponent,
-    private homeViewFactoryFn: () => HTMLElement,
+    private homeComponentFactoryFn: () => HomeComponent,
     private nicknameComponentFactoryFn: () => NicknameComponent,
     private historyComponentFactoryFn: () => HistoryComponent,
     private feedbackComponentFactoryFn: () => FeedbackComponent,
@@ -62,7 +62,7 @@ export class BodyComponent {
         TextButtonComponent.create(E.text(LOCALIZED_TEXT.privacyTab)),
         TextButtonComponent.create(E.text(LOCALIZED_TEXT.feedbackTab))
       ),
-      () => HomeView.create(),
+      () => HomeComponent.create(),
       () => NicknameComponent.create(),
       () => HistoryComponent.create(),
       () => FeedbackComponent.create(),
@@ -248,28 +248,51 @@ export class BodyComponent {
   }
 
   public init(): this {
-    new TabsNavigationController(
-      this.tabsContainer,
-      this.state,
-      this.browserHistoryPusher
-    )
-      .addWithHTMLButton("showHome", this.logo, this.homeViewFactoryFn)
-      .addWithHideable(
-        "showNickname",
-        this.nicknameButton,
-        this.nicknameComponentFactoryFn
+    new TabsNavigator(this.browserHistoryPusher)
+      .add(
+        "home",
+        (callback) => this.state.on("showHome", callback),
+        (value) => (this.state.showHome = value),
+        (callback) => this.logo.addEventListener("click", callback),
+        () => {
+          let homeComponent = this.homeComponentFactoryFn();
+          this.tabsContainer.appendChild(homeComponent.body);
+          return homeComponent;
+        }
       )
-      .addWithHideable(
-        "showHistory",
-        this.historyButton,
-        this.historyComponentFactoryFn
+      .add(
+        "nickname",
+        (callback) => this.state.on("showNickname", callback),
+        (value) => (this.state.showNickname = value),
+        (callback) => this.nicknameButton.on("click", callback),
+        () => {
+          let nicknameComponent = this.nicknameComponentFactoryFn();
+          this.tabsContainer.appendChild(nicknameComponent.body);
+          return nicknameComponent;
+        }
       )
-      .addWithHideable(
-        "showFeedback",
-        this.feedbackButton,
-        this.feedbackComponentFactoryFn
+      .add(
+        "history",
+        (callback) => this.state.on("showHistory", callback),
+        (value) => (this.state.showHistory = value),
+        (callback) => this.historyButton.on("click", callback),
+        () => {
+          let historyComponent = this.historyComponentFactoryFn();
+          this.tabsContainer.appendChild(historyComponent.body);
+          return historyComponent;
+        }
       )
-      .init();
+      .add(
+        "feedback",
+        (callback) => this.state.on("showFeedback", callback),
+        (value) => (this.state.showFeedback = value),
+        (callback) => this.feedbackButton.on("click", callback),
+        () => {
+          let feedbackComponent = this.feedbackComponentFactoryFn();
+          this.tabsContainer.appendChild(feedbackComponent.body);
+          return feedbackComponent;
+        }
+      );
     this.termsButton.on("click", () => this.gotoTerms());
     this.privacyButton.on("click", () => this.gotoPrivacy());
 

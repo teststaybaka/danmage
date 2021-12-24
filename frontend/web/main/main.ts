@@ -1,9 +1,9 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { normalizeBody } from "../../body_normalizer";
 import { BodyComponent } from "./body_component";
-import { BrowserHistoryPusher } from "./browser_history_pusher";
 import { SERVICE_CLIENT } from "./service_client";
-import { StateLoader } from "./state_loader";
+import { STATE, State } from "./state";
+import { createTrackerAndPusher } from "@selfage/stateful_navigator";
 import "../../../environment";
 
 function main(): void {
@@ -19,14 +19,24 @@ function main(): void {
   } else {
     throw new Error("Unsupported environment.");
   }
-
   SERVICE_CLIENT.origin = origin;
+
+  let defaultState = new State();
+  defaultState.showHome = true;
   let queryParamKeyForState = "q";
-  let state = StateLoader.create(queryParamKeyForState).state;
-  let historyPusher = BrowserHistoryPusher.create(state, queryParamKeyForState);
-  document.body.appendChild(
-    BodyComponent.create(state, historyPusher, origin).body
+  let [browserHistoryTracker, browserHistoryPusher] = createTrackerAndPusher(
+    defaultState,
+    STATE,
+    queryParamKeyForState
   );
+  document.body.appendChild(
+    BodyComponent.create(
+      browserHistoryTracker.state,
+      browserHistoryPusher,
+      origin
+    ).body
+  );
+  browserHistoryTracker.initLoad();
 }
 
 main();
