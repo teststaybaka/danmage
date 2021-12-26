@@ -6,7 +6,7 @@ import { FeedbackComponent } from "./feedback_component";
 import { HistoryComponent } from "./history_component";
 import { HomeComponent } from "./home_component";
 import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
-import { LOCALIZED_TEXT } from "./localized_text";
+import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { NicknameComponent } from "./nickname_component";
 import { SERVICE_CLIENT } from "./service_client";
 import { State } from "./state";

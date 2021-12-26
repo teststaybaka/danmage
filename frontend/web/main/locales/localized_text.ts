@@ -1,7 +1,7 @@
-import { TextEn } from "./locales/en/text";
-import { TextJa } from "./locales/ja/text";
-import { TextZh } from "./locales/zh/text";
-import { TextZhTw } from "./locales/zh_TW/text";
+import { TextEn } from "./en/text";
+import { TextJa } from "./ja/text";
+import { TextZh } from "./zh/text";
+import { TextZhTw } from "./zh_TW/text";
 import { findClosestLocalizedText } from "@selfage/closest_locale_finder";
 
 export let LOCALIZED_TEXT = findClosestLocalizedText(

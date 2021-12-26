@@ -1,7 +1,7 @@
 import { REPORT_USER_ISSUE } from "../../../interface/service";
 import { FillButtonComponent } from "../../button_component";
 import { INPUT_STYLE, LABEL_STYLE } from "./common_style";
-import { LOCALIZED_TEXT } from "./localized_text";
+import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { SERVICE_CLIENT } from "./service_client";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";

@@ -4,7 +4,7 @@ import TWITCH_VIDEO_PATH = require("../assets/twitch.mp4");
 import YOUTUBE_VIDEO_PATH = require("../assets/youtube.mp4");
 import { ColorScheme } from "../../color_scheme";
 import { SIDE_PADDING } from "./common_style";
-import { LOCALIZED_TEXT } from "./localized_text";
+import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { E } from "@selfage/element/factory";
 
 export class HomeComponent {

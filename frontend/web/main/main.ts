@@ -1,7 +1,7 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { normalizeBody } from "../../body_normalizer";
 import { BodyComponent } from "./body_component";
-import { LOCALIZED_TEXT } from "./localized_text";
+import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { SERVICE_CLIENT } from "./service_client";
 import { STATE, State } from "./state";
 import { createTrackerAndPusher } from "@selfage/stateful_navigator";
