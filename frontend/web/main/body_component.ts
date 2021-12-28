@@ -268,6 +268,7 @@ export class BodyComponent {
         () => {
           let nicknameComponent = this.nicknameComponentFactoryFn();
           this.tabsContainer.appendChild(nicknameComponent.body);
+          nicknameComponent.show();
           return nicknameComponent;
         }
       )
@@ -279,6 +280,7 @@ export class BodyComponent {
         () => {
           let historyComponent = this.historyComponentFactoryFn();
           this.tabsContainer.appendChild(historyComponent.body);
+          historyComponent.show();
           return historyComponent;
         }
       )

@@ -9,8 +9,6 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
 export class NicknameComponent {
-  private displayStyle: string;
-
   public constructor(
     public body: HTMLDivElement,
     private input: HTMLInputElement,
@@ -60,7 +58,6 @@ export class NicknameComponent {
   }
 
   public init(): this {
-    this.displayStyle = this.body.style.display;
     this.setButton.on("click", () => this.updateNickname());
     this.inputController.on("enter", () => this.setButton.click());
     return this;
@@ -76,7 +73,6 @@ export class NicknameComponent {
   }
 
   public async show(): Promise<void> {
-    this.body.style.display = this.displayStyle;
     let response = await this.serviceClient.fetchAuthed({}, GET_USER);
     if (response.user.nickname === undefined) {
       return;
@@ -87,7 +83,7 @@ export class NicknameComponent {
     this.setButton.hide();
   }
 
-  public hide(): void {
-    this.body.style.display = "none";
+  public remove(): void {
+    this.body.remove();
   }
 }

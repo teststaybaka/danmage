@@ -11,17 +11,10 @@ export class HomeComponent {
   private static FONT_SIZE = "2rem";
   private static MAX_WIDTH = "128rem";
 
-  private displayStyle: string;
-
   public constructor(public body: HTMLDivElement) {}
 
   public static create(): HomeComponent {
-    return new HomeComponent(HomeComponent.createView()).init();
-  }
-
-  public init(): this {
-    this.displayStyle = this.body.style.display;
-    return this;
+    return new HomeComponent(HomeComponent.createView());
   }
 
   public static createView() {
@@ -123,11 +116,7 @@ export class HomeComponent {
     );
   }
 
-  public show(): void {
-    this.body.style.display = this.displayStyle;
-  }
-
-  public hide(): void {
-    this.body.style.display = "none";
+  public remove(): void {
+    this.body.remove();
   }
 }

@@ -112,7 +112,7 @@ PUPPETEER_TEST_RUNNER.run({
         assertThat(counter.get("hide"), eq(1), "hide button");
       }
       public tearDown() {
-        this.nicknameComponent.body.remove();
+        this.nicknameComponent.remove();
       }
     })(),
     {

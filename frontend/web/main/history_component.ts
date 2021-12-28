@@ -10,7 +10,6 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
 export class HistoryComponent {
-  private displayStyle: string;
   private buttonDisplayStyle: string;
   private cursor: string;
   private dateFormatter: Intl.DateTimeFormat;
@@ -143,7 +142,6 @@ export class HistoryComponent {
   }
 
   public init(): this {
-    this.displayStyle = this.body.style.display;
     this.buttonDisplayStyle = this.buttonContainer.style.display;
     this.showMoreButton.on("click", () => this.loadMore());
     return this;
@@ -184,11 +182,10 @@ export class HistoryComponent {
       this.entryListContainer.lastElementChild.remove();
     }
     this.buttonContainer.style.display = this.buttonDisplayStyle;
-    this.body.style.display = this.displayStyle;
     await this.showMoreButton.click();
   }
 
-  public hide(): void {
-    this.body.style.display = "none";
+  public remove(): void {
+    this.body.remove();
   }
 }

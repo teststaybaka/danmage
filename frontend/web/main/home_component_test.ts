@@ -34,7 +34,7 @@ PUPPETEER_TEST_RUNNER.run({
         );
       }
       public tearDown() {
-        this.homeComponent.body.remove();
+        this.homeComponent.remove();
       }
     })(),
   ],

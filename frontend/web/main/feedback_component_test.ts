@@ -88,7 +88,7 @@ PUPPETEER_TEST_RUNNER.run({
         assertThat(keepDisableds, eqArray([eq(undefined)]), `enable button`);
       }
       public tearDown() {
-        this.feedbackComponent.body.remove();
+        this.feedbackComponent.remove();
       }
     })(),
   ],

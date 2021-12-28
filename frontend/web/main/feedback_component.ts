@@ -8,8 +8,6 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
 export class FeedbackComponent {
-  private displayStyle: string;
-
   public constructor(
     public body: HTMLDivElement,
     private textarea: HTMLTextAreaElement,
@@ -74,7 +72,6 @@ export class FeedbackComponent {
   }
 
   public init(): this {
-    this.displayStyle = this.body.style.display;
     this.button.on("click", () => this.submit());
     return this;
   }
@@ -93,11 +90,7 @@ export class FeedbackComponent {
     this.textarea.value = "";
   }
 
-  public show(): void {
-    this.body.style.display = this.displayStyle;
-  }
-
-  public hide(): void {
-    this.body.style.display = "none";
+  public remove(): void {
+    this.body.remove();
   }
 }

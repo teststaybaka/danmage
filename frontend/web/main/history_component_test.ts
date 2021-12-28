@@ -153,7 +153,7 @@ PUPPETEER_TEST_RUNNER.run({
         );
       }
       public tearDown() {
-        this.historyComponent.body.remove();
+        this.historyComponent.remove();
       }
     })(),
   ],
