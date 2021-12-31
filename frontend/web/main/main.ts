@@ -1,10 +1,10 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { normalizeBody } from "../../body_normalizer";
 import { BodyComponent } from "./body_component";
+import { BODY_STATE } from "./body_state";
 import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { SERVICE_CLIENT } from "./service_client";
-import { STATE, State } from "./state";
-import { createTrackerAndPusher } from "@selfage/stateful_navigator";
+import { createLoaderAndUpdater } from "@selfage/stateful_navigator";
 import "../../../environment";
 
 function main(): void {
@@ -21,22 +21,14 @@ function main(): void {
   }
   SERVICE_CLIENT.origin = origin;
 
-  let defaultState = new State();
-  defaultState.showHome = true;
   let queryParamKeyForState = "q";
-  let [browserHistoryTracker, browserHistoryPusher] = createTrackerAndPusher(
-    defaultState,
-    STATE,
+  let [loader, updater] = createLoaderAndUpdater(
+    BODY_STATE,
     queryParamKeyForState
   );
   document.body.appendChild(
-    BodyComponent.create(
-      browserHistoryTracker.state,
-      browserHistoryPusher,
-      origin
-    ).body
+    BodyComponent.create(loader.state, updater, origin).body
   );
-  browserHistoryTracker.initLoad();
 }
 
 main();

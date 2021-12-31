@@ -2,23 +2,23 @@ import { SIGN_IN } from "../../../interface/service";
 import { normalizeBody } from "../../body_normalizer";
 import { TextButtonComponentMock } from "../../mocks";
 import { BodyComponent } from "./body_component";
+import { BodyState, Page } from "./body_state";
 import {
   FeedbackComponentMock,
   HistoryComponentMock,
   HomeComponentMock,
   NicknameComponentMock,
 } from "./mocks";
-import { State } from "./state";
 import { Counter } from "@selfage/counter";
 import { E } from "@selfage/element/factory";
 import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
 import { ServiceClientMock } from "@selfage/service_client/mocks";
-import { BrowserHistoryPusher } from "@selfage/stateful_navigator/browser_history_pusher";
+import { HistoryUpdater } from "@selfage/stateful_navigator/history_updater";
 import { assertThat, eq, eqArray } from "@selfage/test_matcher";
 import { PUPPETEER_TEST_RUNNER, TestCase } from "@selfage/test_runner";
 
-export class BrowserHistoryPusherMock extends BrowserHistoryPusher {
+export class HistoryUpdaterMock extends HistoryUpdater {
   public constructor() {
     super(undefined, undefined, undefined);
   }
@@ -50,13 +50,13 @@ PUPPETEER_TEST_RUNNER.run({
         let nicknameComponent = new NicknameComponentMock();
         let historyComponent = new HistoryComponentMock();
         let feedbackComponent = new FeedbackComponentMock();
-        let browserHistoryPusher = new (class extends BrowserHistoryPusherMock {
+        let historyUpdater = new (class extends HistoryUpdaterMock {
           public push() {
             counter.increment("push");
           }
         })();
         let sessionStorage = new LocalSessionStorage();
-        let state = new State();
+        let bodyState = new BodyState();
         let serviceClient = new ServiceClientMock();
         let windowMock = new (class {
           public location = {};
@@ -78,15 +78,14 @@ PUPPETEER_TEST_RUNNER.run({
           () => nicknameComponent,
           () => historyComponent,
           () => feedbackComponent,
-          state,
-          browserHistoryPusher,
+          bodyState,
+          historyUpdater,
           "http://random.origin.com",
           sessionStorage,
           serviceClient,
           windowMock
         ).init();
         document.body.appendChild(this.bodyComponent.body);
-        state.showHome = true;
 
         // Verify
         await asyncAssertScreenshot(
@@ -133,8 +132,7 @@ PUPPETEER_TEST_RUNNER.run({
           eqArray([eq(undefined)]),
           "feedback button enabled"
         );
-        assertThat(state.showFeedback, eq(true), "show feedback");
-        assertThat(state.showHome, eq(undefined), "hide home");
+        assertThat(bodyState.page, eq(Page.FEEDBACK), "show feedback");
         await asyncAssertScreenshot(
           __dirname + "/body_component_feedback.png",
           __dirname + "/golden/body_component_feedback.png",
@@ -174,14 +172,14 @@ PUPPETEER_TEST_RUNNER.run({
           }
         })();
         let feedbackComponent = new FeedbackComponentMock();
-        let browserHistoryPusher = new (class extends BrowserHistoryPusherMock {
+        let historyUpdater = new (class extends HistoryUpdaterMock {
           public push() {
             counter.increment("push");
           }
         })();
         let sessionStorage = new LocalSessionStorage();
         sessionStorage.save("some signed session");
-        let state = new State();
+        let bodyState = new BodyState();
         let serviceClient = new ServiceClientMock();
         let windowMock = new (class {
           public location = {};
@@ -203,15 +201,14 @@ PUPPETEER_TEST_RUNNER.run({
           () => nicknameComponent,
           () => historyComponent,
           () => feedbackComponent,
-          state,
-          browserHistoryPusher,
+          bodyState,
+          historyUpdater,
           "http://random.origin.com",
           sessionStorage,
           serviceClient,
           windowMock
         ).init();
         document.body.appendChild(this.bodyComponent.body);
-        state.showHome = true;
 
         // Verify
         await asyncAssertScreenshot(
@@ -232,8 +229,7 @@ PUPPETEER_TEST_RUNNER.run({
           eqArray([eq(undefined)]),
           "nickname button enabled"
         );
-        assertThat(state.showNickname, eq(true), "show nickname");
-        assertThat(state.showHome, eq(undefined), "hide home");
+        assertThat(bodyState.page, eq(Page.NICKNAME), "show nickname");
         await asyncAssertScreenshot(
           __dirname + "/body_component_nickname.png",
           __dirname + "/golden/body_component_nickname.png",
@@ -252,8 +248,7 @@ PUPPETEER_TEST_RUNNER.run({
           eqArray([eq(undefined)]),
           "history button enabled"
         );
-        assertThat(state.showHistory, eq(true), "show history");
-        assertThat(state.showNickname, eq(undefined), "hide nickname");
+        assertThat(bodyState.page, eq(Page.HISTORY), "show history");
         await asyncAssertScreenshot(
           __dirname + "/body_component_history.png",
           __dirname + "/golden/body_component_history.png",
@@ -286,9 +281,10 @@ PUPPETEER_TEST_RUNNER.run({
         let nicknameComponent = new NicknameComponentMock();
         let historyComponent = new HistoryComponentMock();
         let feedbackComponent = new FeedbackComponentMock();
-        let browserHistoryPusher = new BrowserHistoryPusherMock();
+        let historyUpdater = new HistoryUpdaterMock();
         let sessionStorage = new LocalSessionStorage();
-        let state = new State();
+        let bodyState = new BodyState();
+        bodyState.page = Page.FEEDBACK;
         let serviceClient = new (class extends ServiceClientMock {
           public fetchUnauthedAny(request: any, serviceDescriptor: any): any {
             counter.increment("fetchUnauthed");
@@ -330,15 +326,14 @@ PUPPETEER_TEST_RUNNER.run({
           () => nicknameComponent,
           () => historyComponent,
           () => feedbackComponent,
-          state,
-          browserHistoryPusher,
+          bodyState,
+          historyUpdater,
           "http://some.origin.com",
           sessionStorage,
           serviceClient,
           windowMock
         ).init();
         document.body.appendChild(this.bodyComponent.body);
-        state.showFeedback = true;
         signInButton.click();
 
         // Verify

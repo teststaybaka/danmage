@@ -1,6 +1,7 @@
 import { SIGN_IN } from "../../../interface/service";
 import { TextButtonComponent } from "../../button_component";
 import { BLUE, ColorScheme, ORANGE } from "../../color_scheme";
+import { BodyState, Page } from "./body_state";
 import { SIDE_PADDING } from "./common_style";
 import { FeedbackComponent } from "./feedback_component";
 import { HistoryComponent } from "./history_component";
@@ -9,20 +10,23 @@ import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
 import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { NicknameComponent } from "./nickname_component";
 import { SERVICE_CLIENT } from "./service_client";
-import { State } from "./state";
 import { E } from "@selfage/element/factory";
 import { HideableElementController } from "@selfage/element/hideable_element_controller";
 import { TabsSwitcher } from "@selfage/element/tabs_switcher";
 import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
-import { BrowserHistoryPusher } from "@selfage/stateful_navigator/browser_history_pusher";
-import { TabsNavigator } from "@selfage/stateful_navigator/tabs";
+import { HistoryUpdater } from "@selfage/stateful_navigator/history_updater";
 
 export class BodyComponent {
+  private pageSwitcher = TabsSwitcher.create();
   private signInButtonsSwitcher = TabsSwitcher.create();
   private hideableSignInButton: HideableElementController;
   private hideableSignedInButtonsContainer: HideableElementController;
+  private homeComponent: HomeComponent;
+  private nicknameComponent: NicknameComponent;
+  private historyComponent: HistoryComponent;
+  private feedbackComponent: FeedbackComponent;
 
   public constructor(
     public body: HTMLDivElement,
@@ -40,8 +44,8 @@ export class BodyComponent {
     private nicknameComponentFactoryFn: () => NicknameComponent,
     private historyComponentFactoryFn: () => HistoryComponent,
     private feedbackComponentFactoryFn: () => FeedbackComponent,
-    private state: State,
-    private browserHistoryPusher: BrowserHistoryPusher,
+    private bodyState: BodyState,
+    private historyUpdater: HistoryUpdater,
     private origin: string,
     private localSessionStorage: LocalSessionStorage,
     private serviceClient: ServiceClient,
@@ -49,8 +53,8 @@ export class BodyComponent {
   ) {}
 
   public static create(
-    state: State,
-    browserHistoryPusher: BrowserHistoryPusher,
+    bodyState: BodyState,
+    historyUpdater: HistoryUpdater,
     origin: string
   ): BodyComponent {
     return new BodyComponent(
@@ -66,8 +70,8 @@ export class BodyComponent {
       () => NicknameComponent.create(),
       () => HistoryComponent.create(),
       () => FeedbackComponent.create(),
-      state,
-      browserHistoryPusher,
+      bodyState,
+      historyUpdater,
       origin,
       LOCAL_SESSION_STORAGE,
       SERVICE_CLIENT,
@@ -248,53 +252,13 @@ export class BodyComponent {
   }
 
   public init(): this {
-    new TabsNavigator(this.browserHistoryPusher)
-      .add(
-        "home",
-        (callback) => this.state.on("showHome", callback),
-        (value) => (this.state.showHome = value),
-        (callback) => this.logo.addEventListener("click", callback),
-        () => {
-          let homeComponent = this.homeComponentFactoryFn();
-          this.tabsContainer.appendChild(homeComponent.body);
-          return homeComponent;
-        }
-      )
-      .add(
-        "nickname",
-        (callback) => this.state.on("showNickname", callback),
-        (value) => (this.state.showNickname = value),
-        (callback) => this.nicknameButton.on("click", callback),
-        () => {
-          let nicknameComponent = this.nicknameComponentFactoryFn();
-          this.tabsContainer.appendChild(nicknameComponent.body);
-          nicknameComponent.show();
-          return nicknameComponent;
-        }
-      )
-      .add(
-        "history",
-        (callback) => this.state.on("showHistory", callback),
-        (value) => (this.state.showHistory = value),
-        (callback) => this.historyButton.on("click", callback),
-        () => {
-          let historyComponent = this.historyComponentFactoryFn();
-          this.tabsContainer.appendChild(historyComponent.body);
-          historyComponent.show();
-          return historyComponent;
-        }
-      )
-      .add(
-        "feedback",
-        (callback) => this.state.on("showFeedback", callback),
-        (value) => (this.state.showFeedback = value),
-        (callback) => this.feedbackButton.on("click", callback),
-        () => {
-          let feedbackComponent = this.feedbackComponentFactoryFn();
-          this.tabsContainer.appendChild(feedbackComponent.body);
-          return feedbackComponent;
-        }
-      );
+    this.showPage(this.bodyState.page);
+    this.bodyState.on("page", (value) => this.showPage(value));
+
+    this.logo.addEventListener("click", () => this.gotoPage(Page.HOME));
+    this.nicknameButton.on("click", () => this.gotoPage(Page.NICKNAME));
+    this.historyButton.on("click", () => this.gotoPage(Page.HISTORY));
+    this.feedbackButton.on("click", () => this.gotoPage(Page.FEEDBACK));
     this.termsButton.on("click", () => this.gotoTerms());
     this.privacyButton.on("click", () => this.gotoPrivacy());
 
@@ -319,6 +283,57 @@ export class BodyComponent {
     );
     this.serviceClient.on("unauthenticated", () => this.showSignInButton());
     return this;
+  }
+
+  private showPage(page: Page): void {
+    if (!page || page === Page.HOME) {
+      this.pageSwitcher.show(
+        () => {
+          this.homeComponent = this.homeComponentFactoryFn();
+          this.tabsContainer.appendChild(this.homeComponent.body);
+        },
+        () => {
+          this.homeComponent.remove();
+        }
+      );
+    } else if (page === Page.NICKNAME) {
+      this.pageSwitcher.show(
+        async () => {
+          this.nicknameComponent = this.nicknameComponentFactoryFn();
+          this.tabsContainer.appendChild(this.nicknameComponent.body);
+          await this.nicknameComponent.show();
+        },
+        () => {
+          this.nicknameComponent.remove();
+        }
+      );
+    } else if (page === Page.HISTORY) {
+      this.pageSwitcher.show(
+        async () => {
+          this.historyComponent = this.historyComponentFactoryFn();
+          this.tabsContainer.appendChild(this.historyComponent.body);
+          await this.historyComponent.show();
+        },
+        () => {
+          this.historyComponent.remove();
+        }
+      );
+    } else if (page === Page.FEEDBACK) {
+      this.pageSwitcher.show(
+        () => {
+          this.feedbackComponent = this.feedbackComponentFactoryFn();
+          this.tabsContainer.appendChild(this.feedbackComponent.body);
+        },
+        () => {
+          this.feedbackComponent.remove();
+        }
+      );
+    }
+  }
+
+  private gotoPage(page: Page): void {
+    this.bodyState.page = page;
+    this.historyUpdater.push();
   }
 
   private gotoTerms(): void {
