@@ -5,7 +5,6 @@ import "./chrome_extension/content_script/common/linked_list_test";
 import "./chrome_extension/content_script/danmaku_canvas/danmaku_canvas_controller_test";
 import "./chrome_extension/content_script/danmaku_canvas/danmaku_element_component_test";
 import "./web/main/body_component_test";
-import "./web/main/browser_history_pusher_test";
 import "./web/main/feedback_component_test";
 import "./web/main/history_component_test";
 import "./web/main/home_component_test";

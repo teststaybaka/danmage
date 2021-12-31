@@ -129,7 +129,6 @@ export class DanmakuCanvasController {
       );
     let initScore = 0;
     let initY = this.getInitY(startY, endY, elementHeight);
-    console.log(`${startY} ${endY} ${initY}`);
     for (let i = initY; i < initY + elementHeight; i++) {
       initScore += this.occupied[i];
     }
