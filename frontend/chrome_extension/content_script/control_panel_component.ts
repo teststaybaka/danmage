@@ -9,8 +9,8 @@ import { GlobalDocuments } from "./common/global_documents";
 import { DisplaySettingsTabComponent } from "./display_settings_tab/display_settings_tab_component";
 import { PlayerSettingsStorage } from "./player_settings_storage";
 import { E } from "@selfage/element/factory";
-import { TabsSwitcher } from "@selfage/element/tabs_switcher";
 import { Ref } from "@selfage/ref";
+import { TabsSwitcher } from "@selfage/tabs";
 
 export interface ControlPanelComponent {
   on(
