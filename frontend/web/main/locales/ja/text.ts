@@ -28,6 +28,9 @@ export default class Text extends DefaultText {
   get introCrunchyroll() {
     return `この拡張機能はCrunchyrollをサポートしていますが、残念ながら、この拡張機能の人気が十分に得られていないため、コメントが見つからない可能性があります　¯\\ _（ツ）_ /¯ 動画の進行状況バーの周辺でカスタマイズ可能な設定を見つけることができます。同じ場所でログインした後、コメントの投稿する事ができます。 コメントはこのサイトに保存されます。`;
   }
+  get directFeedbackSuggestion() {
+    return `contact@danmage.comに直接フィードバックを送信するか、以下のフォームに記入して送信してくださ。`;
+  }
   get submitFeedbackButton() {
     return `送信`;
   }

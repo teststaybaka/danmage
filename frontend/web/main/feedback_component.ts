@@ -1,5 +1,6 @@
 import { REPORT_USER_ISSUE } from "../../../interface/service";
 import { FillButtonComponent } from "../../button_component";
+import { ColorScheme } from "../../color_scheme";
 import { INPUT_STYLE, LABEL_STYLE } from "./common_style";
 import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { SERVICE_CLIENT } from "./service_client";
@@ -33,6 +34,13 @@ export class FeedbackComponent {
         class: "feedback-body",
         style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem; box-sizing: border-box;`,
       },
+      E.div(
+        {
+          class: "feedback-line",
+          style: `width: 100%; padding-bottom: 6rem; font-size: 1.4rem; color: ${ColorScheme.getContent()}; text-align: center;`,
+        },
+        E.text(LOCALIZED_TEXT.directFeedbackSuggestion)
+      ),
       E.div(
         {
           class: "feedback-line",

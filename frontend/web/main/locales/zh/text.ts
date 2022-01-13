@@ -28,6 +28,9 @@ export default class Text extends DefaultText {
   get introCrunchyroll() {
     return `该扩展支持Crunchyroll的视频，尽管你可能并不能看到任何弹幕，因为该扩展并没有火起来 ¯\\_(ツ)_/¯. 你可以在视频控制栏里找到自定义设置，同时也可以用来发送弹幕（需要先登录）。弹幕会被存储在这个网站上。`;
   }
+  get directFeedbackSuggestion() {
+    return `你可以直接发送反馈至contact@danmage.com或者填写并提交以下的表单。`;
+  }
   get submitFeedbackButton() {
     return `提交`;
   }

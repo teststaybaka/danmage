@@ -26,6 +26,9 @@ export default class Text {
   get introCrunchyroll() {
     return `It works on Crunchyroll videos, though unfortunatley you might not find any chats because this extension hasn't gained enough popularity ¯\\_(ツ)_/¯. Find customizable options around video player controller, which can also be used to post chats, after signed in to the extension. Chats will be stored in this site.`;
   }
+  get directFeedbackSuggestion() {
+    return `You can send your feedback directly to contact@danmage.com or fill the form below.`;
+  }
   get submitFeedbackButton() {
     return `Submit`;
   }
