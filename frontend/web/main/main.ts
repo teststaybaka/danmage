@@ -10,6 +10,10 @@ import "../../../environment";
 function main(): void {
   normalizeBody();
   document.title = LOCALIZED_TEXT.title;
+  let viewPortMeta = document.createElement('meta');
+  viewPortMeta.name = "viewport";
+  viewPortMeta.content = "width=device-width, initial-scale=1";
+  document.head.appendChild(viewPortMeta);
 
   let origin = "";
   if (globalThis.ENVIRONMENT === "prod") {
