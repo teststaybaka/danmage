@@ -25,9 +25,7 @@ PUPPETEER_TEST_RUNNER.run({
       public async execute() {
         // Prepare
         let counter = new Counter<string>();
-        let [body, textarea, input, button] = FeedbackComponent.createView(
-          new FillButtonComponentMock(E.text("Submit"))
-        );
+        let button = new FillButtonComponentMock(E.text("Submit"));
         let serviceClient = new (class extends ServiceClientMock {
           public fetchUnauthedAny(request: any, serviceDescriptor: any): any {
             counter.increment("fetchUnauthed");
@@ -55,9 +53,6 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         this.feedbackComponent = new FeedbackComponent(
-          body,
-          textarea,
-          input,
           button,
           serviceClient
         ).init();
@@ -73,8 +68,8 @@ PUPPETEER_TEST_RUNNER.run({
         );
 
         // Prepare
-        textarea.value = "some description";
-        input.value = "some email";
+        this.feedbackComponent.textarea.value = "some description";
+        this.feedbackComponent.input.value = "some email";
 
         // Execute
         let keepDisableds = await Promise.all(
@@ -83,8 +78,12 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Verify
         assertThat(counter.get("fetchUnauthed"), eq(1), `fetchUnauthed called`);
-        assertThat(textarea.value, eq(""), `textarea cleared`);
-        assertThat(input.value, eq(""), `input cleared`);
+        assertThat(
+          this.feedbackComponent.textarea.value,
+          eq(""),
+          `textarea cleared`
+        );
+        assertThat(this.feedbackComponent.input.value, eq(""), `input cleared`);
         assertThat(keepDisableds, eqArray([eq(undefined)]), `enable button`);
       }
       public tearDown() {

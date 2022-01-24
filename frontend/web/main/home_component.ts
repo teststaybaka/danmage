@@ -11,14 +11,10 @@ export class HomeComponent {
   private static FONT_SIZE = "2rem";
   private static MAX_WIDTH = "128rem";
 
-  public constructor(public body: HTMLDivElement) {}
+  public body: HTMLDivElement;
 
-  public static create(): HomeComponent {
-    return new HomeComponent(HomeComponent.createView());
-  }
-
-  public static createView() {
-    return E.div(
+  public constructor() {
+    this.body = E.div(
       { class: "home-container" },
       HomeComponent.paragraph(
         ColorScheme.getBackground(),
@@ -54,6 +50,10 @@ export class HomeComponent {
         HomeComponent.textElement(LOCALIZED_TEXT.introCrunchyroll, "white")
       )
     );
+  }
+
+  public static create(): HomeComponent {
+    return new HomeComponent();
   }
 
   private static paragraph(

@@ -19,6 +19,11 @@ import { HistoryUpdater } from "@selfage/stateful_navigator/history_updater";
 import { TabsSwitcher } from "@selfage/tabs";
 
 export class BodyComponent {
+  public body: HTMLDivElement;
+  private logo: HTMLDivElement;
+  public signInButton: HTMLDivElement;
+  private signedInButtonsContainer: HTMLDivElement;
+  private tabsContainer: HTMLDivElement;
   private pageSwitcher = TabsSwitcher.create();
   private signInButtonsSwitcher = TabsSwitcher.create();
   private hideableSignInButton: HideableElementController;
@@ -29,11 +34,6 @@ export class BodyComponent {
   private feedbackComponent: FeedbackComponent;
 
   public constructor(
-    public body: HTMLDivElement,
-    private logo: HTMLDivElement,
-    private signInButton: HTMLDivElement,
-    private signedInButtonsContainer: HTMLDivElement,
-    private tabsContainer: HTMLDivElement,
     private nicknameButton: TextButtonComponent,
     private historyButton: TextButtonComponent,
     private signOutButton: TextButtonComponent,
@@ -50,49 +50,13 @@ export class BodyComponent {
     private localSessionStorage: LocalSessionStorage,
     private serviceClient: ServiceClient,
     private window: Window
-  ) {}
-
-  public static create(
-    bodyState: BodyState,
-    historyUpdater: HistoryUpdater,
-    origin: string
-  ): BodyComponent {
-    return new BodyComponent(
-      ...BodyComponent.createView(
-        TextButtonComponent.create(E.text(LOCALIZED_TEXT.nicknameTab)),
-        TextButtonComponent.create(E.text(LOCALIZED_TEXT.historyTab)),
-        TextButtonComponent.create(E.text(LOCALIZED_TEXT.signOutButton)),
-        TextButtonComponent.create(E.text(LOCALIZED_TEXT.termsTab)),
-        TextButtonComponent.create(E.text(LOCALIZED_TEXT.privacyTab)),
-        TextButtonComponent.create(E.text(LOCALIZED_TEXT.feedbackTab))
-      ),
-      () => HomeComponent.create(),
-      () => NicknameComponent.create(),
-      () => HistoryComponent.create(),
-      () => FeedbackComponent.create(),
-      bodyState,
-      historyUpdater,
-      origin,
-      LOCAL_SESSION_STORAGE,
-      SERVICE_CLIENT,
-      window
-    ).init();
-  }
-
-  public static createView(
-    nicknameButton: TextButtonComponent,
-    historyButton: TextButtonComponent,
-    signOutButton: TextButtonComponent,
-    termsButton: TextButtonComponent,
-    privacyButton: TextButtonComponent,
-    feedbackButton: TextButtonComponent
   ) {
     let logoRef = new Ref<HTMLDivElement>();
     let signInButtonRef = new Ref<HTMLDivElement>();
     let googleIconSvgRef = new Ref<SVGSVGElement>();
     let signedInButtonsContainerRef = new Ref<HTMLDivElement>();
     let tabsContainerRef = new Ref<HTMLDivElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "body",
         style: `display: flex; flex-flow: column nowrap; min-height: 100vh; overflow-y: auto;`,
@@ -236,19 +200,35 @@ export class BodyComponent {
             <g id="handles_square" sketch:type="MSLayerGroup"/>
         </g>
     </g>`;
-    return [
-      body,
-      logoRef.val,
-      signInButtonRef.val,
-      signedInButtonsContainerRef.val,
-      tabsContainerRef.val,
-      nicknameButton,
-      historyButton,
-      signOutButton,
-      termsButton,
-      privacyButton,
-      feedbackButton,
-    ] as const;
+    this.logo = logoRef.val;
+    this.signInButton = signInButtonRef.val;
+    this.signedInButtonsContainer = signedInButtonsContainerRef.val;
+    this.tabsContainer = tabsContainerRef.val;
+  }
+
+  public static create(
+    bodyState: BodyState,
+    historyUpdater: HistoryUpdater,
+    origin: string
+  ): BodyComponent {
+    return new BodyComponent(
+      TextButtonComponent.create(E.text(LOCALIZED_TEXT.nicknameTab)),
+      TextButtonComponent.create(E.text(LOCALIZED_TEXT.historyTab)),
+      TextButtonComponent.create(E.text(LOCALIZED_TEXT.signOutButton)),
+      TextButtonComponent.create(E.text(LOCALIZED_TEXT.termsTab)),
+      TextButtonComponent.create(E.text(LOCALIZED_TEXT.privacyTab)),
+      TextButtonComponent.create(E.text(LOCALIZED_TEXT.feedbackTab)),
+      () => HomeComponent.create(),
+      () => NicknameComponent.create(),
+      () => HistoryComponent.create(),
+      () => FeedbackComponent.create(),
+      bodyState,
+      historyUpdater,
+      origin,
+      LOCAL_SESSION_STORAGE,
+      SERVICE_CLIENT,
+      window
+    ).init();
   }
 
   public init(): this {

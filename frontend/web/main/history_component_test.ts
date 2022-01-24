@@ -111,7 +111,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         this.historyComponent = new HistoryComponent(
-          ...HistoryComponent.createView(button),
+          button,
           serviceClient
         ).init();
         document.body.appendChild(this.historyComponent.body);

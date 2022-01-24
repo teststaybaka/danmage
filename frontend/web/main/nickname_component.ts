@@ -9,28 +9,19 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
 export class NicknameComponent {
+  public body: HTMLDivElement;
+  public input: HTMLInputElement;
+  private inputController: TextInputController;
+
   public constructor(
-    public body: HTMLDivElement,
-    private input: HTMLInputElement,
     private setButton: FillButtonComponent,
-    private inputController: TextInputController,
+    private inputControllerFactoryFn: (
+      input: HTMLInputElement
+    ) => TextInputController,
     private serviceClient: ServiceClient
-  ) {}
-
-  public static create(): NicknameComponent {
-    let views = NicknameComponent.createView(
-      FillButtonComponent.create(E.text(LOCALIZED_TEXT.setNicknameButton))
-    );
-    return new NicknameComponent(
-      ...views,
-      new TextInputController(views[1]),
-      SERVICE_CLIENT
-    ).init();
-  }
-
-  public static createView(setButton: FillButtonComponent) {
-    let input = new Ref<HTMLInputElement>();
-    let body = E.div(
+  ) {
+    let inputRef = new Ref<HTMLInputElement>();
+    this.body = E.div(
       {
         class: "nickname-container",
         style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem; box-sizing: border-box;`,
@@ -45,7 +36,7 @@ export class NicknameComponent {
           { class: "nickname-label", style: LABEL_STYLE },
           E.text(LOCALIZED_TEXT.nicknameInputLabel)
         ),
-        E.inputRef(input, {
+        E.inputRef(inputRef, {
           class: "nickname-input",
           placeholder: "You can only set it once.",
           style: INPUT_STYLE,
@@ -54,10 +45,19 @@ export class NicknameComponent {
       ),
       setButton.body
     );
-    return [body, input.val, setButton] as const;
+    this.input = inputRef.val;
+  }
+
+  public static create(): NicknameComponent {
+    return new NicknameComponent(
+      FillButtonComponent.create(E.text(LOCALIZED_TEXT.setNicknameButton)),
+      TextInputController.create,
+      SERVICE_CLIENT
+    ).init();
   }
 
   public init(): this {
+    this.inputController = this.inputControllerFactoryFn(this.input);
     this.setButton.on("click", () => this.updateNickname());
     this.inputController.on("enter", () => this.setButton.click());
     return this;

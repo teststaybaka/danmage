@@ -10,39 +10,20 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
 export class HistoryComponent {
+  public body: HTMLDivElement;
+  private entryListContainer: HTMLDivElement;
+  private buttonContainer: HTMLDivElement;
   private buttonDisplayStyle: string;
   private cursor: string;
   private dateFormatter: Intl.DateTimeFormat;
 
   public constructor(
-    public body: HTMLDivElement,
-    private entryListContainer: HTMLDivElement,
-    private buttonContainer: HTMLDivElement,
     private showMoreButton: TextButtonComponent,
     private serviceClient: ServiceClient
   ) {
-    this.dateFormatter = new Intl.DateTimeFormat(navigator.language, {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    });
-  }
-
-  public static create(): HistoryComponent {
-    return new HistoryComponent(
-      ...HistoryComponent.createView(
-        TextButtonComponent.create(E.text(LOCALIZED_TEXT.showMoreChatsButton))
-      ),
-      SERVICE_CLIENT
-    ).init();
-  }
-
-  public static createView(showMoreButton: TextButtonComponent) {
     let entryListContainerRef = new Ref<HTMLDivElement>();
     let buttonContainerRef = new Ref<HTMLDivElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "history-container",
         style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center;`,
@@ -71,15 +52,26 @@ export class HistoryComponent {
         showMoreButton.body
       )
     );
-    return [
-      body,
-      entryListContainerRef.val,
-      buttonContainerRef.val,
-      showMoreButton,
-    ] as const;
+    this.entryListContainer = entryListContainerRef.val;
+    this.buttonContainer = buttonContainerRef.val;
+
+    this.dateFormatter = new Intl.DateTimeFormat(navigator.language, {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    });
   }
 
-  public static createEntryView(
+  public static create(): HistoryComponent {
+    return new HistoryComponent(
+      TextButtonComponent.create(E.text(LOCALIZED_TEXT.showMoreChatsButton)),
+      SERVICE_CLIENT
+    ).init();
+  }
+
+  private static createEntryView(
     mod: number,
     hostAppStr: string,
     hostContentIdStr: string,

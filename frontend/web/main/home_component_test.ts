@@ -14,7 +14,7 @@ PUPPETEER_TEST_RUNNER.run({
       private homeComponent: HomeComponent;
       public async execute() {
         // Execute
-        this.homeComponent = HomeComponent.create();
+        this.homeComponent = new HomeComponent();
         document.body.appendChild(this.homeComponent.body);
 
         // Verify

@@ -4,8 +4,7 @@ import { ButtonController } from "@selfage/element/button_controller";
 import { E } from "@selfage/element/factory";
 
 // !important since some website will override it.
-let COMMON_BUTTON_STYLE =
-  `outline: none; border: 0; flex: 0 0 auto; background-color: initial; font-family: initial !important; font-size: 1.4rem; line-height: 100%; border-radius: .5rem; padding: .8rem 1.2rem; cursor: pointer;`;
+let COMMON_BUTTON_STYLE = `outline: none; border: 0; flex: 0 0 auto; background-color: initial; font-family: initial !important; font-size: 1.4rem; line-height: 100%; border-radius: .5rem; padding: .8rem 1.2rem; cursor: pointer;`;
 
 export declare interface FillButtonComponent {
   on(
@@ -15,23 +14,17 @@ export declare interface FillButtonComponent {
 }
 
 export class FillButtonComponent extends EventEmitter {
+  public body: HTMLButtonElement;
+  private controller: ButtonController;
+
   public constructor(
-    public body: HTMLButtonElement,
-    private controller: ButtonController
+    childNodes: Array<Node>,
+    private buttonControllerFactoryFn: (
+      button: HTMLButtonElement
+    ) => ButtonController
   ) {
     super();
-  }
-
-  public static create(...childNodes: Array<Node>): FillButtonComponent {
-    let button = FillButtonComponent.createView(...childNodes);
-    return new FillButtonComponent(
-      button,
-      ButtonController.create(button)
-    ).init();
-  }
-
-  public static createView(...childNodes: Array<Node>): HTMLButtonElement {
-    return E.button(
+    this.body = E.button(
       {
         class: "fill-button",
         style: `${COMMON_BUTTON_STYLE} color: ${ColorScheme.getPrimaryButtonContent()};`,
@@ -40,7 +33,12 @@ export class FillButtonComponent extends EventEmitter {
     );
   }
 
+  public static create(...childNodes: Array<Node>): FillButtonComponent {
+    return new FillButtonComponent(childNodes, ButtonController.create).init();
+  }
+
   public init(): this {
+    this.controller = this.buttonControllerFactoryFn(this.body);
     this.controller.on("enable", () => this.enable());
     this.controller.on("disable", () => this.handleDisable());
     this.controller.on("down", () => this.down());
@@ -100,29 +98,28 @@ export declare interface TextButtonComponent {
 }
 
 export class TextButtonComponent extends EventEmitter {
+  public body: HTMLButtonElement;
+  private controller: ButtonController;
+
   public constructor(
-    public body: HTMLButtonElement,
-    private controller: ButtonController
+    childNodes: Array<Node>,
+    private buttonControllerFactoryFn: (
+      button: HTMLButtonElement
+    ) => ButtonController
   ) {
     super();
-  }
-
-  public static create(...childNodes: Array<Node>): TextButtonComponent {
-    let button = TextButtonComponent.createView(...childNodes);
-    return new TextButtonComponent(
-      button,
-      ButtonController.create(button)
-    ).init();
-  }
-
-  public static createView(...childNodes: Array<Node>): HTMLButtonElement {
-    return E.button(
+    this.body = E.button(
       { class: "text-button", style: COMMON_BUTTON_STYLE },
       ...childNodes
     );
   }
 
+  public static create(...childNodes: Array<Node>): TextButtonComponent {
+    return new TextButtonComponent(childNodes, ButtonController.create).init();
+  }
+
   public init(): this {
+    this.controller = this.buttonControllerFactoryFn(this.body);
     this.controller.on("enable", () => this.enable());
     this.controller.on("disable", () => this.handleDisable());
     this.controller.on("down", () => this.down());

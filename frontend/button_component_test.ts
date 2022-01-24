@@ -24,10 +24,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         document.body.appendChild(
-          new FillButtonComponent(
-            FillButtonComponent.createView(E.text("Primary")),
-            button
-          ).init().body
+          new FillButtonComponent([E.text("Primary")], () => button).init().body
         );
 
         // Verify
@@ -57,10 +54,7 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         document.body.appendChild(
-          new TextButtonComponent(
-            TextButtonComponent.createView(E.text("Text")),
-            button
-          ).init().body
+          new TextButtonComponent([E.text("Text")], () => button).init().body
         );
 
         // Verify

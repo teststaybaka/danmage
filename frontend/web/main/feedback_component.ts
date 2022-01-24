@@ -9,27 +9,17 @@ import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
 
 export class FeedbackComponent {
+  public body: HTMLDivElement;
+  public textarea: HTMLTextAreaElement;
+  public input: HTMLInputElement;
+
   public constructor(
-    public body: HTMLDivElement,
-    private textarea: HTMLTextAreaElement,
-    private input: HTMLInputElement,
     private button: FillButtonComponent,
     private serviceClient: ServiceClient
-  ) {}
-
-  public static create(): FeedbackComponent {
-    return new FeedbackComponent(
-      ...FeedbackComponent.createView(
-        FillButtonComponent.create(E.text(LOCALIZED_TEXT.submitFeedbackButton))
-      ),
-      SERVICE_CLIENT
-    ).init();
-  }
-
-  public static createView(button: FillButtonComponent) {
+  ) {
     let textareaRef = new Ref<HTMLTextAreaElement>();
     let inputRef = new Ref<HTMLInputElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "feedback-body",
         style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: 5rem; box-sizing: border-box;`,
@@ -76,7 +66,15 @@ export class FeedbackComponent {
       ),
       button.body
     );
-    return [body, textareaRef.val, inputRef.val, button] as const;
+    this.textarea = textareaRef.val;
+    this.input = inputRef.val;
+  }
+
+  public static create(): FeedbackComponent {
+    return new FeedbackComponent(
+      FillButtonComponent.create(E.text(LOCALIZED_TEXT.submitFeedbackButton)),
+      SERVICE_CLIENT
+    ).init();
   }
 
   public init(): this {

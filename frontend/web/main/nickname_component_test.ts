@@ -71,11 +71,9 @@ PUPPETEER_TEST_RUNNER.run({
         })();
 
         // Execute
-        let views = NicknameComponent.createView(setButton);
-        let input = views[1];
         this.nicknameComponent = new NicknameComponent(
-          ...views,
-          inputController,
+          setButton,
+          () => inputController,
           serviceClient
         ).init();
         document.body.appendChild(this.nicknameComponent.body);
@@ -95,7 +93,7 @@ PUPPETEER_TEST_RUNNER.run({
         );
 
         // Prepare
-        input.value = "new name";
+        this.nicknameComponent.input.value = "new name";
 
         // Execute
         let keepDisableds = await Promise.all(
@@ -120,7 +118,6 @@ PUPPETEER_TEST_RUNNER.run({
       execute: async () => {
         // Prepare
         let counter = new Counter<string>();
-        let input = E.input({});
         let inputController = new (class extends TextInputController {
           public constructor() {
             super(undefined);
@@ -151,10 +148,8 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         let nicknameComponent = new NicknameComponent(
-          E.div({}),
-          input,
           setButton,
-          inputController,
+          () => inputController,
           serviceClient
         ).init();
         await nicknameComponent.show();
@@ -162,7 +157,11 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(counter.get("fetchAuthed"), eq(1), `fetchAuthed called`);
         assertThat(counter.get("hide"), eq(1), `hide called`);
-        assertThat(input.value, eq("some name"), `input value`);
+        assertThat(
+          nicknameComponent.input.value,
+          eq("some name"),
+          `input value`
+        );
       },
     },
     {
@@ -184,10 +183,8 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         new NicknameComponent(
-          E.div({}),
-          undefined,
           setButton,
-          inputController,
+          () => inputController,
           serviceClient
         ).init();
         await inputController.enter();

@@ -66,14 +66,12 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         this.bodyComponent = new BodyComponent(
-          ...BodyComponent.createView(
-            nicknameButton,
-            historyButton,
-            signOutButton,
-            termsButton,
-            privacyButton,
-            feedbackButton
-          ),
+          nicknameButton,
+          historyButton,
+          signOutButton,
+          termsButton,
+          privacyButton,
+          feedbackButton,
           () => homeComponent,
           () => nicknameComponent,
           () => historyComponent,
@@ -189,14 +187,12 @@ PUPPETEER_TEST_RUNNER.run({
 
         // Execute
         this.bodyComponent = new BodyComponent(
-          ...BodyComponent.createView(
-            nicknameButton,
-            historyButton,
-            signOutButton,
-            termsButton,
-            privacyButton,
-            feedbackButton
-          ),
+          nicknameButton,
+          historyButton,
+          signOutButton,
+          termsButton,
+          privacyButton,
+          feedbackButton,
           () => homeComponent,
           () => nicknameComponent,
           () => historyComponent,
@@ -311,17 +307,13 @@ PUPPETEER_TEST_RUNNER.run({
         await globalThis.setViewport(1280, 600);
 
         // Execute
-        let views = BodyComponent.createView(
+        this.bodyComponent = new BodyComponent(
           nicknameButton,
           historyButton,
           signOutButton,
           termsButton,
           privacyButton,
-          feedbackButton
-        );
-        let signInButton = views[2];
-        this.bodyComponent = new BodyComponent(
-          ...views,
+          feedbackButton,
           () => homeComponent,
           () => nicknameComponent,
           () => historyComponent,
@@ -334,7 +326,7 @@ PUPPETEER_TEST_RUNNER.run({
           windowMock
         ).init();
         document.body.appendChild(this.bodyComponent.body);
-        signInButton.click();
+        this.bodyComponent.signInButton.click();
 
         // Verify
         assertThat(counter.get("open"), eq(1), "open called");
