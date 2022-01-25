@@ -166,6 +166,43 @@ export class ControlPanelComponent extends EventEmitter {
     this.blockSettingsTabButton = blockSettingsTabButtonRef.val;
   }
 
+  private static createTabHead(
+    tabHead: Ref<HTMLDivElement>,
+    tabButton: Ref<HTMLDivElement>,
+    titleText: string,
+    svgPath: string
+  ): HTMLDivElement {
+    return E.divRef(
+      tabHead,
+      {
+        class: "control-panel-tab-head",
+        style: `display: inline-flex; align-items: center; border-radius: .5rem .5rem 0 0; transition: ${ControlPanelComponent.WIDTH_TRANSITION_STYLE}; overflow: hidden;`,
+      },
+      E.divRef(
+        tabButton,
+        {
+          class: "control-panel-tab-button",
+          style: `flex-shrink: 0; height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; padding: .3rem; box-sizing: border-box; cursor: pointer;`,
+        },
+        E.svg(
+          {
+            class: "control-panel-tab-button-svg",
+            style: `display: block; height: 100%; fill: ${ColorScheme.getSvgContent()};`,
+            viewBox: "0 0 200 200",
+          },
+          E.path({ class: "control-panel-tab-button-path", d: svgPath })
+        )
+      ),
+      E.div(
+        {
+          class: "control-panel-title",
+          style: `flex-grow: 1; font-size: 1.4rem; line-height: 100%; font-family: initial !important; text-align: center; white-space: nowrap; color: ${ColorScheme.getContent()};`,
+        },
+        E.text(titleText)
+      )
+    );
+  }
+
   public static createYouTubeStructured(
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
@@ -262,43 +299,6 @@ export class ControlPanelComponent extends EventEmitter {
       playerSettings,
       PlayerSettingsStorage.create()
     ).init();
-  }
-
-  private static createTabHead(
-    tabHead: Ref<HTMLDivElement>,
-    tabButton: Ref<HTMLDivElement>,
-    titleText: string,
-    svgPath: string
-  ): HTMLDivElement {
-    return E.divRef(
-      tabHead,
-      {
-        class: "control-panel-tab-head",
-        style: `display: inline-flex; align-items: center; border-radius: .5rem .5rem 0 0; transition: ${ControlPanelComponent.WIDTH_TRANSITION_STYLE}; overflow: hidden;`,
-      },
-      E.divRef(
-        tabButton,
-        {
-          class: "control-panel-tab-button",
-          style: `flex-shrink: 0; height: ${ControlPanelComponent.TAB_BUTTON_WIDTH}rem; padding: .3rem; box-sizing: border-box; cursor: pointer;`,
-        },
-        E.svg(
-          {
-            class: "control-panel-tab-button-svg",
-            style: `display: block; height: 100%; fill: ${ColorScheme.getSvgContent()};`,
-            viewBox: "0 0 200 200",
-          },
-          E.path({ class: "control-panel-tab-button-path", d: svgPath })
-        )
-      ),
-      E.div(
-        {
-          class: "control-panel-title",
-          style: `flex-grow: 1; font-size: 1.4rem; line-height: 100%; font-family: initial !important; text-align: center; white-space: nowrap; color: ${ColorScheme.getContent()};`,
-        },
-        E.text(titleText)
-      )
-    );
   }
 
   public init(): this {
