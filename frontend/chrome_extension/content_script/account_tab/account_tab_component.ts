@@ -12,30 +12,15 @@ import { parseMessage } from "@selfage/message/parser";
 import { ServiceClient } from "@selfage/service_client";
 
 export class AccountTabComponent {
+  public body: HTMLDivElement;
+
   public constructor(
-    public body: HTMLDivElement,
     private signInComponent: SignInComponent,
     private welcomeComponent: WelcomeComponent,
     private chromeRuntime: ChromeRuntime,
     private serviceClient: ServiceClient
-  ) {}
-
-  public static create(): AccountTabComponent {
-    return new AccountTabComponent(
-      ...AccountTabComponent.createView(
-        SignInComponent.create(),
-        WelcomeComponent.create()
-      ),
-      ChromeRuntime.create(),
-      SERVICE_CLIENT
-    ).init();
-  }
-
-  public static createView(
-    signInComponent: SignInComponent,
-    welcomeComponent: WelcomeComponent
   ) {
-    let body = E.div(
+    this.body = E.div(
       {
         class: "account-tab",
         style: `padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%; height: 100%;`,
@@ -43,7 +28,15 @@ export class AccountTabComponent {
       signInComponent.body,
       welcomeComponent.body
     );
-    return [body, signInComponent, welcomeComponent] as const;
+  }
+
+  public static create(): AccountTabComponent {
+    return new AccountTabComponent(
+      SignInComponent.create(),
+      WelcomeComponent.create(),
+      ChromeRuntime.create(),
+      SERVICE_CLIENT
+    ).init();
   }
 
   public init(): this {

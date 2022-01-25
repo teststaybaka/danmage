@@ -18,60 +18,27 @@ export interface BlockSettingsTabComponent {
 }
 
 export class BlockSettingsTabComponent extends EventEmitter {
+  public body: HTMLDivElement;
+  private patternInput: HTMLInputElement;
+  private blockEntryList: HTMLDivElement;
+  private patternInputController: CustomTextInputController;
   private displayStyle: string;
 
   public constructor(
-    public body: HTMLDivElement,
-    private patternInput: HTMLInputElement,
-    private blockEntryList: HTMLDivElement,
     private dropdownListComponent: DropdownListComponent<BlockKind>,
     private submitButton: FillButtonComponent,
-    private patternInputController: CustomTextInputController,
+    private patternInputControllerFactoryFn: (
+      input: HTMLInputElement
+    ) => CustomTextInputController,
     private blockEntryComponentFactoryFn: (
       blockPattern: BlockPattern
     ) => BlockEntryComponent,
     private blockSettings: BlockSettings
   ) {
     super();
-  }
-
-  public static create(
-    blockSettings: BlockSettings
-  ): BlockSettingsTabComponent {
-    let views = BlockSettingsTabComponent.createView(
-      DropdownListComponent.create(".8rem", [
-        {
-          kind: BlockKind.KeywordBlockKind,
-          localizedMsg: chrome.i18n.getMessage(
-            BlockKind[BlockKind.KeywordBlockKind]
-          ),
-        },
-        {
-          kind: BlockKind.RegExpBlockKind,
-          localizedMsg: chrome.i18n.getMessage(
-            BlockKind[BlockKind.RegExpBlockKind]
-          ),
-        },
-      ]),
-      FillButtonComponent.create(
-        E.text(chrome.i18n.getMessage("addBlockRuleButton"))
-      )
-    );
-    return new BlockSettingsTabComponent(
-      ...views,
-      CustomTextInputController.create(views[1]),
-      BlockEntryComponent.create,
-      blockSettings
-    ).init();
-  }
-
-  public static createView(
-    dropdownListComponent: DropdownListComponent<BlockKind>,
-    submitButton: FillButtonComponent
-  ) {
     let patternInputRef = new Ref<HTMLInputElement>();
     let blockEntryListRef = new Ref<HTMLDivElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "block-settings-tab-container",
         style: `display: flex; flex-flow: column nowrap; height: 100%;`,
@@ -94,16 +61,41 @@ export class BlockSettingsTabComponent extends EventEmitter {
         style: `flex-grow: 1; width: 100%; margin-top: .7rem; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; overflow-y: auto;`,
       })
     );
-    return [
-      body,
-      patternInputRef.val,
-      blockEntryListRef.val,
-      dropdownListComponent,
-      submitButton,
-    ] as const;
+    this.patternInput = patternInputRef.val;
+    this.blockEntryList = blockEntryListRef.val;
+  }
+
+  public static create(
+    blockSettings: BlockSettings
+  ): BlockSettingsTabComponent {
+    return new BlockSettingsTabComponent(
+      DropdownListComponent.create(".8rem", [
+        {
+          kind: BlockKind.KeywordBlockKind,
+          localizedMsg: chrome.i18n.getMessage(
+            BlockKind[BlockKind.KeywordBlockKind]
+          ),
+        },
+        {
+          kind: BlockKind.RegExpBlockKind,
+          localizedMsg: chrome.i18n.getMessage(
+            BlockKind[BlockKind.RegExpBlockKind]
+          ),
+        },
+      ]),
+      FillButtonComponent.create(
+        E.text(chrome.i18n.getMessage("addBlockRuleButton"))
+      ),
+      CustomTextInputController.create,
+      BlockEntryComponent.create,
+      blockSettings
+    ).init();
   }
 
   public init(): this {
+    this.patternInputController = this.patternInputControllerFactoryFn(
+      this.patternInput
+    );
     this.displayStyle = this.body.style.display;
     this.dropdownListComponent.setOption({
       kind: BlockKind.KeywordBlockKind,

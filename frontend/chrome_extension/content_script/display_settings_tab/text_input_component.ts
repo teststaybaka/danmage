@@ -13,31 +13,21 @@ export interface TextInputComponent {
 }
 
 export class TextInputComponent extends EventEmitter {
+  public body: HTMLDivElement;
+  private input: HTMLInputElement;
+  private textInputController: CustomTextInputController;
+
   public constructor(
-    public body: HTMLDivElement,
-    private input: HTMLInputElement,
-    private textInputController: CustomTextInputController,
-    private defaultValue: string
+    label: string,
+    private defaultValue: string,
+    value: string,
+    private textInputControllerFactoryFn: (
+      input: HTMLInputElement
+    ) => CustomTextInputController
   ) {
     super();
-  }
-
-  public static create(
-    label: string,
-    defaultValue: string,
-    value: string
-  ): TextInputComponent {
-    let views = TextInputComponent.createView(label, value);
-    return new TextInputComponent(
-      ...views,
-      CustomTextInputController.create(views[1]),
-      defaultValue
-    ).init();
-  }
-
-  public static createView(label: string, value: string) {
     let inputRef = new Ref<HTMLInputElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "text-input-container",
         style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_PADDING_TOP_STYLE}`,
@@ -52,10 +42,24 @@ export class TextInputComponent extends EventEmitter {
         value: value,
       })
     );
-    return [body, inputRef.val] as const;
+    this.input = inputRef.val;
+  }
+
+  public static create(
+    label: string,
+    defaultValue: string,
+    value: string
+  ): TextInputComponent {
+    return new TextInputComponent(
+      label,
+      defaultValue,
+      value,
+      CustomTextInputController.create
+    ).init();
   }
 
   public init(): this {
+    this.textInputController = this.textInputControllerFactoryFn(this.input);
     this.textInputController.on("enter", () => this.changeValue());
     this.input.addEventListener("blur", () => this.changeValue());
     return this;

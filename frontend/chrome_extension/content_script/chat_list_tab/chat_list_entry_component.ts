@@ -6,12 +6,20 @@ import { BlockPatternTester } from "../common/block_pattern_tester";
 import { E } from "@selfage/element/factory";
 
 export class ChatListEntryComponent extends EventEmitter {
+  public body: HTMLDivElement;
+
   public constructor(
-    public body: HTMLDivElement,
     private chatEntry: ChatEntry,
     private blockPatternTester: BlockPatternTester
   ) {
     super();
+    this.body = E.div(
+      {
+        class: "chat-list-entry",
+        style: `position: relative; padding: .3rem 0; line-height: 1.6rem; font-size: 1.4rem; font-family: initial !important; word-break: break-all;`,
+      },
+      E.text(`${chatEntry.userNickname}: ${chatEntry.content}`)
+    );
   }
 
   public static create(
@@ -19,20 +27,9 @@ export class ChatListEntryComponent extends EventEmitter {
     blockSettings: BlockSettings
   ): ChatListEntryComponent {
     return new ChatListEntryComponent(
-      ChatListEntryComponent.createView(chatEntry),
       chatEntry,
       BlockPatternTester.createIdentity(blockSettings)
     ).init();
-  }
-
-  public static createView(chatEntry: ChatEntry) {
-    return E.div(
-      {
-        class: "chat-list-entry",
-        style: `position: relative; padding: .3rem 0; line-height: 1.6rem; font-size: 1.4rem; font-family: initial !important; word-break: break-all;`,
-      },
-      E.text(`${chatEntry.userNickname}: ${chatEntry.content}`)
-    );
   }
 
   public init(): this {

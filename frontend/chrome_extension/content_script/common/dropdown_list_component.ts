@@ -13,30 +13,23 @@ export interface DropdownEntryComponent<T> {
 }
 
 export class DropdownEntryComponent<T> extends EventEmitter {
-  public constructor(
-    public body: HTMLDivElement,
-    private optionEntry: OptionEntry<T>
-  ) {
+  public body: HTMLDivElement;
+
+  public constructor(private optionEntry: OptionEntry<T>) {
     super();
+    this.body = E.div(
+      {
+        class: "dropdown-entry",
+        style: `padding: .2rem 0; font-size: 1.4rem; line-height: 1.6rem; font-family: initial !important;`,
+      },
+      E.text(this.optionEntry.localizedMsg)
+    );
   }
 
   public static create<T>(
     optionEntry: OptionEntry<T>
   ): DropdownEntryComponent<T> {
-    return new DropdownEntryComponent(
-      DropdownEntryComponent.createView(optionEntry.localizedMsg),
-      optionEntry
-    ).init();
-  }
-
-  public static createView(localizedMsg: string) {
-    return E.div(
-      {
-        class: "dropdown-entry",
-        style: `padding: .2rem 0; font-size: 1.4rem; line-height: 1.6rem; font-family: initial !important;`,
-      },
-      E.text(localizedMsg)
-    );
+    return new DropdownEntryComponent(optionEntry).init();
   }
 
   public init(): this {
@@ -66,37 +59,18 @@ export interface DropdownListComponent<T> {
 
 export class DropdownListComponent<T> extends EventEmitter {
   public selectedKind: T;
+  public body: HTMLDivElement;
+  private selectedOptionText: Text;
+  private optionList: HTMLDivElement;
 
   public constructor(
-    public body: HTMLDivElement,
-    private selectedOptionText: Text,
-    private optionList: HTMLDivElement,
+    verticalPadding: string,
     private dropdownEntryComponents: Array<DropdownEntryComponent<T>>
   ) {
     super();
-  }
-
-  public static create<T>(
-    verticalPadding: string,
-    optionEntries: Array<OptionEntry<T>>
-  ): DropdownListComponent<T> {
-    return new DropdownListComponent(
-      ...DropdownListComponent.createView(
-        verticalPadding,
-        optionEntries.map((optionEntry) =>
-          DropdownEntryComponent.create(optionEntry)
-        )
-      )
-    ).init();
-  }
-
-  private static createView<T>(
-    verticalPadding: string,
-    dropdownEntryComponents: Array<DropdownEntryComponent<T>>
-  ) {
     let selectedOptionTextRef = new Ref<Text>();
     let optionListRef = new Ref<HTMLDivElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "dropdown-list-container",
         style: `flex: 0 0 auto; position: relative; cursor: pointer; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
@@ -129,12 +103,20 @@ export class DropdownListComponent<T> extends EventEmitter {
         )
       )
     );
-    return [
-      body,
-      selectedOptionTextRef.val,
-      optionListRef.val,
-      dropdownEntryComponents,
-    ] as const;
+    this.selectedOptionText = selectedOptionTextRef.val;
+    this.optionList = optionListRef.val;
+  }
+
+  public static create<T>(
+    verticalPadding: string,
+    optionEntries: Array<OptionEntry<T>>
+  ): DropdownListComponent<T> {
+    return new DropdownListComponent(
+      verticalPadding,
+      optionEntries.map((optionEntry) =>
+        DropdownEntryComponent.create(optionEntry)
+      )
+    ).init();
   }
 
   public init(): this {

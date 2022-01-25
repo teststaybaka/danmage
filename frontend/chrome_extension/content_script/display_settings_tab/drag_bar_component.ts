@@ -15,39 +15,25 @@ export interface DragBarComponent {
 }
 
 export class DragBarComponent extends EventEmitter {
+  public body: HTMLDivElement;
+  private valueInput: HTMLInputElement;
+  private barWrapper: HTMLDivElement;
+  private cursor: HTMLDivElement;
+  private textInputController: CustomTextInputController;
+
   public constructor(
-    public body: HTMLDivElement,
-    private valueInput: HTMLInputElement,
-    private barWrapper: HTMLDivElement,
-    private cursor: HTMLDivElement,
-    private textInputController: CustomTextInputController,
-    private numberRange: NumberRange
+    label: string,
+    private numberRange: NumberRange,
+    value: number,
+    private textInputControllerFactoryFn: (
+      input: HTMLInputElement
+    ) => CustomTextInputController
   ) {
     super();
-  }
-
-  public static create(
-    label: string,
-    numberRange: NumberRange,
-    value: number
-  ): DragBarComponent {
-    let views = DragBarComponent.createView(label, numberRange, value);
-    return new DragBarComponent(
-      ...views,
-      CustomTextInputController.create(views[1]),
-      numberRange
-    ).init();
-  }
-
-  public static createView(
-    label: string,
-    numberRange: NumberRange,
-    value: number
-  ) {
     let valueInputRef = new Ref<HTMLInputElement>();
     let barWrapperRef = new Ref<HTMLDivElement>();
     let cursorRef = new Ref<HTMLDivElement>();
-    let body = E.div(
+    this.body = E.div(
       { class: "drab-bar-container", style: ENTRY_PADDING_TOP_STYLE },
       E.div(
         {
@@ -100,10 +86,29 @@ export class DragBarComponent extends EventEmitter {
         )
       )
     );
-    return [body, valueInputRef.val, barWrapperRef.val, cursorRef.val] as const;
+    this.valueInput = valueInputRef.val;
+    this.barWrapper = barWrapperRef.val;
+    this.cursor = cursorRef.val;
+  }
+
+  public static create(
+    label: string,
+    numberRange: NumberRange,
+    value: number
+  ): DragBarComponent {
+    return new DragBarComponent(
+      label,
+      numberRange,
+      value,
+      CustomTextInputController.create
+    ).init();
   }
 
   public init(): this {
+    this.textInputController = this.textInputControllerFactoryFn(
+      this.valueInput
+    );
+
     let value = parseInt(this.valueInput.value);
     this.moveCursor(value);
 

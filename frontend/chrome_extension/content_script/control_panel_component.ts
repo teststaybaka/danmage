@@ -25,22 +25,25 @@ export class ControlPanelComponent extends EventEmitter {
   private static TAB_BUTTON_WIDTH = 2.4;
   private static WIDTH_TRANSITION_STYLE = "width .3s";
 
+  public body: HTMLDivElement;
+  private controlPanelButton: HTMLDivElement;
+  private controlPanelPopup: HTMLDivElement;
+  private tabHeadLine: HTMLDivElement;
+  private accountTabHead: HTMLDivElement;
+  private accountTabButton: HTMLDivElement;
+  private chatListTabHead: HTMLDivElement | undefined;
+  private chatListTabButton: HTMLDivElement | undefined;
+  private displaySettingsTabHead: HTMLDivElement;
+  private displaySettingsTabButton: HTMLDivElement;
+  private blockSettingsTabHead: HTMLDivElement;
+  private blockSettingsTabButton: HTMLDivElement;
   private controlPanelPopupDisplayStyle: string;
   private tabsSwitcher = TabsSwitcher.create();
 
   public constructor(
-    public body: HTMLDivElement,
-    private controlPanelButton: HTMLDivElement,
-    private controlPanelPopup: HTMLDivElement,
-    private tabHeadLine: HTMLDivElement,
-    private accountTabHead: HTMLDivElement,
-    private accountTabButton: HTMLDivElement,
-    private chatListTabHead: HTMLDivElement | undefined,
-    private chatListTabButton: HTMLDivElement | undefined,
-    private displaySettingsTabHead: HTMLDivElement,
-    private displaySettingsTabButton: HTMLDivElement,
-    private blockSettingsTabHead: HTMLDivElement,
-    private blockSettingsTabButton: HTMLDivElement,
+    elementStyle: string,
+    controlPanelButtonColor: string,
+    controlPanelPopupStyle: string,
     private accountTabComponent: AccountTabComponent,
     private chatListTabComponent: ChatListTabComponent | undefined,
     private displaySettingsTabComponent: DisplaySettingsTabComponent,
@@ -50,6 +53,117 @@ export class ControlPanelComponent extends EventEmitter {
     private playerSettingsStorage: PlayerSettingsStorage
   ) {
     super();
+    let controlPanelButtonRef = new Ref<HTMLDivElement>();
+    let controlPanelPopupRef = new Ref<HTMLDivElement>();
+    let tabHeadLineRef = new Ref<HTMLDivElement>();
+    let accountTabHeadRef = new Ref<HTMLDivElement>();
+    let accountTabButtonRef = new Ref<HTMLDivElement>();
+    let chatListTabHeadRef = new Ref<HTMLDivElement>();
+    let chatListTabButtonRef = new Ref<HTMLDivElement>();
+    let displaySettingsTabHeadRef = new Ref<HTMLDivElement>();
+    let displaySettingsTabButtonRef = new Ref<HTMLDivElement>();
+    let blockSettingsTabHeadRef = new Ref<HTMLDivElement>();
+    let blockSettingsTabButtonRef = new Ref<HTMLDivElement>();
+
+    let tabHeads = new Array<HTMLDivElement>();
+    tabHeads.push(
+      ControlPanelComponent.createTabHead(
+        accountTabHeadRef,
+        accountTabButtonRef,
+        chrome.i18n.getMessage("accountTitle"),
+        `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`
+      )
+    );
+    if (chatListTabComponent) {
+      tabHeads.push(
+        ControlPanelComponent.createTabHead(
+          chatListTabHeadRef,
+          chatListTabButtonRef,
+          chrome.i18n.getMessage("chatTitle"),
+          `M0 0 L50 0 L50 50 L0 50 z  M0 75 L50 75 L50 125 L0 125 z  M0 150 L50 150 L50 200 L0 200 z  M75 0 L200 0 L200 50 L75 50 z  M75 75 L200 75 L200 125 L75 125 z  M75 150 L200 150 L200 200 L75 200 z`
+        )
+      );
+    }
+    tabHeads.push(
+      ControlPanelComponent.createTabHead(
+        displaySettingsTabHeadRef,
+        displaySettingsTabButtonRef,
+        chrome.i18n.getMessage("displaySettingsTitle"),
+        `M83 0 L117 0 L117 29 A73 73 0 0 1 138 38 L159 17 L183 41 L162 62 A73 73 0 0 1 171 83 L200 83 L200 117 L171 117 A73 73 0 0 1 162 138 L183 158 L159 183 L138 162 A73 73 0 0 1 117 171 L117 200 L83 200 L83 171 A73 73 0 0 1 62 162 L41 183 L17 159 L38 138 A73 73 0 0 1 29 117 L0 117 L0 83 L29 83 A73 73 0 0 1 38 62 L17 41 L41 17 L63 38 A73 73 0 0 1 83 29 z  M100 60 A40 40 0 0 0 100 140 A40 40 0 0 0 100 60 z`
+      ),
+      ControlPanelComponent.createTabHead(
+        blockSettingsTabHeadRef,
+        blockSettingsTabButtonRef,
+        chrome.i18n.getMessage("blockSettingsTitle"),
+        `M100 0 A100 100 0 0 1 100 200 A100 100 0 0 1 100 0 z  M159 138 A70 70 0 0 0 62 41 z  M41 62 A70 70 0 0 0 138 159 z`
+      )
+    );
+
+    let tabBodies = new Array<HTMLDivElement>();
+    tabBodies.push(accountTabComponent.body);
+    if (chatListTabComponent) {
+      tabBodies.push(chatListTabComponent.body);
+    }
+    tabBodies.push(
+      displaySettingsTabComponent.body,
+      blockSettingsTabComponent.body
+    );
+
+    this.body = E.div(
+      {
+        class: "control-panel-container",
+        style: `display: inline-block; text-align: left; text-shadow: none; vertical-align: top; font-size: 0; line-height: 0; ${elementStyle}`,
+      },
+      E.divRef(
+        controlPanelButtonRef,
+        {
+          class: "control-panel-button",
+          style: `height: 100%; padding: 22%; box-sizing: border-box; cursor: pointer;`,
+        },
+        E.svg(
+          {
+            class: "control-panel-svg",
+            style: `display: block; height: 100%; fill: ${controlPanelButtonColor};`,
+            viewBox: "0 0 200 200",
+          },
+          E.path({
+            class: "control-panel-control-panel-path",
+            d: "M99 0 L99 97 L49 49 z  M120 17 L149 17 L149 80 L120 80 z  M171 17 L200 17 L200 80 L171 80 z  M50 103 L50 200 L0 152 z  M71 120 L100 120 L100 183 L71 183 z  M122 120 L151 120 L151 183 L122 183 z",
+          })
+        )
+      ),
+      E.divRef(
+        controlPanelPopupRef,
+        {
+          class: "control-panel-control-panel-popup",
+          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 30rem; height: 38rem; padding: .3rem; box-sizing: content-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 0.1rem 0.1rem 0.3rem ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
+        },
+        E.divRef(
+          tabHeadLineRef,
+          { class: "control-panel-tab-head-line", style: `width: 100%;` },
+          ...tabHeads
+        ),
+        E.div(
+          {
+            class: "control-panel-tabs",
+            style: `flex-grow: 1; box-sizing: border-box; width: 100%; min-height: 0;`,
+          },
+          ...tabBodies
+        )
+      )
+    );
+
+    this.controlPanelButton = controlPanelButtonRef.val;
+    this.controlPanelPopup = controlPanelPopupRef.val;
+    this.tabHeadLine = tabHeadLineRef.val;
+    this.accountTabHead = accountTabHeadRef.val;
+    this.accountTabButton = accountTabButtonRef.val;
+    this.chatListTabHead = chatListTabHeadRef.val;
+    this.chatListTabButton = chatListTabButtonRef.val;
+    this.displaySettingsTabHead = displaySettingsTabHeadRef.val;
+    this.displaySettingsTabButton = displaySettingsTabButtonRef.val;
+    this.blockSettingsTabHead = blockSettingsTabHeadRef.val;
+    this.blockSettingsTabButton = blockSettingsTabButtonRef.val;
   }
 
   public static createYouTubeStructured(
@@ -137,149 +251,17 @@ export class ControlPanelComponent extends EventEmitter {
       );
     }
     return new ControlPanelComponent(
-      ...ControlPanelComponent.createView(
-        elementStyle,
-        controlPanelButtonColor,
-        controlPanelPopupStyle,
-        playerSettings,
-        AccountTabComponent.create(),
-        DisplaySettingsTabComponent.create(playerSettings.displaySettings),
-        BlockSettingsTabComponent.create(playerSettings.blockSettings),
-        chatListTabComponent
-      ),
+      elementStyle,
+      controlPanelButtonColor,
+      controlPanelPopupStyle,
+      AccountTabComponent.create(),
+      chatListTabComponent,
+      DisplaySettingsTabComponent.create(playerSettings.displaySettings),
+      BlockSettingsTabComponent.create(playerSettings.blockSettings),
       globalDocuments,
       playerSettings,
       PlayerSettingsStorage.create()
     ).init();
-  }
-
-  private static createView(
-    elementStyle: string,
-    controlPanelButtonColor: string,
-    controlPanelPopupStyle: string,
-    playerSettings: PlayerSettings,
-    accountTabComponent: AccountTabComponent,
-    displaySettingsTabComponent: DisplaySettingsTabComponent,
-    blockSettingsTabComponent: BlockSettingsTabComponent,
-    chatListTabComponent?: ChatListTabComponent
-  ) {
-    let controlPanelButtonRef = new Ref<HTMLDivElement>();
-    let controlPanelPopupRef = new Ref<HTMLDivElement>();
-    let tabHeadLineRef = new Ref<HTMLDivElement>();
-    let accountTabHeadRef = new Ref<HTMLDivElement>();
-    let accountTabButtonRef = new Ref<HTMLDivElement>();
-    let chatListTabHeadRef = new Ref<HTMLDivElement>();
-    let chatListTabButtonRef = new Ref<HTMLDivElement>();
-    let displaySettingsTabHeadRef = new Ref<HTMLDivElement>();
-    let displaySettingsTabButtonRef = new Ref<HTMLDivElement>();
-    let blockSettingsTabHeadRef = new Ref<HTMLDivElement>();
-    let blockSettingsTabButtonRef = new Ref<HTMLDivElement>();
-
-    let tabHeads = new Array<HTMLDivElement>();
-    tabHeads.push(
-      ControlPanelComponent.createTabHead(
-        accountTabHeadRef,
-        accountTabButtonRef,
-        chrome.i18n.getMessage("accountTitle"),
-        `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`
-      )
-    );
-    if (chatListTabComponent) {
-      tabHeads.push(
-        ControlPanelComponent.createTabHead(
-          chatListTabHeadRef,
-          chatListTabButtonRef,
-          chrome.i18n.getMessage("chatTitle"),
-          `M0 0 L50 0 L50 50 L0 50 z  M0 75 L50 75 L50 125 L0 125 z  M0 150 L50 150 L50 200 L0 200 z  M75 0 L200 0 L200 50 L75 50 z  M75 75 L200 75 L200 125 L75 125 z  M75 150 L200 150 L200 200 L75 200 z`
-        )
-      );
-    }
-    tabHeads.push(
-      ControlPanelComponent.createTabHead(
-        displaySettingsTabHeadRef,
-        displaySettingsTabButtonRef,
-        chrome.i18n.getMessage("displaySettingsTitle"),
-        `M83 0 L117 0 L117 29 A73 73 0 0 1 138 38 L159 17 L183 41 L162 62 A73 73 0 0 1 171 83 L200 83 L200 117 L171 117 A73 73 0 0 1 162 138 L183 158 L159 183 L138 162 A73 73 0 0 1 117 171 L117 200 L83 200 L83 171 A73 73 0 0 1 62 162 L41 183 L17 159 L38 138 A73 73 0 0 1 29 117 L0 117 L0 83 L29 83 A73 73 0 0 1 38 62 L17 41 L41 17 L63 38 A73 73 0 0 1 83 29 z  M100 60 A40 40 0 0 0 100 140 A40 40 0 0 0 100 60 z`
-      ),
-      ControlPanelComponent.createTabHead(
-        blockSettingsTabHeadRef,
-        blockSettingsTabButtonRef,
-        chrome.i18n.getMessage("blockSettingsTitle"),
-        `M100 0 A100 100 0 0 1 100 200 A100 100 0 0 1 100 0 z  M159 138 A70 70 0 0 0 62 41 z  M41 62 A70 70 0 0 0 138 159 z`
-      )
-    );
-
-    let tabBodies = new Array<HTMLDivElement>();
-    tabBodies.push(accountTabComponent.body);
-    if (chatListTabComponent) {
-      tabBodies.push(chatListTabComponent.body);
-    }
-    tabBodies.push(
-      displaySettingsTabComponent.body,
-      blockSettingsTabComponent.body
-    );
-
-    let body = E.div(
-      {
-        class: "control-panel-container",
-        style: `display: inline-block; text-align: left; text-shadow: none; vertical-align: top; font-size: 0; line-height: 0; ${elementStyle}`,
-      },
-      E.divRef(
-        controlPanelButtonRef,
-        {
-          class: "control-panel-button",
-          style: `height: 100%; padding: 22%; box-sizing: border-box; cursor: pointer;`,
-        },
-        E.svg(
-          {
-            class: "control-panel-svg",
-            style: `display: block; height: 100%; fill: ${controlPanelButtonColor};`,
-            viewBox: "0 0 200 200",
-          },
-          E.path({
-            class: "control-panel-control-panel-path",
-            d: "M99 0 L99 97 L49 49 z  M120 17 L149 17 L149 80 L120 80 z  M171 17 L200 17 L200 80 L171 80 z  M50 103 L50 200 L0 152 z  M71 120 L100 120 L100 183 L71 183 z  M122 120 L151 120 L151 183 L122 183 z",
-          })
-        )
-      ),
-      E.divRef(
-        controlPanelPopupRef,
-        {
-          class: "control-panel-control-panel-popup",
-          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 30rem; height: 38rem; padding: .3rem; box-sizing: content-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 0.1rem 0.1rem 0.3rem ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
-        },
-        E.divRef(
-          tabHeadLineRef,
-          { class: "control-panel-tab-head-line", style: `width: 100%;` },
-          ...tabHeads
-        ),
-        E.div(
-          {
-            class: "control-panel-tabs",
-            style: `flex-grow: 1; box-sizing: border-box; width: 100%; min-height: 0;`,
-          },
-          ...tabBodies
-        )
-      )
-    );
-    return [
-      body,
-      controlPanelButtonRef.val,
-      controlPanelPopupRef.val,
-      tabHeadLineRef.val,
-      accountTabHeadRef.val,
-      accountTabButtonRef.val,
-      chatListTabHeadRef.val,
-      chatListTabButtonRef.val,
-      displaySettingsTabHeadRef.val,
-      displaySettingsTabButtonRef.val,
-      blockSettingsTabHeadRef.val,
-      blockSettingsTabButtonRef.val,
-      accountTabComponent,
-      chatListTabComponent,
-      displaySettingsTabComponent,
-      blockSettingsTabComponent,
-    ] as const;
   }
 
   private static createTabHead(

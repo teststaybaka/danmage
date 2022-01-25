@@ -13,39 +13,25 @@ export interface SwitchCheckboxComponent {
 }
 
 export class SwitchCheckboxComponent extends EventEmitter {
+  public body: HTMLDivElement;
+  private switchBarWrapper: HTMLDivElement;
+  private switchBarLeft: HTMLDivElement;
+  private switchBarRight: HTMLDivElement;
+  private switchCircle: HTMLDivElement;
   private static RADIUS = ".9rem";
   private static TRANSITION_DURATION = ".3s";
 
   public constructor(
-    public body: HTMLDivElement,
-    private switchBarWrapper: HTMLDivElement,
-    private switchBarLeft: HTMLDivElement,
-    private switchBarRight: HTMLDivElement,
-    private switchCircle: HTMLDivElement,
+    label: string,
     private defaultValue: boolean,
     private value: boolean
   ) {
     super();
-  }
-
-  public static create(
-    label: string,
-    defaultValue: boolean,
-    value: boolean
-  ): SwitchCheckboxComponent {
-    return new SwitchCheckboxComponent(
-      ...SwitchCheckboxComponent.createView(label),
-      defaultValue,
-      value
-    ).init();
-  }
-
-  public static createView(label: string) {
     let switchBarWrapperRef = new Ref<HTMLDivElement>();
     let switchBarLeftRef = new Ref<HTMLDivElement>();
     let switchBarRightRef = new Ref<HTMLDivElement>();
     let switchCircleRef = new Ref<HTMLDivElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "switch-checkbox-container",
         style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_PADDING_TOP_STYLE}`,
@@ -90,13 +76,18 @@ export class SwitchCheckboxComponent extends EventEmitter {
         })
       )
     );
-    return [
-      body,
-      switchBarWrapperRef.val,
-      switchBarLeftRef.val,
-      switchBarRightRef.val,
-      switchCircleRef.val,
-    ] as const;
+    this.switchBarWrapper = switchBarWrapperRef.val;
+    this.switchBarLeft = switchBarLeftRef.val;
+    this.switchBarRight = switchBarRightRef.val;
+    this.switchCircle = switchCircleRef.val;
+  }
+
+  public static create(
+    label: string,
+    defaultValue: boolean,
+    value: boolean
+  ): SwitchCheckboxComponent {
+    return new SwitchCheckboxComponent(label, defaultValue, value).init();
   }
 
   public init(): this {

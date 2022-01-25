@@ -30,10 +30,11 @@ export interface DisplaySettingsTabComponent {
 }
 
 export class DisplaySettingsTabComponent extends EventEmitter {
+  public body: HTMLDivElement;
+  private resetButton: HTMLDivElement;
   private displayStyle: string;
 
   public constructor(
-    public body: HTMLDivElement,
     private opacityComponent: DragBarComponent,
     private fontSizeComponent: DragBarComponent,
     private numLimitComponent: DragBarComponent,
@@ -44,110 +45,11 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     private enableComponent: SwitchCheckboxComponent,
     private showUserNameComponent: SwitchCheckboxComponent,
     private distributionStyleComponent: DropdownComponent<DistributionStyle>,
-    private resetButton: HTMLDivElement,
     private displaySettings: DisplaySettings
   ) {
     super();
-  }
-
-  public static create(
-    displaySettings: DisplaySettings
-  ): DisplaySettingsTabComponent {
-    return new DisplaySettingsTabComponent(
-      ...DisplaySettingsTabComponent.createView(
-        DragBarComponent.create(
-          chrome.i18n.getMessage("opacityOption"),
-          OPACITY_RANGE,
-          displaySettings.opacity
-        ),
-        DragBarComponent.create(
-          chrome.i18n.getMessage("fontSizeOption"),
-          FONT_SIZE_RANGE,
-          displaySettings.fontSize
-        ),
-        DragBarComponent.create(
-          chrome.i18n.getMessage("maxNumOption"),
-          NUM_LIMIT_RANGE,
-          displaySettings.numLimit
-        ),
-        DragBarComponent.create(
-          chrome.i18n.getMessage("speedOption"),
-          SPEED_RANGE,
-          displaySettings.speed
-        ),
-        DragBarComponent.create(
-          chrome.i18n.getMessage("topMarginOption"),
-          TOP_MARGIN_RANGE,
-          displaySettings.topMargin
-        ),
-        DragBarComponent.create(
-          chrome.i18n.getMessage("bottomMarginOption"),
-          BOTTOM_MARGIN_RANGE,
-          displaySettings.bottomMargin
-        ),
-        TextInputComponent.create(
-          chrome.i18n.getMessage("fontFamilyOption"),
-          FONT_FAMILY_DEFAULT,
-          displaySettings.fontFamily
-        ),
-        SwitchCheckboxComponent.create(
-          chrome.i18n.getMessage("enableScrollingOption"),
-          ENABLE_CHAT_SCROLLING_DEFAULT,
-          displaySettings.enable
-        ),
-        SwitchCheckboxComponent.create(
-          chrome.i18n.getMessage("userNameOption"),
-          SHOW_USER_NAME_DEFAULT,
-          displaySettings.showUserName
-        ),
-        DropdownComponent.create(
-          chrome.i18n.getMessage("distributionStyleOption"),
-          {
-            kind: DISTRIBUTION_STYLE_DEFAULT,
-            localizedMsg: chrome.i18n.getMessage(
-              DistributionStyle[DISTRIBUTION_STYLE_DEFAULT]
-            ),
-          },
-          {
-            kind: displaySettings.distributionStyle,
-            localizedMsg: chrome.i18n.getMessage(
-              DistributionStyle[displaySettings.distributionStyle]
-            ),
-          },
-          [
-            {
-              kind: DistributionStyle.RandomDistributionStyle,
-              localizedMsg: chrome.i18n.getMessage(
-                DistributionStyle[DistributionStyle.RandomDistributionStyle]
-              ),
-            },
-            {
-              kind: DistributionStyle.TopDownDistributionStyle,
-              localizedMsg: chrome.i18n.getMessage(
-                DistributionStyle[DistributionStyle.TopDownDistributionStyle]
-              ),
-            },
-          ]
-        )
-      ),
-      displaySettings
-    ).init();
-  }
-
-  public static createView(
-    opacityComponent: DragBarComponent,
-    fontSizeComponent: DragBarComponent,
-    numLimitComponent: DragBarComponent,
-    speedComponent: DragBarComponent,
-    topMarginComponent: DragBarComponent,
-    bottomMarginComponent: DragBarComponent,
-    fontFamilyComponent: TextInputComponent,
-    enableComponent: SwitchCheckboxComponent,
-    showUserNameComponent: SwitchCheckboxComponent,
-    distributionStyleComponent: DropdownComponent<DistributionStyle>
-  ) {
     let resetButtonRef = new Ref<HTMLDivElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "display-settings-tab-container",
         style: `padding: 0 ${TAB_SIDE_PADDING} 1rem; box-sizing: border-box; height: 100%; overflow-y: auto;`,
@@ -197,20 +99,89 @@ export class DisplaySettingsTabComponent extends EventEmitter {
         )
       )
     );
-    return [
-      body,
-      opacityComponent,
-      fontSizeComponent,
-      numLimitComponent,
-      speedComponent,
-      topMarginComponent,
-      bottomMarginComponent,
-      fontFamilyComponent,
-      enableComponent,
-      showUserNameComponent,
-      distributionStyleComponent,
-      resetButtonRef.val,
-    ] as const;
+    this.resetButton = resetButtonRef.val;
+  }
+
+  public static create(
+    displaySettings: DisplaySettings
+  ): DisplaySettingsTabComponent {
+    return new DisplaySettingsTabComponent(
+      DragBarComponent.create(
+        chrome.i18n.getMessage("opacityOption"),
+        OPACITY_RANGE,
+        displaySettings.opacity
+      ),
+      DragBarComponent.create(
+        chrome.i18n.getMessage("fontSizeOption"),
+        FONT_SIZE_RANGE,
+        displaySettings.fontSize
+      ),
+      DragBarComponent.create(
+        chrome.i18n.getMessage("maxNumOption"),
+        NUM_LIMIT_RANGE,
+        displaySettings.numLimit
+      ),
+      DragBarComponent.create(
+        chrome.i18n.getMessage("speedOption"),
+        SPEED_RANGE,
+        displaySettings.speed
+      ),
+      DragBarComponent.create(
+        chrome.i18n.getMessage("topMarginOption"),
+        TOP_MARGIN_RANGE,
+        displaySettings.topMargin
+      ),
+      DragBarComponent.create(
+        chrome.i18n.getMessage("bottomMarginOption"),
+        BOTTOM_MARGIN_RANGE,
+        displaySettings.bottomMargin
+      ),
+      TextInputComponent.create(
+        chrome.i18n.getMessage("fontFamilyOption"),
+        FONT_FAMILY_DEFAULT,
+        displaySettings.fontFamily
+      ),
+      SwitchCheckboxComponent.create(
+        chrome.i18n.getMessage("enableScrollingOption"),
+        ENABLE_CHAT_SCROLLING_DEFAULT,
+        displaySettings.enable
+      ),
+      SwitchCheckboxComponent.create(
+        chrome.i18n.getMessage("userNameOption"),
+        SHOW_USER_NAME_DEFAULT,
+        displaySettings.showUserName
+      ),
+      DropdownComponent.create(
+        chrome.i18n.getMessage("distributionStyleOption"),
+        {
+          kind: DISTRIBUTION_STYLE_DEFAULT,
+          localizedMsg: chrome.i18n.getMessage(
+            DistributionStyle[DISTRIBUTION_STYLE_DEFAULT]
+          ),
+        },
+        {
+          kind: displaySettings.distributionStyle,
+          localizedMsg: chrome.i18n.getMessage(
+            DistributionStyle[displaySettings.distributionStyle]
+          ),
+        },
+        [
+          {
+            kind: DistributionStyle.RandomDistributionStyle,
+            localizedMsg: chrome.i18n.getMessage(
+              DistributionStyle[DistributionStyle.RandomDistributionStyle]
+            ),
+          },
+          {
+            kind: DistributionStyle.TopDownDistributionStyle,
+            localizedMsg: chrome.i18n.getMessage(
+              DistributionStyle[DistributionStyle.TopDownDistributionStyle]
+            ),
+          },
+        ]
+      ),
+      displaySettings
+    ).init();
   }
 
   public init(): this {

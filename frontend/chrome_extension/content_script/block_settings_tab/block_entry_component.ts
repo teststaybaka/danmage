@@ -9,24 +9,13 @@ export interface BlockEntryComponent {
 }
 
 export class BlockEntryComponent extends EventEmitter {
-  public constructor(
-    public body: HTMLDivElement,
-    private removeButton: HTMLDivElement,
-    private blockPattern: BlockPattern
-  ) {
+  public body: HTMLDivElement;
+  private removeButton: HTMLDivElement;
+
+  public constructor(private blockPattern: BlockPattern) {
     super();
-  }
-
-  public static create(blockPattern: BlockPattern): BlockEntryComponent {
-    return new BlockEntryComponent(
-      ...BlockEntryComponent.createView(blockPattern),
-      blockPattern
-    ).init();
-  }
-
-  public static createView(blockPattern: BlockPattern) {
     let removeButtonRef = new Ref<HTMLDivElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "block-entry-container",
         style: `display: flex; flex-flow: row nowrap; align-items: center; padding: .4rem 0;`,
@@ -65,7 +54,11 @@ export class BlockEntryComponent extends EventEmitter {
         )
       )
     );
-    return [body, removeButtonRef.val] as const;
+    this.removeButton = removeButtonRef.val;
+  }
+
+  public static create(blockPattern: BlockPattern): BlockEntryComponent {
+    return new BlockEntryComponent(blockPattern).init();
   }
 
   public init(): this {

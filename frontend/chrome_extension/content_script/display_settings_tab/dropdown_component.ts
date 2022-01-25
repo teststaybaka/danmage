@@ -11,36 +11,16 @@ export interface DropdownComponent<T> {
 }
 
 export class DropdownComponent<T> extends EventEmitter {
+  public body: HTMLDivElement;
+
   public constructor(
-    public body: HTMLDivElement,
-    private dropdonwListComponent: DropdownListComponent<T>,
+    label: string,
     private defaultValue: OptionEntry<T>,
-    private value: OptionEntry<T>
+    private value: OptionEntry<T>,
+    private dropdonwListComponent: DropdownListComponent<T>
   ) {
     super();
-  }
-
-  public static create<T>(
-    label: string,
-    defaultValue: OptionEntry<T>,
-    value: OptionEntry<T>,
-    optionEntries: Array<OptionEntry<T>>
-  ): DropdownComponent<T> {
-    return new DropdownComponent(
-      ...DropdownComponent.createView(
-        label,
-        DropdownListComponent.create(".4rem", optionEntries)
-      ),
-      defaultValue,
-      value
-    ).init();
-  }
-
-  public static createView<T>(
-    label: string,
-    dropdonwListComponent: DropdownListComponent<T>
-  ) {
-    let body = E.div(
+    this.body = E.div(
       {
         class: "dropdown-container",
         style: `display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center; ${ENTRY_PADDING_TOP_STYLE}`,
@@ -55,7 +35,20 @@ export class DropdownComponent<T> extends EventEmitter {
       ),
       dropdonwListComponent.body
     );
-    return [body, dropdonwListComponent] as const;
+  }
+
+  public static create<T>(
+    label: string,
+    defaultValue: OptionEntry<T>,
+    value: OptionEntry<T>,
+    optionEntries: Array<OptionEntry<T>>
+  ): DropdownComponent<T> {
+    return new DropdownComponent(
+      label,
+      defaultValue,
+      value,
+      DropdownListComponent.create(".4rem", optionEntries)
+    ).init();
   }
 
   public init(): this {

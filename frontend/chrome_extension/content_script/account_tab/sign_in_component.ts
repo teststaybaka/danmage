@@ -10,28 +10,15 @@ export interface SignInComponent {
 }
 
 export class SignInComponent extends EventEmitter {
+  public body: HTMLDivElement;
   private displayStyle: string;
 
   public constructor(
-    public body: HTMLDivElement,
     private button: FillButtonComponent,
     private chromeRuntime: ChromeRuntime
   ) {
     super();
-  }
-
-  public static create(): SignInComponent {
-    let button = FillButtonComponent.create(
-      E.text(chrome.i18n.getMessage("signInButton"))
-    );
-    return new SignInComponent(
-      ...SignInComponent.createView(button),
-      ChromeRuntime.create()
-    ).init();
-  }
-
-  public static createView(button: FillButtonComponent) {
-    let body = E.div(
+    this.body = E.div(
       {
         class: "sign-in-container",
         style: `display: flex; flex-flow: column nowrap; justify-content: center; align-items: center; height: 100%;`,
@@ -55,7 +42,15 @@ export class SignInComponent extends EventEmitter {
       ),
       button.body
     );
-    return [body, button] as const;
+  }
+
+  public static create(): SignInComponent {
+    return new SignInComponent(
+      FillButtonComponent.create(
+        E.text(chrome.i18n.getMessage("signInButton"))
+      ),
+      ChromeRuntime.create()
+    ).init();
   }
 
   public init(): this {

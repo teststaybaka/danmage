@@ -20,15 +20,18 @@ export interface ChatListTabComponent {
 export class ChatListTabComponent extends EventEmitter {
   private static LENGTH_LIMIT = 40;
 
+  public body: HTMLDivElement;
+  private entryList: HTMLDivElement;
+  private chatInput: HTMLInputElement;
+  private chatInputController: CustomTextInputController;
   private chatListEntries = new LinkedList<ChatListEntryComponent>();
   private displayStyle: string;
 
   public constructor(
-    public body: HTMLDivElement,
-    private entryList: HTMLDivElement,
-    private chatInput: HTMLInputElement,
     private fireButton: FillButtonComponent,
-    private chatInputController: CustomTextInputController,
+    private chatInputControllerFactoryFn: (
+      input: HTMLInputElement
+    ) => CustomTextInputController,
     private blockSettings: BlockSettings,
     private chatListEntryComponentFactoryFn: (
       chatEntry: ChatEntry,
@@ -36,26 +39,9 @@ export class ChatListTabComponent extends EventEmitter {
     ) => ChatListEntryComponent
   ) {
     super();
-  }
-
-  public static create(blockSettings: BlockSettings): ChatListTabComponent {
-    let views = ChatListTabComponent.createView(
-      FillButtonComponent.create(
-        E.text(chrome.i18n.getMessage("submitNewChatButton"))
-      )
-    );
-    return new ChatListTabComponent(
-      ...views,
-      CustomTextInputController.create(views[2]),
-      blockSettings,
-      ChatListEntryComponent.create
-    ).init();
-  }
-
-  public static createView(fireButton: FillButtonComponent) {
     let entryListRef = new Ref<HTMLDivElement>();
     let chatInputRef = new Ref<HTMLInputElement>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "chat-list-tab-container",
         style: `display: flex; flex-flow: column nowrap; height: 100%;`,
@@ -83,10 +69,25 @@ export class ChatListTabComponent extends EventEmitter {
         fireButton.body
       )
     );
-    return [body, entryListRef.val, chatInputRef.val, fireButton] as const;
+    this.entryList = entryListRef.val;
+    this.chatInput = chatInputRef.val;
+  }
+
+  public static create(blockSettings: BlockSettings): ChatListTabComponent {
+    return new ChatListTabComponent(
+      FillButtonComponent.create(
+        E.text(chrome.i18n.getMessage("submitNewChatButton"))
+      ),
+      CustomTextInputController.create,
+      blockSettings,
+      ChatListEntryComponent.create
+    ).init();
   }
 
   public init(): this {
+    this.chatInputController = this.chatInputControllerFactoryFn(
+      this.chatInput
+    );
     this.displayStyle = this.body.style.display;
     this.chatInputController.on("enter", () => this.enterToFire());
     this.fireButton.on("click", () => this.fire());

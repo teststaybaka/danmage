@@ -18,33 +18,18 @@ export interface WelcomeComponent {
 }
 
 export class WelcomeComponent extends EventEmitter {
+  public body: HTMLDivElement;
+  private welcomeText: Text;
   private displayStyle: string;
 
   public constructor(
-    public body: HTMLDivElement,
-    private welcomeText: Text,
     private signOutButton: FillButtonComponent,
     private chromeRuntime: ChromeRuntime,
     private serviceClient: ServiceClient
   ) {
     super();
-  }
-
-  public static create(): WelcomeComponent {
-    return new WelcomeComponent(
-      ...WelcomeComponent.createView(
-        FillButtonComponent.create(
-          E.text(chrome.i18n.getMessage("signOutButton"))
-        )
-      ),
-      ChromeRuntime.create(),
-      SERVICE_CLIENT
-    ).init();
-  }
-
-  public static createView(signOutButton: FillButtonComponent) {
     let welcomeTextRef = new Ref<Text>();
-    let body = E.div(
+    this.body = E.div(
       {
         class: "welcome-container",
         style: `display: flex; flex-flow: column nowrap; justify-content: center; align-items: center; width: 100%; height: 100%;`,
@@ -75,7 +60,17 @@ export class WelcomeComponent extends EventEmitter {
       ),
       signOutButton.body
     );
-    return [body, welcomeTextRef.val, signOutButton] as const;
+    this.welcomeText = welcomeTextRef.val;
+  }
+
+  public static create(): WelcomeComponent {
+    return new WelcomeComponent(
+      FillButtonComponent.create(
+        E.text(chrome.i18n.getMessage("signOutButton"))
+      ),
+      ChromeRuntime.create(),
+      SERVICE_CLIENT
+    ).init();
   }
 
   public init(): this {
