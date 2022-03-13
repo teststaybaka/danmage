@@ -26,7 +26,7 @@ function oauthSignIn() {
   // Parameters to pass to OAuth 2.0 endpoint.
   var params = {
     client_id:
-      "796944535248-jnsa4io0gk4emf3djdlme07692ckec94.apps.googleusercontent.com",
+      "783644681124-88huoven16e44ujc1lctmgs6be8fof3n.apps.googleusercontent.com",
     redirect_uri: `${origin}/oauth_callback`,
     response_type: "token",
     scope: "profile",

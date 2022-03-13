@@ -28,7 +28,7 @@ import "@selfage/web_app_base_dir";
 
 async function main(): Promise<void> {
   if (globalThis.ENVIRONMENT === "prod") {
-    let reader = new BucketReader(new Storage(), "danmage-keys");
+    let reader = new BucketReader(new Storage(), "danmage-prod");
     let [
       privateKey,
       certificate,
@@ -37,7 +37,8 @@ async function main(): Promise<void> {
       ca2,
       sessionKey,
       googleOauthWebClientId,
-      googleOauthChromeExtensionMasterClientId,
+      googleOauthChromeExtensionClientId,
+      googleOauthChromeExtensionPastClientId,
     ] = await Promise.all([
       reader.read("danmage.key"),
       reader.read("danmage.crt"),
@@ -46,7 +47,8 @@ async function main(): Promise<void> {
       reader.read("ca_g2.crt"),
       reader.read("session.key"),
       reader.read("google_oauth_web_client_id.key"),
-      reader.read("google_oauth_chrome_extension_master_client_id.key"),
+      reader.read("google_oauth_chrome_extension_client_id.key"),
+      reader.read("google_oauth_chrome_extension_past_client_id.key"),
     ]);
 
     let redirectApp = express();
@@ -60,7 +62,8 @@ async function main(): Promise<void> {
 
     let app = registerHandlers(sessionKey, [
       googleOauthWebClientId,
-      googleOauthChromeExtensionMasterClientId,
+      googleOauthChromeExtensionClientId,
+      googleOauthChromeExtensionPastClientId,
     ]);
     let httpsServer = https.createServer(
       {
