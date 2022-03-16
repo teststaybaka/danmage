@@ -54,7 +54,7 @@ async function main(): Promise<void> {
     });
     let httpServer = http.createServer(redirectApp);
     httpServer.listen(80, () => {
-      console.log("Http server started at 80.");
+      LOGGER.info("Http server started at 80.");
     });
 
     let app = registerHandlers(sessionKey, [
@@ -71,7 +71,7 @@ async function main(): Promise<void> {
       app
     );
     httpsServer.listen(443, () => {
-      console.log("Https server started at 443.");
+      LOGGER.info("Https server started at 443.");
     });
   } else if (globalThis.ENVIRONMENT === "dev") {
     let reader = new BucketReader(new Storage(), "danmage-dev-keys");
@@ -91,13 +91,13 @@ async function main(): Promise<void> {
     ]);
     let httpServer = http.createServer(app);
     httpServer.listen(80, () => {
-      console.log("Http server started at 80.");
+      LOGGER.info("Http server started at 80.");
     });
   } else if (globalThis.ENVIRONMENT === "local") {
     let app = registerHandlers("randomlocalkey", ["randomclientid"]);
     let httpServer = http.createServer(app);
     httpServer.listen(8080, () => {
-      console.log("Http server started at 8080.");
+      LOGGER.info("Http server started at 8080.");
     });
   } else {
     throw new Error(
