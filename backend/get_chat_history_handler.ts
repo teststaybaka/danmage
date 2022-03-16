@@ -24,7 +24,6 @@ export class GetChatHistoryHandler extends UserAuthedServiceHandler<
   }
 
   public async handle(
-    logContext: string,
     request: GetChatHistoryRequest,
     session: UserSession
   ): Promise<GetChatHistoryResponse> {

@@ -22,7 +22,6 @@ export class GetChatHandler
   }
 
   public async handle(
-    logContext: string,
     request: GetChatRequest
   ): Promise<GetChatResponse> {
     let query = new HostContentQueryBuilder()
@@ -49,7 +48,6 @@ export class GetDanmakuHandler
   }
 
   public async handle(
-    logContext: string,
     request: EmptyMessage
   ): Promise<EmptyMessage> {
     return {};

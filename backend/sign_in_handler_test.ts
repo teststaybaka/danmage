@@ -50,7 +50,7 @@ NODE_TEST_RUNNER.run({
 
         // Execute
         let error = await assertReject(
-          handler.handle("prefix", { googleAccessToken: "some_token" })
+          handler.handle({ googleAccessToken: "some_token" })
         );
 
         // Verify
@@ -94,7 +94,7 @@ NODE_TEST_RUNNER.run({
 
         // Execute
         let error = await assertReject(
-          handler.handle("prefix", { googleAccessToken: "some_token" })
+          handler.handle({ googleAccessToken: "some_token" })
         );
 
         // Verify
@@ -132,7 +132,7 @@ NODE_TEST_RUNNER.run({
 
         // Execute
         let error = await assertReject(
-          handler.handle("prefix", { googleAccessToken: "some_token" })
+          handler.handle({ googleAccessToken: "some_token" })
         );
 
         // Verify
@@ -203,7 +203,7 @@ NODE_TEST_RUNNER.run({
         );
 
         // Execute
-        let response = await handler.handle("prefix", {
+        let response = await handler.handle({
           googleAccessToken: "some_token",
         });
 
@@ -269,7 +269,7 @@ NODE_TEST_RUNNER.run({
         );
 
         // Execute
-        let response = await handler.handle("prefix", {
+        let response = await handler.handle({
           googleAccessToken: "some_token",
         });
 

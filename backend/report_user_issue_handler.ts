@@ -20,7 +20,6 @@ export class ReportUserIssueHandler
   }
 
   public async handle(
-    logContext: string,
     request: ReportUserIssueRequest
   ): Promise<ReportUserIssueResponse> {
     let userIssues = await this.datastoreClient.allocateKeys(

@@ -25,7 +25,6 @@ export class UpdatePlayerSettingsHandler extends UserAuthedServiceHandler<
   }
 
   public async handle(
-    logContext: string,
     request: UpdatePlayerSettingsRequest,
     session: UserSession
   ): Promise<UpdatePlayerSettingsResponse> {
@@ -55,7 +54,6 @@ export class ChangePlayerSettingsHandler extends UserAuthedServiceHandler<
   }
 
   public async handle(
-    logContext: string,
     request: UpdatePlayerSettingsRequest,
     session: UserSession
   ): Promise<UpdatePlayerSettingsResponse> {

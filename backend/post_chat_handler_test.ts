@@ -50,7 +50,6 @@ NODE_TEST_RUNNER.run({
 
         // Execute
         let response = await handler.handle(
-          "context",
           {
             chatEntry: {
               hostApp: HostApp.YouTube,

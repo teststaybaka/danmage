@@ -28,7 +28,6 @@ export class PostChatHandler extends UserAuthedServiceHandler<
   }
 
   public async handle(
-    logContext: string,
     request: PostChatRequest,
     session: UserSession
   ): Promise<PostChatResponse> {

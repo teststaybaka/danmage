@@ -24,7 +24,6 @@ export class GetPlayerSettingsHandler extends UserAuthedServiceHandler<
   }
 
   public async handle(
-    logContext: string,
     request: GetPlayerSettingsRequest,
     session: UserSession
   ): Promise<GetPlayerSettingsResponse> {

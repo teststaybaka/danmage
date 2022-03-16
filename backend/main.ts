@@ -8,6 +8,7 @@ import { GetChatHandler, GetDanmakuHandler } from "./get_chat_handler";
 import { GetChatHistoryHandler } from "./get_chat_history_handler";
 import { GetPlayerSettingsHandler } from "./get_player_settings_handler";
 import { GetUserHandler } from "./get_user_handler";
+import { LOGGER } from "./logger";
 import { PostChatHandler } from "./post_chat_handler";
 import { ReportUserIssueHandler } from "./report_user_issue_handler";
 import { SignInHandler } from "./sign_in_handler";
@@ -17,11 +18,7 @@ import {
   UpdatePlayerSettingsHandler,
 } from "./update_player_settings_handler";
 import { Storage } from "@google-cloud/storage";
-import { registerCorsAllowedPreflightHandler } from "@selfage/service_handler/preflight_handler";
-import {
-  registerAuthed,
-  registerUnauthed,
-} from "@selfage/service_handler/register";
+import { HandlerRegister } from "@selfage/service_handler/handler_register";
 import { SessionSigner } from "@selfage/service_handler/session_signer";
 import "../environment";
 import "@selfage/web_app_base_dir";
@@ -103,7 +100,9 @@ async function main(): Promise<void> {
       console.log("Http server started at 8080.");
     });
   } else {
-    throw new Error(`Not supported environment ${globalThis.ENVIRONMENT}.`);
+    throw new Error(
+      `Not supported environment ${globalThis.ENVIRONMENT} when intializing main.`
+    );
   }
 }
 
@@ -113,18 +112,21 @@ function registerHandlers(
 ): express.Express {
   SessionSigner.SECRET_KEY = sessionKey;
   let app = express();
-  registerCorsAllowedPreflightHandler(app);
-  registerUnauthed(app, SignInHandler.create(new Set(googleOauthClientIds)));
-  registerAuthed(app, GetUserHandler.create());
-  registerAuthed(app, PostChatHandler.create());
-  registerUnauthed(app, GetChatHandler.create());
-  registerAuthed(app, GetChatHistoryHandler.create());
-  registerAuthed(app, UpdatePlayerSettingsHandler.create());
-  registerAuthed(app, GetPlayerSettingsHandler.create());
-  registerAuthed(app, UpdateNicknameHandler.create());
-  registerUnauthed(app, ReportUserIssueHandler.create());
-  registerUnauthed(app, GetDanmakuHandler.create());
-  registerAuthed(app, ChangePlayerSettingsHandler.create());
+  let register = new HandlerRegister(app, LOGGER);
+  register.registerCorsAllowedPreflightHandler();
+  register.registerUnauthed(
+    SignInHandler.create(new Set(googleOauthClientIds))
+  );
+  register.registerAuthed(GetUserHandler.create());
+  register.registerAuthed(PostChatHandler.create());
+  register.registerUnauthed(GetChatHandler.create());
+  register.registerAuthed(GetChatHistoryHandler.create());
+  register.registerAuthed(UpdatePlayerSettingsHandler.create());
+  register.registerAuthed(GetPlayerSettingsHandler.create());
+  register.registerAuthed(UpdateNicknameHandler.create());
+  register.registerUnauthed(ReportUserIssueHandler.create());
+  register.registerUnauthed(GetDanmakuHandler.create());
+  register.registerAuthed(ChangePlayerSettingsHandler.create());
   app.use(
     "/",
     expressStaticGzip(globalThis.WEB_APP_BASE_DIR, {

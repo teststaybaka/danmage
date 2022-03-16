@@ -41,7 +41,6 @@ export class SignInHandler
   }
 
   public async handle(
-    logContext: string,
     request: SignInRequest
   ): Promise<SignInResponse> {
     let response = await this.fetch(

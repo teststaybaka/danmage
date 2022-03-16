@@ -11,8 +11,8 @@ export abstract class UserAuthedServiceHandler<ServiceRequest, ServiceResponse>
     ServiceResponse
   >;
   public abstract handle(
-    logContext: string,
     request: ServiceRequest,
-    session: UserSession
+    session: UserSession,
+    requestId: string
   ): Promise<ServiceResponse>;
 }

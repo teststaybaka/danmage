@@ -25,7 +25,6 @@ export class UpdateNicknameHandler extends UserAuthedServiceHandler<
   }
 
   public async handle(
-    logContext: string,
     request: UpdateNicknameRequest,
     session: UserSession
   ): Promise<UpdateNicknameResponse> {

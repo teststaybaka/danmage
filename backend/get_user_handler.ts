@@ -24,7 +24,6 @@ export class GetUserHandler extends UserAuthedServiceHandler<
   }
 
   public async handle(
-    logContext: string,
     request: GetUserRequest,
     session: UserSession
   ): Promise<GetUserResponse> {
