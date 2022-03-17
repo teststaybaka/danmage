@@ -127,6 +127,11 @@ function registerHandlers(
   register.registerUnauthed(ReportUserIssueHandler.create());
   register.registerUnauthed(GetDanmakuHandler.create());
   register.registerAuthed(ChangePlayerSettingsHandler.create());
+
+  app.get("/*", (req, res, next) => {
+    LOGGER.info(`Received GET request at ${req.originalUrl}.`);
+    next();
+  });
   app.use(
     "/",
     expressStaticGzip(globalThis.WEB_APP_BASE_DIR, {
