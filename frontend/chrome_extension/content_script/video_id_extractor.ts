@@ -2,7 +2,7 @@ import {
   BackgroundRequest,
   GET_URL_RESPONSE,
 } from "../interface/background_service";
-import { ChromeRuntime } from "./common/chrome_runtime";
+import { BACKGROUND_SERVICE_CLIENT, BackgroungServiceClient } from "./common/background_service_client";
 import { parseMessage } from "@selfage/message/parser";
 
 export interface VideoIdExtractor {
@@ -38,17 +38,17 @@ export class CrunchyrollVideoIdExtractor implements VideoIdExtractor {
   private static VIDEO_ID_EXTRACTION =
     /^.*?\.crunchyroll\.com\/(?:watch\/){0,1}(.+?)(?:\?.*$|$)/;
 
-  public constructor(private chromeRuntime: ChromeRuntime) {}
+  public constructor(private backgroundServiceClient: BackgroungServiceClient) {}
 
   public static create(): CrunchyrollVideoIdExtractor {
-    return new CrunchyrollVideoIdExtractor(new ChromeRuntime());
+    return new CrunchyrollVideoIdExtractor(BACKGROUND_SERVICE_CLIENT);
   }
 
   public async extract(): Promise<string | undefined> {
     let request: BackgroundRequest = {
       getUrlRequest: {},
     };
-    let rawResponse = await this.chromeRuntime.sendMessage(request);
+    let rawResponse = await this.backgroundServiceClient.send(request);
     let response = parseMessage(rawResponse, GET_URL_RESPONSE);
     let videoIdMatched = response.url.match(
       CrunchyrollVideoIdExtractor.VIDEO_ID_EXTRACTION

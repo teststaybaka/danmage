@@ -2,12 +2,15 @@ import EventEmitter = require("events");
 import { ChatEntry } from "../../../interface/chat_entry";
 import { PlayerSettings } from "../../../interface/player_settings";
 import { ColorScheme } from "../../color_scheme";
+import {
+  CHROME_PLAYER_SETTINGS_STORAGE,
+  ChromePlayerSettingsStorage,
+} from "../common/chrome_player_settings_storage";
 import { AccountTabComponent } from "./account_tab/account_tab_component";
 import { BlockSettingsTabComponent } from "./block_settings_tab/block_settings_tab_component";
 import { ChatListTabComponent } from "./chat_list_tab/chat_list_tab_component";
 import { GlobalDocuments } from "./common/global_documents";
 import { DisplaySettingsTabComponent } from "./display_settings_tab/display_settings_tab_component";
-import { PlayerSettingsStorage } from "./player_settings_storage";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 import { TabsSwitcher } from "@selfage/tabs";
@@ -50,7 +53,7 @@ export class ControlPanelComponent extends EventEmitter {
     private blockSettingsTabComponent: BlockSettingsTabComponent,
     private globalDocuments: GlobalDocuments,
     private playerSettings: PlayerSettings,
-    private playerSettingsStorage: PlayerSettingsStorage
+    private playerSettingsStorage: ChromePlayerSettingsStorage
   ) {
     super();
     let controlPanelButtonRef = new Ref<HTMLDivElement>();
@@ -297,7 +300,7 @@ export class ControlPanelComponent extends EventEmitter {
       BlockSettingsTabComponent.create(playerSettings.blockSettings),
       globalDocuments,
       playerSettings,
-      PlayerSettingsStorage.create()
+      CHROME_PLAYER_SETTINGS_STORAGE
     ).init();
   }
 

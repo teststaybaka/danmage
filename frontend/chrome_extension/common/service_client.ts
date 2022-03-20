@@ -1,7 +1,7 @@
-import { BackgroundSessionStorage } from "./background_session_storage";
+import { CHROME_SESSION_STORAGE } from "./chrome_session_storage";
 import { ServiceClient } from "@selfage/service_client";
 
 export let SERVICE_CLIENT = new ServiceClient(
-  BackgroundSessionStorage.create(),
+  CHROME_SESSION_STORAGE,
   window.fetch.bind(window)
 );

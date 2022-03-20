@@ -6,9 +6,11 @@ import {
 } from "../../../../interface/service";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
-import { BackgroundRequest } from "../../interface/background_service";
-import { ChromeRuntime } from "../common/chrome_runtime";
-import { SERVICE_CLIENT } from "../common/service_client";
+import {
+  CHROME_SESSION_STORAGE,
+  ChromeSessionStorage,
+} from "../../common/chrome_session_storage";
+import { SERVICE_CLIENT } from "../../common/service_client";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 import { ServiceClient } from "@selfage/service_client";
@@ -24,8 +26,8 @@ export class WelcomeComponent extends EventEmitter {
 
   public constructor(
     private signOutButton: FillButtonComponent,
-    private chromeRuntime: ChromeRuntime,
-    private serviceClient: ServiceClient
+    private serviceClient: ServiceClient,
+    private chromeSessionStorage: ChromeSessionStorage
   ) {
     super();
     let welcomeTextRef = new Ref<Text>();
@@ -68,8 +70,8 @@ export class WelcomeComponent extends EventEmitter {
       FillButtonComponent.create(
         E.text(chrome.i18n.getMessage("signOutButton"))
       ),
-      ChromeRuntime.create(),
-      SERVICE_CLIENT
+      SERVICE_CLIENT,
+      CHROME_SESSION_STORAGE
     ).init();
   }
 
@@ -80,8 +82,7 @@ export class WelcomeComponent extends EventEmitter {
   }
 
   private async signOut(): Promise<void> {
-    let request: BackgroundRequest = { signOutRequest: {} };
-    await this.chromeRuntime.sendMessage(request);
+    await this.chromeSessionStorage.clear();
     await Promise.all(this.listeners("signOut").map((callback) => callback()));
   }
 

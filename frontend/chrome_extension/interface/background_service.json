@@ -1,38 +1,5 @@
 [{
   "message": {
-    "name": "SignInRequest",
-    "fields": []
-  }
-}, {
-  "message": {
-    "name": "SignInResponse",
-    "fields": []
-  }
-}, {
-  "message": {
-    "name": "SignOutRequest",
-    "fields": []
-  }
-}, {
-  "message": {
-    "name": "SignOutResponse",
-    "fields": []
-  }
-}, {
-  "message": {
-    "name": "GetSessionRequest",
-    "fields": []
-  }
-}, {
-  "message": {
-    "name": "GetSessionResponse",
-    "fields": [{
-      "name": "signedSession",
-      "type": "string"
-    }]
-  }
-}, {
-  "message": {
     "name": "GetUrlRequest",
     "fields": []
   }
@@ -46,27 +13,14 @@
   }
 }, {
   "message": {
-    "name": "SavePlayerSettingsRequest",
-    "fields": [{
-      "name": "playerSettingsStringified",
-      "type": "string"
-    }]
-  }
-}, {
-  "message": {
-    "name": "SavePlayerSettingsResponse",
+    "name": "GetAuthTokenRequest",
     "fields": []
   }
 }, {
   "message": {
-    "name": "ReadPlayerSettingsRequest",
-    "fields": []
-  }
-}, {
-  "message": {
-    "name": "ReadPlayerSettingsResponse",
+    "name": "GetAuthTokenResponse",
     "fields": [{
-      "name": "playerSettingsStringified",
+      "name": "accessToken",
       "type": "string"
     }]
   }
@@ -74,23 +28,11 @@
   "message": {
     "name": "BackgroundRequest",
     "fields": [{
-      "name": "signInRequest",
-      "type": "SignInRequest"
-    }, {
-      "name": "signOutRequest",
-      "type": "SignOutRequest"
-    }, {
-      "name": "getSessionRequest",
-      "type": "GetSessionRequest"
-    }, {
       "name": "getUrlRequest",
       "type": "GetUrlRequest"
     }, {
-      "name": "savePlayerSettingsRequest",
-      "type": "SavePlayerSettingsRequest"
-    }, {
-      "name": "readPlayerSettingsRequest",
-      "type": "ReadPlayerSettingsRequest"
+      "name": "getAuthTokenRequest",
+      "type": "GetAuthTokenRequest"
     }]
   }
 }]

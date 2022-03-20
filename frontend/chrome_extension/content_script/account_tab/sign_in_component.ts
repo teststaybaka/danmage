@@ -1,9 +1,20 @@
 import EventEmitter = require("events");
+import { SIGN_IN } from "../../../../interface/service";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
-import { BackgroundRequest } from "../../interface/background_service";
-import { ChromeRuntime } from "../common/chrome_runtime";
+import {
+  CHROME_SESSION_STORAGE,
+  ChromeSessionStorage,
+} from "../../common/chrome_session_storage";
+import { SERVICE_CLIENT } from "../../common/service_client";
+import { GET_AUTH_TOKEN_RESPONSE } from "../../interface/background_service";
+import {
+  BACKGROUND_SERVICE_CLIENT,
+  BackgroungServiceClient,
+} from "../common/background_service_client";
 import { E } from "@selfage/element/factory";
+import { parseMessage } from "@selfage/message/parser";
+import { ServiceClient } from "@selfage/service_client";
 
 export interface SignInComponent {
   on(event: "checkStatus", listener: () => Promise<void> | void): this;
@@ -15,7 +26,9 @@ export class SignInComponent extends EventEmitter {
 
   public constructor(
     private button: FillButtonComponent,
-    private chromeRuntime: ChromeRuntime
+    private serviceClient: ServiceClient,
+    private chromeSessionStoroage: ChromeSessionStorage,
+    private backgroundServiceClient: BackgroungServiceClient
   ) {
     super();
     this.body = E.div(
@@ -49,7 +62,9 @@ export class SignInComponent extends EventEmitter {
       FillButtonComponent.create(
         E.text(chrome.i18n.getMessage("signInButton"))
       ),
-      ChromeRuntime.create()
+      SERVICE_CLIENT,
+      CHROME_SESSION_STORAGE,
+      BACKGROUND_SERVICE_CLIENT
     ).init();
   }
 
@@ -60,8 +75,19 @@ export class SignInComponent extends EventEmitter {
   }
 
   private async signIn(): Promise<void> {
-    let request: BackgroundRequest = { signInRequest: {} };
-    await this.chromeRuntime.sendMessage(request);
+    let response = await this.backgroundServiceClient.send({
+      getAuthTokenRequest: {},
+    });
+    let getAuthTokenResponse = parseMessage(response, GET_AUTH_TOKEN_RESPONSE);
+    if (!getAuthTokenResponse.accessToken) {
+      return;
+    }
+
+    let signInResponse = await this.serviceClient.fetchUnauthed(
+      { googleAccessToken: getAuthTokenResponse.accessToken },
+      SIGN_IN
+    );
+    await this.chromeSessionStoroage.save(signInResponse.signedSession);
     await Promise.all(
       this.listeners("checkStatus").map((callback) => callback())
     );

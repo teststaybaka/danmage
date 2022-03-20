@@ -8,6 +8,7 @@ import {
   PostChatRequest,
   PostChatResponse,
 } from "../../../interface/service";
+import { SERVICE_CLIENT } from "../common/service_client";
 import {
   ChatPool,
   StructuredChatPool,
@@ -15,7 +16,6 @@ import {
   YouTubeChatPool,
 } from "./chat_pool";
 import { GlobalDocuments } from "./common/global_documents";
-import { SERVICE_CLIENT } from "./common/service_client";
 import { ControlPanelComponent } from "./control_panel_component";
 import {
   ControlPanelDocker,

@@ -1,12 +1,12 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
   "version": "3.5.1",
   "icons": { "128": "image/app_icon.png" },
   "default_locale": "en",
   "background": {
-    "scripts": ["background/index.js"]
+    "service_worker": "background/index.js"
   },
   "content_scripts": [{
     "matches": [
@@ -25,6 +25,10 @@
   }],
   "permissions": [
     "identity",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
     "https://www.danmage.com/"
   ],
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlKkmRu2EcBWP/JbKM6iugQF5H84PGf5Kh/osv3+seAJwBxsaWFC1Dj2JBhb93AUpwPduBmLRYksSepcGZneWX3jEdqrCvQCL6RKb4o2xa6lD29SbEXZ9WL2PDkfgsHgsWs1kbplhsE0ZGkVhTldbFSbTsLGrrBRPeU7KLVjxfWYWznp6AgCTuqZrBf3oOgSGZ/6t3ow+3eASaESKi2j2S7ej0yS57YKkyxGlx43m8BmiC/rOOKK3i6hTjZ/N38ZGzmFNHBG5z2dUUsD+OO6yWe1HEGvlvmpybZNe77DRMUFLvTg+Xh62PBrqsSGt0Pks5IMLn0V6S63xjU1MrO9W4QIDAQAB",

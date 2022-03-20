@@ -15,7 +15,7 @@ import {
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
   TOP_MARGIN_RANGE,
-} from "../common/defaults";
+} from "../../common/defaults";
 import { TAB_SIDE_PADDING } from "../common/styles";
 import { DragBarComponent } from "./drag_bar_component";
 import { DropdownComponent } from "./dropdown_component";

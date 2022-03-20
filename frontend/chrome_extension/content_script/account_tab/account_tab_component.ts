@@ -1,14 +1,12 @@
 import {
-  BackgroundRequest,
-  GET_SESSION_RESPONSE,
-} from "../../interface/background_service";
-import { ChromeRuntime } from "../common/chrome_runtime";
-import { SERVICE_CLIENT } from "../common/service_client";
+  CHROME_SESSION_STORAGE,
+  ChromeSessionStorage,
+} from "../../common/chrome_session_storage";
+import { SERVICE_CLIENT } from "../../common/service_client";
 import { TAB_SIDE_PADDING } from "../common/styles";
 import { SignInComponent } from "./sign_in_component";
 import { WelcomeComponent } from "./welcome_component";
 import { E } from "@selfage/element/factory";
-import { parseMessage } from "@selfage/message/parser";
 import { ServiceClient } from "@selfage/service_client";
 
 export class AccountTabComponent {
@@ -17,8 +15,8 @@ export class AccountTabComponent {
   public constructor(
     private signInComponent: SignInComponent,
     private welcomeComponent: WelcomeComponent,
-    private chromeRuntime: ChromeRuntime,
-    private serviceClient: ServiceClient
+    private serviceClient: ServiceClient,
+    private chromeSessionStorage: ChromeSessionStorage
   ) {
     this.body = E.div(
       {
@@ -34,8 +32,8 @@ export class AccountTabComponent {
     return new AccountTabComponent(
       SignInComponent.create(),
       WelcomeComponent.create(),
-      ChromeRuntime.create(),
-      SERVICE_CLIENT
+      SERVICE_CLIENT,
+      CHROME_SESSION_STORAGE
     ).init();
   }
 
@@ -49,10 +47,9 @@ export class AccountTabComponent {
   private async checkStatus(): Promise<void> {
     this.signInComponent.hide();
     this.welcomeComponent.hide();
-    let request: BackgroundRequest = { getSessionRequest: {} };
-    let rawResponse = await this.chromeRuntime.sendMessage(request);
-    let response = parseMessage(rawResponse, GET_SESSION_RESPONSE);
-    if (!response.signedSession) {
+
+    let session = await this.chromeSessionStorage.read();
+    if (!session) {
       this.signInComponent.show();
     } else {
       await this.welcomeComponent.show();

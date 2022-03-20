@@ -1,4 +1,4 @@
-import { DistributionStyle } from "../../../../interface/player_settings";
+import { DistributionStyle } from "../../../interface/player_settings";
 import { NumberRange } from "./number_range";
 
 export let SPEED_RANGE = new NumberRange(500, 100, 200);

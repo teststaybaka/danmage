@@ -1,7 +1,7 @@
 import EventEmitter = require("events");
 import { ColorScheme } from "../../../color_scheme";
+import { NumberRange } from "../../common/number_range";
 import { CustomTextInputController } from "../common/custom_text_input_controller";
-import { NumberRange } from "../common/number_range";
 import {
   ENTRY_PADDING_TOP_STYLE,
   LABEL_STYLE,

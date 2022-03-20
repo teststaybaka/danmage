@@ -1,9 +1,7 @@
-export class ChromeRuntime {
-  public static create(): ChromeRuntime {
-    return new ChromeRuntime();
-  }
+import { BackgroundRequest } from "../../interface/background_service";
 
-  public sendMessage(request: any): Promise<any> {
+export class BackgroungServiceClient {
+  public send(request: BackgroundRequest): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       chrome.runtime.sendMessage(
         chrome.runtime.id,
@@ -20,3 +18,5 @@ export class ChromeRuntime {
     });
   }
 }
+
+export let BACKGROUND_SERVICE_CLIENT = new BackgroungServiceClient();

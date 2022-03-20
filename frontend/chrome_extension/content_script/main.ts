@@ -1,8 +1,8 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { CLASSIC_COLOR_SCHEME, ColorScheme } from "../../color_scheme";
+import { CHROME_PLAYER_SETTINGS_STORAGE } from "../common/chrome_player_settings_storage";
+import { SERVICE_CLIENT } from "../common/service_client";
 import { BodyRefresher } from "./body_refresher";
-import { SERVICE_CLIENT } from "./common/service_client";
-import { PlayerSettingsStorage } from "./player_settings_storage";
 import "../../../environment";
 
 async function main(): Promise<void> {
@@ -15,7 +15,7 @@ async function main(): Promise<void> {
   }
   ColorScheme.SCHEME = CLASSIC_COLOR_SCHEME;
 
-  let playerSettings = await PlayerSettingsStorage.create().read();
+  let playerSettings = await CHROME_PLAYER_SETTINGS_STORAGE.read();
   switch (location.hostname) {
     case "www.youtube.com":
       BodyRefresher.createYouTube(playerSettings);
