@@ -3,6 +3,10 @@ import { ChatEntry } from "../../../../interface/chat_entry";
 import { BlockSettings } from "../../../../interface/player_settings";
 import { FillButtonComponent } from "../../../button_component";
 import { ColorScheme } from "../../../color_scheme";
+import {
+  CHROME_SESSION_STORAGE,
+  ChromeSessionStorage,
+} from "../../common/chrome_session_storage";
 import { CustomTextInputController } from "../common/custom_text_input_controller";
 import { LinkedList } from "../common/linked_list";
 import { TAB_SIDE_PADDING } from "../common/styles";
@@ -32,11 +36,12 @@ export class ChatListTabComponent extends EventEmitter {
     private chatInputControllerFactoryFn: (
       input: HTMLInputElement
     ) => CustomTextInputController,
-    private blockSettings: BlockSettings,
     private chatListEntryComponentFactoryFn: (
       chatEntry: ChatEntry,
       blockSettings: BlockSettings
-    ) => ChatListEntryComponent
+    ) => ChatListEntryComponent,
+    private blockSettings: BlockSettings,
+    private chromeSessionStorage: ChromeSessionStorage
   ) {
     super();
     let entryListRef = new Ref<HTMLDivElement>();
@@ -64,7 +69,6 @@ export class ChatListTabComponent extends EventEmitter {
         E.inputRef(chatInputRef, {
           class: "chat-list-tab-input",
           style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin-right: 1rem; font-size: 1.4rem; line-height: 3rem; border-bottom: .1rem solid ${ColorScheme.getInputBorder()}; font-family: initial !important; color: ${ColorScheme.getContent()};`,
-          placeholder: chrome.i18n.getMessage("chatInputPlaceHolder"),
         }),
         fireButton.body
       )
@@ -79,8 +83,9 @@ export class ChatListTabComponent extends EventEmitter {
         E.text(chrome.i18n.getMessage("submitNewChatButton"))
       ),
       CustomTextInputController.create,
+      ChatListEntryComponent.create,
       blockSettings,
-      ChatListEntryComponent.create
+      CHROME_SESSION_STORAGE
     ).init();
   }
 
@@ -152,7 +157,18 @@ export class ChatListTabComponent extends EventEmitter {
     this.chatListEntries.clear();
   }
 
-  public show(): void {
+  public async show(): Promise<void> {
+    let session = await this.chromeSessionStorage.read();
+    this.chatInput.placeholder = "";
+    if (!session) {
+      this.chatInput.placeholder = chrome.i18n.getMessage(
+        "chatInputPlaceHolderSignedOut"
+      );
+    } else {
+      this.chatInput.placeholder = chrome.i18n.getMessage(
+        "chatInputPlaceHolderSignedIn"
+      );
+    }
     this.body.style.display = this.displayStyle;
   }
 

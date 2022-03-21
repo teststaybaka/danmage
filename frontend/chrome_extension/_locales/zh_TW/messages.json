@@ -71,14 +71,17 @@
   "submitNewChatButton": {
     "message": "發射！"
   },
-  "chatInputPlaceHolder": {
+  "chatInputPlaceHolderSignedOut": {
     "message": "登入後即可發送彈幕"
+  },
+  "chatInputPlaceHolderSignedIn": {
+    "message": "上膛"
   },
   "firstSignInReminder": {
     "message": "使用Google帳號登入 "
   },
   "secondSignInReminder": {
-    "message": " 即可在不同設備上同步設置並在特定視頻網站上發送彈幕。"
+    "message": " 即可發送彈幕。"
   },
   "signInButton": {
     "message": "登入"
@@ -96,9 +99,9 @@
     "message": "！"
   },
   "firstExplanation": {
-    "message": "您的設置正在通過 "
+    "message": "彈幕會被發送到 "
   },
   "secondExplanation": {
-    "message": " 同步中。"
+    "message": " 上。"
   }
 }

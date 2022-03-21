@@ -71,14 +71,17 @@
   "submitNewChatButton": {
     "message": "发射！"
   },
-  "chatInputPlaceHolder": {
+  "chatInputPlaceHolderSignedOut": {
     "message": "登录后即可发送弹幕"
+  },
+  "chatInputPlaceHolderSignedIn": {
+    "message": "上膛"
   },
   "firstSignInReminder": {
     "message": "使用Google账号登录 "
   },
   "secondSignInReminder": {
-    "message": " 即可在不同设备上同步设置并在特定视频网站上发送弹幕。"
+    "message": " 即可发送弹幕。"
   },
   "signInButton": {
     "message": "登录"
@@ -96,9 +99,9 @@
     "message": "！"
   },
   "firstExplanation": {
-    "message": "您的设置正在通过 "
+    "message": "弹幕会被发送到 "
   },
   "secondExplanation": {
-    "message": " 同步中。"
+    "message": " 上。"
   }
 }

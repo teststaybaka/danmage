@@ -71,14 +71,17 @@
   "submitNewChatButton": {
     "message": "送信"
   },
-  "chatInputPlaceHolder": {
+  "chatInputPlaceHolderSignedOut": {
     "message": "ログイン後にコメントを送信可能"
+  },
+  "chatInputPlaceHolderSignedIn": {
+    "message": "ここにコメント"
   },
   "firstSignInReminder": {
     "message": "Googleアカウントで "
   },
   "secondSignInReminder": {
-    "message": " にログインして、デバイス間で設定を同期し、特定のビデオサイトにコメントを送信します。"
+    "message": " にログインして、コメントを送信できるようにします。"
   },
   "signInButton": {
     "message": "ログイン"
@@ -96,9 +99,9 @@
     "message": "、こんにちは！"
   },
   "firstExplanation": {
-    "message": "設定は "
+    "message": "コメントは "
   },
   "secondExplanation": {
-    "message": " を介して同期されています。"
+    "message": " に送信されます。"
   }
 }

@@ -95,17 +95,21 @@
     "message": "Fire!",
     "description": "Text on the button to submit a new chat."
   },
-  "chatInputPlaceHolder": {
+  "chatInputPlaceHolderSignedOut": {
     "message": "Sign in before posting chats",
+    "description": "Place holder for the input to submit a new chat."
+  },
+  "chatInputPlaceHolderSignedIn": {
+    "message": "Lock & load",
     "description": "Place holder for the input to submit a new chat."
   },
   "firstSignInReminder": {
     "message": "Sign in ",
-    "description": "First part before URL in 'Sign in www.danmage.com with your Chrome/Google account to be able to sync settings across devices and post chats on certain video sites.'."
+    "description": "First part before URL in 'Sign in www.danmage.com with your Google account to be able to post chats.'."
   },
   "secondSignInReminder": {
-    "message": " with your Google account to be able to sync settings across devices and post chats on certain video sites.",
-    "description": "Second part after URL in 'Sign in www.danmage.com with your Chrome/Google account to be able to sync settings across devices and post chats on certain video sites.'"
+    "message": " with your Google account to be able to post chats.",
+    "description": "Second part after URL in 'Sign in www.danmage.com with your Google account to be able to post chats.'"
   },
   "signInButton": {
     "message": "Sign in",
@@ -128,11 +132,11 @@
     "description": "The ending message to welcome a signed in user with name."
   },
   "firstExplanation": {
-    "message": "Your settings are being synced via ",
-    "description": "First part before URL in 'Your settings are being synced via www.danmage.com.'"
+    "message": "Chats will be posted to ",
+    "description": "First part before URL in 'Chat will be posted to www.danmage.com.'"
   },
   "secondExplanation": {
     "message": ".",
-    "description": "Second part after URL in 'Your settings are being synced via www.danmage.com.'"
+    "description": "Second part after URL in 'Chat will be posted to www.danmage.com.'"
   }
 }
