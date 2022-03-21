@@ -32,8 +32,8 @@ export class ControlPanelComponent extends EventEmitter {
   private controlPanelButton: HTMLDivElement;
   private controlPanelPopup: HTMLDivElement;
   private tabHeadLine: HTMLDivElement;
-  private accountTabHead: HTMLDivElement;
-  private accountTabButton: HTMLDivElement;
+  private accountTabHead: HTMLDivElement | undefined;
+  private accountTabButton: HTMLDivElement | undefined;
   private chatListTabHead: HTMLDivElement | undefined;
   private chatListTabButton: HTMLDivElement | undefined;
   private displaySettingsTabHead: HTMLDivElement;
@@ -47,7 +47,8 @@ export class ControlPanelComponent extends EventEmitter {
     elementStyle: string,
     controlPanelButtonColor: string,
     controlPanelPopupStyle: string,
-    private accountTabComponent: AccountTabComponent,
+    private hasChat: boolean,
+    private accountTabComponent: AccountTabComponent | undefined,
     private chatListTabComponent: ChatListTabComponent | undefined,
     private displaySettingsTabComponent: DisplaySettingsTabComponent,
     private blockSettingsTabComponent: BlockSettingsTabComponent,
@@ -69,16 +70,14 @@ export class ControlPanelComponent extends EventEmitter {
     let blockSettingsTabButtonRef = new Ref<HTMLDivElement>();
 
     let tabHeads = new Array<HTMLDivElement>();
-    tabHeads.push(
-      ControlPanelComponent.createTabHead(
-        accountTabHeadRef,
-        accountTabButtonRef,
-        chrome.i18n.getMessage("accountTitle"),
-        `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`
-      )
-    );
-    if (chatListTabComponent) {
+    if (hasChat) {
       tabHeads.push(
+        ControlPanelComponent.createTabHead(
+          accountTabHeadRef,
+          accountTabButtonRef,
+          chrome.i18n.getMessage("accountTitle"),
+          `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`
+        ),
         ControlPanelComponent.createTabHead(
           chatListTabHeadRef,
           chatListTabButtonRef,
@@ -103,9 +102,8 @@ export class ControlPanelComponent extends EventEmitter {
     );
 
     let tabBodies = new Array<HTMLDivElement>();
-    tabBodies.push(accountTabComponent.body);
-    if (chatListTabComponent) {
-      tabBodies.push(chatListTabComponent.body);
+    if (hasChat) {
+      tabBodies.push(accountTabComponent.body, chatListTabComponent.body);
     }
     tabBodies.push(
       displaySettingsTabComponent.body,
@@ -280,12 +278,14 @@ export class ControlPanelComponent extends EventEmitter {
     elementStyle: string,
     controlPanelButtonColor: string,
     controlPanelPopupStyle: string,
-    hasChatListTab: boolean,
+    hasChat: boolean,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings
   ): ControlPanelComponent {
+    let accountTabComponent: AccountTabComponent;
     let chatListTabComponent: ChatListTabComponent;
-    if (hasChatListTab) {
+    if (hasChat) {
+      accountTabComponent = AccountTabComponent.create();
       chatListTabComponent = ChatListTabComponent.create(
         playerSettings.blockSettings
       );
@@ -294,7 +294,8 @@ export class ControlPanelComponent extends EventEmitter {
       elementStyle,
       controlPanelButtonColor,
       controlPanelPopupStyle,
-      AccountTabComponent.create(),
+      hasChat,
+      accountTabComponent,
       chatListTabComponent,
       DisplaySettingsTabComponent.create(playerSettings.displaySettings),
       BlockSettingsTabComponent.create(playerSettings.blockSettings),
@@ -314,31 +315,33 @@ export class ControlPanelComponent extends EventEmitter {
     this.controlPanelButton.addEventListener("click", () => this.showPopup());
     this.globalDocuments.hideWhenMousedown(this.body, () => this.hidePopup());
 
-    this.showAccountTab();
-    if (this.chatListTabComponent) {
+    if (this.hasChat) {
+      this.showAccountTab();
       this.lowlightTabHead(this.chatListTabHead);
       this.chatListTabComponent.hide();
+      this.lowlightTabHead(this.displaySettingsTabHead);
+      this.displaySettingsTabComponent.hide();
+    } else {
+      this.showDisplaySettingsTab();
     }
-    this.lowlightTabHead(this.displaySettingsTabHead);
-    this.displaySettingsTabComponent.hide();
     this.lowlightTabHead(this.blockSettingsTabHead);
     this.blockSettingsTabComponent.hide();
 
+    if (this.hasChat) {
+      this.accountTabButton.addEventListener("click", () =>
+        this.showAccountTab()
+      );
+      this.chatListTabButton.addEventListener("click", () =>
+        this.showChatListTab()
+      );
+      this.chatListTabComponent.on("fire", (chatEntry) => this.fire(chatEntry));
+    }
     this.displaySettingsTabButton.addEventListener("click", () =>
       this.showDisplaySettingsTab()
     );
     this.blockSettingsTabButton.addEventListener("click", () =>
       this.showBlockSettingsTab()
     );
-    this.accountTabButton.addEventListener("click", () =>
-      this.showAccountTab()
-    );
-    if (this.chatListTabComponent) {
-      this.chatListTabButton.addEventListener("click", () =>
-        this.showChatListTab()
-      );
-      this.chatListTabComponent.on("fire", (chatEntry) => this.fire(chatEntry));
-    }
     this.displaySettingsTabComponent.on("update", () => this.updateDisplay());
     this.blockSettingsTabComponent.on("update", () => this.updateBlocked());
     return this;
