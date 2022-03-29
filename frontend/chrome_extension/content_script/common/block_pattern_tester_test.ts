@@ -12,12 +12,12 @@ PUPPETEER_TEST_RUNNER.run({
         let contentExtractor = new (class implements ContentExtractor {
           public extract(content: string) {
             assertThat(content, eq("test content"), "content");
-            return "Contains a key!";
+            return "Contains a Key!";
           }
         })();
         let blockPatternTester = new BlockPatternTester(
           {
-            blockPatterns: [{ kind: 1, content: "key" }],
+            blockPatterns: [{ kind: 1, content: "KEY" }],
           },
           contentExtractor
         );
@@ -64,7 +64,7 @@ PUPPETEER_TEST_RUNNER.run({
         let blockPatternTester = new BlockPatternTester(
           {
             blockPatterns: [
-              { kind: 1, content: "key" },
+              { kind: 1, content: "KEY" },
               { kind: 3, content: "^Has.*?reg.*?$" },
             ],
           },

@@ -1,5 +1,8 @@
 import { ChatEntry } from "../../../../interface/chat_entry";
-import { BlockKind, BlockSettings } from "../../../../interface/player_settings";
+import {
+  BlockKind,
+  BlockSettings,
+} from "../../../../interface/player_settings";
 
 export interface ContentExtractor {
   extract: (content: string) => string;
@@ -40,7 +43,11 @@ export class BlockPatternTester {
       let content = this.contentExtractor.extract(chatEntry.content);
       switch (blockPattern.kind) {
         case BlockKind.KeywordBlockKind:
-          if (content.indexOf(blockPattern.content) !== -1) {
+          if (
+            content
+              .toLocaleLowerCase()
+              .includes(blockPattern.content.toLocaleLowerCase())
+          ) {
             return true;
           }
           break;
