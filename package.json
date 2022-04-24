@@ -36,7 +36,7 @@
     "@google-cloud/storage": "^5.8.5",
     "@selfage/closest_locale_finder": "^1.0.1",
     "@selfage/datastore_client": "^2.0.3",
-    "@selfage/element": "^3.1.3",
+    "@selfage/element": "^3.1.5",
     "@selfage/http_error": "^1.1.0",
     "@selfage/message": "^2.1.0",
     "@selfage/once": "^1.1.0",
