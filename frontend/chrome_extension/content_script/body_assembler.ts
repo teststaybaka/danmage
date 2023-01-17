@@ -79,7 +79,7 @@ export class TwitchBodyAssembler implements BodyAssembler {
   public queryElements(): Element[] {
     this.canvas = document.querySelector(".video-player__container");
     this.video = document.getElementsByTagName("video")[0];
-    this.chatContainer = document.querySelector("div[role=log]");
+    this.chatContainer = document.querySelector(".chat-scrollable-area__message-container");
     if (!this.chatContainer) {
       this.chatContainer = document.querySelector(
         ".video-chat__message-list-wrapper ul"
