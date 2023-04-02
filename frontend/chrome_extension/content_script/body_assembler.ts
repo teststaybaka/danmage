@@ -31,7 +31,7 @@ export class YouTubeBodyAssembler implements BodyAssembler {
       this.iframeDocument = chatFrame.contentDocument;
       this.chatContainer = this.iframeDocument.querySelector("#chat #items");
       this.anchorButtonElement = this.iframeDocument.querySelector(
-        "#chat-messages yt-icon-button#overflow"
+        "#live-chat-header-context-menu"
       );
       this.assemble = this.assembleChat;
       return [
