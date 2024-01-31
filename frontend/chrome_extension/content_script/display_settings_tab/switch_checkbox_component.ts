@@ -109,7 +109,7 @@ export class SwitchCheckboxComponent extends EventEmitter {
     }
   }
 
-  private toggleSwitch(): void {
+  public toggleSwitch(): void {
     this.setValue(!this.value);
     this.emit("change", this.value);
   }

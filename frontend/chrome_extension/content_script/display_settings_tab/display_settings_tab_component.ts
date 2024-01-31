@@ -260,6 +260,10 @@ export class DisplaySettingsTabComponent extends EventEmitter {
     this.emit("update");
   }
 
+  public toggleEnableChange(): void {
+    this.enableComponent.toggleSwitch();
+  }
+
   public resetSettings(): void {
     this.displaySettings.opacity = this.opacityComponent.reset();
     this.displaySettings.fontSize = this.fontSizeComponent.reset();

@@ -439,6 +439,10 @@ export class ControlPanelComponent extends EventEmitter {
     await this.playerSettingsStorage.save(this.playerSettings);
   }
 
+  public toggleEnableScrolling(): void {
+    this.displaySettingsTabComponent.toggleEnableChange();
+  }
+
   public addChat(chatEntries: ChatEntry[]): void {
     if (this.chatListTabComponent) {
       this.chatListTabComponent.add(chatEntries);

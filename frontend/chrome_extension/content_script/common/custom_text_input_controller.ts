@@ -25,6 +25,12 @@ export class CustomTextInputController extends EventEmitter {
     this.input.addEventListener("keydown", (event: KeyboardEvent) =>
       this.keydown(event)
     );
+    this.input.addEventListener("keyup", (event: KeyboardEvent) =>
+      event.stopPropagation()
+    );
+    this.input.addEventListener("keypress", (event: KeyboardEvent) =>
+      event.stopPropagation()
+    );
     return this;
   }
 

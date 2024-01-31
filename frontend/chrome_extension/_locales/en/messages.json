@@ -52,7 +52,7 @@
     "description": "Explain the option to set font family."
   },
   "enableScrollingOption": {
-    "message": "Enable/Disable chat scrolling",
+    "message": "Enable/Disable chat scrolling (D)",
     "description": "Explain the option to enable or disable chat scrolling."
   },
   "userNameOption": {

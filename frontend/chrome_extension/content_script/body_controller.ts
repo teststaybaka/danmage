@@ -41,6 +41,7 @@ export class BodyController {
 
   public constructor(
     private video: HTMLVideoElement,
+    private documentBody: HTMLElement,
     private danmakuCanvasController: DanmakuCanvasController,
     private controlPanelComponent: ControlPanelComponent,
     private controlPanelDocker: ControlPanelDocker,
@@ -187,6 +188,7 @@ export class BodyController {
   ): BodyController {
     return new BodyController(
       video,
+      document.body,
       danmakuCanvasController,
       controlPanelComponent,
       controlPanelDocker,
@@ -220,6 +222,10 @@ export class BodyController {
     if (!this.video.paused && !this.video.ended && !this.video.seeking) {
       this.window.setTimeout(() => this.playerOnce.call(), 0);
     }
+
+    this.documentBody.addEventListener("keydown", (event) =>
+      this.handleKeyDown(event)
+    );
     return this;
   }
 
@@ -322,6 +328,12 @@ export class BodyController {
 
   private refreshBlocked(): void {
     this.danmakuCanvasController.refreshBlocked();
+  }
+
+  private handleKeyDown(event: KeyboardEvent): void {
+    if (event.code === "KeyD") {
+      this.controlPanelComponent.toggleEnableScrolling();
+    }
   }
 
   public remove(): void {
