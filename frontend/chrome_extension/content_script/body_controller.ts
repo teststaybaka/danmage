@@ -331,7 +331,7 @@ export class BodyController {
   }
 
   private handleKeyDown(event: KeyboardEvent): void {
-    if (event.code === "KeyD") {
+    if (!(event.target instanceof HTMLInputElement) && event.code === "KeyD") {
       this.controlPanelComponent.toggleEnableScrolling();
     }
   }
