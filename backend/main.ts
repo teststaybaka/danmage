@@ -4,7 +4,7 @@ import getStream = require("get-stream");
 import http = require("http");
 import https = require("https");
 import { ORIGIN_PROD } from "../common";
-import { GetChatHandler, GetDanmakuHandler } from "./get_chat_handler";
+import { GetChatHandler } from "./get_chat_handler";
 import { GetChatHistoryHandler } from "./get_chat_history_handler";
 import { GetPlayerSettingsHandler } from "./get_player_settings_handler";
 import { GetUserHandler } from "./get_user_handler";
@@ -14,11 +14,10 @@ import { ReportUserIssueHandler } from "./report_user_issue_handler";
 import { SignInHandler } from "./sign_in_handler";
 import { UpdateNicknameHandler } from "./update_nickname_handler";
 import {
-  ChangePlayerSettingsHandler,
   UpdatePlayerSettingsHandler,
 } from "./update_player_settings_handler";
 import { Storage } from "@google-cloud/storage";
-import { HandlerRegister } from "@selfage/service_handler/handler_register";
+import { HandlerRegister } from "@selfage/service_handler/register";
 import { SessionSigner } from "@selfage/service_handler/session_signer";
 import "../environment";
 import "@selfage/web_app_base_dir";
@@ -114,19 +113,15 @@ function registerHandlers(
   let app = express();
   let register = new HandlerRegister(app, LOGGER);
   register.registerCorsAllowedPreflightHandler();
-  register.registerUnauthed(
-    SignInHandler.create(new Set(googleOauthClientIds))
-  );
-  register.registerAuthed(GetUserHandler.create());
-  register.registerAuthed(PostChatHandler.create());
-  register.registerUnauthed(GetChatHandler.create());
-  register.registerAuthed(GetChatHistoryHandler.create());
-  register.registerAuthed(UpdatePlayerSettingsHandler.create());
-  register.registerAuthed(GetPlayerSettingsHandler.create());
-  register.registerAuthed(UpdateNicknameHandler.create());
-  register.registerUnauthed(ReportUserIssueHandler.create());
-  register.registerUnauthed(GetDanmakuHandler.create());
-  register.registerAuthed(ChangePlayerSettingsHandler.create());
+  register.register(SignInHandler.create(new Set(googleOauthClientIds)));
+  register.register(GetUserHandler.create());
+  register.register(PostChatHandler.create());
+  register.register(GetChatHandler.create());
+  register.register(GetChatHistoryHandler.create());
+  register.register(UpdatePlayerSettingsHandler.create());
+  register.register(GetPlayerSettingsHandler.create());
+  register.register(UpdateNicknameHandler.create());
+  register.register(ReportUserIssueHandler.create());
 
   app.get("/*", (req, res, next) => {
     LOGGER.info(`Received GET request at ${req.originalUrl}.`);

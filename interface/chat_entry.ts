@@ -39,9 +39,6 @@ export interface ChatEntry {
 
 export let CHAT_ENTRY: MessageDescriptor<ChatEntry> = {
   name: 'ChatEntry',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'id',
@@ -49,7 +46,7 @@ export let CHAT_ENTRY: MessageDescriptor<ChatEntry> = {
     },
     {
       name: 'hostApp',
-      enumDescriptor: HOST_APP,
+      enumType: HOST_APP,
     },
     {
       name: 'hostContentId',

@@ -1,6 +1,6 @@
 [{
+  "name": "HostApp",
   "enum": {
-    "name": "HostApp",
     "values": [{
       "name": "YouTube",
       "value": 1
@@ -13,8 +13,8 @@
     }]
   }
 }, {
+  "name": "ChatEntry",
   "message": {
-    "name": "ChatEntry",
     "fields": [{
       "name": "id",
       "type": "string"

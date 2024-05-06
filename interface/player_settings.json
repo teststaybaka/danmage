@@ -1,6 +1,6 @@
 [{
+  "name": "BlockKind",
   "enum": {
-    "name": "BlockKind",
     "values": [{
       "name": "KeywordBlockKind",
       "value": 1
@@ -10,8 +10,8 @@
     }]
   }
 }, {
+  "name": "BlockPattern",
   "message": {
-    "name": "BlockPattern",
     "fields": [{
       "name": "kind",
       "type": "BlockKind"
@@ -21,8 +21,8 @@
     }]
   }
 }, {
+  "name": "BlockSettings",
   "message": {
-    "name": "BlockSettings",
     "fields": [{
       "name": "blockPatterns",
       "type": "BlockPattern",
@@ -30,8 +30,8 @@
     }]
   }
 }, {
+  "name": "DistributionStyle",
   "enum": {
-    "name": "DistributionStyle",
     "values": [{
       "name": "RandomDistributionStyle",
       "value": 1
@@ -41,8 +41,8 @@
     }]
   }
 }, {
+  "name": "DisplaySettings",
   "message": {
-    "name": "DisplaySettings",
     "fields": [{
       "name": "speed",
       "type": "number"
@@ -76,8 +76,8 @@
     }]
   }
 }, {
+  "name": "PlayerSettings",
   "message": {
-    "name": "PlayerSettings",
     "fields": [{
       "name": "userId",
       "type": "string"

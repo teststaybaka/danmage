@@ -26,13 +26,10 @@ export interface BlockPattern {
 
 export let BLOCK_PATTERN: MessageDescriptor<BlockPattern> = {
   name: 'BlockPattern',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'kind',
-      enumDescriptor: BLOCK_KIND,
+      enumType: BLOCK_KIND,
     },
     {
       name: 'content',
@@ -47,16 +44,11 @@ export interface BlockSettings {
 
 export let BLOCK_SETTINGS: MessageDescriptor<BlockSettings> = {
   name: 'BlockSettings',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'blockPatterns',
-      messageDescriptor: BLOCK_PATTERN,
-      arrayFactoryFn: () => {
-        return new Array<any>();
-      },
+      messageType: BLOCK_PATTERN,
+      isArray: true,
     },
   ]
 };
@@ -95,9 +87,6 @@ export interface DisplaySettings {
 
 export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
   name: 'DisplaySettings',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'speed',
@@ -137,7 +126,7 @@ export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
     },
     {
       name: 'distributionStyle',
-      enumDescriptor: DISTRIBUTION_STYLE,
+      enumType: DISTRIBUTION_STYLE,
     },
   ]
 };
@@ -150,9 +139,6 @@ export interface PlayerSettings {
 
 export let PLAYER_SETTINGS: MessageDescriptor<PlayerSettings> = {
   name: 'PlayerSettings',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'userId',
@@ -160,11 +146,11 @@ export let PLAYER_SETTINGS: MessageDescriptor<PlayerSettings> = {
     },
     {
       name: 'displaySettings',
-      messageDescriptor: DISPLAY_SETTINGS,
+      messageType: DISPLAY_SETTINGS,
     },
     {
       name: 'blockSettings',
-      messageDescriptor: BLOCK_SETTINGS,
+      messageType: BLOCK_SETTINGS,
     },
   ]
 };

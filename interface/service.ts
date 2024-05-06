@@ -1,6 +1,7 @@
 import { MessageDescriptor, PrimitiveType } from '@selfage/message/descriptor';
-import { UnauthedServiceDescriptor, AuthedServiceDescriptor } from '@selfage/service_descriptor';
+import { ServiceDescriptor } from '@selfage/service_descriptor';
 import { User, USER } from './user';
+import { USER_SESSION } from './session';
 import { ChatEntry, CHAT_ENTRY, HostApp, HOST_APP } from './chat_entry';
 import { PlayerSettings, PLAYER_SETTINGS } from './player_settings';
 import { UserIssue, USER_ISSUE } from './user_issue';
@@ -11,9 +12,6 @@ export interface SignInRequest {
 
 export let SIGN_IN_REQUEST: MessageDescriptor<SignInRequest> = {
   name: 'SignInRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'googleAccessToken',
@@ -28,9 +26,6 @@ export interface SignInResponse {
 
 export let SIGN_IN_RESPONSE: MessageDescriptor<SignInResponse> = {
   name: 'SignInResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'signedSession',
@@ -39,27 +34,23 @@ export let SIGN_IN_RESPONSE: MessageDescriptor<SignInResponse> = {
   ]
 };
 
-export let SIGN_IN: UnauthedServiceDescriptor<SignInRequest, SignInResponse> = {
+export let SIGN_IN: ServiceDescriptor = {
   name: "SignIn",
   path: "/SignIn",
-  requestDescriptor: SIGN_IN_REQUEST,
-  responseDescriptor: SIGN_IN_RESPONSE,
-};
+  body: {
+    messageType: SIGN_IN_REQUEST,
+  },
+  response: {
+    messageType: SIGN_IN_RESPONSE,
+  },
+}
 
 export interface GetUserRequest {
-  signedSession?: string,
 }
 
 export let GET_USER_REQUEST: MessageDescriptor<GetUserRequest> = {
   name: 'GetUserRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
-    {
-      name: 'signedSession',
-      primitiveType: PrimitiveType.STRING,
-    },
   ]
 };
 
@@ -69,42 +60,39 @@ export interface GetUserResponse {
 
 export let GET_USER_RESPONSE: MessageDescriptor<GetUserResponse> = {
   name: 'GetUserResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'user',
-      messageDescriptor: USER,
+      messageType: USER,
     },
   ]
 };
 
-export let GET_USER: AuthedServiceDescriptor<GetUserRequest, GetUserResponse> = {
+export let GET_USER: ServiceDescriptor = {
   name: "GetUser",
   path: "/GetUser",
-  requestDescriptor: GET_USER_REQUEST,
-  responseDescriptor: GET_USER_RESPONSE,
-};
+  body: {
+    messageType: GET_USER_REQUEST,
+  },
+  auth: {
+    key: "auth",
+    type: USER_SESSION
+  },
+  response: {
+    messageType: GET_USER_RESPONSE,
+  },
+}
 
 export interface PostChatRequest {
-  signedSession?: string,
   chatEntry?: ChatEntry,
 }
 
 export let POST_CHAT_REQUEST: MessageDescriptor<PostChatRequest> = {
   name: 'PostChatRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
-      name: 'signedSession',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
       name: 'chatEntry',
-      messageDescriptor: CHAT_ENTRY,
+      messageType: CHAT_ENTRY,
     },
   ]
 };
@@ -115,23 +103,28 @@ export interface PostChatResponse {
 
 export let POST_CHAT_RESPONSE: MessageDescriptor<PostChatResponse> = {
   name: 'PostChatResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'chatEntry',
-      messageDescriptor: CHAT_ENTRY,
+      messageType: CHAT_ENTRY,
     },
   ]
 };
 
-export let POST_CHAT: AuthedServiceDescriptor<PostChatRequest, PostChatResponse> = {
+export let POST_CHAT: ServiceDescriptor = {
   name: "PostChat",
   path: "/PostChat",
-  requestDescriptor: POST_CHAT_REQUEST,
-  responseDescriptor: POST_CHAT_RESPONSE,
-};
+  body: {
+    messageType: POST_CHAT_REQUEST,
+  },
+  auth: {
+    key: "auth",
+    type: USER_SESSION
+  },
+  response: {
+    messageType: POST_CHAT_RESPONSE,
+  },
+}
 
 export interface GetChatRequest {
   hostApp?: HostApp,
@@ -140,13 +133,10 @@ export interface GetChatRequest {
 
 export let GET_CHAT_REQUEST: MessageDescriptor<GetChatRequest> = {
   name: 'GetChatRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'hostApp',
-      enumDescriptor: HOST_APP,
+      enumType: HOST_APP,
     },
     {
       name: 'hostContentId',
@@ -161,43 +151,34 @@ export interface GetChatResponse {
 
 export let GET_CHAT_RESPONSE: MessageDescriptor<GetChatResponse> = {
   name: 'GetChatResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'chatEntries',
-      messageDescriptor: CHAT_ENTRY,
-      arrayFactoryFn: () => {
-        return new Array<any>();
-      },
+      messageType: CHAT_ENTRY,
+      isArray: true,
     },
   ]
 };
 
-export let GET_CHAT: UnauthedServiceDescriptor<GetChatRequest, GetChatResponse> = {
+export let GET_CHAT: ServiceDescriptor = {
   name: "GetChat",
   path: "/GetChat",
-  requestDescriptor: GET_CHAT_REQUEST,
-  responseDescriptor: GET_CHAT_RESPONSE,
-};
+  body: {
+    messageType: GET_CHAT_REQUEST,
+  },
+  response: {
+    messageType: GET_CHAT_RESPONSE,
+  },
+}
 
 export interface GetChatHistoryRequest {
-  signedSession?: string,
 /* If absent, query from the beginning. */
   cursor?: string,
 }
 
 export let GET_CHAT_HISTORY_REQUEST: MessageDescriptor<GetChatHistoryRequest> = {
   name: 'GetChatHistoryRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
-    {
-      name: 'signedSession',
-      primitiveType: PrimitiveType.STRING,
-    },
     {
       name: 'cursor',
       primitiveType: PrimitiveType.STRING,
@@ -212,16 +193,11 @@ export interface GetChatHistoryResponse {
 
 export let GET_CHAT_HISTORY_RESPONSE: MessageDescriptor<GetChatHistoryResponse> = {
   name: 'GetChatHistoryResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'chatEntries',
-      messageDescriptor: CHAT_ENTRY,
-      arrayFactoryFn: () => {
-        return new Array<any>();
-      },
+      messageType: CHAT_ENTRY,
+      isArray: true,
     },
     {
       name: 'cursor',
@@ -230,31 +206,31 @@ export let GET_CHAT_HISTORY_RESPONSE: MessageDescriptor<GetChatHistoryResponse> 
   ]
 };
 
-export let GET_CHAT_HISTORY: AuthedServiceDescriptor<GetChatHistoryRequest, GetChatHistoryResponse> = {
+export let GET_CHAT_HISTORY: ServiceDescriptor = {
   name: "GetChatHistory",
   path: "/GetChatHistory",
-  requestDescriptor: GET_CHAT_HISTORY_REQUEST,
-  responseDescriptor: GET_CHAT_HISTORY_RESPONSE,
-};
+  body: {
+    messageType: GET_CHAT_HISTORY_REQUEST,
+  },
+  auth: {
+    key: "auth",
+    type: USER_SESSION
+  },
+  response: {
+    messageType: GET_CHAT_HISTORY_RESPONSE,
+  },
+}
 
 export interface UpdatePlayerSettingsRequest {
-  signedSession?: string,
   playerSettings?: PlayerSettings,
 }
 
 export let UPDATE_PLAYER_SETTINGS_REQUEST: MessageDescriptor<UpdatePlayerSettingsRequest> = {
   name: 'UpdatePlayerSettingsRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
-      name: 'signedSession',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
       name: 'playerSettings',
-      messageDescriptor: PLAYER_SETTINGS,
+      messageType: PLAYER_SETTINGS,
     },
   ]
 };
@@ -264,34 +240,31 @@ export interface UpdatePlayerSettingsResponse {
 
 export let UPDATE_PLAYER_SETTINGS_RESPONSE: MessageDescriptor<UpdatePlayerSettingsResponse> = {
   name: 'UpdatePlayerSettingsResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
   ]
 };
 
-export let UPDATE_PLAYER_SETTINGS: AuthedServiceDescriptor<UpdatePlayerSettingsRequest, UpdatePlayerSettingsResponse> = {
+export let UPDATE_PLAYER_SETTINGS: ServiceDescriptor = {
   name: "UpdatePlayerSettings",
   path: "/UpdatePlayerSettings",
-  requestDescriptor: UPDATE_PLAYER_SETTINGS_REQUEST,
-  responseDescriptor: UPDATE_PLAYER_SETTINGS_RESPONSE,
-};
+  body: {
+    messageType: UPDATE_PLAYER_SETTINGS_REQUEST,
+  },
+  auth: {
+    key: "auth",
+    type: USER_SESSION
+  },
+  response: {
+    messageType: UPDATE_PLAYER_SETTINGS_RESPONSE,
+  },
+}
 
 export interface GetPlayerSettingsRequest {
-  signedSession?: string,
 }
 
 export let GET_PLAYER_SETTINGS_REQUEST: MessageDescriptor<GetPlayerSettingsRequest> = {
   name: 'GetPlayerSettingsRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
-    {
-      name: 'signedSession',
-      primitiveType: PrimitiveType.STRING,
-    },
   ]
 };
 
@@ -301,39 +274,36 @@ export interface GetPlayerSettingsResponse {
 
 export let GET_PLAYER_SETTINGS_RESPONSE: MessageDescriptor<GetPlayerSettingsResponse> = {
   name: 'GetPlayerSettingsResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'playerSettings',
-      messageDescriptor: PLAYER_SETTINGS,
+      messageType: PLAYER_SETTINGS,
     },
   ]
 };
 
-export let GET_PLAYER_SETTINGS: AuthedServiceDescriptor<GetPlayerSettingsRequest, GetPlayerSettingsResponse> = {
+export let GET_PLAYER_SETTINGS: ServiceDescriptor = {
   name: "GetPlayerSettings",
   path: "/GetPlayerSettings",
-  requestDescriptor: GET_PLAYER_SETTINGS_REQUEST,
-  responseDescriptor: GET_PLAYER_SETTINGS_RESPONSE,
-};
+  body: {
+    messageType: GET_PLAYER_SETTINGS_REQUEST,
+  },
+  auth: {
+    key: "auth",
+    type: USER_SESSION
+  },
+  response: {
+    messageType: GET_PLAYER_SETTINGS_RESPONSE,
+  },
+}
 
 export interface UpdateNicknameRequest {
-  signedSession?: string,
   newName?: string,
 }
 
 export let UPDATE_NICKNAME_REQUEST: MessageDescriptor<UpdateNicknameRequest> = {
   name: 'UpdateNicknameRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
-    {
-      name: 'signedSession',
-      primitiveType: PrimitiveType.STRING,
-    },
     {
       name: 'newName',
       primitiveType: PrimitiveType.STRING,
@@ -346,19 +316,24 @@ export interface UpdateNicknameResponse {
 
 export let UPDATE_NICKNAME_RESPONSE: MessageDescriptor<UpdateNicknameResponse> = {
   name: 'UpdateNicknameResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
   ]
 };
 
-export let UPDATE_NICKNAME: AuthedServiceDescriptor<UpdateNicknameRequest, UpdateNicknameResponse> = {
+export let UPDATE_NICKNAME: ServiceDescriptor = {
   name: "UpdateNickname",
   path: "/UpdateNickname",
-  requestDescriptor: UPDATE_NICKNAME_REQUEST,
-  responseDescriptor: UPDATE_NICKNAME_RESPONSE,
-};
+  body: {
+    messageType: UPDATE_NICKNAME_REQUEST,
+  },
+  auth: {
+    key: "auth",
+    type: USER_SESSION
+  },
+  response: {
+    messageType: UPDATE_NICKNAME_RESPONSE,
+  },
+}
 
 export interface ReportUserIssueRequest {
   userIssue?: UserIssue,
@@ -366,13 +341,10 @@ export interface ReportUserIssueRequest {
 
 export let REPORT_USER_ISSUE_REQUEST: MessageDescriptor<ReportUserIssueRequest> = {
   name: 'ReportUserIssueRequest',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'userIssue',
-      messageDescriptor: USER_ISSUE,
+      messageType: USER_ISSUE,
     },
   ]
 };
@@ -382,42 +354,17 @@ export interface ReportUserIssueResponse {
 
 export let REPORT_USER_ISSUE_RESPONSE: MessageDescriptor<ReportUserIssueResponse> = {
   name: 'ReportUserIssueResponse',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
   ]
 };
 
-export let REPORT_USER_ISSUE: UnauthedServiceDescriptor<ReportUserIssueRequest, ReportUserIssueResponse> = {
+export let REPORT_USER_ISSUE: ServiceDescriptor = {
   name: "ReportUserIssue",
   path: "/ReportUserIssue",
-  requestDescriptor: REPORT_USER_ISSUE_REQUEST,
-  responseDescriptor: REPORT_USER_ISSUE_RESPONSE,
-};
-
-export interface EmptyMessage {
-}
-
-export let EMPTY_MESSAGE: MessageDescriptor<EmptyMessage> = {
-  name: 'EmptyMessage',
-  factoryFn: () => {
-    return new Object();
+  body: {
+    messageType: REPORT_USER_ISSUE_REQUEST,
   },
-  fields: [
-  ]
-};
-
-export let GET_DANMAKU: UnauthedServiceDescriptor<EmptyMessage, EmptyMessage> = {
-  name: "GetDanmaku",
-  path: "/GetDanmaku",
-  requestDescriptor: EMPTY_MESSAGE,
-  responseDescriptor: EMPTY_MESSAGE,
-};
-
-export let CHANGE_PLAYER_SETTINGS: AuthedServiceDescriptor<UpdatePlayerSettingsRequest, UpdatePlayerSettingsResponse> = {
-  name: "ChangePlayerSettings",
-  path: "/ChangePlayerSettings",
-  requestDescriptor: UPDATE_PLAYER_SETTINGS_REQUEST,
-  responseDescriptor: UPDATE_PLAYER_SETTINGS_RESPONSE,
-};
+  response: {
+    messageType: REPORT_USER_ISSUE_RESPONSE,
+  },
+}

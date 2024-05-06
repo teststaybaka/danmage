@@ -5,10 +5,10 @@ import { PostChatHandler } from "./post_chat_handler";
 import { Counter } from "@selfage/counter";
 import { DatastoreClient } from "@selfage/datastore_client";
 import { eqMessage } from "@selfage/message/test_matcher";
-import { assertThat, eq, eqArray } from "@selfage/test_matcher";
-import { NODE_TEST_RUNNER } from "@selfage/test_runner";
+import { assertThat, eq, isArray } from "@selfage/test_matcher";
+import { TEST_RUNNER } from "@selfage/test_runner";
 
-NODE_TEST_RUNNER.run({
+TEST_RUNNER.run({
   name: "PostChatHandlerTest",
   cases: [
     {
@@ -23,12 +23,12 @@ NODE_TEST_RUNNER.run({
             }
             public get(ids: Array<string>) {
               counter.increment("get");
-              assertThat(ids, eqArray([eq("789")]), "get user ids");
+              assertThat(ids, isArray([eq("789")]), "get user ids");
               return Promise.resolve([
-                ({
+                {
                   id: "789",
                   nickname: "some name",
-                } as User) as any,
+                } as User as any,
               ]);
             }
             public allocateKeys(entries: Array<any>) {
@@ -45,11 +45,12 @@ NODE_TEST_RUNNER.run({
           })(),
           () => {
             return 10000;
-          }
+          },
         );
 
         // Execute
         let response = await handler.handle(
+          "Request:",
           {
             chatEntry: {
               hostApp: HostApp.YouTube,
@@ -58,7 +59,7 @@ NODE_TEST_RUNNER.run({
               timestamp: 567,
             },
           },
-          { userId: "789" }
+          { userId: "789" },
         );
 
         // Verify
@@ -80,9 +81,9 @@ NODE_TEST_RUNNER.run({
                 created: 10,
               },
             },
-            POST_CHAT_RESPONSE
+            POST_CHAT_RESPONSE,
           ),
-          "response"
+          "response",
         );
       },
     },

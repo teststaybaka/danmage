@@ -1,6 +1,6 @@
 [{
+  "name": "UserIssue",
   "message": {
-    "name": "UserIssue",
     "fields": [{
       "name": "id",
       "type": "string"

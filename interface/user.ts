@@ -9,9 +9,6 @@ export interface User {
 
 export let USER: MessageDescriptor<User> = {
   name: 'User',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'id',

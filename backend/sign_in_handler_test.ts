@@ -11,12 +11,12 @@ import {
   assertThat,
   containStr,
   eq,
-  eqArray,
   eqError,
+  isArray,
 } from "@selfage/test_matcher";
-import { NODE_TEST_RUNNER } from "@selfage/test_runner";
+import { TEST_RUNNER } from "@selfage/test_runner";
 
-NODE_TEST_RUNNER.run({
+TEST_RUNNER.run({
   name: "SignInHandlerTest",
   cases: [
     {
@@ -45,12 +45,12 @@ NODE_TEST_RUNNER.run({
               status: 400,
               statusText: "400 error",
             } as any);
-          }
+          },
         );
 
         // Execute
         let error = await assertReject(
-          handler.handle({ googleAccessToken: "some_token" })
+          handler.handle("Request:", { googleAccessToken: "some_token" }),
         );
 
         // Verify
@@ -58,7 +58,7 @@ NODE_TEST_RUNNER.run({
         assertThat(
           error,
           eqError(new HttpError(400, "Failed to fetch")),
-          "error"
+          "error",
         );
         assertThat(error.status, eq(400), "error code");
       },
@@ -89,12 +89,12 @@ NODE_TEST_RUNNER.run({
                 });
               },
             } as any);
-          }
+          },
         );
 
         // Execute
         let error = await assertReject(
-          handler.handle({ googleAccessToken: "some_token" })
+          handler.handle("Request:", { googleAccessToken: "some_token" }),
         );
 
         // Verify
@@ -127,12 +127,12 @@ NODE_TEST_RUNNER.run({
                 });
               },
             } as any);
-          }
+          },
         );
 
         // Execute
         let error = await assertReject(
-          handler.handle({ googleAccessToken: "some_token" })
+          handler.handle("Request:", { googleAccessToken: "some_token" }),
         );
 
         // Verify
@@ -152,23 +152,23 @@ NODE_TEST_RUNNER.run({
             }
             public get(ids: Array<string>, model: any) {
               counter.increment("get");
-              assertThat(ids, eqArray([eq("google-8rXL")]), "ids");
+              assertThat(ids, isArray([eq("google-8rXL")]), "ids");
               return Promise.resolve([]);
             }
             public save(users: Array<User>, model: any) {
               counter.increment("save");
               assertThat(
                 users,
-                eqArray([
+                isArray([
                   eqMessage(
                     {
                       id: "google-8rXL",
                       created: 10,
                     },
-                    USER
+                    USER,
                   ),
                 ]),
-                "users"
+                "users",
               );
               return Promise.resolve();
             }
@@ -182,7 +182,7 @@ NODE_TEST_RUNNER.run({
               assertThat(
                 sessionStr,
                 eq('{"userId":"google-8rXL"}'),
-                "session string"
+                "session string",
               );
               return "signed random session";
             }
@@ -199,11 +199,11 @@ NODE_TEST_RUNNER.run({
                 });
               },
             } as any);
-          }
+          },
         );
 
         // Execute
-        let response = await handler.handle({
+        let response = await handler.handle("Request:", {
           googleAccessToken: "some_token",
         });
 
@@ -217,9 +217,9 @@ NODE_TEST_RUNNER.run({
             {
               signedSession: "signed random session",
             },
-            SIGN_IN_RESPONSE
+            SIGN_IN_RESPONSE,
           ),
-          "signInResponse"
+          "signInResponse",
         );
       },
     },
@@ -236,7 +236,7 @@ NODE_TEST_RUNNER.run({
             }
             public get(ids: Array<string>, model: any) {
               counter.increment("get");
-              assertThat(ids, eqArray([eq("google-8rXL")]), "ids");
+              assertThat(ids, isArray([eq("google-8rXL")]), "ids");
               return Promise.resolve([{ id: "anything" } as any]);
             }
             public save(users: Array<User>, model: any) {
@@ -265,11 +265,11 @@ NODE_TEST_RUNNER.run({
                 });
               },
             } as any);
-          }
+          },
         );
 
         // Execute
-        let response = await handler.handle({
+        let response = await handler.handle("Request:", {
           googleAccessToken: "some_token",
         });
 
@@ -283,9 +283,9 @@ NODE_TEST_RUNNER.run({
             {
               signedSession: "signed random session",
             },
-            SIGN_IN_RESPONSE
+            SIGN_IN_RESPONSE,
           ),
-          "signInResponse"
+          "signInResponse",
         );
       },
     },

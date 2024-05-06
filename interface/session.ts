@@ -6,9 +6,6 @@ export interface UserSession {
 
 export let USER_SESSION: MessageDescriptor<UserSession> = {
   name: 'UserSession',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'userId',

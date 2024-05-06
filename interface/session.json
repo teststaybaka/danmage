@@ -1,6 +1,6 @@
 [{
+  "name": "UserSession",
   "message": {
-    "name": "UserSession",
     "fields": [{
       "name": "userId",
       "type": "string"

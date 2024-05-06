@@ -1,6 +1,6 @@
 [{
+  "name": "User",
   "message": {
-    "name": "User",
     "fields": [{
       "name": "id",
       "type": "string"

@@ -9,9 +9,6 @@ export interface UserIssue {
 
 export let USER_ISSUE: MessageDescriptor<UserIssue> = {
   name: 'UserIssue',
-  factoryFn: () => {
-    return new Object();
-  },
   fields: [
     {
       name: 'id',

@@ -1,37 +1,36 @@
 [{
+  "name": "SignInRequest",
   "message": {
-    "name": "SignInRequest",
     "fields": [{
       "name": "googleAccessToken",
       "type": "string"
     }]
   }
 }, {
+  "name": "SignInResponse",
   "message": {
-    "name": "SignInResponse",
     "fields": [{
       "name": "signedSession",
       "type": "string"
     }]
   }
 }, {
+  "name": "SignIn",
   "service": {
-    "name": "SignIn",
     "path": "/SignIn",
-    "request": "SignInRequest",
-    "response": "SignInResponse"
+    "body": "SignInRequest",
+    "response": "SignInResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }, {
+  "name": "GetUserRequest",
   "message": {
-    "name": "GetUserRequest",
-    "fields": [{
-      "name": "signedSession",
-      "type": "string"
-    }]
+    "fields": []
   }
 }, {
+  "name": "GetUserResponse",
   "message": {
-    "name": "GetUserResponse",
     "fields": [{
       "name": "user",
       "type": "User",
@@ -39,27 +38,22 @@
     }]
   }
 }, {
+  "name": "GetUser",
   "service": {
-    "name": "GetUser",
     "path": "/GetUser",
-    "request": "GetUserRequest",
-    "response": "GetUserResponse"
+    "body": "GetUserRequest",
+    "auth": {
+      "key": "auth",
+      "type": "UserSession",
+      "import": "./session"
+    },
+    "response": "GetUserResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }, {
+  "name": "PostChatRequest",
   "message": {
-    "name": "PostChatRequest",
-    "fields": [{
-      "name": "signedSession",
-      "type": "string"
-    }, {
-      "name": "chatEntry",
-      "type": "ChatEntry",
-      "import": "./chat_entry"
-    }]
-  }
-}, {
-  "message": {
-    "name": "PostChatResponse",
     "fields": [{
       "name": "chatEntry",
       "type": "ChatEntry",
@@ -67,15 +61,31 @@
     }]
   }
 }, {
+  "name": "PostChatResponse",
+  "message": {
+    "fields": [{
+      "name": "chatEntry",
+      "type": "ChatEntry",
+      "import": "./chat_entry"
+    }]
+  }
+}, {
+  "name": "PostChat",
   "service": {
-    "name": "PostChat",
     "path": "/PostChat",
-    "request": "PostChatRequest",
-    "response": "PostChatResponse"
+    "body": "PostChatRequest",
+    "auth": {
+      "key": "auth",
+      "type": "UserSession",
+      "import": "./session"
+    },
+    "response": "PostChatResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }, {
+  "name": "GetChatRequest",
   "message": {
-    "name": "GetChatRequest",
     "fields": [{
       "name": "hostApp",
       "type": "HostApp",
@@ -86,8 +96,8 @@
     }]
   }
 }, {
+  "name": "GetChatResponse",
   "message": {
-    "name": "GetChatResponse",
     "fields": [{
       "name": "chatEntries",
       "type": "ChatEntry",
@@ -96,27 +106,26 @@
     }]
   }
 }, {
+  "name": "GetChat",
   "service": {
-    "name": "GetChat",
     "path": "/GetChat",
-    "request": "GetChatRequest",
-    "response": "GetChatResponse"
+    "body": "GetChatRequest",
+    "response": "GetChatResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }, {
+  "name": "GetChatHistoryRequest",
   "message": {
-    "name": "GetChatHistoryRequest",
     "fields": [{
-      "name": "signedSession",
-      "type": "string"
-    }, {
       "name": "cursor",
       "type": "string",
       "comment": "If absent, query from the beginning."
     }]
   }
 }, {
+  "name": "GetChatHistoryResponse",
   "message": {
-    "name": "GetChatHistoryResponse",
     "fields": [{
       "name": "chatEntries",
       "type": "ChatEntry",
@@ -128,47 +137,55 @@
     }]
   }
 }, {
+  "name": "GetChatHistory",
   "service": {
-    "name": "GetChatHistory",
     "path": "/GetChatHistory",
-    "request": "GetChatHistoryRequest",
-    "response": "GetChatHistoryResponse"
+    "body": "GetChatHistoryRequest",
+    "auth": {
+      "key": "auth",
+      "type": "UserSession",
+      "import": "./session"
+    },
+    "response": "GetChatHistoryResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }, {
+  "name": "UpdatePlayerSettingsRequest",
   "message": {
-    "name": "UpdatePlayerSettingsRequest",
     "fields": [{
-      "name": "signedSession",
-      "type": "string"
-    }, {
       "name": "playerSettings",
       "type": "PlayerSettings",
       "import": "./player_settings"
     }]
   }
 }, {
+  "name": "UpdatePlayerSettingsResponse",
   "message": {
-    "name": "UpdatePlayerSettingsResponse",
     "fields": []
   }
 }, {
+  "name": "UpdatePlayerSettings",
   "service": {
-    "name": "UpdatePlayerSettings",
     "path": "/UpdatePlayerSettings",
-    "request": "UpdatePlayerSettingsRequest",
-    "response": "UpdatePlayerSettingsResponse"
+    "body": "UpdatePlayerSettingsRequest",
+    "auth": {
+      "key": "auth",
+      "type": "UserSession",
+      "import": "./session"
+    },
+    "response": "UpdatePlayerSettingsResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }, {
+  "name": "GetPlayerSettingsRequest",
   "message": {
-    "name": "GetPlayerSettingsRequest",
-    "fields": [{
-      "name": "signedSession",
-      "type": "string"
-    }]
+    "fields": []
   }
 }, {
+  "name": "GetPlayerSettingsResponse",
   "message": {
-    "name": "GetPlayerSettingsResponse",
     "fields": [{
       "name": "playerSettings",
       "type": "PlayerSettings",
@@ -176,38 +193,49 @@
     }]
   }
 }, {
+  "name": "GetPlayerSettings",
   "service": {
-    "name": "GetPlayerSettings",
     "path": "/GetPlayerSettings",
-    "request": "GetPlayerSettingsRequest",
-    "response": "GetPlayerSettingsResponse"
+    "body": "GetPlayerSettingsRequest",
+    "auth": {
+      "key": "auth",
+      "type": "UserSession",
+      "import": "./session"
+    },
+    "response": "GetPlayerSettingsResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }, {
+  "name": "UpdateNicknameRequest",
   "message": {
-    "name": "UpdateNicknameRequest",
     "fields": [{
-      "name": "signedSession",
-      "type": "string"
-    }, {
       "name": "newName",
       "type": "string"
     }]
   }
 }, {
+  "name": "UpdateNicknameResponse",
   "message": {
-    "name": "UpdateNicknameResponse",
     "fields": []
   }
 }, {
+  "name": "UpdateNickname",
   "service": {
-    "name": "UpdateNickname",
     "path": "/UpdateNickname",
-    "request": "UpdateNicknameRequest",
-    "response": "UpdateNicknameResponse"
+    "body": "UpdateNicknameRequest",
+    "auth": {
+      "key": "auth",
+      "type": "UserSession",
+      "import": "./session"
+    },
+    "response": "UpdateNicknameResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }, {
+  "name": "ReportUserIssueRequest",
   "message": {
-    "name": "ReportUserIssueRequest",
     "fields": [{
       "name": "userIssue",
       "type": "UserIssue",
@@ -215,34 +243,17 @@
     }]
   }
 }, {
+  "name": "ReportUserIssueResponse",
   "message": {
-    "name": "ReportUserIssueResponse",
     "fields": []
   }
 }, {
+  "name": "ReportUserIssue",
   "service": {
-    "name": "ReportUserIssue",
     "path": "/ReportUserIssue",
-    "request": "ReportUserIssueRequest",
-    "response": "ReportUserIssueResponse"
-  }
-}, {
-  "message": {
-    "name": "EmptyMessage",
-    "fields": []
-  }
-}, {
-  "service": {
-    "name": "GetDanmaku",
-    "path": "/GetDanmaku",
-    "request": "EmptyMessage",
-    "response": "EmptyMessage"
-  }
-}, {
-  "service": {
-    "name": "ChangePlayerSettings",
-    "path": "/ChangePlayerSettings",
-    "request": "UpdatePlayerSettingsRequest",
-    "response": "UpdatePlayerSettingsResponse"
+    "body": "ReportUserIssueRequest",
+    "response": "ReportUserIssueResponse",
+    "outputWebClient": "../frontend/client_requests",
+    "outputHandler": "../backend/server_handlers"
   }
 }]
