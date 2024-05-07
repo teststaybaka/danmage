@@ -2,15 +2,16 @@ import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { normalizeBody } from "../../body_normalizer";
 import { BodyComponent } from "./body_component";
 import { BODY_STATE } from "./body_state";
+import { HistoryTracker } from "./history_tracker";
 import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { SERVICE_CLIENT } from "./service_client";
-import { createLoaderAndUpdater } from "@selfage/stateful_navigator";
 import "../../../environment";
 
 function main(): void {
   normalizeBody();
+
   document.title = LOCALIZED_TEXT.title;
-  let viewPortMeta = document.createElement('meta');
+  let viewPortMeta = document.createElement("meta");
   viewPortMeta.name = "viewport";
   viewPortMeta.content = "width=device-width, initial-scale=1";
   document.head.appendChild(viewPortMeta);
@@ -23,16 +24,17 @@ function main(): void {
   } else {
     throw new Error("Unsupported environment.");
   }
-  SERVICE_CLIENT.origin = origin;
+  SERVICE_CLIENT.baseUrl = origin;
 
-  let queryParamKeyForState = "q";
-  let [loader, updater] = createLoaderAndUpdater(
-    BODY_STATE,
-    queryParamKeyForState
+  let bodyComponent = BodyComponent.create(origin);
+  document.body.append(bodyComponent.body);
+  let queryParamKey = "s";
+  let historyTracker = HistoryTracker.create(BODY_STATE, queryParamKey);
+  historyTracker.on("update", (newState) =>
+    bodyComponent.updateState(newState),
   );
-  document.body.appendChild(
-    BodyComponent.create(loader.state, updater, origin).body
-  );
+  bodyComponent.on("newState", (newState) => historyTracker.push(newState));
+  historyTracker.parse();
 }
 
 main();

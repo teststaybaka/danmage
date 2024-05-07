@@ -1,6 +1,6 @@
 [{
+  "name": "Page",
   "enum": {
-    "name": "Page",
     "values": [{
       "name": "HOME",
       "value": 1
@@ -16,12 +16,11 @@
     }]
   }
 }, {
+  "name": "BodyState",
   "message": {
-    "name": "BodyState",
     "fields": [{
       "name": "page",
       "type": "Page"
-    }],
-    "isObservable": true
+    }]
   }
 }]

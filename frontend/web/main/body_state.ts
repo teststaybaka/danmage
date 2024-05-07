@@ -1,5 +1,4 @@
 import { EnumDescriptor, MessageDescriptor } from '@selfage/message/descriptor';
-import { EventEmitter } from 'events';
 
 export enum Page {
   HOME = 1,
@@ -31,47 +30,15 @@ export let PAGE: EnumDescriptor<Page> = {
 }
 
 export interface BodyState {
-  on(event: 'page', listener: (newValue: Page, oldValue: Page) => void): this;
-  on(event: 'init', listener: () => void): this;
-}
-
-export class BodyState extends EventEmitter {
-  private page_?: Page;
-  get page(): Page {
-    return this.page_;
-  }
-  set page(value: Page) {
-    let oldValue = this.page_;
-    if (value === oldValue) {
-      return;
-    }
-    this.page_ = value;
-    this.emit('page', this.page_, oldValue);
-  }
-
-  public triggerInitialEvents(): void {
-    if (this.page_ !== undefined) {
-      this.emit('page', this.page_, undefined);
-    }
-    this.emit('init');
-  }
-
-  public toJSON(): Object {
-    return {
-      page: this.page,
-    };
-  }
+  page?: Page,
 }
 
 export let BODY_STATE: MessageDescriptor<BodyState> = {
   name: 'BodyState',
-  factoryFn: () => {
-    return new BodyState();
-  },
   fields: [
     {
       name: 'page',
-      enumDescriptor: PAGE,
+      enumType: PAGE,
     },
   ]
 };

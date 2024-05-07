@@ -7,7 +7,11 @@ import { SIDE_PADDING } from "./common_style";
 import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { E } from "@selfage/element/factory";
 
-export class HomeComponent {
+export class HomePage {
+  public static create(): HomePage {
+    return new HomePage();
+  }
+
   private static FONT_SIZE = "2rem";
   private static MAX_WIDTH = "128rem";
 
@@ -16,44 +20,34 @@ export class HomeComponent {
   public constructor() {
     this.body = E.div(
       { class: "home-container" },
-      HomeComponent.paragraph(
+      HomePage.paragraph(
         ColorScheme.getBackground(),
         INTRO_VIDEO_PATH,
-        HomeComponent.textElement(
-          LOCALIZED_TEXT.intro,
-          ColorScheme.getContent()
+        HomePage.textElement(LOCALIZED_TEXT.intro, ColorScheme.getContent()),
+        HomePage.link(
+          "https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm",
         ),
-        HomeComponent.link(
-          "https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm"
-        ),
-        HomeComponent.textElement(
-          LOCALIZED_TEXT.intro2,
-          ColorScheme.getContent()
-        ),
-        HomeComponent.link("https://github.com/teststaybaka/danmage")
+        HomePage.textElement(LOCALIZED_TEXT.intro2, ColorScheme.getContent()),
+        HomePage.link("https://github.com/teststaybaka/danmage"),
       ),
-      HomeComponent.paragraph(
+      HomePage.paragraph(
         `rgb(100,65,164)`,
         TWITCH_VIDEO_PATH,
-        HomeComponent.textElement(LOCALIZED_TEXT.introTwitch, "white")
+        HomePage.textElement(LOCALIZED_TEXT.introTwitch, "white"),
       ),
-      HomeComponent.paragraph(
+      HomePage.paragraph(
         `rgb(255,0,0)`,
         YOUTUBE_VIDEO_PATH,
-        HomeComponent.textElement(LOCALIZED_TEXT.introYouTube, "white"),
-        HomeComponent.textElement(LOCALIZED_TEXT.introYouTube2, "white"),
-        HomeComponent.textElement(LOCALIZED_TEXT.introYouTube3, "white")
+        HomePage.textElement(LOCALIZED_TEXT.introYouTube, "white"),
+        HomePage.textElement(LOCALIZED_TEXT.introYouTube2, "white"),
+        HomePage.textElement(LOCALIZED_TEXT.introYouTube3, "white"),
       ),
-      HomeComponent.paragraph(
+      HomePage.paragraph(
         `rgb(223,99,0)`,
         CRUNCHYROLL_VIDEO_PATH,
-        HomeComponent.textElement(LOCALIZED_TEXT.introCrunchyroll, "white")
-      )
+        HomePage.textElement(LOCALIZED_TEXT.introCrunchyroll, "white"),
+      ),
     );
-  }
-
-  public static create(): HomeComponent {
-    return new HomeComponent();
   }
 
   private static paragraph(
@@ -66,15 +60,15 @@ export class HomeComponent {
         class: "home-paragraph",
         style: `display: flex; flex-flow: column nowrap; align-items: center; padding: 0 ${SIDE_PADDING}rem; background-color: ${backgroundColor};`,
       },
-      HomeComponent.video(videoPath),
-      ...textElements
+      HomePage.video(videoPath),
+      ...textElements,
     );
   }
 
   private static video(videoPath: string): HTMLElement {
     let v = E.video({
       class: "home-video",
-      style: `width: 100%; max-width: ${HomeComponent.MAX_WIDTH}; margin: ${
+      style: `width: 100%; max-width: ${HomePage.MAX_WIDTH}; margin: ${
         SIDE_PADDING / 2
       }rem 0;`,
       src: videoPath,
@@ -90,12 +84,12 @@ export class HomeComponent {
       {
         class: "home-text",
         style: `width: 100%; font-size: ${
-          HomeComponent.FONT_SIZE
-        }; max-width: ${HomeComponent.MAX_WIDTH}; margin-bottom: ${
+          HomePage.FONT_SIZE
+        }; max-width: ${HomePage.MAX_WIDTH}; margin-bottom: ${
           SIDE_PADDING / 2
         }rem; color: ${color};`,
       },
-      E.text(text)
+      E.text(text),
     );
   }
 
@@ -103,8 +97,8 @@ export class HomeComponent {
     return E.a(
       {
         style:
-          `width: 100%; font-size: ${HomeComponent.FONT_SIZE}; max-width: ${
-            HomeComponent.MAX_WIDTH
+          `width: 100%; font-size: ${HomePage.FONT_SIZE}; max-width: ${
+            HomePage.MAX_WIDTH
           }; margin-bottom: ${
             SIDE_PADDING / 2
           }rem; color: ${ColorScheme.getLinkContent()}; ` +
@@ -112,7 +106,7 @@ export class HomeComponent {
         href: url,
         target: "_blank",
       },
-      E.text(url)
+      E.text(url),
     );
   }
 

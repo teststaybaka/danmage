@@ -1,65 +1,75 @@
-import { SIGN_IN } from "../../../interface/service";
-import { TextButtonComponent } from "../../button_component";
+import EventEmitter = require("events");
+import { TEXT_BUTTON_STYLE } from "../../button_styles";
+import { signIn } from "../../client_requests";
 import { BLUE, ColorScheme, ORANGE } from "../../color_scheme";
+import { FONT_M } from "../../font_sizes";
+import { PageNavigator } from "../../page_navigator";
 import { BodyState, Page } from "./body_state";
 import { SIDE_PADDING } from "./common_style";
-import { FeedbackComponent } from "./feedback_component";
-import { HistoryComponent } from "./history_component";
-import { HomeComponent } from "./home_component";
+import { FeedbackPage } from "./feedback_page";
+import { HistoryPage } from "./history_page";
+import { HomePage } from "./home_page";
 import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
 import { LOCALIZED_TEXT } from "./locales/localized_text";
-import { NicknameComponent } from "./nickname_component";
+import { NicknamePage } from "./nickname_page";
 import { SERVICE_CLIENT } from "./service_client";
 import { E } from "@selfage/element/factory";
-import { HideableElementController } from "@selfage/element/hideable_element_controller";
 import { Ref } from "@selfage/ref";
-import { ServiceClient } from "@selfage/service_client";
-import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
-import { HistoryUpdater } from "@selfage/stateful_navigator/history_updater";
-import { TabsSwitcher } from "@selfage/tabs";
+import { WebServiceClient } from "@selfage/web_service_client";
+import { LocalSessionStorage } from "@selfage/web_service_client/local_session_storage";
 
-export class BodyComponent {
+export interface BodyComponent {
+  on(event: "newState", listener: (newState: BodyState) => void): this;
+}
+
+export class BodyComponent extends EventEmitter {
+  public static create(origin: string): BodyComponent {
+    return new BodyComponent(
+      HomePage.create,
+      NicknamePage.create,
+      HistoryPage.create,
+      FeedbackPage.create,
+      origin,
+      LOCAL_SESSION_STORAGE,
+      SERVICE_CLIENT,
+      window,
+    );
+  }
+
   public body: HTMLDivElement;
-  private logo: HTMLDivElement;
-  public signInButton: HTMLDivElement;
-  private signedInButtonsContainer: HTMLDivElement;
-  private tabsContainer: HTMLDivElement;
-  private pageSwitcher = TabsSwitcher.create();
-  private signInButtonsSwitcher = TabsSwitcher.create();
-  private hideableSignInButton: HideableElementController;
-  private hideableSignedInButtonsContainer: HideableElementController;
-  private homeComponent: HomeComponent;
-  private nicknameComponent: NicknameComponent;
-  private historyComponent: HistoryComponent;
-  private feedbackComponent: FeedbackComponent;
+  private logo = new Ref<HTMLDivElement>();
+  public signInButton = new Ref<HTMLDivElement>();
+  private signedInButtonsContainer = new Ref<HTMLDivElement>();
+  public nicknameButton = new Ref<HTMLDivElement>();
+  public historyButton = new Ref<HTMLDivElement>();
+  public signOutButton = new Ref<HTMLDivElement>();
+  private tabsContainer = new Ref<HTMLDivElement>();
+  public termsButton = new Ref<HTMLDivElement>();
+  public privacyButton = new Ref<HTMLDivElement>();
+  public feedbackButton = new Ref<HTMLDivElement>();
+  private homePage: HomePage;
+  private nicknamePage: NicknamePage;
+  private historyPage: HistoryPage;
+  private feedbackPage: FeedbackPage;
+  private pageNavigator: PageNavigator<Page>;
+  private bodyState: BodyState;
 
   public constructor(
-    private nicknameButton: TextButtonComponent,
-    private historyButton: TextButtonComponent,
-    private signOutButton: TextButtonComponent,
-    private termsButton: TextButtonComponent,
-    private privacyButton: TextButtonComponent,
-    private feedbackButton: TextButtonComponent,
-    private homeComponentFactoryFn: () => HomeComponent,
-    private nicknameComponentFactoryFn: () => NicknameComponent,
-    private historyComponentFactoryFn: () => HistoryComponent,
-    private feedbackComponentFactoryFn: () => FeedbackComponent,
-    private bodyState: BodyState,
-    private historyUpdater: HistoryUpdater,
+    private createHomagePage: () => HomePage,
+    private createNicknamePage: () => NicknamePage,
+    private createHistoryPage: () => HistoryPage,
+    private createFeedbackPage: () => FeedbackPage,
     private origin: string,
     private localSessionStorage: LocalSessionStorage,
-    private serviceClient: ServiceClient,
-    private window: Window
+    private serviceClient: WebServiceClient,
+    private window: Window,
   ) {
-    let logoRef = new Ref<HTMLDivElement>();
-    let signInButtonRef = new Ref<HTMLDivElement>();
+    super();
     let googleIconSvgRef = new Ref<SVGSVGElement>();
-    let signedInButtonsContainerRef = new Ref<HTMLDivElement>();
-    let tabsContainerRef = new Ref<HTMLDivElement>();
     this.body = E.div(
       {
         class: "body",
-        style: `display: flex; flex-flow: column nowrap; min-height: 100vh; overflow-y: auto;`,
+        style: `display: flex; flex-flow: column nowrap; min-height: 100vh; background-color: ${ColorScheme.getBackground()};`,
       },
       E.div(
         {
@@ -67,7 +77,7 @@ export class BodyComponent {
           style: `display: flex; flex-flow: row nowrap; align-items: center; padding: 1rem ${SIDE_PADDING}rem; border-bottom: .1rem solid ${ColorScheme.getBlockSeparator()};`,
         },
         E.divRef(
-          logoRef,
+          this.logo,
           {
             class: "body-logo",
             style: `font-size: 3rem; font-weight: bold; font-family: Comic Sans MS, cursive, sans-serif; cursor: pointer;`,
@@ -77,19 +87,19 @@ export class BodyComponent {
               class: "body-logo-left",
               style: `display: inline; color: ${ORANGE};`,
             },
-            E.text("Dan")
+            E.text("Dan"),
           ),
           E.div(
             {
               class: "body-logo-right",
               style: `display: inline; color: ${BLUE};`,
             },
-            E.text("Mage")
-          )
+            E.text("Mage"),
+          ),
         ),
         E.div({ style: `flex: 1;` }),
         E.divRef(
-          signInButtonRef,
+          this.signInButton,
           {
             class: "body-header-sign-in-button",
             style: `display: flex; flex-flow: row nowrap; align-items: center; background-color: #4285F4; cursor: pointer;`,
@@ -102,38 +112,44 @@ export class BodyComponent {
           E.div(
             {
               class: "body-header-sign-in-text",
-              style: `padding: 0 .8rem; font-size: 1.4rem; color: white;`,
+              style: `padding: 0 .8rem; font-size: ${FONT_M}rem; color: white;`,
             },
-            E.text(LOCALIZED_TEXT.signInButton)
-          )
+            E.text(LOCALIZED_TEXT.signInButton),
+          ),
         ),
         E.divRef(
-          signedInButtonsContainerRef,
+          this.signedInButtonsContainer,
           {
             class: "body-header-signed-in-tab-buttons-container",
             style: `display: flex; flex-flow: row nowrap; align-items: center;`,
           },
-          E.div(
+          E.divRef(
+            this.nicknameButton,
             {
-              class: "body-header-nickname-button-wrapper",
-              style: `margin-right: 2rem;`,
+              class: "body-header-nickname-button",
+              style: `${TEXT_BUTTON_STYLE} margin-right: 2rem;`,
             },
-            nicknameButton.body
+            E.text(LOCALIZED_TEXT.nicknameTab),
           ),
-          E.div(
+          E.divRef(
+            this.historyButton,
             {
-              class: "body-header-history-button-wrapper",
-              style: `margin-right: 2rem;`,
+              class: "body-header-history-button",
+              style: `${TEXT_BUTTON_STYLE} margin-right: 2rem;`,
             },
-            historyButton.body
+            E.text(LOCALIZED_TEXT.historyTab),
           ),
-          E.div(
-            { class: "body-heaer-history-button-wrapper" },
-            signOutButton.body
-          )
-        )
+          E.divRef(
+            this.signOutButton,
+            {
+              class: "body-heaer-history-button-wrapper",
+              style: TEXT_BUTTON_STYLE,
+            },
+            E.text(LOCALIZED_TEXT.signOutButton),
+          ),
+        ),
       ),
-      E.divRef(tabsContainerRef, {
+      E.divRef(this.tabsContainer, {
         class: "body-tab-container",
         style: "flex: 1;",
       }),
@@ -142,16 +158,37 @@ export class BodyComponent {
           class: "body-footer",
           style: `display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; padding: 2rem 0; border-top: .1rem solid ${ColorScheme.getBlockSeparator()};`,
         },
-        termsButton.body,
+        E.divRef(
+          this.termsButton,
+          {
+            class: "body-terms-button",
+            style: TEXT_BUTTON_STYLE,
+          },
+          E.text(LOCALIZED_TEXT.termsTab),
+        ),
         E.div({
           style: `height: 2rem; margin: 0 .2rem; width: .1rem; background-color: ${ColorScheme.getBlockSeparator()}`,
         }),
-        privacyButton.body,
+        E.divRef(
+          this.privacyButton,
+          {
+            class: "body-privacy-button",
+            style: TEXT_BUTTON_STYLE,
+          },
+          E.text(LOCALIZED_TEXT.privacyTab),
+        ),
         E.div({
           style: `height: 2rem; margin: 0 .2rem; width: .1rem; background-color: ${ColorScheme.getBlockSeparator()};`,
         }),
-        feedbackButton.body
-      )
+        E.divRef(
+          this.feedbackButton,
+          {
+            class: "body-feedback-button",
+            style: TEXT_BUTTON_STYLE,
+          },
+          E.text(LOCALIZED_TEXT.feedbackTab),
+        ),
+      ),
     );
     googleIconSvgRef.val.innerHTML = `<!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
     <title>btn_google_dark_normal_ios</title>
@@ -200,120 +237,92 @@ export class BodyComponent {
             <g id="handles_square" sketch:type="MSLayerGroup"/>
         </g>
     </g>`;
-    this.logo = logoRef.val;
-    this.signInButton = signInButtonRef.val;
-    this.signedInButtonsContainer = signedInButtonsContainerRef.val;
-    this.tabsContainer = tabsContainerRef.val;
-  }
 
-  public static create(
-    bodyState: BodyState,
-    historyUpdater: HistoryUpdater,
-    origin: string
-  ): BodyComponent {
-    return new BodyComponent(
-      TextButtonComponent.create(E.text(LOCALIZED_TEXT.nicknameTab)),
-      TextButtonComponent.create(E.text(LOCALIZED_TEXT.historyTab)),
-      TextButtonComponent.create(E.text(LOCALIZED_TEXT.signOutButton)),
-      TextButtonComponent.create(E.text(LOCALIZED_TEXT.termsTab)),
-      TextButtonComponent.create(E.text(LOCALIZED_TEXT.privacyTab)),
-      TextButtonComponent.create(E.text(LOCALIZED_TEXT.feedbackTab)),
-      () => HomeComponent.create(),
-      () => NicknameComponent.create(),
-      () => HistoryComponent.create(),
-      () => FeedbackComponent.create(),
-      bodyState,
-      historyUpdater,
-      origin,
-      LOCAL_SESSION_STORAGE,
-      SERVICE_CLIENT,
-      window
-    ).init();
-  }
-
-  public init(): this {
-    this.showPage(this.bodyState.page);
-    this.bodyState.on("page", (value) => this.showPage(value));
-
-    this.logo.addEventListener("click", () => this.gotoPage(Page.HOME));
-    this.nicknameButton.on("click", () => this.gotoPage(Page.NICKNAME));
-    this.historyButton.on("click", () => this.gotoPage(Page.HISTORY));
-    this.feedbackButton.on("click", () => this.gotoPage(Page.FEEDBACK));
-    this.termsButton.on("click", () => this.gotoTerms());
-    this.privacyButton.on("click", () => this.gotoPrivacy());
-
-    this.hideableSignInButton = new HideableElementController(
-      this.signInButton
+    this.pageNavigator = new PageNavigator(
+      (page) => this.addPage(page),
+      (page) => this.removePage(page),
     );
-    this.hideableSignInButton.hide();
-    this.hideableSignedInButtonsContainer = new HideableElementController(
-      this.signedInButtonsContainer
-    );
-    this.hideableSignedInButtonsContainer.hide();
     if (!this.localSessionStorage.read()) {
       this.showSignInButton();
     } else {
       this.showSignedInButtonsContainer();
     }
-    this.signInButton.addEventListener("click", () => this.signIn());
-    this.signOutButton.on("click", () => this.signOut());
+
+    this.logo.val.addEventListener("click", () => this.gotoPage(Page.HOME));
+    this.nicknameButton.val.addEventListener("click", () =>
+      this.gotoPage(Page.NICKNAME),
+    );
+    this.historyButton.val.addEventListener("click", () =>
+      this.gotoPage(Page.HISTORY),
+    );
+    this.feedbackButton.val.addEventListener("click", () =>
+      this.gotoPage(Page.FEEDBACK),
+    );
+    this.termsButton.val.addEventListener("click", () => this.gotoTerms());
+    this.privacyButton.val.addEventListener("click", () => this.gotoPrivacy());
+
+    this.signInButton.val.addEventListener("click", () => this.signIn());
+    this.signOutButton.val.addEventListener("click", () => this.signOut());
 
     this.window.addEventListener("message", (event) =>
-      this.handleMessage(event)
+      this.handleMessage(event),
     );
     this.serviceClient.on("unauthenticated", () => this.showSignInButton());
-    return this;
   }
 
-  private showPage(page: Page): void {
-    if (!page || page === Page.HOME) {
-      this.pageSwitcher.show(
-        () => {
-          this.homeComponent = this.homeComponentFactoryFn();
-          this.tabsContainer.appendChild(this.homeComponent.body);
-        },
-        () => {
-          this.homeComponent.remove();
-        }
-      );
-    } else if (page === Page.NICKNAME) {
-      this.pageSwitcher.show(
-        async () => {
-          this.nicknameComponent = this.nicknameComponentFactoryFn();
-          this.tabsContainer.appendChild(this.nicknameComponent.body);
-          await this.nicknameComponent.show();
-        },
-        () => {
-          this.nicknameComponent.remove();
-        }
-      );
-    } else if (page === Page.HISTORY) {
-      this.pageSwitcher.show(
-        async () => {
-          this.historyComponent = this.historyComponentFactoryFn();
-          this.tabsContainer.appendChild(this.historyComponent.body);
-          await this.historyComponent.show();
-        },
-        () => {
-          this.historyComponent.remove();
-        }
-      );
-    } else if (page === Page.FEEDBACK) {
-      this.pageSwitcher.show(
-        () => {
-          this.feedbackComponent = this.feedbackComponentFactoryFn();
-          this.tabsContainer.appendChild(this.feedbackComponent.body);
-        },
-        () => {
-          this.feedbackComponent.remove();
-        }
-      );
+  private addPage(page: Page): void {
+    switch (page) {
+      case Page.HOME:
+        this.homePage = this.createHomagePage();
+        this.tabsContainer.val.append(this.homePage.body);
+        break;
+      case Page.NICKNAME:
+        this.nicknamePage = this.createNicknamePage();
+        this.tabsContainer.val.append(this.nicknamePage.body);
+        break;
+      case Page.HISTORY:
+        this.historyPage = this.createHistoryPage();
+        this.tabsContainer.val.append(this.historyPage.body);
+        break;
+      case Page.FEEDBACK:
+        this.feedbackPage = this.createFeedbackPage();
+        this.tabsContainer.val.append(this.feedbackPage.body);
+        break;
     }
+  }
+
+  private removePage(page: Page): void {
+    switch (page) {
+      case Page.HOME:
+        this.homePage.remove();
+        break;
+      case Page.NICKNAME:
+        this.nicknamePage.remove();
+        break;
+      case Page.HISTORY:
+        this.historyPage.remove();
+        break;
+      case Page.FEEDBACK:
+        this.feedbackPage.remove();
+        break;
+    }
+  }
+
+  public updateState(newState?: BodyState): void {
+    if (!newState) {
+      newState = {};
+    }
+    if (!newState.page) {
+      newState.page = Page.HOME;
+    }
+    this.bodyState = newState;
+    this.pageNavigator.goTo(this.bodyState.page);
   }
 
   private gotoPage(page: Page): void {
     this.bodyState.page = page;
-    this.historyUpdater.push();
+    this.pageNavigator.goTo(this.bodyState.page);
+    this.emit("newState", this.bodyState);
   }
 
   private gotoTerms(): void {
@@ -325,25 +334,13 @@ export class BodyComponent {
   }
 
   private showSignInButton(): void {
-    this.signInButtonsSwitcher.show(
-      () => {
-        this.hideableSignInButton.show();
-      },
-      () => {
-        this.hideableSignInButton.hide();
-      }
-    );
+    this.signInButton.val.style.display = "flex";
+    this.signedInButtonsContainer.val.style.display = "none";
   }
 
   private showSignedInButtonsContainer(): void {
-    this.signInButtonsSwitcher.show(
-      () => {
-        this.hideableSignedInButtonsContainer.show();
-      },
-      () => {
-        this.hideableSignedInButtonsContainer.hide();
-      }
-    );
+    this.signInButton.val.style.display = "none";
+    this.signedInButtonsContainer.val.style.display = "flex";
   }
 
   private signIn(): void {
@@ -361,11 +358,14 @@ export class BodyComponent {
     }
 
     let accessToken = event.data;
-    let response = await this.serviceClient.fetchUnauthed(
-      { googleAccessToken: accessToken },
-      SIGN_IN
-    );
+    let response = await signIn(this.serviceClient, {
+      googleAccessToken: accessToken,
+    });
     this.localSessionStorage.save(response.signedSession);
     this.showSignedInButtonsContainer();
+  }
+
+  public remove(): void {
+    this.body.remove();
   }
 }

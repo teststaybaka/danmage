@@ -1,30 +1,59 @@
-import { FillButtonComponentMock, TextButtonComponentMock } from "../../mocks";
-import { FeedbackComponent } from "./feedback_component";
-import { HistoryComponent } from "./history_component";
-import { HomeComponent } from "./home_component";
-import { NicknameComponent } from "./nickname_component";
-import { E } from "@selfage/element/factory";
+import { HostApp } from "../../../interface/chat_entry";
+import {
+  GetChatHistoryResponse,
+  GetUserResponse,
+} from "../../../interface/service";
+import { FeedbackPage } from "./feedback_page";
+import { HistoryPage } from "./history_page";
+import { HomePage } from "./home_page";
+import { NicknamePage } from "./nickname_page";
+import { WebServiceClientMock } from "@selfage/web_service_client/client_mock";
 
-export class HomeComponentMock extends HomeComponent {
+export class HomePageMock extends HomePage {
   public constructor() {
     super();
   }
 }
 
-export class FeedbackComponentMock extends FeedbackComponent {
+export class FeedbackPageMock extends FeedbackPage {
   public constructor() {
-    super(new FillButtonComponentMock(E.text("Submit")), undefined);
+    super(undefined);
   }
 }
 
-export class HistoryComponentMock extends HistoryComponent {
+export class HistoryPageMock extends HistoryPage {
   public constructor() {
-    super(new TextButtonComponentMock(E.text("Show more")), undefined);
+    super(
+      new (class extends WebServiceClientMock {
+        public async send(request: any): Promise<any> {
+          return {
+            chatEntries: [
+              {
+                hostApp: HostApp.YouTube,
+                hostContentId: "piavxf",
+                timestamp: 80000,
+                content: "Chashu!",
+                created: 100000,
+              },
+            ],
+            cursor: "a cursor",
+          } as GetChatHistoryResponse as any;
+        }
+      })(),
+    );
   }
 }
 
-export class NicknameComponentMock extends NicknameComponent {
+export class NicknamePageMock extends NicknamePage {
   public constructor() {
-    super(new FillButtonComponentMock(E.text("Set")), undefined, undefined);
+    super(
+      new (class extends WebServiceClientMock {
+        public async send(request: any): Promise<any> {
+          return {
+            user: {},
+          } as GetUserResponse as any;
+        }
+      })(),
+    );
   }
 }

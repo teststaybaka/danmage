@@ -1,335 +1,269 @@
-import { SIGN_IN } from "../../../interface/service";
+import {
+  SIGN_IN,
+  SIGN_IN_REQUEST,
+  SignInResponse,
+} from "../../../interface/service";
 import { normalizeBody } from "../../body_normalizer";
-import { TextButtonComponentMock } from "../../mocks";
 import { BodyComponent } from "./body_component";
 import { BodyState, Page } from "./body_state";
+import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
 import {
-  FeedbackComponentMock,
-  HistoryComponentMock,
-  HomeComponentMock,
-  NicknameComponentMock,
+  FeedbackPageMock,
+  HistoryPageMock,
+  HomePageMock,
+  NicknamePageMock,
 } from "./mocks";
-import { Counter } from "@selfage/counter";
-import { E } from "@selfage/element/factory";
+import { eqMessage } from "@selfage/message/test_matcher";
+import { setViewport } from "@selfage/puppeteer_test_executor_api";
+import { TEST_RUNNER, TestCase } from "@selfage/puppeteer_test_runner";
 import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
-import { LocalSessionStorage } from "@selfage/service_client/local_session_storage";
-import { ServiceClientMock } from "@selfage/service_client/mocks";
-import { HistoryUpdater } from "@selfage/stateful_navigator/history_updater";
-import { assertThat, eq, eqArray } from "@selfage/test_matcher";
-import { PUPPETEER_TEST_RUNNER, TestCase } from "@selfage/test_runner";
+import { assertThat, eq } from "@selfage/test_matcher";
+import { WebServiceClientMock } from "@selfage/web_service_client/client_mock";
 
-export class HistoryUpdaterMock extends HistoryUpdater {
-  public constructor() {
-    super(undefined, undefined, undefined);
-  }
-}
+normalizeBody();
 
-PUPPETEER_TEST_RUNNER.run({
+TEST_RUNNER.run({
   name: "BodyComponentTest",
-  environment: {
-    setUp: () => normalizeBody(),
-  },
   cases: [
     new (class implements TestCase {
       public name = "WithoutSignInRenderHomeAndFeedback";
-      private bodyComponent: BodyComponent;
+      private cut: BodyComponent;
       public async execute() {
         // Prepare
-        let counter = new Counter<string>();
-        let nicknameButton = new TextButtonComponentMock(E.text("Nickname"));
-        let historyButton = new TextButtonComponentMock(E.text("History"));
-        let signOutButton = new TextButtonComponentMock(E.text("Sign out"));
-        let termsButton = new TextButtonComponentMock(
-          E.text("Terms and Conditions")
-        );
-        let privacyButton = new TextButtonComponentMock(
-          E.text("Privacy policy")
-        );
-        let feedbackButton = new TextButtonComponentMock(E.text("Feedback"));
-        let homeComponent = new HomeComponentMock();
-        let nicknameComponent = new NicknameComponentMock();
-        let historyComponent = new HistoryComponentMock();
-        let feedbackComponent = new FeedbackComponentMock();
-        let historyUpdater = new (class extends HistoryUpdaterMock {
-          public push() {
-            counter.increment("push");
-          }
-        })();
-        let sessionStorage = new LocalSessionStorage();
-        let bodyState = new BodyState();
-        let serviceClient = new ServiceClientMock();
+        await setViewport(1280, 600);
         let windowMock = new (class {
           public location = {};
           public addEventListener() {}
         })() as any;
-        await globalThis.setViewport(1280, 600);
 
         // Execute
-        this.bodyComponent = new BodyComponent(
-          nicknameButton,
-          historyButton,
-          signOutButton,
-          termsButton,
-          privacyButton,
-          feedbackButton,
-          () => homeComponent,
-          () => nicknameComponent,
-          () => historyComponent,
-          () => feedbackComponent,
-          bodyState,
-          historyUpdater,
+        this.cut = new BodyComponent(
+          () => new HomePageMock(),
+          () => new NicknamePageMock(),
+          () => new HistoryPageMock(),
+          () => new FeedbackPageMock(),
           "http://random.origin.com",
-          sessionStorage,
-          serviceClient,
-          windowMock
-        ).init();
-        document.body.appendChild(this.bodyComponent.body);
+          LOCAL_SESSION_STORAGE,
+          new WebServiceClientMock(),
+          windowMock,
+        );
+        let state: BodyState;
+        this.cut.on("newState", (newState) => (state = newState));
+        document.body.appendChild(this.cut.body);
+        this.cut.updateState();
 
         // Verify
         await asyncAssertScreenshot(
           __dirname + "/body_component_home.png",
           __dirname + "/golden/body_component_home.png",
           __dirname + "/body_component_home_diff.png",
-          { fullPage: true }
+          {
+            fullPage: true,
+            excludedAreas: [
+              {
+                x: 47,
+                y: 86,
+                width: 1184,
+                height: 668,
+              },
+              {
+                x: 47,
+                y: 1013,
+                width: 1184,
+                height: 668,
+              },
+              {
+                x: 47,
+                y: 1799,
+                width: 1184,
+                height: 668,
+              },
+              {
+                x: 47,
+                y: 2731,
+                width: 1184,
+                height: 668,
+              },
+            ],
+          },
         );
 
         // Execute
-        let termsKeepDisables = await Promise.all(
-          termsButton.listeners("click").map((callback) => callback())
-        );
+        this.cut.termsButton.val.click();
 
         // Verify
-        assertThat(
-          termsKeepDisables,
-          eqArray([eq(undefined)]),
-          "terms button enabled"
-        );
         assertThat(windowMock.location.href, eq("/terms"), "goto /terms");
 
         // Execute
-        let privacyKeepDisables = await Promise.all(
-          privacyButton.listeners("click").map((callback) => callback())
-        );
+        this.cut.privacyButton.val.click();
 
         // Verify
-        assertThat(
-          privacyKeepDisables,
-          eqArray([eq(undefined)]),
-          "privacy button enabled"
-        );
         assertThat(windowMock.location.href, eq("/privacy"), "goto /privacy");
 
         // Execute
-        let feedbackKeepDisables = await Promise.all(
-          feedbackButton.listeners("click").map((callback) => callback())
-        );
+        this.cut.feedbackButton.val.click();
 
         // Verify
-        assertThat(
-          feedbackKeepDisables,
-          eqArray([eq(undefined)]),
-          "feedback button enabled"
-        );
-        assertThat(bodyState.page, eq(Page.FEEDBACK), "show feedback");
+        assertThat(state.page, eq(Page.FEEDBACK), "show feedback");
         await asyncAssertScreenshot(
           __dirname + "/body_component_feedback.png",
           __dirname + "/golden/body_component_feedback.png",
           __dirname + "/body_component_feedback_diff.png",
-          { fullPage: true }
+          { fullPage: true },
         );
       }
       public tearDown() {
-        this.bodyComponent.body.remove();
+        this.cut.remove();
       }
     })(),
     new (class implements TestCase {
       public name = "WithSignedInRenderHomeAndNicknameAndHistory";
-      private bodyComponent: BodyComponent;
+      private cut: BodyComponent;
       public async execute() {
         // Prepare
-        let counter = new Counter<string>();
-        let nicknameButton = new TextButtonComponentMock(E.text("Nickname"));
-        let historyButton = new TextButtonComponentMock(E.text("History"));
-        let signOutButton = new TextButtonComponentMock(E.text("Sign out"));
-        let termsButton = new TextButtonComponentMock(
-          E.text("Terms and Conditions")
-        );
-        let privacyButton = new TextButtonComponentMock(
-          E.text("Privacy policy")
-        );
-        let feedbackButton = new TextButtonComponentMock(E.text("Feedback"));
-        let homeComponent = new HomeComponentMock();
-        let nicknameComponent = new (class extends NicknameComponentMock {
-          public show() {
-            return Promise.resolve();
-          }
-        })();
-        let historyComponent = new (class extends HistoryComponentMock {
-          public show() {
-            return Promise.resolve();
-          }
-        })();
-        let feedbackComponent = new FeedbackComponentMock();
-        let historyUpdater = new (class extends HistoryUpdaterMock {
-          public push() {
-            counter.increment("push");
-          }
-        })();
-        let sessionStorage = new LocalSessionStorage();
-        sessionStorage.save("some signed session");
-        let bodyState = new BodyState();
-        let serviceClient = new ServiceClientMock();
+        await setViewport(1280, 600);
+        LOCAL_SESSION_STORAGE.save("some signed session");
         let windowMock = new (class {
           public location = {};
           public addEventListener() {}
         })() as any;
-        await globalThis.setViewport(1280, 600);
 
         // Execute
-        this.bodyComponent = new BodyComponent(
-          nicknameButton,
-          historyButton,
-          signOutButton,
-          termsButton,
-          privacyButton,
-          feedbackButton,
-          () => homeComponent,
-          () => nicknameComponent,
-          () => historyComponent,
-          () => feedbackComponent,
-          bodyState,
-          historyUpdater,
+        this.cut = new BodyComponent(
+          () => new HomePageMock(),
+          () => new NicknamePageMock(),
+          () => new HistoryPageMock(),
+          () => new FeedbackPageMock(),
           "http://random.origin.com",
-          sessionStorage,
-          serviceClient,
-          windowMock
-        ).init();
-        document.body.appendChild(this.bodyComponent.body);
+          LOCAL_SESSION_STORAGE,
+          new WebServiceClientMock(),
+          windowMock,
+        );
+        let state: BodyState;
+        this.cut.on("newState", (newState) => (state = newState));
+        document.body.appendChild(this.cut.body);
+        this.cut.updateState();
 
         // Verify
         await asyncAssertScreenshot(
           __dirname + "/body_component_home_signed_in.png",
           __dirname + "/golden/body_component_home_signed_in.png",
           __dirname + "/body_component_home_signed_in_diff.png",
-          { fullPage: true }
+          {
+            fullPage: true,
+            excludedAreas: [
+              {
+                x: 47,
+                y: 86,
+                width: 1184,
+                height: 668,
+              },
+              {
+                x: 47,
+                y: 1013,
+                width: 1184,
+                height: 668,
+              },
+              {
+                x: 47,
+                y: 1799,
+                width: 1184,
+                height: 668,
+              },
+              {
+                x: 47,
+                y: 2731,
+                width: 1184,
+                height: 668,
+              },
+            ],
+          },
         );
 
         // Execute
-        let nicknameKeepDisables = await Promise.all(
-          nicknameButton.listeners("click").map((callback) => callback())
-        );
+        this.cut.nicknameButton.val.click();
 
         // Verify
-        assertThat(
-          nicknameKeepDisables,
-          eqArray([eq(undefined)]),
-          "nickname button enabled"
-        );
-        assertThat(bodyState.page, eq(Page.NICKNAME), "show nickname");
+        assertThat(state.page, eq(Page.NICKNAME), "show nickname");
         await asyncAssertScreenshot(
           __dirname + "/body_component_nickname.png",
           __dirname + "/golden/body_component_nickname.png",
           __dirname + "/body_component_nickname_diff.png",
-          { fullPage: true }
+          { fullPage: true },
         );
 
         // Execute
-        let historyKeepDisables = await Promise.all(
-          historyButton.listeners("click").map((callback) => callback())
-        );
+        this.cut.historyButton.val.click();
 
         // Verify
-        assertThat(
-          historyKeepDisables,
-          eqArray([eq(undefined)]),
-          "history button enabled"
-        );
-        assertThat(bodyState.page, eq(Page.HISTORY), "show history");
+        assertThat(state.page, eq(Page.HISTORY), "show history");
         await asyncAssertScreenshot(
           __dirname + "/body_component_history.png",
           __dirname + "/golden/body_component_history.png",
           __dirname + "/body_component_history_diff.png",
-          { fullPage: true }
+          { fullPage: true },
         );
       }
       public tearDown() {
-        this.bodyComponent.body.remove();
+        this.cut.remove();
+        LOCAL_SESSION_STORAGE.clear();
       }
     })(),
     new (class implements TestCase {
       public name =
         "SignInFailedAndSignInSuccessAndSignOutAndHandleUnauthError";
-      private bodyComponent: BodyComponent;
+      private cut: BodyComponent;
       public async execute() {
         // Prepare
-        let counter = new Counter<string>();
-        let nicknameButton = new TextButtonComponentMock(E.text("Nickname"));
-        let historyButton = new TextButtonComponentMock(E.text("History"));
-        let signOutButton = new TextButtonComponentMock(E.text("Sign out"));
-        let termsButton = new TextButtonComponentMock(
-          E.text("Terms and Conditions")
-        );
-        let privacyButton = new TextButtonComponentMock(
-          E.text("Privacy policy")
-        );
-        let feedbackButton = new TextButtonComponentMock(E.text("Feedback"));
-        let homeComponent = new HomeComponentMock();
-        let nicknameComponent = new NicknameComponentMock();
-        let historyComponent = new HistoryComponentMock();
-        let feedbackComponent = new FeedbackComponentMock();
-        let historyUpdater = new HistoryUpdaterMock();
-        let sessionStorage = new LocalSessionStorage();
-        let bodyState = new BodyState();
-        bodyState.page = Page.FEEDBACK;
-        let serviceClient = new (class extends ServiceClientMock {
-          public fetchUnauthedAny(request: any, serviceDescriptor: any): any {
-            counter.increment("fetchUnauthed");
-            assertThat(serviceDescriptor, eq(SIGN_IN), "sign in");
+        await setViewport(1280, 600);
+        let serviceClient = new (class extends WebServiceClientMock {
+          public async send(request: any): Promise<any> {
+            assertThat(request.descriptor, eq(SIGN_IN), "sign in");
             assertThat(
-              request.googleAccessToken,
-              eq("some token"),
-              "access token"
+              request.body,
+              eqMessage(
+                {
+                  googleAccessToken: "some token",
+                },
+                SIGN_IN_REQUEST,
+              ),
+              "access token",
             );
-            return { signedSession: "some session" };
+            return { signedSession: "some session" } as SignInResponse;
           }
         })();
+        let opened = false;
         let windowMock = new (class {
           public callback: Function;
           public location = {};
           public open(url: string) {
-            counter.increment("open");
+            opened = true;
             assertThat(url, eq("/oauth_start"), "open url");
           }
           public addEventListener(event: string, callback: Function) {
             this.callback = callback;
           }
         })() as any;
-        await globalThis.setViewport(1280, 600);
 
         // Execute
-        this.bodyComponent = new BodyComponent(
-          nicknameButton,
-          historyButton,
-          signOutButton,
-          termsButton,
-          privacyButton,
-          feedbackButton,
-          () => homeComponent,
-          () => nicknameComponent,
-          () => historyComponent,
-          () => feedbackComponent,
-          bodyState,
-          historyUpdater,
+        this.cut = new BodyComponent(
+          () => new HomePageMock(),
+          () => new NicknamePageMock(),
+          () => new HistoryPageMock(),
+          () => new FeedbackPageMock(),
           "http://some.origin.com",
-          sessionStorage,
+          LOCAL_SESSION_STORAGE,
           serviceClient,
-          windowMock
-        ).init();
-        document.body.appendChild(this.bodyComponent.body);
-        this.bodyComponent.signInButton.click();
+          windowMock,
+        );
+        document.body.appendChild(this.cut.body);
+        this.cut.updateState({
+          page: Page.FEEDBACK,
+        });
+        this.cut.signInButton.val.click();
 
         // Verify
-        assertThat(counter.get("open"), eq(1), "open called");
+        assertThat(opened, eq(true), "url opened");
 
         // Execute
         await windowMock.callback({
@@ -338,7 +272,7 @@ PUPPETEER_TEST_RUNNER.run({
         });
 
         // Verify
-        assertThat(counter.get("fetchUnauthed"), eq(0), "not sign in");
+        assertThat(LOCAL_SESSION_STORAGE.read(), eq(null), "not sign in");
 
         // Execute
         await windowMock.callback({
@@ -347,30 +281,31 @@ PUPPETEER_TEST_RUNNER.run({
         });
 
         // Verify
-        assertThat(counter.get("fetchUnauthed"), eq(1), "sign in called");
-        assertThat(sessionStorage.read(), eq("some session"), "session stored");
+        assertThat(
+          LOCAL_SESSION_STORAGE.read(),
+          eq("some session"),
+          "signed in",
+        );
         await asyncAssertScreenshot(
           __dirname + "/body_component_signed_in.png",
           __dirname + "/golden/body_component_signed_in.png",
           __dirname + "/body_component_signed_in_diff.png",
-          { fullPage: true }
+          { fullPage: true },
         );
 
         // Execute
-        await Promise.all(
-          signOutButton.listeners("click").map((callback) => callback())
-        );
+        this.cut.signOutButton.val.click();
 
         // Verify
-        assertThat(sessionStorage.read(), eq(null), "session cleared");
+        assertThat(LOCAL_SESSION_STORAGE.read(), eq(null), "session cleared");
         await asyncAssertScreenshot(
           __dirname + "/body_component_signed_out.png",
           __dirname + "/golden/body_component_signed_out.png",
           __dirname + "/body_component_signed_out_diff.png",
-          { fullPage: true }
+          { fullPage: true },
         );
 
-        // Prepare
+        // Prepare by signing in
         await windowMock.callback({
           data: "some token",
           origin: "http://some.origin.com",
@@ -384,11 +319,11 @@ PUPPETEER_TEST_RUNNER.run({
           __dirname + "/body_component_handle_unauth.png",
           __dirname + "/golden/body_component_handle_unauth.png",
           __dirname + "/body_component_handle_unauth_diff.png",
-          { fullPage: true }
+          { fullPage: true },
         );
       }
       public tearDown() {
-        this.bodyComponent.body.remove();
+        this.cut.remove();
       }
     })(),
   ],
