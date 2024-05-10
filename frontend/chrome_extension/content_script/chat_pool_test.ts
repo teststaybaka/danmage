@@ -1,10 +1,10 @@
 import { ChatEntry } from "../../../interface/chat_entry";
 import { StructuredChatPool } from "./chat_pool";
 import { MockBlockPatternTester } from "./common/mocks";
-import { assertThat, eq, eqArray } from "@selfage/test_matcher";
-import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
+import { TEST_RUNNER } from "@selfage/puppeteer_test_runner";
+import { assertThat, eq, isArray } from "@selfage/test_matcher";
 
-PUPPETEER_TEST_RUNNER.run({
+TEST_RUNNER.run({
   name: "ChatPoolTests",
   cases: [
     {
@@ -25,7 +25,7 @@ PUPPETEER_TEST_RUNNER.run({
         let readed = chatPool.read(20);
 
         // Verify
-        assertThat(readed, eqArray([eq(chatEntry)]), "read chat entries.");
+        assertThat(readed, isArray([eq(chatEntry)]), "read chat entries.");
       },
     },
     {
@@ -41,7 +41,7 @@ PUPPETEER_TEST_RUNNER.run({
         let readed = chatPool.read(10);
 
         // Verify
-        assertThat(readed, eqArray([]), "read chat entries");
+        assertThat(readed, isArray([]), "read chat entries");
       },
     },
     {
@@ -62,7 +62,7 @@ PUPPETEER_TEST_RUNNER.run({
         let readed = chatPool.read(20);
 
         // Verify
-        assertThat(readed, eqArray([]), "read chat entries");
+        assertThat(readed, isArray([]), "read chat entries");
       },
     },
     {
@@ -83,7 +83,7 @@ PUPPETEER_TEST_RUNNER.run({
         let readed = chatPool.read(40);
 
         // Verify
-        assertThat(readed, eqArray([eq(chatEntry)]), "read chat entries");
+        assertThat(readed, isArray([eq(chatEntry)]), "read chat entries");
       },
     },
     {
@@ -106,8 +106,8 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(
           readed,
-          eqArray([eq(chatEntry), eq(chatEntry2)]),
-          "read chat entries"
+          isArray([eq(chatEntry), eq(chatEntry2)]),
+          "read chat entries",
         );
       },
     },
@@ -140,14 +140,14 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(
           readed,
-          eqArray([
+          isArray([
             eq(chatEntry),
             eq(chatEntry2),
             eq(chatEntry3),
             eq(chatEntry4),
             eq(chatEntry5),
           ]),
-          "read chat entries"
+          "read chat entries",
         );
       },
     },
@@ -176,7 +176,7 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(
           readed,
-          eqArray([
+          isArray([
             eq(chatEntry),
             eq(chatEntry2),
             eq(chatEntry3),
@@ -184,7 +184,7 @@ PUPPETEER_TEST_RUNNER.run({
             eq(chatEntry5),
             eq(chatEntry6),
           ]),
-          "read chat entries"
+          "read chat entries",
         );
       },
     },
@@ -211,8 +211,8 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(
           readed,
-          eqArray([eq(chatEntry2), eq(chatEntry3)]),
-          "read chat entries"
+          isArray([eq(chatEntry2), eq(chatEntry3)]),
+          "read chat entries",
         );
       },
     },
@@ -232,7 +232,7 @@ PUPPETEER_TEST_RUNNER.run({
         let readed = chatPool.read(60);
 
         // Verify
-        assertThat(readed, eqArray([]), "read chat entries");
+        assertThat(readed, isArray([]), "read chat entries");
       },
     },
   ],

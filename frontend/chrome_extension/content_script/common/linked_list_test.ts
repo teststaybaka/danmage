@@ -1,8 +1,8 @@
 import { LinkedList } from "./linked_list";
-import { assertThat, eq, eqArray } from "@selfage/test_matcher";
-import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
+import { TEST_RUNNER } from "@selfage/puppeteer_test_runner";
+import { assertThat, eq, isArray } from "@selfage/test_matcher";
 
-PUPPETEER_TEST_RUNNER.run({
+TEST_RUNNER.run({
   name: "LinkedListTest",
   cases: [
     {
@@ -12,13 +12,13 @@ PUPPETEER_TEST_RUNNER.run({
         let linkedList = new LinkedList<number>();
 
         // Verify
-        assertThat(linkedList.toArray(), eqArray([]), "empty");
+        assertThat(linkedList.toArray(), isArray([]), "empty");
 
         // Execute
         let node = linkedList.pushBack(12311);
 
         // Verify
-        assertThat(linkedList.toArray(), eqArray([eq(12311)]), "one element");
+        assertThat(linkedList.toArray(), isArray([eq(12311)]), "one element");
         assertThat(node.value, eq(12311), "1st node value");
 
         // Execute
@@ -27,8 +27,8 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(
           linkedList.toArray(),
-          eqArray([eq(12311), eq(4332)]),
-          "two elements"
+          isArray([eq(12311), eq(4332)]),
+          "two elements",
         );
         assertThat(node2.value, eq(4332), "2nd node value");
       },
@@ -49,7 +49,7 @@ PUPPETEER_TEST_RUNNER.run({
         });
 
         // Verify
-        assertThat(res, eqArray([eq(132), eq(31), eq(22)]), "forEach");
+        assertThat(res, isArray([eq(132), eq(31), eq(22)]), "forEach");
       },
     },
     {
@@ -68,7 +68,7 @@ PUPPETEER_TEST_RUNNER.run({
         });
 
         // Verify
-        assertThat(res, eqArray([eq(22), eq(31), eq(132)]), "forEachReverse");
+        assertThat(res, isArray([eq(22), eq(31), eq(132)]), "forEachReverse");
       },
     },
     {
@@ -87,7 +87,7 @@ PUPPETEER_TEST_RUNNER.run({
         });
 
         // Verify
-        assertThat(res, eqArray([eq(132), eq(31), eq(22)]), "forEachNode");
+        assertThat(res, isArray([eq(132), eq(31), eq(22)]), "forEachNode");
       },
     },
     {
@@ -108,8 +108,8 @@ PUPPETEER_TEST_RUNNER.run({
         // Verify
         assertThat(
           res,
-          eqArray([eq(22), eq(31), eq(132)]),
-          "forEachNodeReverse"
+          isArray([eq(22), eq(31), eq(132)]),
+          "forEachNodeReverse",
         );
       },
     },
@@ -142,7 +142,7 @@ PUPPETEER_TEST_RUNNER.run({
         node.remove();
 
         // Verify
-        assertThat(linkedList.toArray(), eqArray([eq(132), eq(22)]), "removed");
+        assertThat(linkedList.toArray(), isArray([eq(132), eq(22)]), "removed");
       },
     },
     {
@@ -158,7 +158,7 @@ PUPPETEER_TEST_RUNNER.run({
         linkedList.clear();
 
         // Verify
-        assertThat(linkedList.toArray(), eqArray([]), "cleared");
+        assertThat(linkedList.toArray(), isArray([]), "cleared");
       },
     },
   ],

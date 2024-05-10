@@ -1,7 +1,7 @@
-import { CHROME_SESSION_STORAGE } from "./chrome_session_storage";
-import { ServiceClient } from "@selfage/service_client";
+import { WebServiceClient } from "@selfage/web_service_client";
+import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
 
-export let SERVICE_CLIENT = new ServiceClient(
-  CHROME_SESSION_STORAGE,
+export let SERVICE_CLIENT = new WebServiceClient(
+  LOCAL_SESSION_STORAGE,
   window.fetch.bind(window)
 );

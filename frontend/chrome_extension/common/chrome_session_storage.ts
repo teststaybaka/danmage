@@ -1,4 +1,4 @@
-import { SessionStorage } from "@selfage/service_client/session_storage";
+import { SessionStorage } from "@selfage/web_service_client/session_storage";
 
 export class ChromeSessionStorage implements SessionStorage {
   private static NAME = "UserSession";

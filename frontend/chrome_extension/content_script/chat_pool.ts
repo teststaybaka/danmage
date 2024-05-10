@@ -10,6 +10,12 @@ export interface ChatPool {
 }
 
 export class StructuredChatPool implements ChatPool {
+  public static create(blockSettings: BlockSettings): StructuredChatPool {
+    return new StructuredChatPool(
+      BlockPatternTester.createIdentity(blockSettings),
+    );
+  }
+
   private static ANONYMOUS = "Anonymous";
 
   private lastTimestamp: number = 0; // ms
@@ -17,12 +23,6 @@ export class StructuredChatPool implements ChatPool {
   private lastIndex = 0;
 
   public constructor(private blockTester: BlockPatternTester) {}
-
-  public static create(blockSettings: BlockSettings): StructuredChatPool {
-    return new StructuredChatPool(
-      BlockPatternTester.createIdentity(blockSettings)
-    );
-  }
 
   public fill(newChatEntries: Array<ChatEntry>): void {
     for (let newChatEntry of newChatEntries) {
@@ -106,22 +106,22 @@ export class StructuredChatPool implements ChatPool {
 }
 
 export class YouTubeChatPool implements ChatPool {
+  public static create(
+    chatContainer: Element,
+    blockSettings: BlockSettings,
+  ): YouTubeChatPool {
+    return new YouTubeChatPool(
+      chatContainer,
+      BlockPatternTester.createHtml(blockSettings),
+    );
+  }
+
   private lastLogElement: Element;
 
   public constructor(
     private chatContainer: Element,
-    private blockTester: BlockPatternTester
+    private blockTester: BlockPatternTester,
   ) {}
-
-  public static create(
-    chatContainer: Element,
-    blockSettings: BlockSettings
-  ): YouTubeChatPool {
-    return new YouTubeChatPool(
-      chatContainer,
-      BlockPatternTester.createHtml(blockSettings)
-    );
-  }
 
   public fill(): void {
     // Do nothing.
@@ -164,24 +164,24 @@ export class YouTubeChatPool implements ChatPool {
 }
 
 export class TwitchChatPool implements ChatPool {
+  public static create(
+    chatContainer: Element,
+    blockSettings: BlockSettings,
+  ): TwitchChatPool {
+    return new TwitchChatPool(
+      chatContainer,
+      BlockPatternTester.createHtml(blockSettings),
+    );
+  }
+
   private static TW_HIDE_CLASS = "tw-hide";
 
   private logElementPointer: Element;
 
   public constructor(
     private chatContainer: Element,
-    private blockTester: BlockPatternTester
+    private blockTester: BlockPatternTester,
   ) {}
-
-  public static create(
-    chatContainer: Element,
-    blockSettings: BlockSettings
-  ): TwitchChatPool {
-    return new TwitchChatPool(
-      chatContainer,
-      BlockPatternTester.createHtml(blockSettings)
-    );
-  }
 
   public fill(): void {
     // Do nothing.

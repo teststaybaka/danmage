@@ -23,8 +23,8 @@
   "fontSizeOption": {
     "message": "フォントサイズ"
   },
-  "maxNumOption": {
-    "message": "同じ画面上のコメントの最大数"
+  "densityOption": {
+    "message": "コメントの密度　‐　パーセント"
   },
   "speedOption": {
     "message": "流速"
@@ -81,7 +81,7 @@
     "message": "Googleアカウントで "
   },
   "secondSignInReminder": {
-    "message": " にログインして、コメントを送信できるようにします。"
+    "message": " にログインすると、設定を同期してコメントを投稿できるようになります。"
   },
   "signInButton": {
     "message": "ログイン"

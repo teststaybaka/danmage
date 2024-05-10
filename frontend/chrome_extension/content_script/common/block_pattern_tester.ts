@@ -23,13 +23,8 @@ class HtmlExtractor implements ContentExtractor {
 }
 
 export class BlockPatternTester {
-  public constructor(
-    private blockSettings: BlockSettings,
-    private contentExtractor: ContentExtractor
-  ) {}
-
   public static createIdentity(
-    blockSettings: BlockSettings
+    blockSettings: BlockSettings,
   ): BlockPatternTester {
     return new BlockPatternTester(blockSettings, new IdentityExtractor());
   }
@@ -37,6 +32,11 @@ export class BlockPatternTester {
   public static createHtml(blockSettings: BlockSettings): BlockPatternTester {
     return new BlockPatternTester(blockSettings, new HtmlExtractor());
   }
+
+  public constructor(
+    private blockSettings: BlockSettings,
+    private contentExtractor: ContentExtractor,
+  ) {}
 
   public test(chatEntry: ChatEntry): boolean {
     for (let blockPattern of this.blockSettings.blockPatterns) {

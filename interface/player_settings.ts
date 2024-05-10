@@ -74,10 +74,14 @@ export let DISTRIBUTION_STYLE: EnumDescriptor<DistributionStyle> = {
 
 export interface DisplaySettings {
   speed?: number,
+/* 0 to 100 percentage. */
   opacity?: number,
   fontSize?: number,
-  numLimit?: number,
+/* 0 to 100 percentage. */
+  density?: number,
+/* 0 to 100 percentage. */
   topMargin?: number,
+/* 0 to 100 percentage. */
   bottomMargin?: number,
   fontFamily?: string,
   enable?: boolean,
@@ -101,7 +105,7 @@ export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
       primitiveType: PrimitiveType.NUMBER,
     },
     {
-      name: 'numLimit',
+      name: 'density',
       primitiveType: PrimitiveType.NUMBER,
     },
     {

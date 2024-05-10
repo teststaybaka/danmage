@@ -1,20 +1,24 @@
 import EventEmitter = require("events");
 import { BlockKind, BlockPattern } from "../../../../interface/player_settings";
 import { ColorScheme } from "../../../color_scheme";
+import { FONT_M } from "../../../font_sizes";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 
-export interface BlockEntryComponent {
+export interface BlockEntry {
   on(event: "remove", listener: (blockPattern: BlockPattern) => void): this;
 }
 
-export class BlockEntryComponent extends EventEmitter {
+export class BlockEntry extends EventEmitter {
+  public static create(blockPattern: BlockPattern): BlockEntry {
+    return new BlockEntry(blockPattern);
+  }
+
   public body: HTMLDivElement;
-  private removeButton: HTMLDivElement;
+  private removeButton = new Ref<HTMLDivElement>();
 
   public constructor(private blockPattern: BlockPattern) {
     super();
-    let removeButtonRef = new Ref<HTMLDivElement>();
     this.body = E.div(
       {
         class: "block-entry-container",
@@ -23,20 +27,20 @@ export class BlockEntryComponent extends EventEmitter {
       E.div(
         {
           class: "block-entry-type",
-          style: `font-size: 1.4rem; line-height: 120%; font-family: initial !important; padding-right: .5rem;`,
+          style: `font-size: ${FONT_M}rem; line-height: 120%; font-family: initial !important; padding-right: .5rem;`,
         },
-        E.text(chrome.i18n.getMessage(BlockKind[blockPattern.kind]))
+        E.text(chrome.i18n.getMessage(BlockKind[blockPattern.kind])),
       ),
       E.div(
         {
           class: "block-entry-content",
-          style: `flex-grow: 1; font-size: 1.4rem; line-height: 120%; font-family: initial !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;`,
+          style: `flex-grow: 1; font-size: ${FONT_M}rem; line-height: 120%; font-family: initial !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;`,
           title: blockPattern.content,
         },
-        E.text(blockPattern.content)
+        E.text(blockPattern.content),
       ),
       E.divRef(
-        removeButtonRef,
+        this.removeButton,
         {
           class: "block-entry-remove-button",
           style: `flex-shrink: 0; height: 1rem; margin-left: .5rem; cursor: pointer; fill: ${ColorScheme.getContent()};`,
@@ -50,33 +54,25 @@ export class BlockEntryComponent extends EventEmitter {
           E.path({
             class: "block-entry-remove-button-path",
             d: "M45 0 L100 55 L155 0 L200 45 L145 100 L200 155 L155 200 L100 145 L45 200 L0 155 L55 100 L0 45 z",
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
-    this.removeButton = removeButtonRef.val;
-  }
-
-  public static create(blockPattern: BlockPattern): BlockEntryComponent {
-    return new BlockEntryComponent(blockPattern).init();
-  }
-
-  public init(): this {
     this.lowlight();
+
     this.body.addEventListener("mouseover", () => this.highlight());
     this.body.addEventListener("mouseleave", () => this.lowlight());
-    this.removeButton.addEventListener("click", () => this.remove());
-    return this;
+    this.removeButton.val.addEventListener("click", () => this.remove());
   }
 
   private lowlight(): void {
     this.body.style.color = ColorScheme.getContent();
-    this.removeButton.style.display = "none";
+    this.removeButton.val.style.display = "none";
   }
 
   private highlight(): void {
     this.body.style.color = ColorScheme.getHighlightContent();
-    this.removeButton.style.display = "block";
+    this.removeButton.val.style.display = "block";
   }
 
   private remove(): void {

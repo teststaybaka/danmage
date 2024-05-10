@@ -23,8 +23,8 @@
   "fontSizeOption": {
     "message": "字體大小"
   },
-  "maxNumOption": {
-    "message": "同屏最大彈幕數量"
+  "densityOption": {
+    "message": "彈幕密度 - 百分比"
   },
   "speedOption": {
     "message": "滾動速度"
@@ -81,7 +81,7 @@
     "message": "使用Google帳號登入 "
   },
   "secondSignInReminder": {
-    "message": " 即可發送彈幕。"
+    "message": " 即可同步設置並發送彈幕。"
   },
   "signInButton": {
     "message": "登入"

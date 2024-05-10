@@ -1,8 +1,8 @@
 import { BlockPatternTester, ContentExtractor } from "./block_pattern_tester";
+import { TEST_RUNNER } from "@selfage/puppeteer_test_runner";
 import { assertThat, eq } from "@selfage/test_matcher";
-import { PUPPETEER_TEST_RUNNER } from "@selfage/test_runner";
 
-PUPPETEER_TEST_RUNNER.run({
+TEST_RUNNER.run({
   name: "BlockPatternTesterTest",
   cases: [
     {
@@ -19,7 +19,7 @@ PUPPETEER_TEST_RUNNER.run({
           {
             blockPatterns: [{ kind: 1, content: "KEY" }],
           },
-          contentExtractor
+          contentExtractor,
         );
 
         // Execute
@@ -42,7 +42,7 @@ PUPPETEER_TEST_RUNNER.run({
           {
             blockPatterns: [{ kind: 3, content: "^Has.*?reg.*?$" }],
           },
-          contentExtractor
+          contentExtractor,
         );
 
         // Execute
@@ -68,7 +68,7 @@ PUPPETEER_TEST_RUNNER.run({
               { kind: 3, content: "^Has.*?reg.*?$" },
             ],
           },
-          contentExtractor
+          contentExtractor,
         );
 
         // Execute

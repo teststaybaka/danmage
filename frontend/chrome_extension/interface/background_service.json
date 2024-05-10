@@ -1,32 +1,32 @@
 [{
+  "name": "GetUrlRequest",
   "message": {
-    "name": "GetUrlRequest",
     "fields": []
   }
 }, {
+  "name": "GetUrlResponse",
   "message": {
-    "name": "GetUrlResponse",
     "fields": [{
       "name": "url",
       "type": "string"
     }]
   }
 }, {
+  "name": "GetAuthTokenRequest",
   "message": {
-    "name": "GetAuthTokenRequest",
     "fields": []
   }
 }, {
+  "name": "GetAuthTokenResponse",
   "message": {
-    "name": "GetAuthTokenResponse",
     "fields": [{
       "name": "accessToken",
       "type": "string"
     }]
   }
 }, {
+  "name": "BackgroundRequest",
   "message": {
-    "name": "BackgroundRequest",
     "fields": [{
       "name": "getUrlRequest",
       "type": "GetUrlRequest"

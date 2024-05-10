@@ -13,7 +13,7 @@ export class BackgroungServiceClient {
           } else {
             resolve(response);
           }
-        }
+        },
       );
     });
   }

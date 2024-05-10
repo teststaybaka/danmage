@@ -8,25 +8,29 @@ import {
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 
-export interface TextInputComponent {
+export interface TextInput {
   on(event: "change", listener: (value: string) => void): this;
 }
 
-export class TextInputComponent extends EventEmitter {
+export class TextInput extends EventEmitter {
+  public static create(
+    label: string,
+    defaultValue: string,
+    value: string,
+  ): TextInput {
+    return new TextInput(label, defaultValue, value);
+  }
+
   public body: HTMLDivElement;
-  private input: HTMLInputElement;
+  private input = new Ref<HTMLInputElement>();
   private textInputController: CustomTextInputController;
 
   public constructor(
     label: string,
     private defaultValue: string,
     value: string,
-    private textInputControllerFactoryFn: (
-      input: HTMLInputElement
-    ) => CustomTextInputController
   ) {
     super();
-    let inputRef = new Ref<HTMLInputElement>();
     this.body = E.div(
       {
         class: "text-input-container",
@@ -34,46 +38,29 @@ export class TextInputComponent extends EventEmitter {
       },
       E.div(
         { class: "text-input-label", style: LABEL_STYLE, title: label },
-        E.text(label)
+        E.text(label),
       ),
-      E.inputRef(inputRef, {
+      E.inputRef(this.input, {
         class: "text-input",
         style: TEXT_INPUT_STYLE,
         value: value,
-      })
+      }),
     );
-    this.input = inputRef.val;
-  }
+    this.textInputController = CustomTextInputController.create(this.input.val);
 
-  public static create(
-    label: string,
-    defaultValue: string,
-    value: string
-  ): TextInputComponent {
-    return new TextInputComponent(
-      label,
-      defaultValue,
-      value,
-      CustomTextInputController.create
-    ).init();
-  }
-
-  public init(): this {
-    this.textInputController = this.textInputControllerFactoryFn(this.input);
     this.textInputController.on("enter", () => this.changeValue());
-    this.input.addEventListener("blur", () => this.changeValue());
-    return this;
+    this.input.val.addEventListener("blur", () => this.changeValue());
   }
 
   private changeValue(): void {
-    if (!this.input.value) {
-      this.input.value = this.defaultValue;
+    if (!this.input.val.value) {
+      this.input.val.value = this.defaultValue;
     }
-    this.emit("change", this.input.value);
+    this.emit("change", this.input.val.value);
   }
 
   public reset(): string {
-    this.input.value = this.defaultValue;
+    this.input.val.value = this.defaultValue;
     return this.defaultValue;
   }
 }

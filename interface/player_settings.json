@@ -48,19 +48,23 @@
       "type": "number"
     }, {
       "name": "opacity",
-      "type": "number"
+      "type": "number",
+      "comment": "0 to 100 percentage."
     }, {
       "name": "fontSize",
       "type": "number"
     }, {
-      "name": "numLimit",
-      "type": "number"
+      "name": "density",
+      "type": "number",
+      "comment": "0 to 100 percentage."
     }, {
       "name": "topMargin",
-      "type": "number"
+      "type": "number",
+      "comment": "0 to 100 percentage."
     }, {
       "name": "bottomMargin",
-      "type": "number"
+      "type": "number",
+      "comment": "0 to 100 percentage."
     }, {
       "name": "fontFamily",
       "type": "string"

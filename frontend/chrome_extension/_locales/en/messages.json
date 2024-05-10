@@ -31,13 +31,13 @@
     "message": "Font size",
     "description": "Explain the option to adjust the scale of font size."
   },
-  "maxNumOption": {
-    "message": "Max number of scrolling chats",
-    "description": "Explain the option to adjusst maximum number of scrolling chats."
+  "densityOption": {
+    "message": "Density - percentage",
+    "description": "Explain the option to adjust the density of scrolling chats."
   },
   "speedOption": {
     "message": "Speed for scrolling",
-    "description": "Explain the option to adjusst the speed for scrolling chats."
+    "description": "Explain the option to adjust the speed for scrolling chats."
   },
   "topMarginOption": {
     "message": "Top margin - percentage",
@@ -108,7 +108,7 @@
     "description": "First part before URL in 'Sign in www.danmage.com with your Google account to be able to post chats.'."
   },
   "secondSignInReminder": {
-    "message": " with your Google account to be able to post chats.",
+    "message": " with your Google account to be able to sync settings and post chats.",
     "description": "Second part after URL in 'Sign in www.danmage.com with your Google account to be able to post chats.'"
   },
   "signInButton": {
