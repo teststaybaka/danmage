@@ -1,21 +1,7 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
-import { PlayerSettings } from "../../../interface/player_settings";
-import { getPlayerSettings } from "../../client_requests";
 import { CLASSIC_COLOR_SCHEME, ColorScheme } from "../../color_scheme";
 import { SERVICE_CLIENT } from "../common/service_client";
-import {
-  BOTTOM_MARGIN_RANGE,
-  DENSITY_RANGE,
-  DISTRIBUTION_STYLE_DEFAULT,
-  ENABLE_CHAT_INTERACTION_DEFAULT,
-  ENABLE_CHAT_SCROLLING_DEFAULT,
-  FONT_FAMILY_DEFAULT,
-  FONT_SIZE_RANGE,
-  OPACITY_RANGE,
-  SHOW_USER_NAME_DEFAULT,
-  SPEED_RANGE,
-  TOP_MARGIN_RANGE,
-} from "./common/defaults";
+import { PLAYER_SETTINGS_STORAGE } from "./common/player_settings_storage";
 import { Refresher } from "./refresher";
 import "../../../environment";
 
@@ -30,7 +16,7 @@ async function main(): Promise<void> {
   ColorScheme.SCHEME = CLASSIC_COLOR_SCHEME;
   document.documentElement.style.fontSize = "62.5%";
 
-  let playerSettings = normalizePlayerSettings(await loadPlayerSettings());
+  let playerSettings = await PLAYER_SETTINGS_STORAGE.read();
   switch (location.hostname) {
     case "www.youtube.com":
       Refresher.createYouTube(playerSettings);
@@ -44,68 +30,6 @@ async function main(): Promise<void> {
     default:
       throw new Error(`Unsupported hostname: ${location.hostname}.`);
   }
-}
-
-async function loadPlayerSettings(): Promise<PlayerSettings> {
-  try {
-    return (await getPlayerSettings(SERVICE_CLIENT, {})).playerSettings;
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
-}
-
-function normalizePlayerSettings(
-  playerSettings?: PlayerSettings,
-): PlayerSettings {
-  if (!playerSettings) {
-    playerSettings = {};
-  }
-
-  if (!playerSettings.displaySettings) {
-    playerSettings.displaySettings = {};
-  }
-  let displaySettings = playerSettings.displaySettings;
-  displaySettings.speed = SPEED_RANGE.getValidValue(displaySettings.speed);
-  displaySettings.opacity = OPACITY_RANGE.getValidValue(
-    displaySettings.opacity,
-  );
-  displaySettings.fontSize = FONT_SIZE_RANGE.getValidValue(
-    displaySettings.fontSize,
-  );
-  displaySettings.density = DENSITY_RANGE.getValidValue(
-    displaySettings.density,
-  );
-  displaySettings.topMargin = TOP_MARGIN_RANGE.getValidValue(
-    displaySettings.topMargin,
-  );
-  displaySettings.bottomMargin = BOTTOM_MARGIN_RANGE.getValidValue(
-    displaySettings.bottomMargin,
-  );
-  if (!displaySettings.fontFamily) {
-    displaySettings.fontFamily = FONT_FAMILY_DEFAULT;
-  }
-  if (displaySettings.showUserName === undefined) {
-    displaySettings.showUserName = SHOW_USER_NAME_DEFAULT;
-  }
-  if (displaySettings.enable === undefined) {
-    displaySettings.enable = ENABLE_CHAT_SCROLLING_DEFAULT;
-  }
-  if (displaySettings.distributionStyle === undefined) {
-    displaySettings.distributionStyle = DISTRIBUTION_STYLE_DEFAULT;
-  }
-  if (displaySettings.enableInteraction === undefined) {
-    displaySettings.enableInteraction = ENABLE_CHAT_INTERACTION_DEFAULT;
-  }
-
-  if (!playerSettings.blockSettings) {
-    playerSettings.blockSettings = {};
-  }
-  let blockSettings = playerSettings.blockSettings;
-  if (!blockSettings.blockPatterns) {
-    blockSettings.blockPatterns = [];
-  }
-  return playerSettings;
 }
 
 main();

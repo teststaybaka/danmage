@@ -1,19 +1,20 @@
 import EventEmitter = require("events");
 import { ChatEntry } from "../../../interface/chat_entry";
 import { PlayerSettings } from "../../../interface/player_settings";
-import { updatePlayerSettings } from "../../client_requests";
 import { ColorScheme } from "../../color_scheme";
 import { FONT_M } from "../../font_sizes";
 import { PageNavigator } from "../../page_navigator";
-import { SERVICE_CLIENT } from "../common/service_client";
 import { AccountTab } from "./account_tab/account_tab";
 import { BlockSettingsTab } from "./block_settings_tab/block_settings_tab";
 import { ChatListTab } from "./chat_list_tab/chat_list_tab";
 import { GlobalDocuments } from "./common/global_documents";
+import {
+  PLAYER_SETTINGS_STORAGE,
+  PlayerSettingsStorage,
+} from "./common/player_settings_storage";
 import { DisplaySettingsTab } from "./display_settings_tab/display_settings_tab";
 import { E } from "@selfage/element/factory";
 import { Ref, assign } from "@selfage/ref";
-import { WebServiceClient } from "@selfage/web_service_client";
 
 enum Tab {
   ACCOUNT = 1,
@@ -37,13 +38,13 @@ export class ControlPanel extends EventEmitter {
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      PLAYER_SETTINGS_STORAGE,
       `position: relative; height: 100%;`,
       "currentColor",
       "bottom: 100%; right: 0;",
       true,
       globalDocuments,
       playerSettings,
-      SERVICE_CLIENT,
     );
   }
 
@@ -52,13 +53,13 @@ export class ControlPanel extends EventEmitter {
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      PLAYER_SETTINGS_STORAGE,
       `position: relative; height: 4rem;`,
       "var(--yt-live-chat-header-button-color)",
       "top: 4rem; right: 0;",
       false,
       globalDocuments,
       playerSettings,
-      SERVICE_CLIENT,
     );
   }
 
@@ -67,13 +68,13 @@ export class ControlPanel extends EventEmitter {
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      PLAYER_SETTINGS_STORAGE,
       `position: absolute; height: 3rem; right: 1rem;`,
       "currentColor",
       "top: 3rem; right: 0;",
       false,
       globalDocuments,
       playerSettings,
-      SERVICE_CLIENT,
     );
   }
 
@@ -82,13 +83,13 @@ export class ControlPanel extends EventEmitter {
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      PLAYER_SETTINGS_STORAGE,
       `position: relative; height: 3rem;`,
       "currentColor",
       "bottom: 3rem; right: 0;",
       false,
       globalDocuments,
       playerSettings,
-      SERVICE_CLIENT,
     );
   }
 
@@ -97,13 +98,13 @@ export class ControlPanel extends EventEmitter {
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      PLAYER_SETTINGS_STORAGE,
       `position: relative; height: 4rem;`,
       "white",
       "bottom: 4rem; right: 0;",
       true,
       globalDocuments,
       playerSettings,
-      SERVICE_CLIENT,
     );
   }
 
@@ -114,41 +115,31 @@ export class ControlPanel extends EventEmitter {
   private controlPanelButton = new Ref<HTMLDivElement>();
   private controlPanelPopup = new Ref<HTMLDivElement>();
   private tabHeadLine = new Ref<HTMLDivElement>();
-  private accountTabHead = new Ref<HTMLDivElement>();
-  private accountTabButton = new Ref<HTMLDivElement>();
   private chatListTabHead = new Ref<HTMLDivElement>();
   private chatListTabButton = new Ref<HTMLDivElement>();
   private displaySettingsTabHead = new Ref<HTMLDivElement>();
   private displaySettingsTabButton = new Ref<HTMLDivElement>();
   private blockSettingsTabHead = new Ref<HTMLDivElement>();
   private blockSettingsTabButton = new Ref<HTMLDivElement>();
-  private accountTab = new Ref<AccountTab>();
+  private accountTabHead = new Ref<HTMLDivElement>();
+  private accountTabButton = new Ref<HTMLDivElement>();
   private chatListTab = new Ref<ChatListTab>();
   private displaySettingsTab = new Ref<DisplaySettingsTab>();
   private blockSettingsTab = new Ref<BlockSettingsTab>();
+  private accountTab = new Ref<AccountTab>();
   private pageNavigator: PageNavigator<Tab>;
 
   public constructor(
+    private playerSettingsStorage: PlayerSettingsStorage,
     elementStyle: string,
     controlPanelButtonColor: string,
     controlPanelPopupStyle: string,
     hasChat: boolean,
     private globalDocuments: GlobalDocuments,
     private playerSettings: PlayerSettings,
-    private serviceClient: WebServiceClient,
   ) {
     super();
     let tabHeads = new Array<HTMLDivElement>();
-    tabHeads.push(
-      assign(
-        this.accountTabHead,
-        ControlPanel.createTabHead(
-          this.accountTabButton,
-          chrome.i18n.getMessage("accountTitle"),
-          `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`,
-        ),
-      ),
-    );
     if (hasChat) {
       tabHeads.push(
         assign(
@@ -178,10 +169,17 @@ export class ControlPanel extends EventEmitter {
           `M100 0 A100 100 0 0 1 100 200 A100 100 0 0 1 100 0 z  M159 138 A70 70 0 0 0 62 41 z  M41 62 A70 70 0 0 0 138 159 z`,
         ),
       ),
+      assign(
+        this.accountTabHead,
+        ControlPanel.createTabHead(
+          this.accountTabButton,
+          chrome.i18n.getMessage("accountTitle"),
+          `M0 200 A105 105 0 0 1 200 200 L0 200 M100 0 A65 65 0 1 1 100 130 A65 65 0 1 1 100 0 z`,
+        ),
+      ),
     );
 
     let tabs = new Array<HTMLDivElement>();
-    tabs.push(assign(this.accountTab, AccountTab.create().hide()).body);
     if (hasChat) {
       tabs.push(
         assign(
@@ -199,6 +197,7 @@ export class ControlPanel extends EventEmitter {
         this.blockSettingsTab,
         BlockSettingsTab.create(this.playerSettings.blockSettings).hide(),
       ).body,
+      assign(this.accountTab, AccountTab.create().hide()).body,
     );
 
     this.body = E.div(
@@ -249,21 +248,23 @@ export class ControlPanel extends EventEmitter {
       (tab) => this.addTab(tab),
       (tab) => this.removeTab(tab),
     );
-    this.pageNavigator.goTo(Tab.ACCOUNT);
 
     if (this.chatListTabButton.val) {
+      this.pageNavigator.goTo(Tab.CHAT_LIST);
       this.chatListTabButton.val.addEventListener("click", () =>
         this.pageNavigator.goTo(Tab.CHAT_LIST),
       );
+    } else {
+      this.pageNavigator.goTo(Tab.DISPLAY_SETTINGS);
     }
-    this.accountTabHead.val.addEventListener("click", () =>
-      this.pageNavigator.goTo(Tab.ACCOUNT),
-    );
     this.displaySettingsTabButton.val.addEventListener("click", () =>
       this.pageNavigator.goTo(Tab.DISPLAY_SETTINGS),
     );
     this.blockSettingsTabButton.val.addEventListener("click", () =>
       this.pageNavigator.goTo(Tab.BLOCK_SETTINGS),
+    );
+    this.accountTabHead.val.addEventListener("click", () =>
+      this.pageNavigator.goTo(Tab.ACCOUNT),
     );
     if (this.chatListTab.val) {
       this.chatListTab.val.on("fire", (chatEntry) => this.fire(chatEntry));
@@ -392,21 +393,17 @@ export class ControlPanel extends EventEmitter {
     );
   }
 
-  private async updateDisplaySettings(): Promise<void> {
+  private updateDisplaySettings(): void {
     this.emit("updateDisplaySettings");
-    await updatePlayerSettings(this.serviceClient, {
-      playerSettings: this.playerSettings,
-    });
+    this.playerSettingsStorage.save(this.playerSettings);
   }
 
-  private async updateBlockSettings(): Promise<void> {
+  private updateBlockSettings(): void {
     if (this.chatListTab.val) {
       this.chatListTab.val.updateBlockSettings();
     }
     this.emit("updateBlockSettings");
-    await updatePlayerSettings(this.serviceClient, {
-      playerSettings: this.playerSettings,
-    });
+    this.playerSettingsStorage.save(this.playerSettings);
   }
 
   public toggleEnableScrolling(): void {
