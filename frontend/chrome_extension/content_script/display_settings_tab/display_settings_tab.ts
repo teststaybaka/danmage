@@ -8,6 +8,7 @@ import {
   BOTTOM_MARGIN_RANGE,
   DENSITY_RANGE,
   DISTRIBUTION_STYLE_DEFAULT,
+  ENABLE_CHAT_INTERACTION_DEFAULT,
   ENABLE_CHAT_SCROLLING_DEFAULT,
   FONT_FAMILY_DEFAULT,
   FONT_SIZE_RANGE,
@@ -36,6 +37,7 @@ export class DisplaySettingsTab extends EventEmitter {
 
   public body: HTMLDivElement;
   private enableOption = new Ref<SwitchCheckbox>();
+  private enableInteractionOption = new Ref<SwitchCheckbox>();
   private opacityOption = new Ref<Slider>();
   private speedOption = new Ref<Slider>();
   private fontSizeOption = new Ref<Slider>();
@@ -60,6 +62,14 @@ export class DisplaySettingsTab extends EventEmitter {
           chrome.i18n.getMessage("enableScrollingOption"),
           ENABLE_CHAT_SCROLLING_DEFAULT,
           displaySettings.enable,
+        ),
+      ).body,
+      assign(
+        this.enableInteractionOption,
+        SwitchCheckbox.create(
+          chrome.i18n.getMessage("enableInteractionOption"),
+          ENABLE_CHAT_INTERACTION_DEFAULT,
+          displaySettings.enableInteraction,
         ),
       ).body,
       assign(
@@ -183,6 +193,10 @@ export class DisplaySettingsTab extends EventEmitter {
         ),
       ),
     );
+    this.enableOption.val.on("change", (value) => this.enableChange(value));
+    this.enableInteractionOption.val.on("change", (value) =>
+      this.enableInteractionChange(value),
+    );
     this.opacityOption.val.on("change", (value) => this.opacityChange(value));
     this.fontSizeOption.val.on("change", (value) => this.fontSizeChange(value));
     this.densityOption.val.on("change", (value) => this.densityChange(value));
@@ -196,7 +210,6 @@ export class DisplaySettingsTab extends EventEmitter {
     this.fontFamilyOption.val.on("change", (value) =>
       this.fontFamilyChange(value),
     );
-    this.enableOption.val.on("change", (value) => this.enableChange(value));
     this.showUsernameOption.val.on("change", (value) =>
       this.showUserNameChange(value),
     );
@@ -244,6 +257,11 @@ export class DisplaySettingsTab extends EventEmitter {
 
   public enableChange(value: boolean): void {
     this.displaySettings.enable = value;
+    this.emit("update");
+  }
+
+  public enableInteractionChange(value: boolean): void {
+    this.displaySettings.enableInteraction = value;
     this.emit("update");
   }
 

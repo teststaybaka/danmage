@@ -204,10 +204,13 @@ export class Refresher {
     private assembler: Assembler,
     private window: Window,
   ) {
-    this.window.setInterval(() => this.refresh(), Refresher.REFRESH_INTERVAL);
+    this.refresh();
   }
 
-  private refresh(): void {
+  private refresh = async (): Promise<void> => {
+    await new Promise<void>((resolve) =>
+      this.window.setTimeout(resolve, Refresher.REFRESH_INTERVAL),
+    );
     let newElements = this.assembler.queryElements();
     let comparisonResult = this.compareElements(newElements);
     switch (comparisonResult) {
@@ -223,7 +226,8 @@ export class Refresher {
       default:
         break;
     }
-  }
+    this.window.requestAnimationFrame(this.refresh);
+  };
 
   private compareElements(newElements: Element[]): ElementsComparisonResult {
     for (let element of newElements) {

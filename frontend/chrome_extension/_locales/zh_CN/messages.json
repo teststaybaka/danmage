@@ -56,6 +56,9 @@
   "resetOption": {
     "message": "重置样式设置"
   },
+  "enableInteractionOption": {
+    "message": "悬停以停止滚动"
+  },
   "blockRuleInputPlaceHolder": {
     "message": "新的屏蔽规则"
   },
@@ -99,7 +102,7 @@
     "message": "！"
   },
   "firstExplanation": {
-    "message": "弹幕会被发送到 "
+    "message": "设置会被同步，弹幕会被发送到 "
   },
   "secondExplanation": {
     "message": " 上。"

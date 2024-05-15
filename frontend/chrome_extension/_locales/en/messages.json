@@ -75,6 +75,10 @@
     "message": "Reset display settings",
     "description": "Explain the option to reset all settings."
   },
+  "enableInteractionOption": {
+    "message": "Mouse hover to stop scrolling",
+    "description": "Explain the option to enable hover on chat to stop scrolling."
+  },
   "blockRuleInputPlaceHolder": {
     "message": "New block rule",
     "description": "Place holder for the input to add new a block rule."
@@ -132,7 +136,7 @@
     "description": "The ending message to welcome a signed in user with name."
   },
   "firstExplanation": {
-    "message": "Chats will be posted to ",
+    "message": "Settings will be synced and chats will be posted to  ",
     "description": "First part before URL in 'Chat will be posted to www.danmage.com.'"
   },
   "secondExplanation": {

@@ -166,6 +166,7 @@ export class PlayerController {
   }
 
   private static HAVE_NOTHING = 0;
+  private static ADD_CHAT_INTERVAL = 100; // ms
 
   private videoId: string;
   private nextFrameId: number;
@@ -211,11 +212,15 @@ export class PlayerController {
   }
 
   private play(): void {
+    this.chatPool.start(this.getCurrentTimestamp());
     this.addChatsPeriodic();
     this.danmakuCanvasController.play();
   }
 
-  private addChatsPeriodic(): void {
+  private addChatsPeriodic = async (): Promise<void> => {
+    await new Promise<void>((resolve) =>
+      this.window.setTimeout(resolve, PlayerController.ADD_CHAT_INTERVAL),
+    );
     let videoTimestamp = this.getCurrentTimestamp();
     let chatEntries = this.chatPool.read(videoTimestamp);
     this.controlPanel.addChats(chatEntries);
@@ -223,7 +228,7 @@ export class PlayerController {
     this.nextFrameId = this.window.requestAnimationFrame(() =>
       this.addChatsPeriodic(),
     );
-  }
+  };
 
   private getCurrentTimestamp(): number {
     return this.video.currentTime * 1000;

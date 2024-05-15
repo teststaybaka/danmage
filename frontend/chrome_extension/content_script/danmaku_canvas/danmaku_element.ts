@@ -80,7 +80,7 @@ export class DanmakuElement extends EventEmitter {
     super();
     this.body = E.div({
       class: "danmaku-element",
-      style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; bottom: 100%; right: 0; padding: .2rem 1.5rem .2rem 0; line-height: normal; z-index: 10; pointer-events: none; white-space: nowrap; visibility: hidden;`,
+      style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; bottom: 100%; right: 0; padding: .2rem 1.5rem .2rem 0; line-height: normal; z-index: 10; white-space: nowrap; visibility: hidden;`,
     });
     this.render();
     this.leaveToResume();
@@ -100,6 +100,11 @@ export class DanmakuElement extends EventEmitter {
       this.displaySettings.fontFamily,
       "important",
     );
+    if (this.displaySettings.enableInteraction) {
+      this.body.style.pointerEvents = "auto";
+    } else {
+      this.body.style.pointerEvents = "none";
+    }
     this.body.innerHTML = this.danmakuElementContentBuilder.build(
       this.chatEntry,
       this.displaySettings,
@@ -152,6 +157,8 @@ export class DanmakuElement extends EventEmitter {
     this.posX = this.getPosXComputed();
     this.transform(this.posX);
     this.body.style.transition = `none`;
+    // Force reflow.
+    this.body.offsetHeight;
   }
 
   private getPosXComputed(): number {
@@ -176,6 +183,8 @@ export class DanmakuElement extends EventEmitter {
     this.transform(this.posX);
     this.body.style.transition = `none`;
     this.body.style.visibility = "visible";
+    // Force reflow.
+    this.body.offsetHeight;
   }
 
   public play(): void {

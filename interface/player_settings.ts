@@ -87,6 +87,7 @@ export interface DisplaySettings {
   enable?: boolean,
   showUserName?: boolean,
   distributionStyle?: DistributionStyle,
+  enableInteraction?: boolean,
 }
 
 export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
@@ -131,6 +132,10 @@ export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
     {
       name: 'distributionStyle',
       enumType: DISTRIBUTION_STYLE,
+    },
+    {
+      name: 'enableInteraction',
+      primitiveType: PrimitiveType.BOOLEAN,
     },
   ]
 };

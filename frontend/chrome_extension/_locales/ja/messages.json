@@ -56,6 +56,9 @@
   "resetOption": {
     "message": "スタイル設定をリセット"
   },
+  "enableInteractionOption": {
+    "message": "ホバーすると流れが止まる"
+  },
   "blockRuleInputPlaceHolder": {
     "message": "新しいルール"
   },
@@ -99,9 +102,9 @@
     "message": "、こんにちは！"
   },
   "firstExplanation": {
-    "message": "コメントは "
+    "message": "設定が同期され、チャットが "
   },
   "secondExplanation": {
-    "message": " に送信されます。"
+    "message": " に投稿されます。"
   }
 }

@@ -7,6 +7,7 @@ import {
   BOTTOM_MARGIN_RANGE,
   DENSITY_RANGE,
   DISTRIBUTION_STYLE_DEFAULT,
+  ENABLE_CHAT_INTERACTION_DEFAULT,
   ENABLE_CHAT_SCROLLING_DEFAULT,
   FONT_FAMILY_DEFAULT,
   FONT_SIZE_RANGE,
@@ -27,10 +28,9 @@ async function main(): Promise<void> {
     throw new Error("Unsupported environment.");
   }
   ColorScheme.SCHEME = CLASSIC_COLOR_SCHEME;
+  document.documentElement.style.fontSize = "62.5%";
 
-  let playerSettings = normalizePlayerSettings(
-    (await getPlayerSettings(SERVICE_CLIENT, {})).playerSettings,
-  );
+  let playerSettings = normalizePlayerSettings(await loadPlayerSettings());
   switch (location.hostname) {
     case "www.youtube.com":
       Refresher.createYouTube(playerSettings);
@@ -43,6 +43,15 @@ async function main(): Promise<void> {
       break;
     default:
       throw new Error(`Unsupported hostname: ${location.hostname}.`);
+  }
+}
+
+async function loadPlayerSettings(): Promise<PlayerSettings> {
+  try {
+    return (await getPlayerSettings(SERVICE_CLIENT, {})).playerSettings;
+  } catch (e) {
+    console.log(e);
+    return undefined;
   }
 }
 
@@ -84,6 +93,9 @@ function normalizePlayerSettings(
   }
   if (displaySettings.distributionStyle === undefined) {
     displaySettings.distributionStyle = DISTRIBUTION_STYLE_DEFAULT;
+  }
+  if (displaySettings.enableInteraction === undefined) {
+    displaySettings.enableInteraction = ENABLE_CHAT_INTERACTION_DEFAULT;
   }
 
   if (!playerSettings.blockSettings) {

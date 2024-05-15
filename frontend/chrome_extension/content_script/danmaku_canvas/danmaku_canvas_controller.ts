@@ -99,16 +99,15 @@ export class DanmakuCanvasController {
     let element = this.createDanmakuElement(this.playerSettings, chatEntry);
     this.canvas.append(element.body);
 
-    let elementHeight = element.getOffsetHeight();
     let startY = Math.floor(
-      (this.playerSettings.displaySettings.topMargin / 100) * elementHeight,
+      (this.playerSettings.displaySettings.topMargin / 100) * this.height,
     );
     let endY =
-      elementHeight -
+      this.height -
       Math.floor(
-        (this.playerSettings.displaySettings.bottomMargin / 100) *
-          elementHeight,
+        (this.playerSettings.displaySettings.bottomMargin / 100) * this.height,
       ); // Exclusive
+    let elementHeight = element.getOffsetHeight();
     if (endY - startY - elementHeight < 0) {
       // Not enough room for a danmaku.
       element.remove();
@@ -293,7 +292,7 @@ export class DanmakuCanvasController {
 
   public clear(): void {
     this.elements.forEachNode((danmakuElementNode) => {
-      this.removeNode(danmakuElementNode)
+      this.removeNode(danmakuElementNode);
     });
   }
 

@@ -363,7 +363,7 @@ export class ControlPanel extends EventEmitter {
         this.chatListTab.val.hide();
         break;
       case Tab.DISPLAY_SETTINGS:
-        ControlPanel.lowlightTabHead(this.accountTabHead.val);
+        ControlPanel.lowlightTabHead(this.displaySettingsTabHead.val);
         this.displaySettingsTab.val.hide();
         break;
       case Tab.BLOCK_SETTINGS:

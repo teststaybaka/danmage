@@ -3,11 +3,11 @@ import { DisplaySettings } from "../../../../interface/player_settings";
 
 let FONT_SIZE_SCALE = 1 / 10;
 let TEXT_SHADOW =
-  "-.2rem 0 black, 0 .2rem black, .2rem 0 black, 0 -.2rem black";
+  "-.1rem 0 .1rem black, 0 .1rem .1rem black, .1rem 0 .1rem black, 0 -.1rem .1rem black";
 
 function removeSelectedChildElements(
   container: HTMLElement | DocumentFragment,
-  selector: string
+  selector: string,
 ): void {
   let children = container.querySelectorAll(selector);
   for (let i = children.length - 1; i >= 0; i--) {
@@ -18,7 +18,7 @@ function removeSelectedChildElements(
 function resizeSelectedChildElements(
   container: HTMLElement | DocumentFragment,
   selector: string,
-  fontSize: number
+  fontSize: number,
 ): void {
   let children = container.querySelectorAll(selector);
   for (let i = children.length - 1; i >= 0; i--) {
@@ -57,7 +57,7 @@ export class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
     removeSelectedChildElements(template.content, "#menu");
     removeSelectedChildElements(
       template.content,
-      "#inline-action-button-container"
+      "#inline-action-button-container",
     );
     if (!displaySettings.showUserName) {
       removeSelectedChildElements(template.content, "#author-photo");
@@ -91,32 +91,32 @@ export class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
     resizeSelectedChildElements(
       template.content,
       ".emoji",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     resizeSelectedChildElements(
       template.content,
       "#author-photo > img",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     resizeSelectedChildElements(
       template.content,
       "#chip-badges",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     resizeSelectedChildElements(
       template.content,
       "#chat-badges div#image",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     resizeSelectedChildElements(
       template.content,
       "#chat-badges img",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     resizeSelectedChildElements(
       template.content,
       "#icon",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     return template.innerHTML;
   }
@@ -129,15 +129,16 @@ export class TwitchChatContentBuilder implements DanmakuElementContentBuilder {
     let template = document.createElement("template");
     template.innerHTML = chatEntry.content.replace(
       TwitchChatContentBuilder.COLON_REPLACER,
-      `> </`
+      `> </`,
     );
     removeSelectedChildElements(template.content, ".vod-message__header");
     if (!displaySettings.showUserName) {
       removeSelectedChildElements(template.content, ".chat-badge");
       removeSelectedChildElements(
         template.content,
-        ".chat-author__display-name"
+        ".chat-author__display-name",
       );
+      removeSelectedChildElements(template.content, ".chat-author__intl-login");
     }
 
     let texts = template.content.querySelectorAll(".text-fragment");
@@ -149,24 +150,24 @@ export class TwitchChatContentBuilder implements DanmakuElementContentBuilder {
     resizeSelectedChildElements(
       template.content,
       ".chat-badge",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     resizeSelectedChildElements(
       template.content,
       ".chat-image__container",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     resizeSelectedChildElements(
       template.content,
       ".chat-line__message--emote",
-      displaySettings.fontSize
+      displaySettings.fontSize,
     );
     return template.innerHTML;
   }
 
   private static setContentStyle(
     texts: NodeListOf<Element>,
-    displaySettings: DisplaySettings
+    displaySettings: DisplaySettings,
   ): void {
     for (let i = 0; i < texts.length; i++) {
       let text = texts.item(i) as HTMLElement;
