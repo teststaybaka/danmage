@@ -54,7 +54,7 @@ export class DisplaySettingsTab extends EventEmitter {
     this.body = E.div(
       {
         class: "display-settings-tab-container",
-        style: `padding: 0 ${TAB_SIDE_PADDING} 1rem; box-sizing: border-box; height: 100%; overflow-y: auto;`,
+        style: `flex-flow: column nowrap; gap: .5rem; padding: 0 ${TAB_SIDE_PADDING} 1rem; box-sizing: border-box; height: 100%; overflow-y: auto;`,
       },
       assign(
         this.enableOption,
@@ -295,7 +295,7 @@ export class DisplaySettingsTab extends EventEmitter {
   }
 
   public show(): this {
-    this.body.style.display = "block";
+    this.body.style.display = "flex";
     return this;
   }
 
