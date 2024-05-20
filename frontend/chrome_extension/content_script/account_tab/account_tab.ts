@@ -27,7 +27,6 @@ export class AccountTab {
       class: "account-tab",
       style: `padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%; height: 100%;`,
     });
-    this.checkStatus();
   }
 
   private checkStatus(): void {
@@ -57,12 +56,19 @@ export class AccountTab {
   }
 
   public show(): this {
+    this.checkStatus();
     this.body.style.display = "block";
     return this;
   }
 
   public hide(): this {
     this.body.style.display = "none";
+    if (this.welcomeTab) {
+      this.welcomeTab.remove();
+    }
+    if (this.signInTab) {
+      this.signInTab.remove();
+    }
     return this;
   }
 }

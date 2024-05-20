@@ -89,7 +89,6 @@ export class PlayerSettingsStorage {
     if (!blockSettings.blockPatterns) {
       blockSettings.blockPatterns = [];
     }
-    console.log(playerSettings.displaySettings.fontSize);
     return playerSettings;
   }
 

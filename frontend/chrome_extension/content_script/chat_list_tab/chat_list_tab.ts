@@ -74,26 +74,9 @@ export class ChatListTab extends EventEmitter {
     this.chatInputController = CustomTextInputController.create(
       this.chatInput.val,
     );
-    this.checkLogInStatus();
 
     this.chatInputController.on("enter", () => this.enterToFire());
     this.fireButton.val.on("action", () => this.fire());
-  }
-
-  private checkLogInStatus(): void {
-    let session = this.localSessionStorage.read();
-    this.chatInput.val.placeholder = "";
-    if (!session) {
-      this.chatInput.val.placeholder = chrome.i18n.getMessage(
-        "chatInputPlaceHolderSignedOut",
-      );
-      this.fireButton.val.disable();
-    } else {
-      this.chatInput.val.placeholder = chrome.i18n.getMessage(
-        "chatInputPlaceHolderSignedIn",
-      );
-      this.fireButton.val.enable();
-    }
   }
 
   private enterToFire(): void {
@@ -150,6 +133,19 @@ export class ChatListTab extends EventEmitter {
   }
 
   public show(): this {
+    let session = this.localSessionStorage.read();
+    this.chatInput.val.placeholder = "";
+    if (!session) {
+      this.chatInput.val.placeholder = chrome.i18n.getMessage(
+        "chatInputPlaceHolderSignedOut",
+      );
+      this.fireButton.val.disable();
+    } else {
+      this.chatInput.val.placeholder = chrome.i18n.getMessage(
+        "chatInputPlaceHolderSignedIn",
+      );
+      this.fireButton.val.enable();
+    }
     this.body.style.display = "flex";
     return this;
   }
