@@ -1,8 +1,8 @@
 steps:
-- name: node:12.22.1
+- name: node:20.12.1
   entrypoint: npm
   args: ['install']
-- name: node:12.22.1
+- name: node:20.12.1
   entrypoint: npx
   args: ['bundage', 'bws', 'backend/main', 'backend/main_bin', '-ec', 'frontend/web/entries.json', '-t', 'bin', '-e', 'environment_${_ENVIRONMENT}']
 - name: 'gcr.io/cloud-builders/docker'
