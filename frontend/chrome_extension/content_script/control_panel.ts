@@ -3,7 +3,6 @@ import { ChatEntry } from "../../../interface/chat_entry";
 import { PlayerSettings } from "../../../interface/player_settings";
 import { ColorScheme } from "../../color_scheme";
 import { FONT_M } from "../../font_sizes";
-import { PageNavigator } from "../../page_navigator";
 import { AccountTab } from "./account_tab/account_tab";
 import { BlockSettingsTab } from "./block_settings_tab/block_settings_tab";
 import { ChatListTab } from "./chat_list_tab/chat_list_tab";
@@ -15,6 +14,7 @@ import {
 import { DisplaySettingsTab } from "./display_settings_tab/display_settings_tab";
 import { E } from "@selfage/element/factory";
 import { Ref, assign } from "@selfage/ref";
+import { TabNavigator } from "@selfage/tabs/navigator";
 
 enum Tab {
   ACCOUNT = 1,
@@ -127,7 +127,7 @@ export class ControlPanel extends EventEmitter {
   private displaySettingsTab = new Ref<DisplaySettingsTab>();
   private blockSettingsTab = new Ref<BlockSettingsTab>();
   private accountTab = new Ref<AccountTab>();
-  private pageNavigator: PageNavigator<Tab>;
+  private tabNavigator: TabNavigator<Tab>;
 
   public constructor(
     private playerSettingsStorage: PlayerSettingsStorage,
@@ -244,27 +244,27 @@ export class ControlPanel extends EventEmitter {
       ),
     );
     this.hidePopup();
-    this.pageNavigator = new PageNavigator(
+    this.tabNavigator = new TabNavigator(
       (tab) => this.addTab(tab),
       (tab) => this.removeTab(tab),
     );
 
     if (this.chatListTabButton.val) {
-      this.pageNavigator.goTo(Tab.CHAT_LIST);
+      this.tabNavigator.goTo(Tab.CHAT_LIST);
       this.chatListTabButton.val.addEventListener("click", () =>
-        this.pageNavigator.goTo(Tab.CHAT_LIST),
+        this.tabNavigator.goTo(Tab.CHAT_LIST),
       );
     } else {
-      this.pageNavigator.goTo(Tab.DISPLAY_SETTINGS);
+      this.tabNavigator.goTo(Tab.DISPLAY_SETTINGS);
     }
     this.displaySettingsTabButton.val.addEventListener("click", () =>
-      this.pageNavigator.goTo(Tab.DISPLAY_SETTINGS),
+      this.tabNavigator.goTo(Tab.DISPLAY_SETTINGS),
     );
     this.blockSettingsTabButton.val.addEventListener("click", () =>
-      this.pageNavigator.goTo(Tab.BLOCK_SETTINGS),
+      this.tabNavigator.goTo(Tab.BLOCK_SETTINGS),
     );
     this.accountTabHead.val.addEventListener("click", () =>
-      this.pageNavigator.goTo(Tab.ACCOUNT),
+      this.tabNavigator.goTo(Tab.ACCOUNT),
     );
     if (this.chatListTab.val) {
       this.chatListTab.val.on("fire", (chatEntry) => this.fire(chatEntry));

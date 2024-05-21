@@ -3,7 +3,6 @@ import { TEXT_BUTTON_STYLE } from "../../button_styles";
 import { signIn } from "../../client_requests";
 import { BLUE, ColorScheme, ORANGE } from "../../color_scheme";
 import { FONT_M } from "../../font_sizes";
-import { PageNavigator } from "../../page_navigator";
 import { BodyState, Page } from "./body_state";
 import { SIDE_PADDING } from "./common_style";
 import { FeedbackPage } from "./feedback_page";
@@ -15,6 +14,7 @@ import { NicknamePage } from "./nickname_page";
 import { SERVICE_CLIENT } from "./service_client";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
+import { TabNavigator } from "@selfage/tabs/navigator";
 import { WebServiceClient } from "@selfage/web_service_client";
 import { LocalSessionStorage } from "@selfage/web_service_client/local_session_storage";
 
@@ -51,7 +51,7 @@ export class BodyComponent extends EventEmitter {
   private nicknamePage: NicknamePage;
   private historyPage: HistoryPage;
   private feedbackPage: FeedbackPage;
-  private pageNavigator: PageNavigator<Page>;
+  private pageNavigator: TabNavigator<Page>;
   private bodyState: BodyState;
 
   public constructor(
@@ -238,7 +238,7 @@ export class BodyComponent extends EventEmitter {
         </g>
     </g>`;
 
-    this.pageNavigator = new PageNavigator(
+    this.pageNavigator = new TabNavigator(
       (page) => this.addPage(page),
       (page) => this.removePage(page),
     );
