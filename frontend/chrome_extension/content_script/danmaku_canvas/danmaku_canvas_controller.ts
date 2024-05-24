@@ -87,7 +87,7 @@ export class DanmakuCanvasController {
   }
 
   public add(chatEntries: Array<ChatEntry>): void {
-    if (!this.playerSettings.displaySettings.enable || !this.playing) {
+    if (!this.playerSettings.displaySettings.enable || !this.height) {
       return;
     }
     for (let chatEntry of chatEntries) {
@@ -168,7 +168,9 @@ export class DanmakuCanvasController {
     );
     element.once("displayEnded", () => this.removeNode(node));
     element.setReadyToPlay(posY, this.width);
-    element.play();
+    if (this.playing) {
+      element.play();
+    }
   }
 
   private getInitY(
