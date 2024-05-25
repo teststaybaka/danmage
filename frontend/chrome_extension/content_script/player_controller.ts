@@ -40,7 +40,6 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      globalDocuments,
       DanmakuCanvasController.createStructured(canvas, playerSettings),
       controlPanel,
       ControlPanelOneTimePrepender.create(
@@ -69,7 +68,6 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      globalDocuments,
       DanmakuCanvasController.createYouTube(canvas, playerSettings),
       controlPanel,
       ControlPanelOneTimePrepender.create(
@@ -97,7 +95,6 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      globalDocuments,
       DanmakuCanvasController.createTwitch(canvas, playerSettings),
       controlPanel,
       ControlPanelOneTimePrepender.create(
@@ -125,7 +122,6 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      globalDocuments,
       DanmakuCanvasController.createTwitch(canvas, playerSettings),
       controlPanel,
       ControlPanelOneTimePrepender.create(
@@ -152,7 +148,6 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      globalDocuments,
       DanmakuCanvasController.createStructured(canvas, playerSettings),
       controlPanel,
       ControlPanelPeriodicPrepender.create(
@@ -175,7 +170,6 @@ export class PlayerController {
     private window: Window,
     private serviceClient: WebServiceClient,
     private video: HTMLVideoElement,
-    private globalDocuments: GlobalDocuments,
     private danmakuCanvasController: DanmakuCanvasController,
     private controlPanel: ControlPanel,
     private controlPanelAttacher: ControlPanelAttacher,
@@ -205,9 +199,6 @@ export class PlayerController {
     );
     this.controlPanel.on("updateBlockSettings", () =>
       this.updateBlockSettings(),
-    );
-    this.globalDocuments.onKeydown((event) =>
-      this.toggleEnableScrolling(event),
     );
   }
 
@@ -300,11 +291,6 @@ export class PlayerController {
     this.danmakuCanvasController.updateBlockSettings();
   }
 
-  private toggleEnableScrolling(event: KeyboardEvent): void {
-    if (event.code === "KeyD" && !(event.target instanceof HTMLInputElement)) {
-      this.controlPanel.toggleEnableScrolling();
-    }
-  }
 
   public remove(): void {
     this.video.onplaying = undefined;

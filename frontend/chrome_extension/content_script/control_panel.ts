@@ -281,6 +281,9 @@ export class ControlPanel extends EventEmitter {
       this.togglePopup(),
     );
     this.globalDocuments.hideWhenMousedown(this.body, () => this.hidePopup());
+    this.globalDocuments.onKeydown((event) =>
+      this.toggleEnableScrolling(event),
+    );
   }
 
   private static createTabHead(
@@ -406,7 +409,16 @@ export class ControlPanel extends EventEmitter {
     this.playerSettingsStorage.save(this.playerSettings);
   }
 
-  public toggleEnableScrolling(): void {
+  public toggleEnableScrolling(event: KeyboardEvent): void {
+    if (event.code !== "KeyD") {
+      return;
+    }
+    if (event.target instanceof HTMLElement && event.target.isContentEditable) {
+      return;
+    }
+    if (event.target instanceof HTMLInputElement) {
+      return;
+    }
     this.displaySettingsTab.val.toggleEnableChange();
   }
 
