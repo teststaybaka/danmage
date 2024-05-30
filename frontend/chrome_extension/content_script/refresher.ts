@@ -208,9 +208,6 @@ export class Refresher {
   }
 
   private refresh = async (): Promise<void> => {
-    await new Promise<void>((resolve) =>
-      this.window.setTimeout(resolve, Refresher.REFRESH_INTERVAL),
-    );
     let newElements = this.assembler.queryElements();
     let comparisonResult = this.compareElements(newElements);
     switch (comparisonResult) {
@@ -226,7 +223,7 @@ export class Refresher {
       default:
         break;
     }
-    this.window.requestAnimationFrame(this.refresh);
+    this.window.setTimeout(this.refresh, Refresher.REFRESH_INTERVAL);
   };
 
   private compareElements(newElements: Element[]): ElementsComparisonResult {

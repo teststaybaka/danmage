@@ -59,9 +59,6 @@ export class ControlPanelPeriodicPrepender implements ControlPanelAttacher {
   }
 
   private cycle = async (): Promise<void> => {
-    await new Promise<void>((resolve) =>
-      this.window.setTimeout(resolve, ControlPanelPeriodicPrepender.INTERVAL),
-    );
     let anchorButtonElement = this.document.querySelector(
       this.anchorButtonSelector,
     );
@@ -74,10 +71,13 @@ export class ControlPanelPeriodicPrepender implements ControlPanelAttacher {
         );
       }
     }
-    this.cycleId = this.window.requestAnimationFrame(this.cycle);
+    this.cycleId = this.window.setTimeout(
+      this.cycle,
+      ControlPanelPeriodicPrepender.INTERVAL,
+    );
   };
 
   public stop(): void {
-    this.window.clearInterval(this.cycleId);
+    this.window.clearTimeout(this.cycleId);
   }
 }
