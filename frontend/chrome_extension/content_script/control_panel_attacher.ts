@@ -58,7 +58,7 @@ export class ControlPanelPeriodicPrepender implements ControlPanelAttacher {
     this.cycle();
   }
 
-  private cycle = async (): Promise<void> => {
+  private cycle = (): void => {
     let anchorButtonElement = this.document.querySelector(
       this.anchorButtonSelector,
     );

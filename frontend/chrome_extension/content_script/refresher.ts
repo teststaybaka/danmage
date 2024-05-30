@@ -207,7 +207,7 @@ export class Refresher {
     this.refresh();
   }
 
-  private refresh = async (): Promise<void> => {
+  private refresh = (): void => {
     let newElements = this.assembler.queryElements();
     let comparisonResult = this.compareElements(newElements);
     switch (comparisonResult) {

@@ -207,7 +207,7 @@ export class PlayerController {
     this.danmakuCanvasController.play();
   }
 
-  private addChatsPeriodic = async (): Promise<void> => {
+  private addChatsPeriodic = (): void => {
     let videoTimestamp = this.getCurrentTimestamp();
     let chatEntries = this.chatPool.read(videoTimestamp);
     this.controlPanel.addChats(chatEntries);
