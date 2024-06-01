@@ -1,4 +1,5 @@
 import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
+import { parseGoogleAccessToken } from "../../common/oauth_helper";
 import "../../../environment";
 
 function main(): void {
@@ -11,10 +12,8 @@ function main(): void {
     throw new Error("Unsupported environment.");
   }
 
-  let extractRegex = /access_token=(.*?)($|&)/;
-  let match = window.location.hash.match(extractRegex);
-  if (match) {
-    let accessToken = match[1];
+  let accessToken = parseGoogleAccessToken(window.location.href);
+  if (accessToken) {
     window.opener.postMessage(accessToken, origin);
   }
   window.close();

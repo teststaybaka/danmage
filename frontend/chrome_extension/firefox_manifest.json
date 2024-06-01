@@ -1,11 +1,11 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "__MSG_extName__",
   "version": "4.2.0",
   "icons": { "128": "image/app_icon.png" },
   "default_locale": "en",
   "background": {
-    "service_worker": "background/index.js"
+    "scripts": ["background/index.js"]
   },
   "content_scripts": [{
     "matches": [
@@ -23,10 +23,12 @@
     "run_at": "document_end"
   }],
   "permissions": [
-    "identity"
-  ],
-  "host_permissions": [
+    "identity",
     "https://www.danmage.com/"
   ],
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlKkmRu2EcBWP/JbKM6iugQF5H84PGf5Kh/osv3+seAJwBxsaWFC1Dj2JBhb93AUpwPduBmLRYksSepcGZneWX3jEdqrCvQCL6RKb4o2xa6lD29SbEXZ9WL2PDkfgsHgsWs1kbplhsE0ZGkVhTldbFSbTsLGrrBRPeU7KLVjxfWYWznp6AgCTuqZrBf3oOgSGZ/6t3ow+3eASaESKi2j2S7ej0yS57YKkyxGlx43m8BmiC/rOOKK3i6hTjZ/N38ZGzmFNHBG5z2dUUsD+OO6yWe1HEGvlvmpybZNe77DRMUFLvTg+Xh62PBrqsSGt0Pks5IMLn0V6S63xjU1MrO9W4QIDAQAB"
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "0a150fd6759d28eec63560dee702589a3954ba02@danmage.com"
+    }
+  }  
 }

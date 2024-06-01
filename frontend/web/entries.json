@@ -3,9 +3,6 @@
     "source": "./main/main",
     "output": "./index"
   }, {
-    "source": "./oauth_start/main",
-    "output": "./oauth_start/index"
-  }, {
     "source": "./oauth_callback/main",
     "output": "./oauth_callback/index"
   }, {

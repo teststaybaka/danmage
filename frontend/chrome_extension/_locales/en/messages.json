@@ -1,11 +1,7 @@
 {
   "extName": {
-    "message": "DanMage - NicoNico-style chat on multi sites",
+    "message": "DanMage: Flow chat on YouTube & Twitch & more",
     "description": "Extension name."
-  },
-  "extDescription": {
-    "message": "Bring NicoNico-style chat to Twitch, YouTube and Crunchyroll!",
-    "description": "Extension description."
   },
   "displaySettingsTitle": {
     "message": "Display settings",

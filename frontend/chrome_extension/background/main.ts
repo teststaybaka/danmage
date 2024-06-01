@@ -1,4 +1,8 @@
 import {
+  getGoogleOauthUrl,
+  parseGoogleAccessToken,
+} from "../../common/oauth_helper";
+import {
   BACKGROUND_REQUEST,
   GetAuthTokenResponse,
   GetUrlResponse,
@@ -7,7 +11,7 @@ import { parseMessage } from "@selfage/message/parser";
 
 async function handle(
   data: any,
-  sender: chrome.runtime.MessageSender
+  sender: chrome.runtime.MessageSender,
 ): Promise<any> {
   let backgroundRequest = parseMessage(data, BACKGROUND_REQUEST);
   if (backgroundRequest.getUrlRequest) {
@@ -15,10 +19,18 @@ async function handle(
       url: sender.tab.url,
     } as GetUrlResponse;
   } else if (backgroundRequest.getAuthTokenRequest) {
+    let redirectUri = chrome.identity.getRedirectURL();
+    console.log("redirectUri", redirectUri);
     let token = await new Promise<string>((resolve) => {
-      chrome.identity.getAuthToken({ interactive: true }, (token) => {
-        resolve(token);
-      });
+      chrome.identity.launchWebAuthFlow(
+        {
+          url: getGoogleOauthUrl(redirectUri),
+          interactive: true,
+        },
+        (responseUrl) => {
+          resolve(parseGoogleAccessToken(responseUrl));
+        },
+      );
     });
     if (!token) {
       return {} as GetAuthTokenResponse;
@@ -37,7 +49,7 @@ function main(): void {
 
       handle(data, sender).then((response) => sendResponse(response));
       return true;
-    }
+    },
   );
 }
 

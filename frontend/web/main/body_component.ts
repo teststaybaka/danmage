@@ -2,6 +2,7 @@ import EventEmitter = require("events");
 import { TEXT_BUTTON_STYLE } from "../../button_styles";
 import { signIn } from "../../client_requests";
 import { BLUE, ColorScheme, ORANGE } from "../../color_scheme";
+import { getGoogleOauthUrl } from "../../common/oauth_helper";
 import { FONT_M } from "../../font_sizes";
 import { BodyState, Page } from "./body_state";
 import { SIDE_PADDING } from "./common_style";
@@ -344,7 +345,7 @@ export class BodyComponent extends EventEmitter {
   }
 
   private signIn(): void {
-    this.window.open("/oauth_start");
+    this.window.open(getGoogleOauthUrl(`${this.window.origin}/oauth_callback`));
   }
 
   private signOut(): void {

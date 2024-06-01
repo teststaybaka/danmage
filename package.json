@@ -59,6 +59,9 @@
   ],
   "scripts": {
     "local": "bundage bws backend/main backend/main_bin -ec frontend/web/entries.json -e environment_local; node backend/main_bin",
-    "bext": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin; cd chrome_extension_bin/; find . \\( -iname '*.gz' -o -iname '*.html' \\) -type f -delete; zip -r ../extension.zip *; cd ../"
+    "bext": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin",
+    "bext_firefox_windows": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin && copy frontend\\chrome_extension\\firefox_manifest.json chrome_extension_bin\\manifest.json /y",
+    "bext_firefox_linux": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin; cp -f frontend/chrome_extension/firefox_manifest.json chrome_extension_bin/manifest.json",
+    "bext_linux_zip": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin; cd chrome_extension_bin/; find . \\( -iname '*.gz' -o -iname '*.html' \\) -type f -delete; zip -r ../extension.zip *; cd ../"
   }
 }

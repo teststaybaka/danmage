@@ -39,7 +39,7 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 100%;`,
+      `position: relative; height: 100%; aspect-ratio: 1/1;`,
       "currentColor",
       "bottom: 100%; right: 0;",
       true,
@@ -54,7 +54,7 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 4rem;`,
+      `position: relative; height: 4rem; width: 4rem;`,
       "var(--yt-live-chat-header-button-color)",
       "top: 4rem; right: 0;",
       false,
@@ -69,7 +69,7 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: absolute; height: 3rem; right: 1rem;`,
+      `position: absolute; height: 3rem; width: 3rem; right: 1rem;`,
       "currentColor",
       "top: 3rem; right: 0;",
       false,
@@ -84,7 +84,7 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 3rem;`,
+      `position: relative; height: 3rem; width: 3rem;`,
       "currentColor",
       "bottom: 3rem; right: 0;",
       false,
@@ -99,7 +99,7 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 4rem;`,
+      `position: relative; height: 4rem; width: 4rem;`,
       "white",
       "bottom: 4rem; right: 0;",
       true,

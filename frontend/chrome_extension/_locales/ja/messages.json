@@ -1,9 +1,6 @@
 {
   "extName": {
-    "message": "DanMage - コメントをニコニコ動画っぽく流す"
-  },
-  "extDescription": {
-    "message": "現在、この機能はYouTube、Twitch、Crunchyrollをサポートしています。"
+    "message": "DanMage: YouTube や Twitch などでコメントを流す"
   },
   "displaySettingsTitle": {
     "message": "スタイル設定"

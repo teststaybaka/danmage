@@ -1,9 +1,6 @@
 {
   "extName": {
-    "message": "DanMage - 為多個視頻網站統一提供彈幕功能"
-  },
-  "extDescription": {
-    "message": "目前彈幕功能支持YouTube, Twitch和Crunchyroll。"
+    "message": "DanMage: YouTube和Twitch等網站上新增彈幕"
   },
   "displaySettingsTitle": {
     "message": "樣式設置"
