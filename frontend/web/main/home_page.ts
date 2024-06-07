@@ -28,6 +28,10 @@ export class HomePage {
           "https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm",
         ),
         HomePage.textElement(LOCALIZED_TEXT.intro2, ColorScheme.getContent()),
+        HomePage.link(
+          "https://addons.mozilla.org/en-US/firefox/addon/danmage",
+        ),
+        HomePage.textElement(LOCALIZED_TEXT.intro3, ColorScheme.getContent()),
         HomePage.link("https://github.com/teststaybaka/danmage"),
       ),
       HomePage.paragraph(

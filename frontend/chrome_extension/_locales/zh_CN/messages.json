@@ -2,6 +2,9 @@
   "extName": {
     "message": "DanMage: YouTube和Twitch等网站上添加弹幕"
   },
+  "extDescription": {
+    "message": "提供跟bilibili和NicoNico一样的弹幕功能。"
+  },
   "displaySettingsTitle": {
     "message": "样式设置"
   },
@@ -84,7 +87,7 @@
     "message": " 即可同步设置和发送弹幕。"
   },
   "signInButton": {
-    "message": "登录"
+    "message": "使用Google账号登录"
   },
   "signOutButton": {
     "message": "登出"

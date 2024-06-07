@@ -5,12 +5,15 @@ export default class Text extends DefaultText {
     return "ja";
   }
   get title() {
-    return `DanMage - コメントをニコニコ動画っぽく流す`;
+    return `DanMage: YouTube や Twitch などでコメントを流す`;
   }
   get intro() {
-    return `DanMageは、コメントをニコニコ動画っぽく流するChrome拡張機能です。現在、Twitch、YouTube、Crunchyrollをサポートしています。 ここで入手してください：`;
+    return `DanMageは、コメントをニコニコ動画っぽく流するchromeとfirefox拡張機能です。現在、Twitch、YouTube、Crunchyrollをサポートしています。 chrome用：`;
   }
   get intro2() {
+    return `firefox用：`;
+  }
+  get intro3() {
     return `この拡張機能はここでオープンソース化されています：`;
   }
   get introTwitch() {

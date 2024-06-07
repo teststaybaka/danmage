@@ -3,12 +3,15 @@ export default class Text {
     return "en";
   }
   get title() {
-    return `DanMage - Bring NicoNico-style chats to Twitch, YouTube and Crunchyroll`;
+    return `DanMage: Flow chat on YouTube & Twitch & more`;
   }
   get intro() {
-    return `DanMage is a Chrome extension that introduces NicoNico-style chats (or Danmaku, bullet comments, scrolling comments) to video sites. It currently supports Twitch, YouTube and Crunchyroll. Get it here:`;
+    return `DanMage is both a chrome extension and a firefox extension that introduce flow chat, (A.K.A. NicoNico-style chats, danmaku, bullet chat, or scrolling chat) to multiple video sites. It currently supports Twitch, YouTube and Crunchyroll. For chrome:`;
   }
   get intro2() {
+    return `For firefox:`;
+  }
+  get intro3() {
     return `It's also open-sourced at:`;
   }
   get introTwitch() {

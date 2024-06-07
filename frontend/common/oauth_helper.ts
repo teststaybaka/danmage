@@ -10,7 +10,11 @@ export function getGoogleOauthUrl(redirectUrl: string): string {
   return urlBuilder.toString();
 }
 
-export function parseGoogleAccessToken(responseUrl: string): string {
+export function parseGoogleAccessToken(responseUrl?: string): string {
+  if (!responseUrl) {
+    return undefined;
+  }
+
   let extractRegex = /access_token=(.*?)($|&)/;
   let match = new URL(responseUrl).hash.match(extractRegex);
   if (match) {

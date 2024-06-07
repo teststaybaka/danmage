@@ -5,12 +5,15 @@ export default class Text extends DefaultText {
     return "zh";
   }
   get title() {
-    return `DanMage - 为多个视频网站统一提供弹幕功能`;
+    return `DanMage: YouTube和Twitch等网站上添加弹幕`;
   }
   get intro() {
-    return `DanMage是一个Chrome扩展程序，它为多个视频网站统一提供显示弹幕的功能。目前支持的网站有Twitch， YouTube，和Crunchyroll。这里安装：`;
+    return `DanMage是chrome和firefox的扩展程序，它为多个视频网站同时提供显示弹幕的功能。目前支持的网站有Twitch， YouTube，和Crunchyroll。chrome对应：`;
   }
   get intro2() {
+    return `firefox对应：`;
+  }
+  get intro3() {
     return `对应的开源代码可以在这里看到：`;
   }
   get introTwitch() {

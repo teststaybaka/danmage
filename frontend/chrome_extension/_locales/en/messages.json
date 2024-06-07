@@ -3,6 +3,10 @@
     "message": "DanMage: Flow chat on YouTube & Twitch & more",
     "description": "Extension name."
   },
+  "extDescription": {
+    "message": "A.K.A. NicoNico-style chats, danmaku, bullet chat, or scrolling chat.",
+    "description": "Extension description."
+  },
   "displaySettingsTitle": {
     "message": "Display settings",
     "description": "Tab title for display settings."
@@ -112,7 +116,7 @@
     "description": "Second part after URL in 'Sign in www.danmage.com with your Google account to be able to post chats.'"
   },
   "signInButton": {
-    "message": "Sign in",
+    "message": "Sign in with Google",
     "description": "Text on the button to sign in."
   },
   "signOutButton": {

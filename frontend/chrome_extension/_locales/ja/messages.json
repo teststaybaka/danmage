@@ -2,6 +2,9 @@
   "extName": {
     "message": "DanMage: YouTube や Twitch などでコメントを流す"
   },
+  "extDescription": {
+    "message": "コメントをニコニコ動画っぽく流す。"
+  },
   "displaySettingsTitle": {
     "message": "スタイル設定"
   },
@@ -84,7 +87,7 @@
     "message": " にログインすると、設定を同期してコメントを投稿できるようになります。"
   },
   "signInButton": {
-    "message": "ログイン"
+    "message": "Googleでログイン"
   },
   "signOutButton": {
     "message": "ログアウト"

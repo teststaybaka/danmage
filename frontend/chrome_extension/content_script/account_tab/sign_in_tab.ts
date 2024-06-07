@@ -1,5 +1,5 @@
 import EventEmitter = require("events");
-import { FilledBlockingButton } from "../../../blocking_button";
+import { BlockingButton } from "../../../blocking_button";
 import { signIn } from "../../../client_requests";
 import { ColorScheme } from "../../../color_scheme";
 import { LOCAL_SESSION_STORAGE } from "../../common/local_session_storage";
@@ -9,6 +9,7 @@ import {
   BACKGROUND_SERVICE_CLIENT,
   BackgroungServiceClient,
 } from "../common/background_service_client";
+import { GoogleSignInBlockingButton } from "./google_sign_in_blocking_button";
 import { E } from "@selfage/element/factory";
 import { parseMessage } from "@selfage/message/parser";
 import { Ref, assign } from "@selfage/ref";
@@ -29,7 +30,7 @@ export class SignInTab extends EventEmitter {
   }
 
   public body: HTMLDivElement;
-  private signInButton = new Ref<FilledBlockingButton>();
+  private signInButton = new Ref<BlockingButton>();
 
   public constructor(
     private serviceClient: WebServiceClient,
@@ -59,12 +60,8 @@ export class SignInTab extends EventEmitter {
         ),
         E.text(chrome.i18n.getMessage("secondSignInReminder")),
       ),
-      assign(
-        this.signInButton,
-        FilledBlockingButton.create("")
-          .append(E.text(chrome.i18n.getMessage("signInButton")))
-          .enable(),
-      ).body,
+      assign(this.signInButton, GoogleSignInBlockingButton.create().enable())
+        .body,
     );
 
     this.signInButton.val.on("action", () => this.signIn());
