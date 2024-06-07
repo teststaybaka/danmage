@@ -28,7 +28,6 @@ async function handle(
           interactive: true,
         },
         (responseUrl) => {
-          console.log('responseUrl', responseUrl)
           resolve(parseGoogleAccessToken(responseUrl));
         },
       );
