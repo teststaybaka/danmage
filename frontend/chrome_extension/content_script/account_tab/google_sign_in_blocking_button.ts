@@ -16,7 +16,7 @@ export class GoogleSignInBlockingButton extends BlockingButton {
 
   public constructor() {
     super(
-      `${NULLIFIED_BUTTON_STYLE} display: flex; flex-flow: row nowrap; align-items: center;`,
+      `${NULLIFIED_BUTTON_STYLE} padding: 0; display: flex; flex-flow: row nowrap; align-items: center; cursor: pointer;`,
     );
     this.append(
       createGoogleIcon(),
