@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "icons": { "128": "image/app_icon.png" },
   "default_locale": "en",
   "background": {
