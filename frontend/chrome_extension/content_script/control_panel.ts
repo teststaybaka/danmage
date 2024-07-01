@@ -413,7 +413,7 @@ export class ControlPanel extends EventEmitter {
     if (event.code !== "KeyD") {
       return;
     }
-    if (event.target instanceof HTMLElement && event.target.isContentEditable) {
+    if ((event.target as HTMLElement).isContentEditable) {
       return;
     }
     if (event.target instanceof HTMLInputElement) {
