@@ -47,6 +47,10 @@
     "message": "Bottom margin - percentage",
     "description": "Explain the option to add bottom margins."
   },
+  "fontWeightOption": {
+    "message": "Font weight",
+    "description": "Explain the option to set font weight."
+  },
   "fontFamilyOption": {
     "message": "Font family",
     "description": "Explain the option to set font family."

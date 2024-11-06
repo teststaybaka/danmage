@@ -84,6 +84,8 @@ export interface DisplaySettings {
 /* 0 to 100 percentage. */
   bottomMargin?: number,
   fontFamily?: string,
+/* 100 to 900. */
+  fontWeight?: number,
   enable?: boolean,
   showUserName?: boolean,
   distributionStyle?: DistributionStyle,
@@ -120,6 +122,10 @@ export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
     {
       name: 'fontFamily',
       primitiveType: PrimitiveType.STRING,
+    },
+    {
+      name: 'fontWeight',
+      primitiveType: PrimitiveType.NUMBER,
     },
     {
       name: 'enable',

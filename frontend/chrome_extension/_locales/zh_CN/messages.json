@@ -35,6 +35,9 @@
   "bottomMarginOption": {
     "message": "底部留白 - 百分比"
   },
+  "fontWeightOption": {
+    "message": "字体粗细"
+  },
   "fontFamilyOption": {
     "message": "字体"
   },

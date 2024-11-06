@@ -35,6 +35,9 @@
   "bottomMarginOption": {
     "message": "下マージン　‐　パーセント"
   },
+  "fontWeightOption": {
+    "message": "フォントの太さ"
+  },
   "fontFamilyOption": {
     "message": "フォント"
   },

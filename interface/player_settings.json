@@ -69,6 +69,10 @@
       "name": "fontFamily",
       "type": "string"
     }, {
+      "name": "fontWeight",
+      "type": "number",
+      "comment": "100 to 900."
+    }, {
       "name": "enable",
       "type": "boolean"
     }, {

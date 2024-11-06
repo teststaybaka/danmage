@@ -15,6 +15,7 @@ import {
   ENABLE_CHAT_SCROLLING_DEFAULT,
   FONT_FAMILY_DEFAULT,
   FONT_SIZE_RANGE,
+  FONT_WEIGHT_RANGE,
   OPACITY_RANGE,
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
@@ -65,6 +66,9 @@ export class PlayerSettingsStorage {
     );
     displaySettings.bottomMargin = BOTTOM_MARGIN_RANGE.getValidValue(
       displaySettings.bottomMargin,
+    );
+    displaySettings.fontWeight = FONT_WEIGHT_RANGE.getValidValue(
+      displaySettings.fontWeight,
     );
     if (!displaySettings.fontFamily) {
       displaySettings.fontFamily = FONT_FAMILY_DEFAULT;

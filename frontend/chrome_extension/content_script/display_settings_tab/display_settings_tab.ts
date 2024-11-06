@@ -12,6 +12,7 @@ import {
   ENABLE_CHAT_SCROLLING_DEFAULT,
   FONT_FAMILY_DEFAULT,
   FONT_SIZE_RANGE,
+  FONT_WEIGHT_RANGE,
   OPACITY_RANGE,
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
@@ -41,6 +42,7 @@ export class DisplaySettingsTab extends EventEmitter {
   private opacityOption = new Ref<Slider>();
   private speedOption = new Ref<Slider>();
   private fontSizeOption = new Ref<Slider>();
+  private fontWeightOption = new Ref<Slider>();
   private densityOption = new Ref<Slider>();
   private topMarginOption = new Ref<Slider>();
   private bottomMarginOption = new Ref<Slider>();
@@ -94,6 +96,14 @@ export class DisplaySettingsTab extends EventEmitter {
           chrome.i18n.getMessage("fontSizeOption"),
           FONT_SIZE_RANGE,
           displaySettings.fontSize,
+        ),
+      ).body,
+      assign(
+        this.fontWeightOption,
+        Slider.create(
+          chrome.i18n.getMessage("fontWeightOption"),
+          FONT_WEIGHT_RANGE,
+          displaySettings.fontWeight,
         ),
       ).body,
       assign(
@@ -199,6 +209,9 @@ export class DisplaySettingsTab extends EventEmitter {
     );
     this.opacityOption.val.on("change", (value) => this.opacityChange(value));
     this.fontSizeOption.val.on("change", (value) => this.fontSizeChange(value));
+    this.fontWeightOption.val.on("change", (value) =>
+      this.fontWeightChange(value),
+    );
     this.densityOption.val.on("change", (value) => this.densityChange(value));
     this.speedOption.val.on("change", (value) => this.speedChange(value));
     this.topMarginOption.val.on("change", (value) =>
@@ -227,6 +240,11 @@ export class DisplaySettingsTab extends EventEmitter {
 
   public fontSizeChange(value: number): void {
     this.displaySettings.fontSize = value;
+    this.emit("update");
+  }
+
+  public fontWeightChange(value: number): void {
+    this.displaySettings.fontWeight = value;
     this.emit("update");
   }
 

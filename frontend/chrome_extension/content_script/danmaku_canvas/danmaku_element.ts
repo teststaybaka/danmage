@@ -95,6 +95,7 @@ export class DanmakuElement extends EventEmitter {
     this.body.style.fontSize = `${
       this.displaySettings.fontSize * DanmakuElement.FONT_SIZE_SCALE
     }rem`;
+    this.body.style.fontWeight = `${this.displaySettings.fontWeight}`;
     this.body.style.setProperty(
       "font-family",
       this.displaySettings.fontFamily,

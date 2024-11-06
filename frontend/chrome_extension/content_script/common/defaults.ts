@@ -7,6 +7,7 @@ export let FONT_SIZE_RANGE = new NumberRange(100, 10, 25);
 export let DENSITY_RANGE = new NumberRange(100, 0, 100);
 export let TOP_MARGIN_RANGE = new NumberRange(100, 0, 1);
 export let BOTTOM_MARGIN_RANGE = new NumberRange(100, 0, 10);
+export let FONT_WEIGHT_RANGE = new NumberRange(900, 100, 400);;
 export let FONT_FAMILY_DEFAULT = "Arial";
 export let ENABLE_CHAT_SCROLLING_DEFAULT = true;
 export let SHOW_USER_NAME_DEFAULT = false;
