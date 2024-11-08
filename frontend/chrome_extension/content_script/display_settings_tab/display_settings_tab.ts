@@ -300,6 +300,7 @@ export class DisplaySettingsTab extends EventEmitter {
   public resetSettings(): void {
     this.displaySettings.opacity = this.opacityOption.val.reset();
     this.displaySettings.fontSize = this.fontSizeOption.val.reset();
+    this.displaySettings.fontWeight = this.fontWeightOption.val.reset();
     this.displaySettings.density = this.densityOption.val.reset();
     this.displaySettings.speed = this.speedOption.val.reset();
     this.displaySettings.topMargin = this.topMarginOption.val.reset();
