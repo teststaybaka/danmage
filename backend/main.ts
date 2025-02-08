@@ -28,9 +28,6 @@ async function main(): Promise<void> {
     let [
       privateKey,
       certificate,
-      ca0,
-      ca1,
-      ca2,
       sessionKey,
       googleOauthWebClientId,
       googleOauthChromeExtensionClientId,
@@ -38,9 +35,6 @@ async function main(): Promise<void> {
     ] = await Promise.all([
       reader.read("danmage.key"),
       reader.read("danmage.crt"),
-      reader.read("ca_g0.crt"),
-      reader.read("ca_g1.crt"),
-      reader.read("ca_g2.crt"),
       reader.read("session.key"),
       reader.read("google_oauth_web_client_id.key"),
       reader.read("google_oauth_chrome_extension_client_id.key"),
@@ -65,7 +59,6 @@ async function main(): Promise<void> {
       {
         key: privateKey,
         cert: certificate,
-        ca: [ca0, ca1, ca2],
       },
       app
     );
