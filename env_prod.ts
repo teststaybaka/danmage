@@ -1,3 +1,4 @@
+import "./env_const";
 import { ENV_VARS } from "./env_vars";
 
 ENV_VARS.projectId = "danmage";
