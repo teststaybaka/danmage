@@ -9,9 +9,10 @@ steps:
   entrypoint: npx
   args: ['bundage', 'bwa', '-ec', 'frontend/web/entries_${_ENVIRONMENT}.yaml', '-o', 'bin/static']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/web', '.']
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/web:latest', '-f', 'Dockerfile', '.']
+- name: "gcr.io/cloud-builders/docker"
+  args: ['push', 'gcr.io/${PROJECT_ID}/web:latest']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['compute', 'instances', 'stop', '${_SERVER_NAME}', '--zone', '${_SERVER_ZONE}']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['compute', 'instances', 'start', '${_SERVER_NAME}', '--zone', '${_SERVER_ZONE}']
-images: ['gcr.io/${PROJECT_ID}/web']
