@@ -1,0 +1,81 @@
+- kind: Enum
+  name: BlockKind
+  values:
+    - name: KeywordBlockKind
+      value: 1
+    - name: RegExpBlockKind
+      value: 3
+- kind: Message
+  name: BlockPattern
+  fields:
+    - name: kind
+      type: BlockKind
+      index: 1
+    - name: content
+      type: string
+      index: 2
+- kind: Message
+  name: BlockSettings
+  fields:
+    - name: blockPatterns
+      type: BlockPattern
+      isArray: true
+      index: 1
+- kind: Enum
+  name: DistributionStyle
+  values:
+    - name: RandomDistributionStyle
+      value: 1
+    - name: TopDownDistributionStyle
+      value: 2
+- kind: Message
+  name: DisplaySettings
+  fields:
+    - name: speed
+      type: number
+      index: 1
+    - name: opacity
+      type: number # 0 to 100 percentage.
+      index: 2
+    - name: fontSize
+      type: number
+      index: 3
+    - name: density
+      type: number # 0 to 100 percentage.
+      index: 4
+    - name: topMargin
+      type: number # 0 to 100 percentage.
+      index: 5
+    - name: bottomMargin
+      type: number # 0 to 100 percentage.
+      index: 6
+    - name: fontFamily
+      type: string
+      index: 7
+    - name: fontWeight
+      type: number # 100 to 900.
+      index: 8
+    - name: enable
+      type: boolean
+      index: 9
+    - name: showUserName
+      type: boolean
+      index: 10
+    - name: distributionStyle
+      type: DistributionStyle
+      index: 11
+    - name: enableInteraction
+      type: boolean
+      index: 12
+- kind: Message
+  name: PlayerSettings
+  fields:
+    - name: userId
+      type: string
+      index: 1
+    - name: displaySettings
+      type: DisplaySettings
+      index: 2
+    - name: blockSettings
+      type: BlockSettings
+      index: 3

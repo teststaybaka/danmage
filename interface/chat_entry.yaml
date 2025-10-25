@@ -1,0 +1,36 @@
+- kind: Enum
+  name: HostApp
+  values:
+    - name: YouTube
+      value: 1
+    - name: Crunchyroll
+      value: 2
+    - name: Netflix
+      value: 3
+- kind: Message
+  name: ChatEntry
+  fields:
+    - name: id
+      type: string
+      index: 1
+    - name: hostApp
+      type: HostApp
+      index: 2
+    - name: hostContentId
+      type: string
+      index: 3
+    - name: userId
+      type: string
+      index: 4
+    - name: userNickname
+      type: string
+      index: 5
+    - name: content
+      type: string
+      index: 6
+    - name: timestamp
+      type: number
+      index: 7
+    - name: created
+      type: number
+      index: 8

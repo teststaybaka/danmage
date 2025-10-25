@@ -3,141 +3,111 @@ import expressStaticGzip = require("express-static-gzip");
 import getStream = require("get-stream");
 import http = require("http");
 import https = require("https");
-import { ORIGIN_PROD } from "../common";
+import { ENV_VARS } from "../env_vars";
+import { DANMAKU_SERVICE } from "../interface/service";
 import { GetChatHandler } from "./get_chat_handler";
 import { GetChatHistoryHandler } from "./get_chat_history_handler";
 import { GetPlayerSettingsHandler } from "./get_player_settings_handler";
 import { GetUserHandler } from "./get_user_handler";
-import { LOGGER } from "./logger";
 import { PostChatHandler } from "./post_chat_handler";
-import { ReportUserIssueHandler } from "./report_user_issue_handler";
+import { SessionSigner } from "./session_signer";
 import { SignInHandler } from "./sign_in_handler";
 import { UpdateNicknameHandler } from "./update_nickname_handler";
-import {
-  UpdatePlayerSettingsHandler,
-} from "./update_player_settings_handler";
+import { UpdatePlayerSettingsHandler } from "./update_player_settings_handler";
 import { Storage } from "@google-cloud/storage";
-import { HandlerRegister } from "@selfage/service_handler/register";
-import { SessionSigner } from "@selfage/service_handler/session_signer";
-import "../environment";
-import "@selfage/web_app_base_dir";
+import { ServiceHandler } from "@selfage/service_handler/service_handler";
 
+// Requires command line argument: path to the directory of static files.
 async function main(): Promise<void> {
-  if (globalThis.ENVIRONMENT === "prod") {
-    let reader = new BucketReader(new Storage(), "danmage-prod");
-    let [
-      privateKey,
-      certificate,
-      sessionKey,
-      googleOauthWebClientId,
-      googleOauthChromeExtensionClientId,
-      googleOauthChromeExtensionPastClientId,
-    ] = await Promise.all([
-      reader.read("danmage.key"),
-      reader.read("danmage.crt"),
-      reader.read("session.key"),
-      reader.read("google_oauth_web_client_id.key"),
-      reader.read("google_oauth_chrome_extension_client_id.key"),
-      reader.read("google_oauth_chrome_extension_past_client_id.key"),
+  if (!ENV_VARS.local) {
+    let reader = new BucketReader(new Storage(), ENV_VARS.secretBucketName);
+    let [privateKey, certificate, sessionKey] = await Promise.all([
+      reader.read(ENV_VARS.sslPrivateKeyPath),
+      reader.read(ENV_VARS.sslCertificatePath),
+      reader.read(ENV_VARS.sessionSecretPath),
     ]);
-
-    let redirectApp = express();
-    redirectApp.get("/*", (req, res) => {
-      res.redirect(`${ORIGIN_PROD}${req.path}`);
-    });
-    let httpServer = http.createServer(redirectApp);
-    httpServer.listen(80, () => {
-      LOGGER.info("Http server started at 80.");
-    });
-
-    let app = registerHandlers(sessionKey, [
-      googleOauthWebClientId,
-      googleOauthChromeExtensionClientId,
-      googleOauthChromeExtensionPastClientId,
-    ]);
-    let httpsServer = https.createServer(
-      {
+    startServer(
+      https.createServer({
         key: privateKey,
         cert: certificate,
-      },
-      app
-    );
-    httpsServer.listen(443, () => {
-      LOGGER.info("Https server started at 443.");
-    });
-  } else if (globalThis.ENVIRONMENT === "dev") {
-    let reader = new BucketReader(new Storage(), "danmage-dev-keys");
-    let [
+      }),
+      ENV_VARS.httpsPort,
       sessionKey,
-      googleOauthWebClientId,
-      googleOauthChromeExtensionMasterClientId,
-    ] = await Promise.all([
-      reader.read("session.key"),
-      reader.read("google_oauth_web_client_id.key"),
-      reader.read("google_oauth_chrome_extension_master_client_id.key"),
-    ]);
+      [ENV_VARS.googleOauthClientId],
+    );
 
-    let app = registerHandlers(sessionKey, [
-      googleOauthWebClientId,
-      googleOauthChromeExtensionMasterClientId,
-    ]);
-    let httpServer = http.createServer(app);
-    httpServer.listen(80, () => {
-      LOGGER.info("Http server started at 80.");
+    // Redirect http to https.
+    let redirectApp = express();
+    redirectApp.get("/*", (req, res) => {
+      res.redirect(`${ENV_VARS.externalOrigin}${req.path}`);
     });
-  } else if (globalThis.ENVIRONMENT === "local") {
-    let app = registerHandlers("randomlocalkey", ["randomclientid"]);
-    let httpServer = http.createServer(app);
-    httpServer.listen(8080, () => {
-      LOGGER.info("Http server started at 8080.");
+    let httpServer = http.createServer(redirectApp);
+    httpServer.listen(ENV_VARS.httpPort, () => {
+      console.log(`Http server started at ${ENV_VARS.httpPort}.`);
     });
   } else {
-    throw new Error(
-      `Not supported environment ${globalThis.ENVIRONMENT} when intializing main.`
-    );
+    startServer(http.createServer(), ENV_VARS.httpPort, "randomlocalkey", [
+      "randomclientid",
+    ]);
   }
 }
 
-function registerHandlers(
+function startServer(
+  server: https.Server | http.Server,
+  port: number,
   sessionKey: string,
-  googleOauthClientIds: Array<string>
-): express.Express {
+  googleOauthClientIds: Array<string>,
+): void {
   SessionSigner.SECRET_KEY = sessionKey;
   let app = express();
-  let register = new HandlerRegister(app, LOGGER);
-  register.registerCorsAllowedPreflightHandler();
-  register.register(SignInHandler.create(new Set(googleOauthClientIds)));
-  register.register(GetUserHandler.create());
-  register.register(PostChatHandler.create());
-  register.register(GetChatHandler.create());
-  register.register(GetChatHistoryHandler.create());
-  register.register(UpdatePlayerSettingsHandler.create());
-  register.register(GetPlayerSettingsHandler.create());
-  register.register(UpdateNicknameHandler.create());
-  register.register(ReportUserIssueHandler.create());
+  // Post requests
+  let service = ServiceHandler.create(
+    server,
+    "*",
+    app,
+  ).addCorsAllowedPreflightHandler();
+  service
+    .addHandlerRegister(DANMAKU_SERVICE)
+    .add(SignInHandler.create(new Set(googleOauthClientIds)))
+    .add(GetUserHandler.create())
+    .add(PostChatHandler.create())
+    .add(GetChatHandler.create())
+    .add(GetChatHistoryHandler.create())
+    .add(UpdatePlayerSettingsHandler.create())
+    .add(GetPlayerSettingsHandler.create())
+    .add(UpdateNicknameHandler.create());
 
+  // Web UI
   app.get("/*", (req, res, next) => {
-    LOGGER.info(`Received GET request at ${req.originalUrl}.`);
-    next();
+    console.log(`Received GET request at ${req.originalUrl}.`);
+    // Redirect to canonical domain if needed.
+    if (req.hostname !== ENV_VARS.externalDomain) {
+      res.redirect(`${ENV_VARS.externalOrigin}${req.path}`);
+    } else {
+      next();
+    }
   });
   app.use(
     "/",
-    expressStaticGzip(globalThis.WEB_APP_BASE_DIR, {
+    expressStaticGzip(process.argv[2], {
       serveStatic: {
         extensions: ["html"],
         fallthrough: false,
       },
-    })
+    }),
   );
-  return app;
+  service.start(port);
 }
 
 class BucketReader {
-  public constructor(private storage: Storage, private bucketName: string) {}
+  public constructor(
+    private storage: Storage,
+    private bucketName: string,
+  ) {}
 
   public async read(fileName: string): Promise<string> {
     return getStream(
-      this.storage.bucket(this.bucketName).file(fileName).createReadStream()
+      this.storage.bucket(this.bucketName).file(fileName).createReadStream(),
     );
   }
 }

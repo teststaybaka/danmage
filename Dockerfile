@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 COPY bin/ .
-RUN npm install --production
+RUN npm ci --omit=dev
 
 EXPOSE 80 443
-CMD ["node", "backend/main_bin"]
+CMD ["node", "main_bin", "static"]

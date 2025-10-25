@@ -47,7 +47,8 @@ export class Slider extends EventEmitter {
           { class: "slider-label", style: LABEL_STYLE, title: label },
           E.text(label),
         ),
-        E.inputRef(this.valueInput, {
+        E.input({
+          reef: this.valueInput,
           class: "slider-value-input",
           style: TEXT_INPUT_STYLE,
           value: `${value}`,
@@ -61,29 +62,30 @@ export class Slider extends EventEmitter {
         E.div(
           {
             class: "slider-min-value-label",
-            style: `font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; margin-right: 1rem; color: ${ColorScheme.getContent()};`,
+            style: `font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; margin-right: .5rem; color: ${ColorScheme.getContent()};`,
           },
           E.text(`${numberRange.minValue}`),
         ),
-        E.divRef(
-          this.barWrapper,
+        E.div(
           {
+            ref: this.barWrapper,
             class: "slider-bar-wrapper",
             style: `position: relative; flex-grow: 1; cursor: pointer; user-select: none;`,
           },
           E.div({
             class: "slider-bar",
-            style: `height: .4rem; margin: 1rem 0; background-color: ${ColorScheme.getInputBorder()}; border-radius: .2rem;`,
+            style: `height: .25rem; margin: .5rem 0; background-color: ${ColorScheme.getInputBorder()}; border-radius: .125rem;`,
           }),
-          E.divRef(this.cursor, {
+          E.div({
+            ref: this.cursor,
             class: "slider-cursor",
-            style: `position: absolute; width: 1rem; height: 1rem; border-radius: 50%; left: -.5rem; top: .7rem; background-color: ${ColorScheme.getBackground()}; border: .1rem solid ${ColorScheme.getInputBorder()}; pointer-events: none;`,
+            style: `position: absolute; width: .75rem; height: .75rem; border-radius: 50%; left: -.375rem; top: .25rem; background-color: ${ColorScheme.getBackground()}; border: .0625rem solid ${ColorScheme.getInputBorder()}; pointer-events: none;`,
           }),
         ),
         E.div(
           {
             class: "slider-min-value-label",
-            style: `font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; margin-left: 1rem; color: ${ColorScheme.getContent()};`,
+            style: `font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; margin-left: .5rem; color: ${ColorScheme.getContent()};`,
           },
           E.text(`${numberRange.maxValue}`),
         ),

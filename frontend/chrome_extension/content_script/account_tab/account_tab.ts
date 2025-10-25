@@ -1,4 +1,4 @@
-import { LOCAL_SESSION_STORAGE } from "../../common/local_session_storage";
+import { LOCAL_SESSION_STORAGE } from "../common/local_session_storage";
 import { TAB_SIDE_PADDING } from "../common/styles";
 import { SignInTab } from "./sign_in_tab";
 import { WelcomeTab } from "./welcome_tab";

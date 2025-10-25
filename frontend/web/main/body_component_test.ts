@@ -1,23 +1,18 @@
 import {
   SIGN_IN,
-  SIGN_IN_REQUEST,
+  SIGN_IN_REQUEST_BODY,
   SignInResponse,
 } from "../../../interface/service";
 import { normalizeBody } from "../../body_normalizer";
 import { BodyComponent } from "./body_component";
-import { BodyState, Page } from "./body_state";
+import { BodyRl, Page } from "./body_rl";
 import { LOCAL_SESSION_STORAGE } from "./local_session_storage";
-import {
-  FeedbackPageMock,
-  HistoryPageMock,
-  HomePageMock,
-  NicknamePageMock,
-} from "./mocks";
+import { HistoryPageMock, HomePageMock, NicknamePageMock } from "./mocks";
 import { eqMessage } from "@selfage/message/test_matcher";
 import { setViewport } from "@selfage/puppeteer_test_executor_api";
 import { TEST_RUNNER, TestCase } from "@selfage/puppeteer_test_runner";
 import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
-import { assertThat, eq } from "@selfage/test_matcher";
+import { assertThat, containStr, eq } from "@selfage/test_matcher";
 import { WebServiceClientMock } from "@selfage/web_service_client/client_mock";
 
 normalizeBody();
@@ -32,6 +27,7 @@ TEST_RUNNER.run({
         // Prepare
         await setViewport(1280, 600);
         let windowMock = new (class {
+          public origin = "http://random.origin.com";
           public location = {};
           public addEventListener() {}
         })() as any;
@@ -41,16 +37,12 @@ TEST_RUNNER.run({
           () => new HomePageMock(),
           () => new NicknamePageMock(),
           () => new HistoryPageMock(),
-          () => new FeedbackPageMock(),
-          "http://random.origin.com",
           LOCAL_SESSION_STORAGE,
           new WebServiceClientMock(),
           windowMock,
         );
-        let state: BodyState;
-        this.cut.on("newState", (newState) => (state = newState));
         document.body.appendChild(this.cut.body);
-        this.cut.updateState();
+        this.cut.applyRl();
 
         // Verify
         await asyncAssertScreenshot(
@@ -61,55 +53,31 @@ TEST_RUNNER.run({
             fullPage: true,
             excludedAreas: [
               {
-                x: 47,
-                y: 86,
-                width: 1184,
-                height: 668,
+                x: 36,
+                y: 74,
+                width: 1226,
+                height: 692,
               },
               {
-                x: 47,
-                y: 1013,
-                width: 1184,
-                height: 668,
+                x: 36,
+                y: 1069,
+                width: 1226,
+                height: 692,
               },
               {
-                x: 47,
-                y: 1799,
-                width: 1184,
-                height: 668,
+                x: 36,
+                y: 1852,
+                width: 1226,
+                height: 692,
               },
               {
-                x: 47,
-                y: 2731,
-                width: 1184,
-                height: 668,
+                x: 36,
+                y: 2769,
+                width: 1226,
+                height: 692,
               },
             ],
           },
-        );
-
-        // Execute
-        this.cut.termsButton.val.click();
-
-        // Verify
-        assertThat(windowMock.location.href, eq("/terms"), "goto /terms");
-
-        // Execute
-        this.cut.privacyButton.val.click();
-
-        // Verify
-        assertThat(windowMock.location.href, eq("/privacy"), "goto /privacy");
-
-        // Execute
-        this.cut.feedbackButton.val.click();
-
-        // Verify
-        assertThat(state.page, eq(Page.FEEDBACK), "show feedback");
-        await asyncAssertScreenshot(
-          __dirname + "/body_component_feedback.png",
-          __dirname + "/golden/body_component_feedback.png",
-          __dirname + "/body_component_feedback_diff.png",
-          { fullPage: true },
         );
       }
       public tearDown() {
@@ -124,6 +92,7 @@ TEST_RUNNER.run({
         await setViewport(1280, 600);
         LOCAL_SESSION_STORAGE.save("some signed session");
         let windowMock = new (class {
+          public origin = "http://random.origin.com";
           public location = {};
           public addEventListener() {}
         })() as any;
@@ -133,16 +102,14 @@ TEST_RUNNER.run({
           () => new HomePageMock(),
           () => new NicknamePageMock(),
           () => new HistoryPageMock(),
-          () => new FeedbackPageMock(),
-          "http://random.origin.com",
           LOCAL_SESSION_STORAGE,
           new WebServiceClientMock(),
           windowMock,
         );
-        let state: BodyState;
-        this.cut.on("newState", (newState) => (state = newState));
+        let rl: BodyRl;
+        this.cut.on("newRl", (newRl) => (rl = newRl));
         document.body.appendChild(this.cut.body);
-        this.cut.updateState();
+        this.cut.applyRl();
 
         // Verify
         await asyncAssertScreenshot(
@@ -153,28 +120,28 @@ TEST_RUNNER.run({
             fullPage: true,
             excludedAreas: [
               {
-                x: 47,
-                y: 86,
-                width: 1184,
-                height: 668,
+                x: 36,
+                y: 74,
+                width: 1226,
+                height: 692,
               },
               {
-                x: 47,
-                y: 1013,
-                width: 1184,
-                height: 668,
+                x: 36,
+                y: 1067,
+                width: 1226,
+                height: 692,
               },
               {
-                x: 47,
-                y: 1799,
-                width: 1184,
-                height: 668,
+                x: 36,
+                y: 1850,
+                width: 1226,
+                height: 692,
               },
               {
-                x: 47,
-                y: 2731,
-                width: 1184,
-                height: 668,
+                x: 36,
+                y: 2767,
+                width: 1226,
+                height: 692,
               },
             ],
           },
@@ -184,7 +151,7 @@ TEST_RUNNER.run({
         this.cut.nicknameButton.val.click();
 
         // Verify
-        assertThat(state.page, eq(Page.NICKNAME), "show nickname");
+        assertThat(rl.page, eq(Page.NICKNAME), "show nickname");
         await asyncAssertScreenshot(
           __dirname + "/body_component_nickname.png",
           __dirname + "/golden/body_component_nickname.png",
@@ -196,7 +163,7 @@ TEST_RUNNER.run({
         this.cut.historyButton.val.click();
 
         // Verify
-        assertThat(state.page, eq(Page.HISTORY), "show history");
+        assertThat(rl.page, eq(Page.HISTORY), "show history");
         await asyncAssertScreenshot(
           __dirname + "/body_component_history.png",
           __dirname + "/golden/body_component_history.png",
@@ -225,7 +192,7 @@ TEST_RUNNER.run({
                 {
                   googleAccessToken: "some token",
                 },
-                SIGN_IN_REQUEST,
+                SIGN_IN_REQUEST_BODY,
               ),
               "access token",
             );
@@ -234,11 +201,12 @@ TEST_RUNNER.run({
         })();
         let opened = false;
         let windowMock = new (class {
+          public origin = "http://some.origin.com";
           public callback: Function;
           public location = {};
           public open(url: string) {
             opened = true;
-            assertThat(url, eq("/oauth_start"), "open url");
+            assertThat(url, containStr("oauth_callback"), "open url");
           }
           public addEventListener(event: string, callback: Function) {
             this.callback = callback;
@@ -250,15 +218,13 @@ TEST_RUNNER.run({
           () => new HomePageMock(),
           () => new NicknamePageMock(),
           () => new HistoryPageMock(),
-          () => new FeedbackPageMock(),
-          "http://some.origin.com",
           LOCAL_SESSION_STORAGE,
           serviceClient,
           windowMock,
         );
         document.body.appendChild(this.cut.body);
-        this.cut.updateState({
-          page: Page.FEEDBACK,
+        this.cut.applyRl({
+          page: Page.NICKNAME,
         });
         this.cut.signInButton.val.click();
 

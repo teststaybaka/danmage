@@ -1,4 +1,4 @@
-import { EnumDescriptor, MessageDescriptor, PrimitiveType } from '@selfage/message/descriptor';
+import { EnumDescriptor, PrimitiveType, MessageDescriptor } from '@selfage/message/descriptor';
 
 export enum BlockKind {
   KeywordBlockKind = 1,
@@ -7,16 +7,13 @@ export enum BlockKind {
 
 export let BLOCK_KIND: EnumDescriptor<BlockKind> = {
   name: 'BlockKind',
-  values: [
-    {
-      name: 'KeywordBlockKind',
-      value: 1,
-    },
-    {
-      name: 'RegExpBlockKind',
-      value: 3,
-    },
-  ]
+  values: [{
+    name: 'KeywordBlockKind',
+    value: 1,
+  }, {
+    name: 'RegExpBlockKind',
+    value: 3,
+  }]
 }
 
 export interface BlockPattern {
@@ -26,16 +23,15 @@ export interface BlockPattern {
 
 export let BLOCK_PATTERN: MessageDescriptor<BlockPattern> = {
   name: 'BlockPattern',
-  fields: [
-    {
-      name: 'kind',
-      enumType: BLOCK_KIND,
-    },
-    {
-      name: 'content',
-      primitiveType: PrimitiveType.STRING,
-    },
-  ]
+  fields: [{
+    name: 'kind',
+    index: 1,
+    enumType: BLOCK_KIND,
+  }, {
+    name: 'content',
+    index: 2,
+    primitiveType: PrimitiveType.STRING,
+  }],
 };
 
 export interface BlockSettings {
@@ -44,13 +40,12 @@ export interface BlockSettings {
 
 export let BLOCK_SETTINGS: MessageDescriptor<BlockSettings> = {
   name: 'BlockSettings',
-  fields: [
-    {
-      name: 'blockPatterns',
-      messageType: BLOCK_PATTERN,
-      isArray: true,
-    },
-  ]
+  fields: [{
+    name: 'blockPatterns',
+    index: 1,
+    messageType: BLOCK_PATTERN,
+    isArray: true,
+  }],
 };
 
 export enum DistributionStyle {
@@ -60,31 +55,23 @@ export enum DistributionStyle {
 
 export let DISTRIBUTION_STYLE: EnumDescriptor<DistributionStyle> = {
   name: 'DistributionStyle',
-  values: [
-    {
-      name: 'RandomDistributionStyle',
-      value: 1,
-    },
-    {
-      name: 'TopDownDistributionStyle',
-      value: 2,
-    },
-  ]
+  values: [{
+    name: 'RandomDistributionStyle',
+    value: 1,
+  }, {
+    name: 'TopDownDistributionStyle',
+    value: 2,
+  }]
 }
 
 export interface DisplaySettings {
   speed?: number,
-/* 0 to 100 percentage. */
   opacity?: number,
   fontSize?: number,
-/* 0 to 100 percentage. */
   density?: number,
-/* 0 to 100 percentage. */
   topMargin?: number,
-/* 0 to 100 percentage. */
   bottomMargin?: number,
   fontFamily?: string,
-/* 100 to 900. */
   fontWeight?: number,
   enable?: boolean,
   showUserName?: boolean,
@@ -94,56 +81,55 @@ export interface DisplaySettings {
 
 export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
   name: 'DisplaySettings',
-  fields: [
-    {
-      name: 'speed',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-    {
-      name: 'opacity',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-    {
-      name: 'fontSize',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-    {
-      name: 'density',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-    {
-      name: 'topMargin',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-    {
-      name: 'bottomMargin',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-    {
-      name: 'fontFamily',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'fontWeight',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-    {
-      name: 'enable',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-    {
-      name: 'showUserName',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-    {
-      name: 'distributionStyle',
-      enumType: DISTRIBUTION_STYLE,
-    },
-    {
-      name: 'enableInteraction',
-      primitiveType: PrimitiveType.BOOLEAN,
-    },
-  ]
+  fields: [{
+    name: 'speed',
+    index: 1,
+    primitiveType: PrimitiveType.NUMBER,
+  }, {
+    name: 'opacity',
+    index: 2,
+    primitiveType: PrimitiveType.NUMBER,
+  }, {
+    name: 'fontSize',
+    index: 3,
+    primitiveType: PrimitiveType.NUMBER,
+  }, {
+    name: 'density',
+    index: 4,
+    primitiveType: PrimitiveType.NUMBER,
+  }, {
+    name: 'topMargin',
+    index: 5,
+    primitiveType: PrimitiveType.NUMBER,
+  }, {
+    name: 'bottomMargin',
+    index: 6,
+    primitiveType: PrimitiveType.NUMBER,
+  }, {
+    name: 'fontFamily',
+    index: 7,
+    primitiveType: PrimitiveType.STRING,
+  }, {
+    name: 'fontWeight',
+    index: 8,
+    primitiveType: PrimitiveType.NUMBER,
+  }, {
+    name: 'enable',
+    index: 9,
+    primitiveType: PrimitiveType.BOOLEAN,
+  }, {
+    name: 'showUserName',
+    index: 10,
+    primitiveType: PrimitiveType.BOOLEAN,
+  }, {
+    name: 'distributionStyle',
+    index: 11,
+    enumType: DISTRIBUTION_STYLE,
+  }, {
+    name: 'enableInteraction',
+    index: 12,
+    primitiveType: PrimitiveType.BOOLEAN,
+  }],
 };
 
 export interface PlayerSettings {
@@ -154,18 +140,17 @@ export interface PlayerSettings {
 
 export let PLAYER_SETTINGS: MessageDescriptor<PlayerSettings> = {
   name: 'PlayerSettings',
-  fields: [
-    {
-      name: 'userId',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'displaySettings',
-      messageType: DISPLAY_SETTINGS,
-    },
-    {
-      name: 'blockSettings',
-      messageType: BLOCK_SETTINGS,
-    },
-  ]
+  fields: [{
+    name: 'userId',
+    index: 1,
+    primitiveType: PrimitiveType.STRING,
+  }, {
+    name: 'displaySettings',
+    index: 2,
+    messageType: DISPLAY_SETTINGS,
+  }, {
+    name: 'blockSettings',
+    index: 3,
+    messageType: BLOCK_SETTINGS,
+  }],
 };

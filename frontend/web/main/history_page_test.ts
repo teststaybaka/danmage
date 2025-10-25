@@ -1,7 +1,7 @@
 import { HostApp } from "../../../interface/chat_entry";
 import {
   GET_CHAT_HISTORY,
-  GET_CHAT_HISTORY_REQUEST,
+  GET_CHAT_HISTORY_REQUEST_BODY,
   GetChatHistoryResponse,
 } from "../../../interface/service";
 import { normalizeBody } from "../../body_normalizer";
@@ -10,6 +10,7 @@ import { eqMessage } from "@selfage/message/test_matcher";
 import { setViewport } from "@selfage/puppeteer_test_executor_api";
 import { TEST_RUNNER, TestCase } from "@selfage/puppeteer_test_runner";
 import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
+import { ClientRequestInterface } from "@selfage/service_descriptor/client_request_interface";
 import { assertThat, eq } from "@selfage/test_matcher";
 import { WebServiceClientMock } from "@selfage/web_service_client/client_mock";
 
@@ -26,14 +27,16 @@ TEST_RUNNER.run({
         await setViewport(1600, 400);
         let counter = 0;
         let serviceClient = new (class extends WebServiceClientMock {
-          public async send(request: any): Promise<any> {
+          public async send(
+            request: ClientRequestInterface<any>,
+          ): Promise<any> {
             assertThat(request.descriptor, eq(GET_CHAT_HISTORY), "service");
             counter++;
             switch (counter) {
               case 1:
                 assertThat(
                   request.body,
-                  eqMessage({}, GET_CHAT_HISTORY_REQUEST),
+                  eqMessage({}, GET_CHAT_HISTORY_REQUEST_BODY),
                   `1st cursor`,
                 );
                 return {
@@ -55,7 +58,7 @@ TEST_RUNNER.run({
                     {
                       cursor: "a cursor",
                     },
-                    GET_CHAT_HISTORY_REQUEST,
+                    GET_CHAT_HISTORY_REQUEST_BODY,
                   ),
                   `2nd cursor`,
                 );
@@ -78,7 +81,7 @@ TEST_RUNNER.run({
                     {
                       cursor: "new cursor",
                     },
-                    GET_CHAT_HISTORY_REQUEST,
+                    GET_CHAT_HISTORY_REQUEST_BODY,
                   ),
                   `3rd cursor`,
                 );

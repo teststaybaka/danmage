@@ -1,8 +1,7 @@
 import {
-  GET_USER,
   GetUserResponse,
-  UPDATE_NICKNAME,
-  UPDATE_NICKNAME_REQUEST,
+  UPDATE_NICKNAME_REQUEST_BODY,
+  UpdateNicknameResponse,
 } from "../../../interface/service";
 import { normalizeBody } from "../../body_normalizer";
 import { NicknamePage } from "./nickname_page";
@@ -13,8 +12,8 @@ import {
 } from "@selfage/puppeteer_test_executor_api";
 import { TEST_RUNNER, TestCase } from "@selfage/puppeteer_test_runner";
 import { asyncAssertScreenshot } from "@selfage/screenshot_test_matcher";
-import { assertThat, eq } from "@selfage/test_matcher";
-import { WebServiceClient } from "@selfage/web_service_client";
+import { assertThat } from "@selfage/test_matcher";
+import { WebServiceClientMock } from "@selfage/web_service_client/client_mock";
 
 normalizeBody();
 
@@ -27,33 +26,13 @@ TEST_RUNNER.run({
       public async execute() {
         // Prepare
         await setViewport(1600, 400);
-        let serviceClient = new (class extends WebServiceClient {
-          public constructor() {
-            super(undefined, undefined);
-          }
-          public async send(request: any): Promise<any> {
-            if (request.descriptor === GET_USER) {
-              return {
-                user: {},
-              } as GetUserResponse as any;
-            } else if (request.descriptor === UPDATE_NICKNAME) {
-              assertThat(
-                request.body,
-                eqMessage(
-                  {
-                    newName: "new name",
-                  },
-                  UPDATE_NICKNAME_REQUEST,
-                ),
-                `new name`,
-              );
-              return {} as any;
-            }
-          }
-        })();
+        let serviceClientMock = new WebServiceClientMock();
+        serviceClientMock.response = {
+          user: {},
+        } as GetUserResponse;
 
         // Execute
-        this.cut = new NicknamePage(serviceClient);
+        this.cut = new NicknamePage(serviceClientMock);
         document.body.appendChild(this.cut.body);
         await new Promise<void>((resolve) => this.cut.once("loaded", resolve));
 
@@ -65,12 +44,23 @@ TEST_RUNNER.run({
         );
 
         // Prepare
+        serviceClientMock.response = {} as UpdateNicknameResponse;
         this.cut.input.val.value = "new name";
 
         // Execute
         this.cut.setButton.val.click();
 
-        // Verified by service client mock.
+        // Verified
+        assertThat(
+          serviceClientMock.request.body,
+          eqMessage(
+            {
+              newName: "new name",
+            },
+            UPDATE_NICKNAME_REQUEST_BODY,
+          ),
+          "update request",
+        );
         await asyncAssertScreenshot(
           __dirname + "/nickname_page_updated.png",
           __dirname + "/golden/nickname_page_updated.png",
@@ -87,20 +77,13 @@ TEST_RUNNER.run({
       public async execute() {
         // Prepare
         await setViewport(1600, 400);
-        let serviceClient = new (class extends WebServiceClient {
-          public constructor() {
-            super(undefined, undefined);
-          }
-          public async send(request: any): Promise<any> {
-            assertThat(request.descriptor, eq(GET_USER), "service descriptor");
-            return {
-              user: { nickname: "some name" },
-            } as GetUserResponse as any;
-          }
-        })();
+        let serviceClientMock = new WebServiceClientMock();
+        serviceClientMock.response = {
+          user: { nickname: "some name" },
+        } as GetUserResponse;
 
         // Execute
-        this.cut = new NicknamePage(serviceClient);
+        this.cut = new NicknamePage(serviceClientMock);
         await new Promise<void>((resolve) => this.cut.once("loaded", resolve));
 
         // Verify
@@ -120,36 +103,26 @@ TEST_RUNNER.run({
       public async execute() {
         // Prepare
         await setViewport(1600, 400);
-        let updateRequested = false;
-        let serviceClient = new (class extends WebServiceClient {
-          public constructor() {
-            super(undefined, undefined);
-          }
-          public async send(request: any): Promise<any> {
-            if (request.descriptor === GET_USER) {
-              return {
-                user: {},
-              } as GetUserResponse as any;
-            } else {
-              updateRequested = true;
-              assertThat(
-                request.descriptor,
-                eq(UPDATE_NICKNAME),
-                "update service",
-              );
-            }
-          }
-        })();
-
-        // Execute
-        this.cut = new NicknamePage(serviceClient);
+        let serviceClientMock = new WebServiceClientMock();
+        serviceClientMock.response = {
+          user: {},
+        } as GetUserResponse;
+        this.cut = new NicknamePage(serviceClientMock);
         document.body.append(this.cut.body);
         await new Promise<void>((resolve) => this.cut.once("loaded", resolve));
+        serviceClientMock.response = {} as UpdateNicknameResponse;
+
+        // Execute
+        this.cut.input.val.value = "new name";
         this.cut.input.val.focus();
         await keyboardDown("Enter");
 
         // Verify
-        assertThat(updateRequested, eq(true), `click called`);
+        assertThat(
+          serviceClientMock.request.body,
+          eqMessage({ newName: "new name" }, UPDATE_NICKNAME_REQUEST_BODY),
+          `click called`,
+        );
       }
       public tearDown() {
         this.cut.remove();

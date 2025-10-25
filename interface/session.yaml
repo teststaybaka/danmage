@@ -1,0 +1,6 @@
+- kind: Message
+  name: UserSession
+  fields:
+    - name: userId
+      type: string
+      index: 1

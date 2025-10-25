@@ -80,7 +80,7 @@ export class DanmakuElement extends EventEmitter {
     super();
     this.body = E.div({
       class: "danmaku-element",
-      style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; bottom: 100%; right: 0; padding: .2rem 1.5rem .2rem 0; line-height: normal; z-index: 10; white-space: nowrap; visibility: hidden;`,
+      style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; bottom: 100%; right: 0; padding: .125rem 1rem .125rem 0; line-height: normal; z-index: 10; white-space: nowrap; visibility: hidden;`,
     });
     this.render();
     this.leaveToResume();

@@ -1,0 +1,18 @@
+entries:
+  - source: frontend/chrome_extension/background/main
+    output: background/index
+  - source: frontend/chrome_extension/content_script/main_prod
+    output: content_script/index
+extraAssets:
+  - from: frontend/chrome_extension/manifest.json
+    to: manifest.json
+  - from: frontend/chrome_extension/image/app_icon.png
+    to: image/app_icon.png
+  - from: frontend/chrome_extension/_locales/en/messages.json
+    to: _locales/en/messages.json
+  - from: frontend/chrome_extension/_locales/ja/messages.json
+    to: _locales/ja/messages.json
+  - from: frontend/chrome_extension/_locales/zh_CN/messages.json
+    to: _locales/zh_CN/messages.json
+  - from: frontend/chrome_extension/_locales/zh_TW/messages.json
+    to: _locales/zh_TW/messages.json

@@ -1,0 +1,15 @@
+- kind: Enum
+  name: Page
+  values:
+    - name: HOME
+      value: 1
+    - name: NICKNAME
+      value: 2
+    - name: HISTORY
+      value: 3
+- kind: Message
+  name: BodyRl
+  fields:
+    - name: page
+      type: Page
+      index: 1

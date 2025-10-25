@@ -1,9 +1,0 @@
-[{
-  "name": "UserSession",
-  "message": {
-    "fields": [{
-      "name": "userId",
-      "type": "string"
-    }]
-  }
-}]

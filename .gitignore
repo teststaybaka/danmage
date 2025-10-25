@@ -1,7 +1,8 @@
 node_modules/
 bin/
 chrome_extension_bin/
-web_app_resources.json
+web_app_resources.yaml
+favicon.ico
 *.d.ts
 *.js
 *.tsbuildinfo

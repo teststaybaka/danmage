@@ -3,10 +3,9 @@ import {
   PlayerSettings,
 } from "../../../../interface/player_settings";
 import {
-  getPlayerSettings,
-  updatePlayerSettings,
+  newGetPlayerSettingsRequest,
+  newUpdatePlayerSettingsRequest,
 } from "../../../client_requests";
-import { SERVICE_CLIENT } from "../../common/service_client";
 import {
   BOTTOM_MARGIN_RANGE,
   DENSITY_RANGE,
@@ -21,16 +20,25 @@ import {
   SPEED_RANGE,
   TOP_MARGIN_RANGE,
 } from "./defaults";
+import { SERVICE_CLIENT } from "./service_client";
 import { parseMessage } from "@selfage/message/parser";
+import { WebServiceClient } from "@selfage/web_service_client";
 
 export class PlayerSettingsStorage {
+  public static create(): PlayerSettingsStorage {
+    return new PlayerSettingsStorage(SERVICE_CLIENT);
+  }
+
   private static NAME = "PlayerSettings";
+
+  public constructor(private serviceClient: WebServiceClient) {}
 
   public async read(): Promise<PlayerSettings> {
     let playerSettings: PlayerSettings;
     try {
-      playerSettings = (await getPlayerSettings(SERVICE_CLIENT, {}))
-        .playerSettings;
+      playerSettings = (
+        await this.serviceClient.send(newGetPlayerSettingsRequest({}))
+      ).playerSettings;
     } catch (e) {
       playerSettings = parseMessage(
         JSON.parse(localStorage.getItem(PlayerSettingsStorage.NAME)),
@@ -101,10 +109,12 @@ export class PlayerSettingsStorage {
       PlayerSettingsStorage.NAME,
       JSON.stringify(playerSettings),
     );
-    await updatePlayerSettings(SERVICE_CLIENT, {
-      playerSettings,
-    });
+    await this.serviceClient.send(
+      newUpdatePlayerSettingsRequest({
+        playerSettings,
+      }),
+    );
   }
 }
 
-export let PLAYER_SETTINGS_STORAGE = new PlayerSettingsStorage();
+export let PLAYER_SETTINGS_STORAGE = PlayerSettingsStorage.create();

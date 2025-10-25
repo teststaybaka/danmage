@@ -1,35 +1,40 @@
 import {
-  GetPlayerSettingsRequest,
+  GetPlayerSettingsRequestBody,
   GetPlayerSettingsResponse,
 } from "../interface/service";
-import { UserSession } from "../interface/session";
-import { DATASTORE_CLIENT } from "./datastore/client";
-import { PLAYER_SETTINGS_MODEL } from "./datastore/player_settings_model";
+import { DATASTORE_CLIENT } from "./datastore_client";
 import { GetPlayerSettingsHandlerInterface } from "./server_handlers";
-import { DatastoreClient } from "@selfage/datastore_client";
+import { SessionExtractor } from "./session_signer";
+import { Datastore } from "@google-cloud/datastore";
 
 export class GetPlayerSettingsHandler extends GetPlayerSettingsHandlerInterface {
   public static create(): GetPlayerSettingsHandler {
-    return new GetPlayerSettingsHandler(DATASTORE_CLIENT);
+    return new GetPlayerSettingsHandler(
+      DATASTORE_CLIENT,
+      SessionExtractor.create(),
+    );
   }
 
-  public constructor(private datastoreClient: DatastoreClient) {
+  public constructor(
+    private datastoreClient: Datastore,
+    private sessionExtractor: SessionExtractor,
+  ) {
     super();
   }
 
   public async handle(
     loggingPrefix: string,
-    body: GetPlayerSettingsRequest,
-    auth: UserSession,
+    body: GetPlayerSettingsRequestBody,
+    auth: string,
   ): Promise<GetPlayerSettingsResponse> {
-    let playerSettingsList = await this.datastoreClient.get(
-      [auth.userId],
-      PLAYER_SETTINGS_MODEL,
+    let session = this.sessionExtractor.extractSessionData(loggingPrefix, auth);
+    let [playerSettings] = await this.datastoreClient.get(
+      this.datastoreClient.key(["PlayerSettings", session.userId]),
     );
-    if (playerSettingsList.length === 0) {
+    if (!playerSettings) {
       return {};
     } else {
-      return { playerSettings: playerSettingsList[0] };
+      return { playerSettings };
     }
   }
 }

@@ -1,33 +1,46 @@
 import {
-  UpdatePlayerSettingsRequest,
+  UpdatePlayerSettingsRequestBody,
   UpdatePlayerSettingsResponse,
 } from "../interface/service";
-import { UserSession } from "../interface/session";
-import { DATASTORE_CLIENT } from "./datastore/client";
-import { PLAYER_SETTINGS_MODEL } from "./datastore/player_settings_model";
+import { DATASTORE_CLIENT } from "./datastore_client";
 import { UpdatePlayerSettingsHandlerInterface } from "./server_handlers";
-import { DatastoreClient } from "@selfage/datastore_client";
+import { SessionExtractor } from "./session_signer";
+import { Datastore } from "@google-cloud/datastore";
+import { newBadRequestError } from "@selfage/http_error";
 
 export class UpdatePlayerSettingsHandler extends UpdatePlayerSettingsHandlerInterface {
   public static create(): UpdatePlayerSettingsHandler {
-    return new UpdatePlayerSettingsHandler(DATASTORE_CLIENT);
+    return new UpdatePlayerSettingsHandler(
+      DATASTORE_CLIENT,
+      SessionExtractor.create(),
+    );
   }
 
-  public constructor(private datastoreClient: DatastoreClient) {
+  public constructor(
+    private datastoreClient: Datastore,
+    private sessionExtractor: SessionExtractor,
+  ) {
     super();
   }
 
   public async handle(
     loggingPrefix: string,
-    body: UpdatePlayerSettingsRequest,
-    auth: UserSession,
+    body: UpdatePlayerSettingsRequestBody,
+    auth: string,
   ): Promise<UpdatePlayerSettingsResponse> {
-    body.playerSettings.userId = auth.userId;
-    await this.datastoreClient.save(
-      [body.playerSettings],
-      PLAYER_SETTINGS_MODEL,
-      "upsert",
-    );
+    if (!body.playerSettings) {
+      throw newBadRequestError(`"playerSettings" is required.`);
+    }
+    let session = this.sessionExtractor.extractSessionData(loggingPrefix, auth);
+    body.playerSettings.userId = session.userId;
+    await this.datastoreClient.save({
+      key: this.datastoreClient.key([
+        "PlayerSettings",
+        body.playerSettings.userId,
+      ]),
+      data: body.playerSettings,
+      method: "upsert",
+    });
     return {};
   }
 }

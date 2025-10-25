@@ -1,11 +1,13 @@
 indexes:
   - kind: ChatEntry
+    ancestor: no
     properties:
       - name: hostApp
         direction: asc
       - name: hostContentId
         direction: asc
   - kind: ChatEntry
+    ancestor: no
     properties:
       - name: userId
         direction: asc

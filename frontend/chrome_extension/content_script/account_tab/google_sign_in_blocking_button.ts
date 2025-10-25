@@ -23,7 +23,7 @@ export class GoogleSignInBlockingButton extends BlockingButton {
       E.div(
         {
           class: "body-header-sign-in-text",
-          style: `font-family: initial !important; padding: 0 .8rem; font-size: ${FONT_M}rem; color: ${GOOGLE_BUTTON_TEXT_COLOR};`,
+          style: `font-family: initial !important; padding: 0 .5rem; font-size: ${FONT_M}rem; color: ${GOOGLE_BUTTON_TEXT_COLOR};`,
         },
         E.text(chrome.i18n.getMessage("signInButton")),
       ),

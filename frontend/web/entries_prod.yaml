@@ -1,0 +1,12 @@
+entries:
+  - source: frontend/web/main/main_prod
+    output: index
+  - source: frontend/web/oauth_callback/main
+    output: oauth_callback
+  - source: frontend/web/privacy/main
+    output: privacy
+  - source: frontend/web/terms/main
+    output: terms
+extraAssets:
+  - from: /frontend/web/favicon.ico
+    to: favicon.ico

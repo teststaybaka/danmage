@@ -12,8 +12,8 @@ export class HomePage {
     return new HomePage();
   }
 
-  private static FONT_SIZE = "2rem";
-  private static MAX_WIDTH = "128rem";
+  private static FONT_SIZE = "1.25rem";
+  private static MAX_WIDTH = "80rem";
 
   public body: HTMLDivElement;
 

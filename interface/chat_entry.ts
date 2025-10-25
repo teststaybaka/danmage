@@ -1,4 +1,4 @@
-import { EnumDescriptor, MessageDescriptor, PrimitiveType } from '@selfage/message/descriptor';
+import { EnumDescriptor, PrimitiveType, MessageDescriptor } from '@selfage/message/descriptor';
 
 export enum HostApp {
   YouTube = 1,
@@ -8,20 +8,16 @@ export enum HostApp {
 
 export let HOST_APP: EnumDescriptor<HostApp> = {
   name: 'HostApp',
-  values: [
-    {
-      name: 'YouTube',
-      value: 1,
-    },
-    {
-      name: 'Crunchyroll',
-      value: 2,
-    },
-    {
-      name: 'Netflix',
-      value: 3,
-    },
-  ]
+  values: [{
+    name: 'YouTube',
+    value: 1,
+  }, {
+    name: 'Crunchyroll',
+    value: 2,
+  }, {
+    name: 'Netflix',
+    value: 3,
+  }]
 }
 
 export interface ChatEntry {
@@ -31,46 +27,43 @@ export interface ChatEntry {
   userId?: string,
   userNickname?: string,
   content?: string,
-/* If absent, the chat entry is essentially a comment. */
   timestamp?: number,
-/* Seconds since epoch. */
   created?: number,
 }
 
 export let CHAT_ENTRY: MessageDescriptor<ChatEntry> = {
   name: 'ChatEntry',
-  fields: [
-    {
-      name: 'id',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'hostApp',
-      enumType: HOST_APP,
-    },
-    {
-      name: 'hostContentId',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'userId',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'userNickname',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'content',
-      primitiveType: PrimitiveType.STRING,
-    },
-    {
-      name: 'timestamp',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-    {
-      name: 'created',
-      primitiveType: PrimitiveType.NUMBER,
-    },
-  ]
+  fields: [{
+    name: 'id',
+    index: 1,
+    primitiveType: PrimitiveType.STRING,
+  }, {
+    name: 'hostApp',
+    index: 2,
+    enumType: HOST_APP,
+  }, {
+    name: 'hostContentId',
+    index: 3,
+    primitiveType: PrimitiveType.STRING,
+  }, {
+    name: 'userId',
+    index: 4,
+    primitiveType: PrimitiveType.STRING,
+  }, {
+    name: 'userNickname',
+    index: 5,
+    primitiveType: PrimitiveType.STRING,
+  }, {
+    name: 'content',
+    index: 6,
+    primitiveType: PrimitiveType.STRING,
+  }, {
+    name: 'timestamp',
+    index: 7,
+    primitiveType: PrimitiveType.NUMBER,
+  }, {
+    name: 'created',
+    index: 8,
+    primitiveType: PrimitiveType.NUMBER,
+  }],
 };

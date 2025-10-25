@@ -1,0 +1,25 @@
+- kind: Message
+  name: GetUrlRequest
+- kind: Message
+  name: GetUrlResponse
+  fields:
+    - name: url
+      type: string
+      index: 1
+- kind: Message
+  name: GetAuthTokenRequest
+- kind: Message
+  name: GetAuthTokenResponse
+  fields:
+    - name: accessToken
+      type: string
+      index: 1
+- kind: Message
+  name: BackgroundRequest
+  fields:
+    - name: getUrlRequest
+      type: GetUrlRequest
+      index: 1
+    - name: getAuthTokenRequest
+      type: GetAuthTokenRequest
+      index: 2

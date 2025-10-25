@@ -1,9 +1,10 @@
 import EventEmitter = require("events");
+import { ENV_VARS } from "../../../../env_vars";
 import { FILLED_BUTTON_STYLE } from "../../../button_styles";
-import { getUser } from "../../../client_requests";
+import { newGetUserRequest } from "../../../client_requests";
 import { ColorScheme } from "../../../color_scheme";
 import { FONT_M } from "../../../font_sizes";
-import { SERVICE_CLIENT } from "../../common/service_client";
+import { SERVICE_CLIENT } from "../common/service_client";
 import { E } from "@selfage/element/factory";
 import { Ref } from "@selfage/ref";
 import { WebServiceClient } from "@selfage/web_service_client";
@@ -21,39 +22,38 @@ export class WelcomeTab extends EventEmitter {
   private welcomeText = new Ref<HTMLDivElement>();
   public signOutButton = new Ref<HTMLDivElement>();
 
-  public constructor(
-    private serviceClient: WebServiceClient,
-  ) {
+  public constructor(private serviceClient: WebServiceClient) {
     super();
     this.body = E.div(
       {
         class: "welcome-container",
         style: `display: flex; flex-flow: column nowrap; justify-content: center; align-items: center; width: 100%; height: 100%;`,
       },
-      E.divRef(this.welcomeText, {
+      E.div({
+        ref: this.welcomeText,
         class: "welcome-text",
-        style: `font-size: ${FONT_M}rem; line-height: 140%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()}; text-align: center;`,
+        style: `font-size: ${FONT_M}rem; line-height: 140%; font-family: initial !important; margin-bottom: 1.25rem; color: ${ColorScheme.getContent()}; text-align: center;`,
       }),
       E.div(
         {
           class: "welcome-promo",
-          style: `font-size: ${FONT_M}rem; line-height: 140%; font-family: initial !important; margin-bottom: 2rem; color: ${ColorScheme.getContent()}; text-align: center;`,
+          style: `font-size: ${FONT_M}rem; line-height: 140%; font-family: initial !important; margin-bottom: 1.25rem; color: ${ColorScheme.getContent()}; text-align: center;`,
         },
         E.text(chrome.i18n.getMessage("firstExplanation")),
         E.a(
           {
             class: "weclome-promo-link",
             style: `color: ${ColorScheme.getLinkContent()};`,
-            href: "https://www.danmage.com",
+            href: ENV_VARS.externalOrigin,
             target: "_blank",
           },
-          E.text("www.danmage.com"),
+          E.text(ENV_VARS.externalDomain),
         ),
         E.text(chrome.i18n.getMessage("secondExplanation")),
       ),
-      E.divRef(
-        this.signOutButton,
+      E.div(
         {
+          ref: this.signOutButton,
           class: "welcome-sign-out",
           style: FILLED_BUTTON_STYLE,
         },
@@ -62,12 +62,14 @@ export class WelcomeTab extends EventEmitter {
     );
     this.load();
 
-    this.signOutButton.val.addEventListener("click", () => this.emit("signOut"));
+    this.signOutButton.val.addEventListener("click", () =>
+      this.emit("signOut"),
+    );
   }
 
   private async load(): Promise<void> {
     this.welcomeText.val.textContent = chrome.i18n.getMessage("welcomeMessage");
-    let response = await getUser(this.serviceClient, {});
+    let response = await this.serviceClient.send(newGetUserRequest({}));
     if (response.user.nickname) {
       this.welcomeText.val.textContent =
         chrome.i18n.getMessage("welcomeWithNameMessage") +

@@ -1,24 +1,13 @@
-import { ORIGIN_LOCAL, ORIGIN_PROD } from "../../../common";
 import { normalizeBody } from "../../body_normalizer";
 import { ColorScheme } from "../../color_scheme";
 import { E } from "@selfage/element/factory";
-import "../../../environment";
 
 function main(): void {
   normalizeBody();
 
-  let origin = "";
-  if (globalThis.ENVIRONMENT === "prod") {
-    origin = ORIGIN_PROD;
-  } else if (globalThis.ENVIRONMENT === "local") {
-    origin = ORIGIN_LOCAL;
-  } else {
-    throw new Error("Unsupported environment.");
-  }
-
   let body = E.div({
     class: "privacy",
-    style: `padding: 5rem; font-size: 1.7rem; color: ${ColorScheme.getContent()};`,
+    style: `padding: 2.5rem; font-size: 1rem; color: ${ColorScheme.getContent()};`,
   });
   document.body.appendChild(body);
   body.innerHTML = `

@@ -1,18 +1,19 @@
+import "../local/env";
 import { SIGN_IN_RESPONSE } from "../interface/service";
-import { USER, User } from "../interface/user";
+import { USER_SESSION, UserSession } from "../interface/session";
+import { USER } from "../interface/user";
+import { DATASTORE_CLIENT } from "./datastore_client";
+import { SessionBuilder } from "./session_signer";
 import { SignInHandler } from "./sign_in_handler";
 import { Counter } from "@selfage/counter";
-import { DatastoreClient } from "@selfage/datastore_client";
 import { HttpError } from "@selfage/http_error";
 import { eqMessage } from "@selfage/message/test_matcher";
-import { SessionBuilder } from "@selfage/service_handler/session_signer";
 import {
   assertReject,
   assertThat,
   containStr,
   eq,
   eqError,
-  isArray,
 } from "@selfage/test_matcher";
 import { TEST_RUNNER } from "@selfage/test_runner";
 
@@ -26,11 +27,7 @@ TEST_RUNNER.run({
         let counter = new Counter<string>();
         let handler = new SignInHandler(
           new Set(["some client id"]),
-          new (class extends DatastoreClient {
-            public constructor() {
-              super(undefined);
-            }
-          })(),
+          DATASTORE_CLIENT,
           new (class extends SessionBuilder {
             public constructor() {
               super(undefined, undefined);
@@ -69,11 +66,7 @@ TEST_RUNNER.run({
         // Prepare
         let handler = new SignInHandler(
           new Set(["some client id"]),
-          new (class extends DatastoreClient {
-            public constructor() {
-              super(undefined);
-            }
-          })(),
+          DATASTORE_CLIENT,
           new (class extends SessionBuilder {
             public constructor() {
               super(undefined, undefined);
@@ -107,11 +100,7 @@ TEST_RUNNER.run({
         // Prepare
         let handler = new SignInHandler(
           new Set(["some client id", "some other id"]),
-          new (class extends DatastoreClient {
-            public constructor() {
-              super(undefined);
-            }
-          })(),
+          DATASTORE_CLIENT,
           new (class extends SessionBuilder {
             public constructor() {
               super(undefined, undefined);
@@ -146,42 +135,16 @@ TEST_RUNNER.run({
         let counter = new Counter<string>();
         let handler = new SignInHandler(
           new Set(["some client id", "some other id"]),
-          new (class extends DatastoreClient {
-            public constructor() {
-              super(undefined);
-            }
-            public get(ids: Array<string>, model: any) {
-              counter.increment("get");
-              assertThat(ids, isArray([eq("google-8rXL")]), "ids");
-              return Promise.resolve([]);
-            }
-            public save(users: Array<User>, model: any) {
-              counter.increment("save");
-              assertThat(
-                users,
-                isArray([
-                  eqMessage(
-                    {
-                      id: "google-8rXL",
-                      created: 10,
-                    },
-                    USER,
-                  ),
-                ]),
-                "users",
-              );
-              return Promise.resolve();
-            }
-          })(),
+          DATASTORE_CLIENT,
           new (class extends SessionBuilder {
             public constructor() {
               super(undefined, undefined);
             }
-            public build(sessionStr: string) {
+            public build(data: UserSession) {
               counter.increment("build");
               assertThat(
-                sessionStr,
-                eq('{"userId":"google-8rXL"}'),
+                data,
+                eqMessage({ userId: "google-8rXL" }, USER_SESSION),
                 "session string",
               );
               return "signed random session";
@@ -208,8 +171,20 @@ TEST_RUNNER.run({
         });
 
         // Verify
-        assertThat(counter.get("get"), eq(1), "get called");
-        assertThat(counter.get("save"), eq(1), "save called");
+        let [user] = await DATASTORE_CLIENT.get(
+          DATASTORE_CLIENT.key(["User", "google-8rXL"]),
+        );
+        assertThat(
+          user,
+          eqMessage(
+            {
+              id: "google-8rXL",
+              created: 10000,
+            },
+            USER,
+          ),
+          "user stored in datastore",
+        );
         assertThat(counter.get("build"), eq(1), "build called");
         assertThat(
           response,
@@ -222,33 +197,33 @@ TEST_RUNNER.run({
           "signInResponse",
         );
       },
+      tearDown: async () => {
+        await DATASTORE_CLIENT.delete(
+          DATASTORE_CLIENT.key(["User", "google-8rXL"]),
+        );
+      },
     },
     {
       name: "ExistingUser",
       execute: async () => {
         // Prepare
+        await DATASTORE_CLIENT.save({
+          key: DATASTORE_CLIENT.key(["User", "google-8rXL"]),
+          data: {
+            id: "google-8rXL",
+            created: 20000,
+          },
+          method: "insert",
+        });
         let counter = new Counter<string>();
         let handler = new SignInHandler(
           new Set(["some client id", "some other id"]),
-          new (class extends DatastoreClient {
-            public constructor() {
-              super(undefined);
-            }
-            public get(ids: Array<string>, model: any) {
-              counter.increment("get");
-              assertThat(ids, isArray([eq("google-8rXL")]), "ids");
-              return Promise.resolve([{ id: "anything" } as any]);
-            }
-            public save(users: Array<User>, model: any) {
-              counter.increment("save");
-              return Promise.resolve();
-            }
-          })(),
+          DATASTORE_CLIENT,
           new (class extends SessionBuilder {
             public constructor() {
               super(undefined, undefined);
             }
-            public build(sessionStr: string) {
+            public build(data: UserSession) {
               counter.increment("build");
               return "signed random session";
             }
@@ -274,8 +249,20 @@ TEST_RUNNER.run({
         });
 
         // Verify
-        assertThat(counter.get("get"), eq(1), "get called");
-        assertThat(counter.get("save"), eq(0), "save not called");
+        let [user] = await DATASTORE_CLIENT.get(
+          DATASTORE_CLIENT.key(["User", "google-8rXL"]),
+        );
+        assertThat(
+          user,
+          eqMessage(
+            {
+              id: "google-8rXL",
+              created: 20000,
+            },
+            USER,
+          ),
+          "user stored in datastore",
+        );
         assertThat(counter.get("build"), eq(1), "build called");
         assertThat(
           response,
@@ -286,6 +273,11 @@ TEST_RUNNER.run({
             SIGN_IN_RESPONSE,
           ),
           "signInResponse",
+        );
+      },
+      tearDown: async () => {
+        await DATASTORE_CLIENT.delete(
+          DATASTORE_CLIENT.key(["User", "google-8rXL"]),
         );
       },
     },

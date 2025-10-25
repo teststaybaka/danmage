@@ -1,18 +1,28 @@
-import { PostChatRequest, PostChatResponse } from "../interface/service";
-import { UserSession } from "../interface/session";
-import { CHAT_ENTRY_MODEL } from "./datastore/chat_entry_model";
-import { DATASTORE_CLIENT } from "./datastore/client";
-import { USER_MODEL } from "./datastore/user_model";
+import { CHAT_CONTENT_MAX_LENGTH } from "../common";
+import { PostChatRequestBody, PostChatResponse } from "../interface/service";
+import { DATASTORE_CLIENT } from "./datastore_client";
 import { PostChatHandlerInterface } from "./server_handlers";
-import { DatastoreClient } from "@selfage/datastore_client";
+import { SessionExtractor } from "./session_signer";
+import { Datastore } from "@google-cloud/datastore";
+import {
+  newBadRequestError,
+  newInternalServerErrorError,
+} from "@selfage/http_error";
 
 export class PostChatHandler extends PostChatHandlerInterface {
   public static create(): PostChatHandler {
-    return new PostChatHandler(DATASTORE_CLIENT, () => Date.now());
+    return new PostChatHandler(
+      DATASTORE_CLIENT,
+      SessionExtractor.create(),
+      () => crypto.randomUUID(),
+      () => Date.now(),
+    );
   }
 
   public constructor(
-    private datastoreClient: DatastoreClient,
+    private datastoreClient: Datastore,
+    private sessionExtractor: SessionExtractor,
+    private generateUuid: () => string,
     private getNow: () => number,
   ) {
     super();
@@ -20,20 +30,48 @@ export class PostChatHandler extends PostChatHandlerInterface {
 
   public async handle(
     loggingPrefix: string,
-    body: PostChatRequest,
-    auth: UserSession,
+    body: PostChatRequestBody,
+    auth: string,
   ): Promise<PostChatResponse> {
-    let users = await this.datastoreClient.get([auth.userId], USER_MODEL);
-    let user = users[0];
+    if (!body.chatEntry) {
+      throw newBadRequestError(`"chatEntry" is required.`);
+    }
+    if (!body.chatEntry.hostApp) {
+      throw newBadRequestError(`"chatEntry.hostApp" is required.`);
+    }
+    if (!body.chatEntry.hostContentId) {
+      throw newBadRequestError(`"chatEntry.hostContentId" is required.`);
+    }
+    if (!body.chatEntry.content) {
+      throw newBadRequestError(`"chatEntry.content" is required.`);
+    }
+    if (body.chatEntry.content.length > CHAT_CONTENT_MAX_LENGTH) {
+      throw newBadRequestError(
+        `"chatEntry.content" must be less than ${CHAT_CONTENT_MAX_LENGTH} characters long.`,
+      );
+    }
+    if (!body.chatEntry.timestamp) {
+      throw newBadRequestError(`"chatEntry.timestamp" is required.`);
+    }
+    let session = this.sessionExtractor.extractSessionData(loggingPrefix, auth);
+    let [user] = await this.datastoreClient.get(
+      this.datastoreClient.key(["User", session.userId]),
+    );
+    if (!user) {
+      throw newInternalServerErrorError(
+        `User with ID ${session.userId} not found in datastore.`,
+      );
+    }
+    body.chatEntry.id = this.generateUuid();
     body.chatEntry.userId = user.id;
     body.chatEntry.userNickname = user.nickname;
     body.chatEntry.timestamp = Math.floor(body.chatEntry.timestamp);
     body.chatEntry.created = Math.floor(this.getNow() / 1000);
-    let chatEntries = await this.datastoreClient.allocateKeys(
-      [body.chatEntry],
-      CHAT_ENTRY_MODEL,
-    );
-    await this.datastoreClient.save(chatEntries, CHAT_ENTRY_MODEL, "insert");
-    return { chatEntry: chatEntries[0] };
+    await this.datastoreClient.save({
+      key: this.datastoreClient.key(["ChatEntry", body.chatEntry.id]),
+      data: body.chatEntry,
+      method: "insert",
+    });
+    return { chatEntry: body.chatEntry };
   }
 }

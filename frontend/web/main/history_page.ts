@@ -1,7 +1,7 @@
 import EventEmitter = require("events");
 import { HostApp } from "../../../interface/chat_entry";
 import { TextBlockingButton } from "../../blocking_button";
-import { getChatHistory } from "../../client_requests";
+import { newGetChatHistoryRequest } from "../../client_requests";
 import { ColorScheme } from "../../color_scheme";
 import { FONT_L } from "../../font_sizes";
 import { formatTimestamp } from "../../timestamp_formatter";
@@ -41,9 +41,9 @@ export class HistoryPage extends EventEmitter {
         class: "history-container",
         style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center;`,
       },
-      E.divRef(
-        this.entryListContainer,
+      E.div(
         {
+          ref: this.entryListContainer,
           class: "history-entry-list",
           style: `width: 100%;`,
         },
@@ -58,7 +58,7 @@ export class HistoryPage extends EventEmitter {
       ),
       assign(
         this.showMoreButton,
-        TextBlockingButton.create(`margin: 1rem 0;`)
+        TextBlockingButton.create(`margin: .5rem 0;`)
           .append(E.text(LOCALIZED_TEXT.showMoreChatsButton))
           .enable(),
       ).body,
@@ -85,12 +85,12 @@ export class HistoryPage extends EventEmitter {
     return E.div(
       {
         class: "history-entry-container",
-        style: `display: flex; flex-flow: row nowrap; width: 100%; padding: .8rem; box-sizing: border-box; font-size: ${FONT_L}rem; color: ${ColorScheme.getContent()}; background-color: ${backgroundColor};`,
+        style: `display: flex; flex-flow: row nowrap; width: 100%; padding: .5rem; box-sizing: border-box; font-size: ${FONT_L}rem; color: ${ColorScheme.getContent()}; background-color: ${backgroundColor};`,
       },
       E.div(
         {
           class: "history-entry-host-app",
-          style: `flex: 2 0 0; padding-right: .5rem; word-break: break-all;`,
+          style: `flex: 2 0 0; padding-right: .25rem; word-break: break-all;`,
           title: hostAppStr,
         },
         E.text(hostAppStr),
@@ -98,7 +98,7 @@ export class HistoryPage extends EventEmitter {
       E.div(
         {
           class: "history-entry-host-content-id",
-          style: `flex: 3 0 0; padding-right: .5rem; word-break: break-all;`,
+          style: `flex: 3 0 0; padding-right: .25rem; word-break: break-all;`,
           title: hostContentIdStr,
         },
         E.text(hostContentIdStr),
@@ -106,7 +106,7 @@ export class HistoryPage extends EventEmitter {
       E.div(
         {
           class: "histroy-entry-timestamp",
-          style: `flex: 2 0 0; padding-right: .5rem; word-break: break-all;`,
+          style: `flex: 2 0 0; padding-right: .25rem; word-break: break-all;`,
           title: timestampStr,
         },
         E.text(timestampStr),
@@ -114,7 +114,7 @@ export class HistoryPage extends EventEmitter {
       E.div(
         {
           class: "histroy-entry-content",
-          style: `flex: 15 0 0; padding-right: .5rem; word-break: break-all;`,
+          style: `flex: 15 0 0; padding-right: .25rem; word-break: break-all;`,
           title: contentStr,
         },
         E.text(contentStr),
@@ -131,9 +131,11 @@ export class HistoryPage extends EventEmitter {
   }
 
   private async loadMore(): Promise<void> {
-    let response = await getChatHistory(this.serviceClient, {
-      cursor: this.cursor,
-    });
+    let response = await this.serviceClient.send(
+      newGetChatHistoryRequest({
+        cursor: this.cursor,
+      }),
+    );
     for (let chatEntry of response.chatEntries) {
       let mod = this.entryListContainer.val.childElementCount % 2;
       let timestampStr = formatTimestamp(chatEntry.timestamp);

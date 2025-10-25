@@ -1,0 +1,143 @@
+- kind: Service
+  name: DanmakuService
+  path: /
+- kind: Message
+  name: SignInRequestBody
+  fields:
+    - name: googleAccessToken
+      type: string
+      index: 1
+- kind: Message
+  name: SignInResponse
+  fields:
+    - name: signedSession
+      type: string
+      index: 1
+- kind: Message
+  name: GetUserRequestBody
+- kind: Message
+  name: GetUserResponse
+  fields:
+    - name: user
+      type: User
+      import: ./interface/user
+      index: 1
+- kind: Message
+  name: PostChatRequestBody
+  fields:
+    - name: chatEntry
+      type: ChatEntry
+      import: ./interface/chat_entry
+      index: 1
+- kind: Message
+  name: PostChatResponse
+  fields:
+    - name: chatEntry
+      type: ChatEntry
+      import: ./interface/chat_entry
+      index: 1
+- kind: Message
+  name: GetChatRequestBody
+  fields:
+    - name: hostApp
+      type: HostApp
+      import: ./interface/chat_entry
+      index: 1
+    - name: hostContentId
+      type: string
+      index: 2
+- kind: Message
+  name: GetChatResponse
+  fields:
+    - name: chatEntries
+      type: ChatEntry
+      import: ./interface/chat_entry
+      isArray: true
+      index: 1
+- kind: Message
+  name: GetChatHistoryRequestBody
+  fields:
+    - name: cursor
+      type: string
+      index: 1
+- kind: Message
+  name: GetChatHistoryResponse
+  fields:
+    - name: chatEntries
+      type: ChatEntry
+      import: ./interface/chat_entry
+      isArray: true
+      index: 1
+    - name: cursor
+      type: string
+      index: 2
+- kind: Message
+  name: UpdatePlayerSettingsRequestBody
+  fields:
+    - name: playerSettings
+      type: PlayerSettings
+      import: ./interface/player_settings
+      index: 1
+- kind: Message
+  name: UpdatePlayerSettingsResponse
+- kind: Message
+  name: GetPlayerSettingsRequestBody
+- kind: Message
+  name: GetPlayerSettingsResponse
+  fields:
+    - name: playerSettings
+      type: PlayerSettings
+      import: ./interface/player_settings
+      index: 1
+- kind: Message
+  name: UpdateNicknameRequestBody
+  fields:
+    - name: newName
+      type: string
+      index: 1
+- kind: Message
+  name: UpdateNicknameResponse
+- kind: RemoteCallsGroup
+  name: DanmakuRemoteCalls
+  service: DanmakuService
+  calls:
+    - name: SignIn
+      path: /SignIn
+      body: SignInRequestBody
+      response: SignInResponse
+    - name: GetUser
+      path: /GetUser
+      body: GetUserRequestBody
+      authKey: a
+      response: GetUserResponse
+    - name: PostChat
+      path: /PostChat
+      body: PostChatRequestBody
+      authKey: a
+      response: PostChatResponse
+    - name: GetChat
+      path: /GetChat
+      body: GetChatRequestBody
+      response: GetChatResponse
+    - name: GetChatHistory
+      path: /GetChatHistory
+      body: GetChatHistoryRequestBody
+      authKey: a
+      response: GetChatHistoryResponse
+    - name: UpdatePlayerSettings
+      path: /UpdatePlayerSettings
+      body: UpdatePlayerSettingsRequestBody
+      authKey: a
+      response: UpdatePlayerSettingsResponse
+    - name: GetPlayerSettings
+      path: /GetPlayerSettings
+      body: GetPlayerSettingsRequestBody
+      authKey: a
+      response: GetPlayerSettingsResponse
+    - name: UpdateNickname
+      path: /UpdateNickname
+      body: UpdateNicknameRequestBody
+      authKey: a
+      response: UpdateNicknameResponse
+  outputClient: ./frontend/client_requests
+  outputHandler: ./backend/server_handlers

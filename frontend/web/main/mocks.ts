@@ -3,7 +3,6 @@ import {
   GetChatHistoryResponse,
   GetUserResponse,
 } from "../../../interface/service";
-import { FeedbackPage } from "./feedback_page";
 import { HistoryPage } from "./history_page";
 import { HomePage } from "./home_page";
 import { NicknamePage } from "./nickname_page";
@@ -12,12 +11,6 @@ import { WebServiceClientMock } from "@selfage/web_service_client/client_mock";
 export class HomePageMock extends HomePage {
   public constructor() {
     super();
-  }
-}
-
-export class FeedbackPageMock extends FeedbackPage {
-  public constructor() {
-    super(undefined);
   }
 }
 

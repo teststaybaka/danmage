@@ -1,0 +1,12 @@
+- kind: Message
+  name: User
+  fields:
+    - name: id
+      type: string
+      index: 1
+    - name: nickname
+      type: string
+      index: 2
+    - name: created
+      type: number
+      index: 3

@@ -5,8 +5,7 @@ export interface GetUrlRequest {
 
 export let GET_URL_REQUEST: MessageDescriptor<GetUrlRequest> = {
   name: 'GetUrlRequest',
-  fields: [
-  ]
+  fields: [],
 };
 
 export interface GetUrlResponse {
@@ -15,12 +14,11 @@ export interface GetUrlResponse {
 
 export let GET_URL_RESPONSE: MessageDescriptor<GetUrlResponse> = {
   name: 'GetUrlResponse',
-  fields: [
-    {
-      name: 'url',
-      primitiveType: PrimitiveType.STRING,
-    },
-  ]
+  fields: [{
+    name: 'url',
+    index: 1,
+    primitiveType: PrimitiveType.STRING,
+  }],
 };
 
 export interface GetAuthTokenRequest {
@@ -28,8 +26,7 @@ export interface GetAuthTokenRequest {
 
 export let GET_AUTH_TOKEN_REQUEST: MessageDescriptor<GetAuthTokenRequest> = {
   name: 'GetAuthTokenRequest',
-  fields: [
-  ]
+  fields: [],
 };
 
 export interface GetAuthTokenResponse {
@@ -38,12 +35,11 @@ export interface GetAuthTokenResponse {
 
 export let GET_AUTH_TOKEN_RESPONSE: MessageDescriptor<GetAuthTokenResponse> = {
   name: 'GetAuthTokenResponse',
-  fields: [
-    {
-      name: 'accessToken',
-      primitiveType: PrimitiveType.STRING,
-    },
-  ]
+  fields: [{
+    name: 'accessToken',
+    index: 1,
+    primitiveType: PrimitiveType.STRING,
+  }],
 };
 
 export interface BackgroundRequest {
@@ -53,14 +49,13 @@ export interface BackgroundRequest {
 
 export let BACKGROUND_REQUEST: MessageDescriptor<BackgroundRequest> = {
   name: 'BackgroundRequest',
-  fields: [
-    {
-      name: 'getUrlRequest',
-      messageType: GET_URL_REQUEST,
-    },
-    {
-      name: 'getAuthTokenRequest',
-      messageType: GET_AUTH_TOKEN_REQUEST,
-    },
-  ]
+  fields: [{
+    name: 'getUrlRequest',
+    index: 1,
+    messageType: GET_URL_REQUEST,
+  }, {
+    name: 'getAuthTokenRequest',
+    index: 2,
+    messageType: GET_AUTH_TOKEN_REQUEST,
+  }],
 };

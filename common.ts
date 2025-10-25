@@ -1,2 +1,3 @@
-export let ORIGIN_PROD = "https://www.danmage.com";
-export let ORIGIN_LOCAL = "http://localhost:8080";
+export let NICKNAME_MIN_LENGTH = 3;
+export let NICKNAME_MAX_LENGTH = 30;
+export let CHAT_CONTENT_MAX_LENGTH = 500;

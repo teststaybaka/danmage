@@ -6,7 +6,7 @@ export let GOOGLE_BUTTON_TEXT_COLOR = `white`;
 export function createGoogleIcon(): SVGSVGElement {
   let icon = E.svg({
     class: "body-header-google-icon",
-    style: `width: 4rem; height: 4rem; background-color: white;`,
+    style: `width: 2.5rem; height: 2.5rem; background-color: white;`,
     viewBox: "3 3 40 40",
   });
   icon.innerHTML = `<!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->

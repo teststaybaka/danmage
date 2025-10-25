@@ -1,6 +1,9 @@
 import EventEmitter = require("events");
 import { FilledBlockingButton } from "../../blocking_button";
-import { getUser, updateNickname } from "../../client_requests";
+import {
+  newGetUserRequest,
+  newUpdateNicknameRequest,
+} from "../../client_requests";
 import { INPUT_STYLE, LABEL_STYLE, SIDE_PADDING } from "./common_style";
 import { LOCALIZED_TEXT } from "./locales/localized_text";
 import { SERVICE_CLIENT } from "./service_client";
@@ -31,14 +34,15 @@ export class NicknamePage extends EventEmitter {
       E.div(
         {
           class: "nickname-input-line",
-          style: `display: flex; flex-flow: row nowrap; width: 100%; align-items: center; justify-content: center; padding-bottom: 6rem;`,
+          style: `display: flex; flex-flow: row nowrap; width: 100%; align-items: center; justify-content: center; padding-bottom: 4rem;`,
         },
         E.div({ style: "flex: 2;" }),
         E.div(
           { class: "nickname-label", style: LABEL_STYLE },
           E.text(LOCALIZED_TEXT.nicknameInputLabel),
         ),
-        E.inputRef(this.input, {
+        E.input({
+          ref: this.input,
           class: "nickname-input",
           placeholder: "You can only set it once.",
           style: INPUT_STYLE,
@@ -59,7 +63,7 @@ export class NicknamePage extends EventEmitter {
   }
 
   public async load(): Promise<void> {
-    let response = await getUser(this.serviceClient, {});
+    let response = await this.serviceClient.send(newGetUserRequest({}));
     if (response.user.nickname === undefined) {
       this.emit("loaded");
       return;
@@ -78,10 +82,11 @@ export class NicknamePage extends EventEmitter {
   }
 
   public async updateNickname(): Promise<void> {
-    await updateNickname(this.serviceClient, {
-      newName: this.input.val.value,
-    });
-
+    await this.serviceClient.send(
+      newUpdateNicknameRequest({
+        newName: this.input.val.value,
+      }),
+    );
     this.input.val.readOnly = true;
     this.setButton.val.hide();
   }

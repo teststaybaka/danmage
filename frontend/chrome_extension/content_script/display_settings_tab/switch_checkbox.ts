@@ -21,7 +21,7 @@ export class SwitchCheckbox extends EventEmitter {
     return new SwitchCheckbox(label, defaultValue, value);
   }
 
-  private static RADIUS = ".9rem";
+  private static RADIUS = 0.5; // in rem
   private static TRANSITION_DURATION = ".3s";
 
   public body: HTMLDivElement;
@@ -45,37 +45,38 @@ export class SwitchCheckbox extends EventEmitter {
         { class: "switch-checkbox-label", style: LABEL_STYLE, title: label },
         E.text(label),
       ),
-      E.divRef(
-        this.switchBarWrapper,
+      E.div(
         {
+          ref: this.switchBarWrapper,
           class: "switch-checkbox-wrapper",
           style: `position: relative; ${INPUT_WIDTH_STYLE} cursor: pointer;`,
         },
-        E.divRef(this.switchBarLeft, {
+        E.div({
+          ref: this.switchBarLeft,
           class: "switch-checkbox-bar-left",
-          style: `display: inline-block; height: 1.8rem; border-radius: ${
+          style: `display: inline-block; height: 1rem; border-radius: ${
             SwitchCheckbox.RADIUS
-          } 0 0 ${
+          }rem 0 0 ${
             SwitchCheckbox.RADIUS
-          }; background-color: ${ColorScheme.getSwitchOffBackground()}; transition: width ${
+          }rem; background-color: ${ColorScheme.getSwitchOffBackground()}; transition: width ${
             SwitchCheckbox.TRANSITION_DURATION
           };`,
         }),
-        E.divRef(this.switchBarRight, {
+        E.div({
+          ref: this.switchBarRight,
           class: "switch-checkbox-bar-right",
-          style: `display: inline-block; height: 1.8rem; border-radius: 0 ${
+          style: `display: inline-block; height: 1rem; border-radius: 0 ${
             SwitchCheckbox.RADIUS
-          } ${
+          }rem ${
             SwitchCheckbox.RADIUS
-          } 0; background-color: ${ColorScheme.getSwitchOnBackground()}; transition: width ${
+          }rem 0; background-color: ${ColorScheme.getSwitchOnBackground()}; transition: width ${
             SwitchCheckbox.TRANSITION_DURATION
           };`,
         }),
-        E.divRef(this.switchCircle, {
+        E.div({
+          ref: this.switchCircle,
           class: "switch-checkbox-circle",
-          style: `position: absolute; height: 1.8rem; width: 1.8rem; box-sizing: border-box; top: 0; left: -${
-            SwitchCheckbox.RADIUS
-          }; background-color: ${ColorScheme.getBackground()}; border: .1rem solid ${ColorScheme.getInputBorder()}; border-radius: 50%; transition: margin-left ${
+          style: `position: absolute; height: 1rem; width: 1rem; box-sizing: border-box; top: 0; background-color: ${ColorScheme.getBackground()}; border: .0625rem solid ${ColorScheme.getInputBorder()}; border-radius: 50%; transition: margin-left ${
             SwitchCheckbox.TRANSITION_DURATION
           };`,
         }),
@@ -91,13 +92,13 @@ export class SwitchCheckbox extends EventEmitter {
   private setValue(value: boolean): void {
     this.value = value;
     if (this.value) {
-      this.switchBarLeft.val.style.width = SwitchCheckbox.RADIUS;
-      this.switchBarRight.val.style.width = `calc(100% - ${SwitchCheckbox.RADIUS})`;
-      this.switchCircle.val.style.marginLeft = SwitchCheckbox.RADIUS;
+      this.switchBarLeft.val.style.width = `${SwitchCheckbox.RADIUS}rem`;
+      this.switchBarRight.val.style.width = `calc(100% - ${SwitchCheckbox.RADIUS}rem)`;
+      this.switchCircle.val.style.marginLeft = "0px";
     } else {
-      this.switchBarLeft.val.style.width = `calc(100% - ${SwitchCheckbox.RADIUS})`;
-      this.switchBarRight.val.style.width = SwitchCheckbox.RADIUS;
-      this.switchCircle.val.style.marginLeft = `calc(100% - ${SwitchCheckbox.RADIUS})`;
+      this.switchBarLeft.val.style.width = `calc(100% - ${SwitchCheckbox.RADIUS}rem)`;
+      this.switchBarRight.val.style.width = `${SwitchCheckbox.RADIUS}rem`;
+      this.switchCircle.val.style.marginLeft = `calc(100% - ${SwitchCheckbox.RADIUS * 2}rem)`;
     }
   }
 

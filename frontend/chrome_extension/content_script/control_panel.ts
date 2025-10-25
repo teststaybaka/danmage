@@ -54,9 +54,9 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 4rem; width: 4rem;`,
+      `position: relative; height: 2.5rem; width: 2.5rem;`,
       "var(--yt-live-chat-header-button-color)",
-      "top: 4rem; right: 0;",
+      "top: 2.5rem; right: 0;",
       false,
       globalDocuments,
       playerSettings,
@@ -69,9 +69,9 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: absolute; height: 3rem; width: 3rem; right: 1rem;`,
+      `position: absolute; height: 2rem; width: 2rem; right: .75rem;`,
       "currentColor",
-      "top: 3rem; right: 0;",
+      "top: 2rem; right: 0;",
       false,
       globalDocuments,
       playerSettings,
@@ -84,9 +84,9 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 3rem; width: 3rem;`,
+      `position: relative; height: 2rem; width: 2rem;`,
       "currentColor",
-      "bottom: 3rem; right: 0;",
+      "bottom: 2rem; right: 0;",
       false,
       globalDocuments,
       playerSettings,
@@ -99,16 +99,16 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 4rem; width: 4rem;`,
+      `position: relative; height: 2.5rem; width: 2.5rem;`,
       "white",
-      "bottom: 4rem; right: 0;",
+      "bottom: 2.5rem; right: 0;",
       true,
       globalDocuments,
       playerSettings,
     );
   }
 
-  private static TAB_BUTTON_WIDTH = 2.4;
+  private static TAB_BUTTON_WIDTH = 1.5; // rem
   private static WIDTH_TRANSITION_STYLE = "width .3s";
 
   public body: HTMLDivElement;
@@ -205,9 +205,9 @@ export class ControlPanel extends EventEmitter {
         class: "control-panel-container",
         style: `display: inline-block; text-align: left; text-shadow: none; vertical-align: top; font-size: 0; line-height: 0; ${elementStyle}`,
       },
-      E.divRef(
-        this.controlPanelButton,
+      E.div(
         {
+          ref: this.controlPanelButton,
           class: "control-panel-button",
           style: `height: 100%; padding: 22%; box-sizing: border-box; cursor: pointer;`,
         },
@@ -223,15 +223,18 @@ export class ControlPanel extends EventEmitter {
           }),
         ),
       ),
-      E.divRef(
-        this.controlPanelPopup,
+      E.div(
         {
+          ref: this.controlPanelPopup,
           class: "control-panel-control-panel-popup",
-          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 30rem; height: 38rem; padding: .3rem; box-sizing: content-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 0.1rem 0.1rem 0.3rem ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
+          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 20rem; height: 24rem; padding: .25rem; box-sizing: border-box; background-color: ${ColorScheme.getBackground()}; box-shadow: .0625rem .0625rem .25rem ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
         },
-        E.divRef(
-          this.tabHeadLine,
-          { class: "control-panel-tab-head-line", style: `width: 100%;` },
+        E.div(
+          {
+            ref: this.tabHeadLine,
+            class: "control-panel-tab-head-line",
+            style: `width: 100%;`,
+          },
           ...tabHeads,
         ),
         E.div(
@@ -281,9 +284,6 @@ export class ControlPanel extends EventEmitter {
       this.togglePopup(),
     );
     this.globalDocuments.hideWhenMousedown(this.body, () => this.hidePopup());
-    this.globalDocuments.onKeydown((event) =>
-      this.toggleEnableScrolling(event),
-    );
   }
 
   private static createTabHead(
@@ -294,13 +294,13 @@ export class ControlPanel extends EventEmitter {
     let head = E.div(
       {
         class: "control-panel-tab-head",
-        style: `display: inline-flex; align-items: center; border-radius: .5rem .5rem 0 0; transition: ${ControlPanel.WIDTH_TRANSITION_STYLE}; overflow: hidden;`,
+        style: `display: inline-flex; align-items: center; border-radius: .25rem .25rem 0 0; transition: ${ControlPanel.WIDTH_TRANSITION_STYLE}; overflow: hidden;`,
       },
-      E.divRef(
-        tabButton,
+      E.div(
         {
+          ref: tabButton,
           class: "control-panel-tab-button",
-          style: `flex-shrink: 0; height: ${ControlPanel.TAB_BUTTON_WIDTH}rem; padding: .3rem; box-sizing: border-box; cursor: pointer;`,
+          style: `flex-shrink: 0; height: ${ControlPanel.TAB_BUTTON_WIDTH}rem; padding: .125rem; box-sizing: border-box; cursor: pointer;`,
         },
         E.svg(
           {
@@ -407,19 +407,6 @@ export class ControlPanel extends EventEmitter {
     }
     this.emit("updateBlockSettings");
     this.playerSettingsStorage.save(this.playerSettings);
-  }
-
-  public toggleEnableScrolling(event: KeyboardEvent): void {
-    if (event.code !== "KeyD") {
-      return;
-    }
-    if ((event.target as HTMLElement).isContentEditable) {
-      return;
-    }
-    if (event.target instanceof HTMLInputElement) {
-      return;
-    }
-    this.displaySettingsTab.val.toggleEnableChange();
   }
 
   public addChats(chatEntries: ChatEntry[]): void {

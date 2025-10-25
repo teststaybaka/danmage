@@ -1,29 +1,36 @@
-import { GetChatRequest, GetChatResponse } from "../interface/service";
-import { HostContentQueryBuilder } from "./datastore/chat_entry_model";
-import { DATASTORE_CLIENT } from "./datastore/client";
+import { GetChatRequestBody, GetChatResponse } from "../interface/service";
+import { DATASTORE_CLIENT } from "./datastore_client";
 import { GetChatHandlerInterface } from "./server_handlers";
-import { DatastoreClient } from "@selfage/datastore_client";
+import { Datastore, PropertyFilter } from "@google-cloud/datastore";
+import { newBadRequestError } from "@selfage/http_error";
 
 export class GetChatHandler extends GetChatHandlerInterface {
   public static create(): GetChatHandler {
     return new GetChatHandler(DATASTORE_CLIENT);
   }
 
-  public constructor(private datastoreClient: DatastoreClient) {
+  public constructor(private datastoreClient: Datastore) {
     super();
   }
 
   public async handle(
     loggingPrefix: string,
-    body: GetChatRequest,
+    body: GetChatRequestBody,
   ): Promise<GetChatResponse> {
-    let query = new HostContentQueryBuilder()
-      .equalToHostApp(body.hostApp)
-      .equalToHostContentId(body.hostContentId)
-      .build();
-    let { values } = await this.datastoreClient.query(query);
+    if (!body.hostApp) {
+      throw newBadRequestError(`"hostApp" is required.`);
+    }
+    if (!body.hostContentId) {
+      throw newBadRequestError(`"hostContentId" is required.`);
+    }
+    let [entities] = await this.datastoreClient.runQuery(
+      this.datastoreClient
+        .createQuery("ChatEntry")
+        .filter(new PropertyFilter("hostApp", "=", body.hostApp))
+        .filter(new PropertyFilter("hostContentId", "=", body.hostContentId)),
+    );
     return {
-      chatEntries: values,
+      chatEntries: entities,
     };
   }
 }

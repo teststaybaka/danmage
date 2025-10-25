@@ -1,11 +1,11 @@
-import { HostApp } from "../interface/chat_entry";
+import "../local/env";
+import { CHAT_ENTRY, HostApp } from "../interface/chat_entry";
 import { POST_CHAT_RESPONSE } from "../interface/service";
-import { User } from "../interface/user";
+import { DATASTORE_CLIENT } from "./datastore_client";
 import { PostChatHandler } from "./post_chat_handler";
-import { Counter } from "@selfage/counter";
-import { DatastoreClient } from "@selfage/datastore_client";
+import { SessionExtractor } from "./session_signer";
 import { eqMessage } from "@selfage/message/test_matcher";
-import { assertThat, eq, isArray } from "@selfage/test_matcher";
+import { assertThat } from "@selfage/test_matcher";
 import { TEST_RUNNER } from "@selfage/test_runner";
 
 TEST_RUNNER.run({
@@ -15,37 +15,27 @@ TEST_RUNNER.run({
       name: "PostChat",
       execute: async () => {
         // Prepare
-        let counter = new Counter<string>();
+        await DATASTORE_CLIENT.save({
+          key: DATASTORE_CLIENT.key(["User", "user1"]),
+          data: {
+            id: "user1",
+            nickname: "some name",
+            created: 5000,
+          },
+          method: "insert",
+        });
         let handler = new PostChatHandler(
-          new (class extends DatastoreClient {
+          DATASTORE_CLIENT,
+          new (class extends SessionExtractor {
             public constructor() {
               super(undefined);
             }
-            public get(ids: Array<string>) {
-              counter.increment("get");
-              assertThat(ids, isArray([eq("789")]), "get user ids");
-              return Promise.resolve([
-                {
-                  id: "789",
-                  nickname: "some name",
-                } as User as any,
-              ]);
-            }
-            public allocateKeys(entries: Array<any>) {
-              counter.increment("allocateKeys");
-              assertThat(entries.length, eq(1), "entries length to allocate");
-              entries[0].id = "901";
-              return Promise.resolve(entries);
-            }
-            public save(entries: Array<any>) {
-              counter.increment("save");
-              assertThat(entries.length, eq(1), "entries length to save");
-              return Promise.resolve();
+            public extractSessionData(loggingPrefix: string, auth: string) {
+              return { userId: "user1" };
             }
           })(),
-          () => {
-            return 10000;
-          },
+          () => "u-u-i-d",
+          () => 10000,
         );
 
         // Execute
@@ -54,27 +44,44 @@ TEST_RUNNER.run({
           {
             chatEntry: {
               hostApp: HostApp.YouTube,
-              hostContentId: "12345",
+              hostContentId: "video1",
               content: "some blabla",
               timestamp: 567,
             },
           },
-          { userId: "789" },
+          "some auth token",
         );
 
         // Verify
-        assertThat(counter.get("get"), eq(1), "get called");
-        assertThat(counter.get("allocateKeys"), eq(1), "allocateKeys called");
-        assertThat(counter.get("save"), eq(1), "save called");
+        let [chatEntry] = await DATASTORE_CLIENT.get(
+          DATASTORE_CLIENT.key(["ChatEntry", "u-u-i-d"]),
+        );
+        assertThat(
+          chatEntry,
+          eqMessage(
+            {
+              id: "u-u-i-d",
+              hostApp: HostApp.YouTube,
+              hostContentId: "video1",
+              userId: "user1",
+              userNickname: "some name",
+              content: "some blabla",
+              timestamp: 567,
+              created: 10,
+            },
+            CHAT_ENTRY,
+          ),
+          "stored chat entry",
+        );
         assertThat(
           response,
           eqMessage(
             {
               chatEntry: {
-                id: "901",
+                id: "u-u-i-d",
                 hostApp: HostApp.YouTube,
-                hostContentId: "12345",
-                userId: "789",
+                hostContentId: "video1",
+                userId: "user1",
                 userNickname: "some name",
                 content: "some blabla",
                 timestamp: 567,
@@ -85,6 +92,12 @@ TEST_RUNNER.run({
           ),
           "response",
         );
+      },
+      tearDown: async () => {
+        await DATASTORE_CLIENT.delete([
+          DATASTORE_CLIENT.key(["User", "user1"]),
+          DATASTORE_CLIENT.key(["ChatEntry", "u-u-i-d"]),
+        ]);
       },
     },
   ],

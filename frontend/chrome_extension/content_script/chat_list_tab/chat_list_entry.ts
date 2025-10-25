@@ -27,7 +27,7 @@ export class ChatListEntry extends EventEmitter {
     this.body = E.div(
       {
         class: "chat-list-entry",
-        style: `position: relative; padding: .4rem 0; line-height: 100%; font-size: ${FONT_M}rem; font-family: initial !important; word-break: break-all;`,
+        style: `position: relative; padding: .25rem 0; line-height: 100%; font-size: ${FONT_M}rem; font-family: initial !important; word-break: break-all;`,
       },
       E.text(`${chatEntry.userNickname}: ${chatEntry.content}`),
     );

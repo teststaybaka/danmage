@@ -4,9 +4,9 @@ import { BlockSettings } from "../../../../interface/player_settings";
 import { FilledBlockingButton } from "../../../blocking_button";
 import { ColorScheme } from "../../../color_scheme";
 import { FONT_M } from "../../../font_sizes";
-import { LOCAL_SESSION_STORAGE } from "../../common/local_session_storage";
 import { CustomTextInputController } from "../common/custom_text_input_controller";
 import { LinkedList } from "../common/linked_list";
+import { LOCAL_SESSION_STORAGE } from "../common/local_session_storage";
 import { TAB_SIDE_PADDING } from "../common/styles";
 import { ChatListEntry } from "./chat_list_entry";
 import { E } from "@selfage/element/factory";
@@ -49,7 +49,8 @@ export class ChatListTab extends EventEmitter {
           class: "chat-list-tab-entry-list-container",
           style: `flex-grow: 1; position: relative;`,
         },
-        E.divRef(this.entryList, {
+        E.div({
+          ref: this.entryList,
           class: "chat-list-tab-entry-list",
           style: `position: absolute; bottom: 0; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%; max-height: 100%; overflow-y: auto;`,
         }),
@@ -59,9 +60,10 @@ export class ChatListTab extends EventEmitter {
           class: "chat-list-tab-fire-form",
           style: `display: flex; flex-flow: row nowrap; align-items: center;  padding: 0 ${TAB_SIDE_PADDING};`,
         },
-        E.inputRef(this.chatInput, {
+        E.input({
+          ref: this.chatInput,
           class: "chat-list-tab-input",
-          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin-right: 1rem; font-size: ${FONT_M}rem; line-height: 3rem; border-bottom: .1rem solid ${ColorScheme.getInputBorder()}; font-family: initial !important; color: ${ColorScheme.getContent()};`,
+          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin-right: .5rem; font-size: ${FONT_M}rem; line-height: 2rem; border-bottom: .0625rem solid ${ColorScheme.getInputBorder()}; font-family: initial !important; color: ${ColorScheme.getContent()};`,
         }),
         assign(
           this.fireButton,

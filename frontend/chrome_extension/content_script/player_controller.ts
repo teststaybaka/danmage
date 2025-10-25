@@ -1,7 +1,6 @@
 import { ChatEntry, HostApp } from "../../../interface/chat_entry";
 import { PlayerSettings } from "../../../interface/player_settings";
-import { getChat, postChat } from "../../client_requests";
-import { SERVICE_CLIENT } from "../common/service_client";
+import { newGetChatRequest, newPostChatRequest } from "../../client_requests";
 import {
   ChatPool,
   StructuredChatPool,
@@ -9,6 +8,7 @@ import {
   YouTubeChatPool,
 } from "./chat_pool";
 import { GlobalDocuments } from "./common/global_documents";
+import { SERVICE_CLIENT } from "./common/service_client";
 import { ControlPanel } from "./control_panel";
 import {
   ControlPanelAttacher,
@@ -245,10 +245,12 @@ export class PlayerController {
     }
 
     let videoIdBeforeLoad = this.videoId;
-    let response = await getChat(this.serviceClient, {
-      hostApp: this.hostApp,
-      hostContentId: this.videoId,
-    });
+    let response = await this.serviceClient.send(
+      newGetChatRequest({
+        hostApp: this.hostApp,
+        hostContentId: this.videoId,
+      }),
+    );
     if (videoIdBeforeLoad !== this.videoId) {
       return;
     }
@@ -267,9 +269,11 @@ export class PlayerController {
     chatEntry.hostContentId = this.videoId;
 
     let videoIdBeforeLoad = this.videoId;
-    let response = await postChat(this.serviceClient, {
-      chatEntry: chatEntry,
-    });
+    let response = await this.serviceClient.send(
+      newPostChatRequest({
+        chatEntry: chatEntry,
+      }),
+    );
     if (videoIdBeforeLoad !== this.videoId) {
       return;
     }

@@ -1,1 +1,1 @@
-export let TAB_SIDE_PADDING = `1rem`;
+export let TAB_SIDE_PADDING = `.5rem`;

@@ -6,6 +6,7 @@ import {
 } from "../../../../interface/player_settings";
 import { FILLED_BUTTON_STYLE } from "../../../button_styles";
 import { ColorScheme } from "../../../color_scheme";
+import { FONT_M } from "../../../font_sizes";
 import { CustomTextInputController } from "../common/custom_text_input_controller";
 import { DropdownList } from "../common/dropdown_list";
 import { TAB_SIDE_PADDING } from "../common/styles";
@@ -39,12 +40,12 @@ export class BlockSettingsTab extends EventEmitter {
       E.div(
         {
           class: "block-settings-tab-input-container",
-          style: `display: flex; flex-flow: row nowrap; align-items: center; margin-top: .7rem; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%;`,
+          style: `display: flex; flex-flow: row nowrap; align-items: center; margin-top: .5rem; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%;`,
         },
         assign(
           this.dropdownList,
           DropdownList.create(
-            ".8rem",
+            ".5rem",
             [
               {
                 kind: BlockKind.KeywordBlockKind,
@@ -63,23 +64,25 @@ export class BlockSettingsTab extends EventEmitter {
             BlockKind.KeywordBlockKind,
           ),
         ).body,
-        E.inputRef(this.patternInput, {
+        E.input({
+          ref: this.patternInput,
           class: "block-settings-tab-pattern-input",
-          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin: 0 1rem; line-height: 3rem; font-size: 1.4rem; font-family: initial !important; color: ${ColorScheme.getContent()}; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
+          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin: 0 .75rem; line-height: 2rem; font-size: ${FONT_M}rem; font-family: initial !important; color: ${ColorScheme.getContent()}; border-bottom: .0625rem solid ${ColorScheme.getInputBorder()};`,
           placeHolder: chrome.i18n.getMessage("blockRuleInputPlaceHolder"),
         }),
-        E.divRef(
-          this.submitButton,
+        E.div(
           {
+            ref: this.submitButton,
             class: "block-settings-tab-pattern-submit",
             style: FILLED_BUTTON_STYLE,
           },
           E.text(chrome.i18n.getMessage("addBlockRuleButton")),
         ),
       ),
-      E.divRef(this.blockEntryList, {
+      E.div({
+        ref: this.blockEntryList,
         class: "block-settings-tab-block-entry-list",
-        style: `flex-grow: 1; width: 100%; margin-top: .7rem; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; overflow-y: auto;`,
+        style: `flex-grow: 1; width: 100%; margin-top: .5rem; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; overflow-y: auto;`,
       }),
     );
     this.patternInputController = CustomTextInputController.create(

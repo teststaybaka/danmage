@@ -40,7 +40,8 @@ export class TextInput extends EventEmitter {
         { class: "text-input-label", style: LABEL_STYLE, title: label },
         E.text(label),
       ),
-      E.inputRef(this.input, {
+      E.input({
+        ref: this.input,
         class: "text-input",
         style: TEXT_INPUT_STYLE,
         value: value,

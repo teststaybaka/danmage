@@ -25,7 +25,7 @@ export class DropdownEntry<T> extends EventEmitter {
     this.body = E.div(
       {
         class: "dropdown-entry",
-        style: `padding: .3rem 0; font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important;`,
+        style: `padding: .125rem 0; font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important;`,
       },
       E.text(this.optionEntry.localizedMsg),
     );
@@ -87,25 +87,26 @@ export class DropdownList<T> extends EventEmitter {
     this.body = E.div(
       {
         class: "dropdown-list-container",
-        style: `flex: 0 0 auto; position: relative; cursor: pointer; border-bottom: .1rem solid ${ColorScheme.getInputBorder()};`,
+        style: `flex: 0 0 auto; position: relative; cursor: pointer; border-bottom: .0625rem solid ${ColorScheme.getInputBorder()};`,
       },
       E.div(
         {
           class: "dropdown-list-selected-option",
           style: `display: flex; flex-flow: row nowrap; align-items: center;`,
         },
-        E.divRef(this.selectedOption, {
+        E.div({
+          ref: this.selectedOption,
           class: "dropdown-list-selected-option-text",
-          style: `padding: ${verticalPadding} .4rem ${verticalPadding} 0; font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; color: ${ColorScheme.getContent()};`,
+          style: `padding: ${verticalPadding} .25rem ${verticalPadding} 0; font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; color: ${ColorScheme.getContent()};`,
         }),
         E.div({
           class: "dropdown-list-option-arrow",
-          style: `border-left: .4rem solid transparent; border-right: .4rem solid transparent; border-top: .8rem solid ${ColorScheme.getInputBorder()};`,
+          style: `border-left: .25rem solid transparent; border-right: .25rem solid transparent; border-top: .5rem solid ${ColorScheme.getInputBorder()};`,
         }),
       ),
-      E.divRef(
-        this.optionList,
+      E.div(
         {
+          ref: this.optionList,
           class: "dropdown-list-option-list",
           style: `position: absolute; width: 100%; background-color: ${ColorScheme.getBackground()}; z-index: 1;`,
         },

@@ -1,92 +1,74 @@
-import { WebServiceClientInterface } from '@selfage/service_descriptor/web_service_client_interface';
-import { SignInRequest, SignInResponse, SIGN_IN, GetUserRequest, GetUserResponse, GET_USER, PostChatRequest, PostChatResponse, POST_CHAT, GetChatRequest, GetChatResponse, GET_CHAT, GetChatHistoryRequest, GetChatHistoryResponse, GET_CHAT_HISTORY, UpdatePlayerSettingsRequest, UpdatePlayerSettingsResponse, UPDATE_PLAYER_SETTINGS, GetPlayerSettingsRequest, GetPlayerSettingsResponse, GET_PLAYER_SETTINGS, UpdateNicknameRequest, UpdateNicknameResponse, UPDATE_NICKNAME, ReportUserIssueRequest, ReportUserIssueResponse, REPORT_USER_ISSUE } from '../interface/service';
+import { SignInRequestBody, SignInResponse, SIGN_IN, GetUserRequestBody, GetUserResponse, GET_USER, PostChatRequestBody, PostChatResponse, POST_CHAT, GetChatRequestBody, GetChatResponse, GET_CHAT, GetChatHistoryRequestBody, GetChatHistoryResponse, GET_CHAT_HISTORY, UpdatePlayerSettingsRequestBody, UpdatePlayerSettingsResponse, UPDATE_PLAYER_SETTINGS, GetPlayerSettingsRequestBody, GetPlayerSettingsResponse, GET_PLAYER_SETTINGS, UpdateNicknameRequestBody, UpdateNicknameResponse, UPDATE_NICKNAME } from '../interface/service';
+import { ClientRequestInterface } from '@selfage/service_descriptor/client_request_interface';
 
-export function signIn(
-  client: WebServiceClientInterface,
-  body: SignInRequest,
-): Promise<SignInResponse> {
-  return client.send({
+export function newSignInRequest(
+  body: SignInRequestBody,
+): ClientRequestInterface<SignInResponse> {
+  return {
     descriptor: SIGN_IN,
     body,
-  });
+  };
 }
 
-export function getUser(
-  client: WebServiceClientInterface,
-  body: GetUserRequest,
-): Promise<GetUserResponse> {
-  return client.send({
+export function newGetUserRequest(
+  body: GetUserRequestBody,
+): ClientRequestInterface<GetUserResponse> {
+  return {
     descriptor: GET_USER,
     body,
-  });
+  };
 }
 
-export function postChat(
-  client: WebServiceClientInterface,
-  body: PostChatRequest,
-): Promise<PostChatResponse> {
-  return client.send({
+export function newPostChatRequest(
+  body: PostChatRequestBody,
+): ClientRequestInterface<PostChatResponse> {
+  return {
     descriptor: POST_CHAT,
     body,
-  });
+  };
 }
 
-export function getChat(
-  client: WebServiceClientInterface,
-  body: GetChatRequest,
-): Promise<GetChatResponse> {
-  return client.send({
+export function newGetChatRequest(
+  body: GetChatRequestBody,
+): ClientRequestInterface<GetChatResponse> {
+  return {
     descriptor: GET_CHAT,
     body,
-  });
+  };
 }
 
-export function getChatHistory(
-  client: WebServiceClientInterface,
-  body: GetChatHistoryRequest,
-): Promise<GetChatHistoryResponse> {
-  return client.send({
+export function newGetChatHistoryRequest(
+  body: GetChatHistoryRequestBody,
+): ClientRequestInterface<GetChatHistoryResponse> {
+  return {
     descriptor: GET_CHAT_HISTORY,
     body,
-  });
+  };
 }
 
-export function updatePlayerSettings(
-  client: WebServiceClientInterface,
-  body: UpdatePlayerSettingsRequest,
-): Promise<UpdatePlayerSettingsResponse> {
-  return client.send({
+export function newUpdatePlayerSettingsRequest(
+  body: UpdatePlayerSettingsRequestBody,
+): ClientRequestInterface<UpdatePlayerSettingsResponse> {
+  return {
     descriptor: UPDATE_PLAYER_SETTINGS,
     body,
-  });
+  };
 }
 
-export function getPlayerSettings(
-  client: WebServiceClientInterface,
-  body: GetPlayerSettingsRequest,
-): Promise<GetPlayerSettingsResponse> {
-  return client.send({
+export function newGetPlayerSettingsRequest(
+  body: GetPlayerSettingsRequestBody,
+): ClientRequestInterface<GetPlayerSettingsResponse> {
+  return {
     descriptor: GET_PLAYER_SETTINGS,
     body,
-  });
+  };
 }
 
-export function updateNickname(
-  client: WebServiceClientInterface,
-  body: UpdateNicknameRequest,
-): Promise<UpdateNicknameResponse> {
-  return client.send({
+export function newUpdateNicknameRequest(
+  body: UpdateNicknameRequestBody,
+): ClientRequestInterface<UpdateNicknameResponse> {
+  return {
     descriptor: UPDATE_NICKNAME,
     body,
-  });
-}
-
-export function reportUserIssue(
-  client: WebServiceClientInterface,
-  body: ReportUserIssueRequest,
-): Promise<ReportUserIssueResponse> {
-  return client.send({
-    descriptor: REPORT_USER_ISSUE,
-    body,
-  });
+  };
 }

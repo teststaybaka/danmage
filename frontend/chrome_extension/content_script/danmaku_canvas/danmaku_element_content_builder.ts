@@ -1,9 +1,9 @@
 import { ChatEntry } from "../../../../interface/chat_entry";
 import { DisplaySettings } from "../../../../interface/player_settings";
 
-let FONT_SIZE_SCALE = 1 / 10;
+let FONT_SIZE_SCALE = 1 / 16;
 let TEXT_SHADOW =
-  "-.1rem 0 .1rem black, 0 .1rem .1rem black, .1rem 0 .1rem black, 0 -.1rem .1rem black";
+  "-.0625rem 0 .0625rem black, 0 .0625rem .0625rem black, .0625rem 0 .0625rem black, 0 -.0625rem .0625rem black";
 
 function removeSelectedChildElements(
   container: HTMLElement | DocumentFragment,
@@ -36,7 +36,7 @@ export class StructuredContentBuilder implements DanmakuElementContentBuilder {
   public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
     let contentHTML = `<span style="color: white; text-shadow: ${TEXT_SHADOW};">${chatEntry.content}</span>`;
     if (displaySettings.showUserName) {
-      return `<span style="color: white; margin-right: .7rem;">${chatEntry.userNickname}</span>${contentHTML}`;
+      return `<span style="color: white; margin-right: .5rem;">${chatEntry.userNickname}</span>${contentHTML}`;
     } else {
       return contentHTML;
     }
@@ -80,7 +80,7 @@ export class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
       }rem`;
       (authorName as HTMLElement).style.lineHeight = "100%";
       (authorName as HTMLElement).parentElement.style.display = "flex";
-      (authorName as HTMLElement).parentElement.style.marginRight = ".8rem";
+      (authorName as HTMLElement).parentElement.style.marginRight = ".5rem";
     }
     for (let subtext of template.content.querySelectorAll("#header-subtext")) {
       (subtext as HTMLElement).style.fontSize = `${
