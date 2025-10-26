@@ -1,7 +1,6 @@
 import { ENV_VARS } from "../../env_vars";
 
 export function getGoogleOauthUrl(redirectUrl: string): string {
-  console.log(`Google OAuth Client ID: ${ENV_VARS.googleOauthClientId}`);
   let urlBuilder = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   urlBuilder.searchParams.append("client_id", ENV_VARS.googleOauthClientId);
   urlBuilder.searchParams.append("redirect_uri", redirectUrl);

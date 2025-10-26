@@ -56,8 +56,8 @@
   ],
   "scripts": {
     "local": "bundage bws backend/main backend/main_bin -ec frontend/web/entries.json -e environment_local; node backend/main_bin",
-    "bext_linux": "bundage bwa -ec frontend/chrome_extension/entries_prod.yaml -d -o chrome_extension_bin",
-    "bext_linux_zip": "bundage bwa -ec frontend/chrome_extension/entries_prod.yaml -d -o chrome_extension_bin; cd chrome_extension_bin/; find . \\( -iname '*.gz' -o -iname '*.html' \\) -type f -delete; zip -r ../extension.zip *; cd ../",
-    "bext_firefox_linux": "bundage bwa -ec frontend/chrome_extension/entries.json -e environment_prod -o chrome_extension_bin; cp -f frontend/chrome_extension/firefox_manifest.json chrome_extension_bin/manifest.json"
+    "ext_linux": "bundage bwa -ec frontend/chrome_extension/entries_prod.yaml -d -o chrome_extension_bin",
+    "ext_linux_zip": "bundage bwa -ec frontend/chrome_extension/entries_prod.yaml -d -o chrome_extension_bin; cd chrome_extension_bin/; find . \\( -iname '*.gz' -o -iname '*.html' \\) -type f -delete; zip -r ../extension.zip *; cd ../",
+    "ext_firefox_linux_zip": "bundage bwa -ec frontend/chrome_extension/entries_prod.yaml -o chrome_extension_bin; cp -f frontend/chrome_extension/firefox_manifest.json chrome_extension_bin/manifest.json; cd chrome_extension_bin/; find . \\( -iname '*.gz' -o -iname '*.html' \\) -type f -delete; zip -r ../extension.zip *; cd ../"
   }
 }
