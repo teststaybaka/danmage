@@ -4,11 +4,7 @@
 
 DanMage is a project that brings NicoNico-style flow chat (A.K.A., scrolling chat, danmaku, danmu) to multiple video sites as both [a chrome extension](https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm) and [a firefox extension](https://addons.mozilla.org/en-US/firefox/addon/danmage), now supporting YouTube, Twitch and Crunchyroll. It's also deployed as a [website](https://www.danmage.com/), which provides minimum backend support to the extension, such as storing posted chats and player settings.
 
-To build the chrome extension, run `npm run bext` which dumps the bundled JS files into `./chrome_extension_bin` directory, which can be loaded in debug mode in browsers. It talks directly to the PROD web server.
-
-To build the firefox extension, run `npm run bext_firefox_windows` or `npm run bext_firefox_linux` depending on your OS. The only extra thing it does than `npm run bext` is to copy and rename `firefox_manifest.json` in  `./chrome_extension_bin` directory.
-
-To run the web server locally, run `npm run local` which starts at port 8080.
+If you want to see danmaku being built into a native video platform, wish list [here](https://www.secount.com/danmaku).
 
 ## Deployment
 
