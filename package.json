@@ -55,6 +55,8 @@
     ".mp4"
   ],
   "scripts": {
+    "server_prod": "bundage bns backend/main_prod main_bin -t bin",
+    "web_prod": "bundage bwa -ec frontend/web/entries_prod.yaml -b frontend/web -o bin/static",
     "ext_linux": "bundage bwa -ec frontend/chrome_extension/entries_prod.yaml -d -o chrome_extension_bin",
     "ext_linux_zip": "bundage bwa -ec frontend/chrome_extension/entries_prod.yaml -d -o chrome_extension_bin; cd chrome_extension_bin/; find . \\( -iname '*.gz' -o -iname '*.html' \\) -type f -delete; zip -r ../extension.zip *; cd ../",
     "ext_firefox_linux_zip": "bundage bwa -ec frontend/chrome_extension/entries_prod.yaml -o chrome_extension_bin; cp -f frontend/chrome_extension/firefox_manifest.json chrome_extension_bin/manifest.json; cd chrome_extension_bin/; find . \\( -iname '*.gz' -o -iname '*.html' \\) -type f -delete; zip -r ../extension.zip *; cd ../"
