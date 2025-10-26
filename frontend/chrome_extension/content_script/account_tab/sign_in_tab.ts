@@ -3,6 +3,7 @@ import { ENV_VARS } from "../../../../env_vars";
 import { BlockingButton } from "../../../blocking_button";
 import { newSignInRequest } from "../../../client_requests";
 import { ColorScheme } from "../../../color_scheme";
+import { FONT_M } from "../../../font_sizes";
 import { GET_AUTH_TOKEN_RESPONSE } from "../../interface/background_service";
 import {
   BACKGROUND_SERVICE_CLIENT,
@@ -16,7 +17,6 @@ import { parseMessage } from "@selfage/message/parser";
 import { Ref, assign } from "@selfage/ref";
 import { WebServiceClient } from "@selfage/web_service_client";
 import { LocalSessionStorage } from "@selfage/web_service_client/local_session_storage";
-import { FONT_M } from "../../../font_sizes";
 
 export interface SignInTab {
   on(event: "checkStatus", listener: () => void): this;
@@ -48,7 +48,7 @@ export class SignInTab extends EventEmitter {
       E.div(
         {
           class: "sign-in-text",
-          style: `font-size: ${FONT_M}rem; line-height: 140%; font-family: initial !important; text-align: center; margin-bottom: 1.25rem; color: ${ColorScheme.getContent()};`,
+          style: `font-size: ${FONT_M}px; line-height: 140%; font-family: initial !important; text-align: center; margin-bottom: 20px; color: ${ColorScheme.getContent()};`,
         },
         E.text(chrome.i18n.getMessage("firstSignInReminder")),
         E.a(

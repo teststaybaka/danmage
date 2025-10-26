@@ -12,8 +12,8 @@ export class HomePage {
     return new HomePage();
   }
 
-  private static FONT_SIZE = "1.25rem";
-  private static MAX_WIDTH = "80rem";
+  private static FONT_SIZE = "20px";
+  private static MAX_WIDTH = "1280px";
 
   public body: HTMLDivElement;
 
@@ -62,7 +62,7 @@ export class HomePage {
     return E.div(
       {
         class: "home-paragraph",
-        style: `display: flex; flex-flow: column nowrap; align-items: center; padding: 0 ${SIDE_PADDING}rem; background-color: ${backgroundColor};`,
+        style: `display: flex; flex-flow: column nowrap; align-items: center; padding: 0 ${SIDE_PADDING}px; background-color: ${backgroundColor};`,
       },
       HomePage.video(videoPath),
       ...textElements,
@@ -74,7 +74,7 @@ export class HomePage {
       class: "home-video",
       style: `width: 100%; max-width: ${HomePage.MAX_WIDTH}; margin: ${
         SIDE_PADDING / 2
-      }rem 0;`,
+      }px 0;`,
       src: videoPath,
     });
     v.autoplay = true;
@@ -91,7 +91,7 @@ export class HomePage {
           HomePage.FONT_SIZE
         }; max-width: ${HomePage.MAX_WIDTH}; margin-bottom: ${
           SIDE_PADDING / 2
-        }rem; color: ${color};`,
+        }px; color: ${color};`,
       },
       E.text(text),
     );
@@ -105,7 +105,7 @@ export class HomePage {
             HomePage.MAX_WIDTH
           }; margin-bottom: ${
             SIDE_PADDING / 2
-          }rem; color: ${ColorScheme.getLinkContent()}; ` +
+          }px; color: ${ColorScheme.getLinkContent()}; ` +
           `word-break: break-all; text-decoration: none;`,
         href: url,
         target: "_blank",

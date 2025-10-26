@@ -32,12 +32,12 @@ export class WelcomeTab extends EventEmitter {
       E.div({
         ref: this.welcomeText,
         class: "welcome-text",
-        style: `font-size: ${FONT_M}rem; line-height: 140%; font-family: initial !important; margin-bottom: 1.25rem; color: ${ColorScheme.getContent()}; text-align: center;`,
+        style: `font-size: ${FONT_M}px; line-height: 140%; font-family: initial !important; margin-bottom: 20px; color: ${ColorScheme.getContent()}; text-align: center;`,
       }),
       E.div(
         {
           class: "welcome-promo",
-          style: `font-size: ${FONT_M}rem; line-height: 140%; font-family: initial !important; margin-bottom: 1.25rem; color: ${ColorScheme.getContent()}; text-align: center;`,
+          style: `font-size: ${FONT_M}px; line-height: 140%; font-family: initial !important; margin-bottom: 20px; color: ${ColorScheme.getContent()}; text-align: center;`,
         },
         E.text(chrome.i18n.getMessage("firstExplanation")),
         E.a(

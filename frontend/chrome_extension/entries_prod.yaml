@@ -1,5 +1,5 @@
 entries:
-  - source: frontend/chrome_extension/background/main
+  - source: frontend/chrome_extension/background/main_prod
     output: background/index
   - source: frontend/chrome_extension/content_script/main_prod
     output: content_script/index

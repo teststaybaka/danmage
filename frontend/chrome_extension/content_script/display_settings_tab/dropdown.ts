@@ -43,7 +43,7 @@ export class Dropdown<T> extends EventEmitter {
       ),
       assign(
         this.dropdownList,
-        DropdownList.create(".25rem", optionEntries, defaultValue, value),
+        DropdownList.create("4px", optionEntries, defaultValue, value),
       ).body,
     );
 

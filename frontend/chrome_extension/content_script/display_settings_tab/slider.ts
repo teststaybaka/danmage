@@ -48,7 +48,7 @@ export class Slider extends EventEmitter {
           E.text(label),
         ),
         E.input({
-          reef: this.valueInput,
+          ref: this.valueInput,
           class: "slider-value-input",
           style: TEXT_INPUT_STYLE,
           value: `${value}`,
@@ -62,7 +62,7 @@ export class Slider extends EventEmitter {
         E.div(
           {
             class: "slider-min-value-label",
-            style: `font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; margin-right: .5rem; color: ${ColorScheme.getContent()};`,
+            style: `font-size: ${FONT_M}px; line-height: 100%; font-family: initial !important; margin-right: 8px; color: ${ColorScheme.getContent()};`,
           },
           E.text(`${numberRange.minValue}`),
         ),
@@ -74,18 +74,18 @@ export class Slider extends EventEmitter {
           },
           E.div({
             class: "slider-bar",
-            style: `height: .25rem; margin: .5rem 0; background-color: ${ColorScheme.getInputBorder()}; border-radius: .125rem;`,
+            style: `height: 4px; margin: 8px 0; background-color: ${ColorScheme.getInputBorder()}; border-radius: 2px;`,
           }),
           E.div({
             ref: this.cursor,
             class: "slider-cursor",
-            style: `position: absolute; width: .75rem; height: .75rem; border-radius: 50%; left: -.375rem; top: .25rem; background-color: ${ColorScheme.getBackground()}; border: .0625rem solid ${ColorScheme.getInputBorder()}; pointer-events: none;`,
+            style: `position: absolute; width: 12px; height: 12px; border-radius: 50%; left: -6px; top: 4px; background-color: ${ColorScheme.getBackground()}; border: 1px solid ${ColorScheme.getInputBorder()}; pointer-events: none;`,
           }),
         ),
         E.div(
           {
             class: "slider-min-value-label",
-            style: `font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; margin-left: .5rem; color: ${ColorScheme.getContent()};`,
+            style: `font-size: ${FONT_M}px; line-height: 100%; font-family: initial !important; margin-left: 8px; color: ${ColorScheme.getContent()};`,
           },
           E.text(`${numberRange.maxValue}`),
         ),

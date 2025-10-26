@@ -40,12 +40,12 @@ export class BlockSettingsTab extends EventEmitter {
       E.div(
         {
           class: "block-settings-tab-input-container",
-          style: `display: flex; flex-flow: row nowrap; align-items: center; margin-top: .5rem; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%;`,
+          style: `display: flex; flex-flow: row nowrap; align-items: center; margin-top: 8px; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; width: 100%;`,
         },
         assign(
           this.dropdownList,
           DropdownList.create(
-            ".5rem",
+            "8px",
             [
               {
                 kind: BlockKind.KeywordBlockKind,
@@ -67,7 +67,7 @@ export class BlockSettingsTab extends EventEmitter {
         E.input({
           ref: this.patternInput,
           class: "block-settings-tab-pattern-input",
-          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin: 0 .75rem; line-height: 2rem; font-size: ${FONT_M}rem; font-family: initial !important; color: ${ColorScheme.getContent()}; border-bottom: .0625rem solid ${ColorScheme.getInputBorder()};`,
+          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin: 0 12px; line-height: 32px; font-size: ${FONT_M}px; font-family: initial !important; color: ${ColorScheme.getContent()}; border-bottom: 1px solid ${ColorScheme.getInputBorder()};`,
           placeHolder: chrome.i18n.getMessage("blockRuleInputPlaceHolder"),
         }),
         E.div(
@@ -82,7 +82,7 @@ export class BlockSettingsTab extends EventEmitter {
       E.div({
         ref: this.blockEntryList,
         class: "block-settings-tab-block-entry-list",
-        style: `flex-grow: 1; width: 100%; margin-top: .5rem; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; overflow-y: auto;`,
+        style: `flex-grow: 1; width: 100%; margin-top: 8px; padding: 0 ${TAB_SIDE_PADDING}; box-sizing: border-box; overflow-y: auto;`,
       }),
     );
     this.patternInputController = CustomTextInputController.create(

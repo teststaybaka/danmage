@@ -25,7 +25,7 @@ export class DropdownEntry<T> extends EventEmitter {
     this.body = E.div(
       {
         class: "dropdown-entry",
-        style: `padding: .125rem 0; font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important;`,
+        style: `padding: 2px 0; font-size: ${FONT_M}px; line-height: 100%; font-family: initial !important;`,
       },
       E.text(this.optionEntry.localizedMsg),
     );
@@ -87,7 +87,7 @@ export class DropdownList<T> extends EventEmitter {
     this.body = E.div(
       {
         class: "dropdown-list-container",
-        style: `flex: 0 0 auto; position: relative; cursor: pointer; border-bottom: .0625rem solid ${ColorScheme.getInputBorder()};`,
+        style: `flex: 0 0 auto; position: relative; cursor: pointer; border-bottom: 1px solid ${ColorScheme.getInputBorder()};`,
       },
       E.div(
         {
@@ -97,11 +97,11 @@ export class DropdownList<T> extends EventEmitter {
         E.div({
           ref: this.selectedOption,
           class: "dropdown-list-selected-option-text",
-          style: `padding: ${verticalPadding} .25rem ${verticalPadding} 0; font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; color: ${ColorScheme.getContent()};`,
+          style: `padding: ${verticalPadding} 4px ${verticalPadding} 0; font-size: ${FONT_M}px; line-height: 100%; font-family: initial !important; color: ${ColorScheme.getContent()};`,
         }),
         E.div({
           class: "dropdown-list-option-arrow",
-          style: `border-left: .25rem solid transparent; border-right: .25rem solid transparent; border-top: .5rem solid ${ColorScheme.getInputBorder()};`,
+          style: `border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 8px solid ${ColorScheme.getInputBorder()};`,
         }),
       ),
       E.div(

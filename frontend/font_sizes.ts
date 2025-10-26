@@ -1,3 +1,3 @@
-export let FONT_S = .75; // rem
-export let FONT_M = .875; // rem
-export let FONT_L = 1; // rem
+export let FONT_S = 12; // px
+export let FONT_M = 14; // px
+export let FONT_L = 16; // px

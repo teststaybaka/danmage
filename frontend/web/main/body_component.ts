@@ -70,13 +70,13 @@ export class BodyComponent extends EventEmitter {
       E.div(
         {
           class: "body-header",
-          style: `display: flex; flex-flow: row nowrap; align-items: center; padding: .5rem ${SIDE_PADDING}rem; border-bottom: .0625rem solid ${ColorScheme.getBlockSeparator()};`,
+          style: `display: flex; flex-flow: row nowrap; align-items: center; padding: 8px ${SIDE_PADDING}px; border-bottom: 1px solid ${ColorScheme.getBlockSeparator()};`,
         },
         E.div(
           {
             ref: this.logo,
             class: "body-logo",
-            style: `font-size: 2rem; font-weight: bold; font-family: Comic Sans MS, cursive, sans-serif; cursor: pointer;`,
+            style: `font-size: 32px; font-weight: bold; font-family: Comic Sans MS, cursive, sans-serif; cursor: pointer;`,
           },
           E.div(
             {
@@ -104,7 +104,7 @@ export class BodyComponent extends EventEmitter {
           E.div(
             {
               class: "body-header-sign-in-text",
-              style: `padding: 0 .5rem; font-size: ${FONT_M}rem; color: ${GOOGLE_BUTTON_TEXT_COLOR};`,
+              style: `padding: 0 8px; font-size: ${FONT_M}px; color: ${GOOGLE_BUTTON_TEXT_COLOR};`,
             },
             E.text(LOCALIZED_TEXT.signInButton),
           ),
@@ -119,7 +119,7 @@ export class BodyComponent extends EventEmitter {
             {
               ref: this.nicknameButton,
               class: "body-header-nickname-button",
-              style: `${TEXT_BUTTON_STYLE} margin-right: 1.25rem;`,
+              style: `${TEXT_BUTTON_STYLE} margin-right: 20px;`,
             },
             E.text(LOCALIZED_TEXT.nicknameTab),
           ),
@@ -127,7 +127,7 @@ export class BodyComponent extends EventEmitter {
             {
               ref: this.historyButton,
               class: "body-header-history-button",
-              style: `${TEXT_BUTTON_STYLE} margin-right: 1.25rem;`,
+              style: `${TEXT_BUTTON_STYLE} margin-right: 20px;`,
             },
             E.text(LOCALIZED_TEXT.historyTab),
           ),
@@ -149,7 +149,7 @@ export class BodyComponent extends EventEmitter {
       E.div(
         {
           class: "body-footer",
-          style: `display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; padding: 1.25rem 0; border-top: .0625rem solid ${ColorScheme.getBlockSeparator()};`,
+          style: `display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; padding: 20px 0; border-top: 1px solid ${ColorScheme.getBlockSeparator()};`,
         },
         E.a(
           {
@@ -161,7 +161,7 @@ export class BodyComponent extends EventEmitter {
           E.text(LOCALIZED_TEXT.termsTab),
         ),
         E.div({
-          style: `height: 1.25rem; margin: 0 .125rem; width: .0625rem; background-color: ${ColorScheme.getBlockSeparator()}`,
+          style: `height: 20px; margin: 0 2px; width: 1px; background-color: ${ColorScheme.getBlockSeparator()}`,
         }),
         E.a(
           {
@@ -173,7 +173,7 @@ export class BodyComponent extends EventEmitter {
           E.text(LOCALIZED_TEXT.privacyTab),
         ),
         E.div({
-          style: `height: 1.25rem; margin: 0 .125rem; width: .0625rem; background-color: ${ColorScheme.getBlockSeparator()};`,
+          style: `height: 20px; margin: 0 2px; width: 1px; background-color: ${ColorScheme.getBlockSeparator()};`,
         }),
         E.a(
           {

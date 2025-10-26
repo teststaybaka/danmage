@@ -82,9 +82,7 @@ export class TwitchAssembler implements Assembler {
   private anchorButtonElement: Element;
   private playController: PlayerController;
 
-  public constructor(private playerSettings: PlayerSettings) {
-    document.documentElement.style.fontSize = "62.5%";
-  }
+  public constructor(private playerSettings: PlayerSettings) {}
 
   public queryElements(): Element[] {
     this.canvas = document.querySelector(".video-player__container");
@@ -149,9 +147,7 @@ export class CrunchyrollAssembler implements Assembler {
   private video: HTMLVideoElement;
   private playController: PlayerController;
 
-  public constructor(private playerSettings: PlayerSettings) {
-    document.documentElement.style.fontSize = "62.5%";
-  }
+  public constructor(private playerSettings: PlayerSettings) {}
 
   public queryElements(): Element[] {
     this.canvas = document.querySelector("#velocity-player-package");

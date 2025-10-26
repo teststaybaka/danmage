@@ -29,12 +29,12 @@ export class NicknamePage extends EventEmitter {
     this.body = E.div(
       {
         class: "nickname-page",
-        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: ${SIDE_PADDING}rem; box-sizing: border-box;`,
+        style: `display: flex; flex-flow: column nowrap; width: 100%; align-items: center; padding: ${SIDE_PADDING}px; box-sizing: border-box;`,
       },
       E.div(
         {
           class: "nickname-input-line",
-          style: `display: flex; flex-flow: row nowrap; width: 100%; align-items: center; justify-content: center; padding-bottom: 4rem;`,
+          style: `display: flex; flex-flow: row nowrap; width: 100%; align-items: center; justify-content: center; padding-bottom: 64px;`,
         },
         E.div({ style: "flex: 2;" }),
         E.div(

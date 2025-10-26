@@ -56,7 +56,7 @@ export class DisplaySettingsTab extends EventEmitter {
     this.body = E.div(
       {
         class: "display-settings-tab-container",
-        style: `flex-flow: column nowrap; gap: .25rem; padding: 0 ${TAB_SIDE_PADDING} .5rem; box-sizing: border-box; height: 100%; overflow-y: auto;`,
+        style: `flex-flow: column nowrap; gap: 4px; padding: 0 ${TAB_SIDE_PADDING} 8px; box-sizing: border-box; height: 100%; overflow-y: auto;`,
       },
       assign(
         this.enableOption,
@@ -185,9 +185,9 @@ export class DisplaySettingsTab extends EventEmitter {
           {
             ref: this.resetButton,
             class: "display-settings-tab-reset-button",
-            style: `width: 1.125rem; height: 1.125rem; padding: 0 ${
-              (INPUT_WIDTH - 1.125) / 2
-            }rem; box-sizing: content-box; cursor: pointer;`,
+            style: `width: 18px; height: 18px; padding: 0 ${
+              (INPUT_WIDTH - 18) / 2
+            }px; box-sizing: content-box; cursor: pointer;`,
           },
           E.svg(
             {

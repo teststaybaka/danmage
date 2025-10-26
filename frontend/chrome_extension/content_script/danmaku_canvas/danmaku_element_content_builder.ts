@@ -1,9 +1,9 @@
 import { ChatEntry } from "../../../../interface/chat_entry";
 import { DisplaySettings } from "../../../../interface/player_settings";
 
-let FONT_SIZE_SCALE = 1 / 16;
+let FONT_SIZE_SCALE = 1 / 1;
 let TEXT_SHADOW =
-  "-.0625rem 0 .0625rem black, 0 .0625rem .0625rem black, .0625rem 0 .0625rem black, 0 -.0625rem .0625rem black";
+  "-1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black";
 
 function removeSelectedChildElements(
   container: HTMLElement | DocumentFragment,
@@ -23,8 +23,8 @@ function resizeSelectedChildElements(
   let children = container.querySelectorAll(selector);
   for (let i = children.length - 1; i >= 0; i--) {
     let child = children.item(i) as HTMLElement;
-    child.style.width = `${fontSize * FONT_SIZE_SCALE}rem`;
-    child.style.height = `${fontSize * FONT_SIZE_SCALE}rem`;
+    child.style.width = `${fontSize * FONT_SIZE_SCALE}px`;
+    child.style.height = `${fontSize * FONT_SIZE_SCALE}px`;
   }
 }
 
@@ -36,7 +36,7 @@ export class StructuredContentBuilder implements DanmakuElementContentBuilder {
   public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
     let contentHTML = `<span style="color: white; text-shadow: ${TEXT_SHADOW};">${chatEntry.content}</span>`;
     if (displaySettings.showUserName) {
-      return `<span style="color: white; margin-right: .5rem;">${chatEntry.userNickname}</span>${contentHTML}`;
+      return `<span style="color: white; margin-right: 8px;">${chatEntry.userNickname}</span>${contentHTML}`;
     } else {
       return contentHTML;
     }
@@ -77,15 +77,15 @@ export class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
       (authorName as HTMLElement).style.display = "flex";
       (authorName as HTMLElement).style.fontSize = `${
         displaySettings.fontSize * FONT_SIZE_SCALE
-      }rem`;
+      }px`;
       (authorName as HTMLElement).style.lineHeight = "100%";
       (authorName as HTMLElement).parentElement.style.display = "flex";
-      (authorName as HTMLElement).parentElement.style.marginRight = ".5rem";
+      (authorName as HTMLElement).parentElement.style.marginRight = "8px";
     }
     for (let subtext of template.content.querySelectorAll("#header-subtext")) {
       (subtext as HTMLElement).style.fontSize = `${
         displaySettings.fontSize * FONT_SIZE_SCALE
-      }rem`;
+      }px`;
       (subtext as HTMLElement).style.lineHeight = "100%";
     }
     resizeSelectedChildElements(

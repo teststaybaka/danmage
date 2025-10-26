@@ -54,9 +54,9 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 2.5rem; width: 2.5rem;`,
+      `position: relative; height: 40px; width: 40px;`,
       "var(--yt-live-chat-header-button-color)",
-      "top: 2.5rem; right: 0;",
+      "top: 40px; right: -40px;",
       false,
       globalDocuments,
       playerSettings,
@@ -69,9 +69,9 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: absolute; height: 2rem; width: 2rem; right: .75rem;`,
+      `position: absolute; height: 32px; width: 32px; right: 12px;`,
       "currentColor",
-      "top: 2rem; right: 0;",
+      "top: 32px; right: 0;",
       false,
       globalDocuments,
       playerSettings,
@@ -84,9 +84,9 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 2rem; width: 2rem;`,
+      `position: relative; height: 32px; width: 32px;`,
       "currentColor",
-      "bottom: 2rem; right: 0;",
+      "bottom: 32px; right: 0;",
       false,
       globalDocuments,
       playerSettings,
@@ -99,16 +99,16 @@ export class ControlPanel extends EventEmitter {
   ): ControlPanel {
     return new ControlPanel(
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 2.5rem; width: 2.5rem;`,
+      `position: relative; height: 40px; width: 40px;`,
       "white",
-      "bottom: 2.5rem; right: 0;",
+      "bottom: 40px; right: 0;",
       true,
       globalDocuments,
       playerSettings,
     );
   }
 
-  private static TAB_BUTTON_WIDTH = 1.5; // rem
+  private static TAB_BUTTON_WIDTH = 24; // px
   private static WIDTH_TRANSITION_STYLE = "width .3s";
 
   public body: HTMLDivElement;
@@ -227,7 +227,7 @@ export class ControlPanel extends EventEmitter {
         {
           ref: this.controlPanelPopup,
           class: "control-panel-control-panel-popup",
-          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 20rem; height: 24rem; padding: .25rem; box-sizing: border-box; background-color: ${ColorScheme.getBackground()}; box-shadow: .0625rem .0625rem .25rem ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
+          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 320px; height: 384px; padding: 4px; box-sizing: border-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 1px 1px 4px ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
         },
         E.div(
           {
@@ -294,13 +294,13 @@ export class ControlPanel extends EventEmitter {
     let head = E.div(
       {
         class: "control-panel-tab-head",
-        style: `display: inline-flex; align-items: center; border-radius: .25rem .25rem 0 0; transition: ${ControlPanel.WIDTH_TRANSITION_STYLE}; overflow: hidden;`,
+        style: `display: inline-flex; align-items: center; border-radius: 4px 4px 0 0; transition: ${ControlPanel.WIDTH_TRANSITION_STYLE}; overflow: hidden;`,
       },
       E.div(
         {
           ref: tabButton,
           class: "control-panel-tab-button",
-          style: `flex-shrink: 0; height: ${ControlPanel.TAB_BUTTON_WIDTH}rem; padding: .125rem; box-sizing: border-box; cursor: pointer;`,
+          style: `flex-shrink: 0; height: ${ControlPanel.TAB_BUTTON_WIDTH}px; padding: 2px; box-sizing: border-box; cursor: pointer;`,
         },
         E.svg(
           {
@@ -314,7 +314,7 @@ export class ControlPanel extends EventEmitter {
       E.div(
         {
           class: "control-panel-title",
-          style: `flex-grow: 1; font-size: ${FONT_M}rem; line-height: 100%; font-family: initial !important; text-align: center; white-space: nowrap; color: ${ColorScheme.getContent()};`,
+          style: `flex-grow: 1; font-size: ${FONT_M}px; line-height: 100%; font-family: initial !important; text-align: center; white-space: nowrap; color: ${ColorScheme.getContent()};`,
         },
         E.text(titleText),
       ),
@@ -381,12 +381,12 @@ export class ControlPanel extends EventEmitter {
     tabHead.style.width = `calc(100% - ${
       ControlPanel.TAB_BUTTON_WIDTH *
       (this.tabHeadLine.val.childElementCount - 1)
-    }rem)`;
+    }px)`;
     tabHead.style.backgroundColor = ColorScheme.getBackground();
   }
 
   private static lowlightTabHead(tabHead: HTMLDivElement): void {
-    tabHead.style.width = `${ControlPanel.TAB_BUTTON_WIDTH}rem`;
+    tabHead.style.width = `${ControlPanel.TAB_BUTTON_WIDTH}px`;
     tabHead.style.backgroundColor = ColorScheme.getAlternativeBackground();
   }
 

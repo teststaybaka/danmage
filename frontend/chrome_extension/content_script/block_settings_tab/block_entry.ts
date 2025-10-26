@@ -22,19 +22,19 @@ export class BlockEntry extends EventEmitter {
     this.body = E.div(
       {
         class: "block-entry-container",
-        style: `display: flex; flex-flow: row nowrap; align-items: center; padding: .25rem 0;`,
+        style: `display: flex; flex-flow: row nowrap; align-items: center; padding: 4px 0;`,
       },
       E.div(
         {
           class: "block-entry-type",
-          style: `font-size: ${FONT_M}rem; line-height: 120%; font-family: initial !important; padding-right: .25rem;`,
+          style: `font-size: ${FONT_M}px; line-height: 120%; font-family: initial !important; padding-right: 4px;`,
         },
         E.text(chrome.i18n.getMessage(BlockKind[blockPattern.kind])),
       ),
       E.div(
         {
           class: "block-entry-content",
-          style: `flex-grow: 1; font-size: ${FONT_M}rem; line-height: 120%; font-family: initial !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;`,
+          style: `flex-grow: 1; font-size: ${FONT_M}px; line-height: 120%; font-family: initial !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;`,
           title: blockPattern.content,
         },
         E.text(blockPattern.content),
@@ -43,7 +43,7 @@ export class BlockEntry extends EventEmitter {
         {
           ref: this.removeButton,
           class: "block-entry-remove-button",
-          style: `flex-shrink: 0; height: .625rem; margin-left: .25rem; cursor: pointer; fill: ${ColorScheme.getContent()};`,
+          style: `flex-shrink: 0; height: 10px; margin-left: 4px; cursor: pointer; fill: ${ColorScheme.getContent()};`,
         },
         E.svg(
           {

@@ -58,7 +58,7 @@ export class HistoryPage extends EventEmitter {
       ),
       assign(
         this.showMoreButton,
-        TextBlockingButton.create(`margin: .5rem 0;`)
+        TextBlockingButton.create(`margin: 8px 0;`)
           .append(E.text(LOCALIZED_TEXT.showMoreChatsButton))
           .enable(),
       ).body,
@@ -85,12 +85,12 @@ export class HistoryPage extends EventEmitter {
     return E.div(
       {
         class: "history-entry-container",
-        style: `display: flex; flex-flow: row nowrap; width: 100%; padding: .5rem; box-sizing: border-box; font-size: ${FONT_L}rem; color: ${ColorScheme.getContent()}; background-color: ${backgroundColor};`,
+        style: `display: flex; flex-flow: row nowrap; width: 100%; padding: 8px; box-sizing: border-box; font-size: ${FONT_L}px; color: ${ColorScheme.getContent()}; background-color: ${backgroundColor};`,
       },
       E.div(
         {
           class: "history-entry-host-app",
-          style: `flex: 2 0 0; padding-right: .25rem; word-break: break-all;`,
+          style: `flex: 2 0 0; padding-right: 4px; word-break: break-all;`,
           title: hostAppStr,
         },
         E.text(hostAppStr),
@@ -98,7 +98,7 @@ export class HistoryPage extends EventEmitter {
       E.div(
         {
           class: "history-entry-host-content-id",
-          style: `flex: 3 0 0; padding-right: .25rem; word-break: break-all;`,
+          style: `flex: 3 0 0; padding-right: 4px; word-break: break-all;`,
           title: hostContentIdStr,
         },
         E.text(hostContentIdStr),
@@ -106,7 +106,7 @@ export class HistoryPage extends EventEmitter {
       E.div(
         {
           class: "histroy-entry-timestamp",
-          style: `flex: 2 0 0; padding-right: .25rem; word-break: break-all;`,
+          style: `flex: 2 0 0; padding-right: 4px; word-break: break-all;`,
           title: timestampStr,
         },
         E.text(timestampStr),
@@ -114,7 +114,7 @@ export class HistoryPage extends EventEmitter {
       E.div(
         {
           class: "histroy-entry-content",
-          style: `flex: 15 0 0; padding-right: .25rem; word-break: break-all;`,
+          style: `flex: 15 0 0; padding-right: 4px; word-break: break-all;`,
           title: contentStr,
         },
         E.text(contentStr),

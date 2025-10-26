@@ -59,7 +59,7 @@ export class DanmakuElement extends EventEmitter {
   }
 
   private static OPACITY_SCALE = 1 / 100;
-  private static FONT_SIZE_SCALE = 1 / 10;
+  private static FONT_SIZE_SCALE = 1 / 1;
 
   public body: HTMLDivElement;
   private canvasWidth: number;
@@ -80,7 +80,7 @@ export class DanmakuElement extends EventEmitter {
     super();
     this.body = E.div({
       class: "danmaku-element",
-      style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; bottom: 100%; right: 0; padding: .125rem 1rem .125rem 0; line-height: normal; z-index: 10; white-space: nowrap; visibility: hidden;`,
+      style: `display: flex; flex-flow: row nowrap; align-items: center; position: absolute; bottom: 100%; right: 0; padding: 2px 16px 2px 0; line-height: normal; z-index: 10; white-space: nowrap; visibility: hidden;`,
     });
     this.render();
     this.leaveToResume();
@@ -94,7 +94,7 @@ export class DanmakuElement extends EventEmitter {
     }`;
     this.body.style.fontSize = `${
       this.displaySettings.fontSize * DanmakuElement.FONT_SIZE_SCALE
-    }rem`;
+    }px`;
     this.body.style.fontWeight = `${this.displaySettings.fontWeight}`;
     this.body.style.setProperty(
       "font-family",

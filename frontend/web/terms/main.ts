@@ -7,7 +7,7 @@ function main(): void {
 
   let body = E.div({
     class: "privacy",
-    style: `padding: 2.5rem; font-size: 1rem; color: ${ColorScheme.getContent()};`,
+    style: `padding: 40px; font-size: 16px; color: ${ColorScheme.getContent()};`,
   });
   document.body.appendChild(body);
   body.innerHTML = `

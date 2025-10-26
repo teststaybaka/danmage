@@ -63,7 +63,7 @@ export class ChatListTab extends EventEmitter {
         E.input({
           ref: this.chatInput,
           class: "chat-list-tab-input",
-          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin-right: .5rem; font-size: ${FONT_M}rem; line-height: 2rem; border-bottom: .0625rem solid ${ColorScheme.getInputBorder()}; font-family: initial !important; color: ${ColorScheme.getContent()};`,
+          style: `padding: 0; margin: 0; outline: none; border: 0; min-width: 0; flex-grow: 1; margin-right: 8px; font-size: ${FONT_M}px; line-height: 32px; border-bottom: 1px solid ${ColorScheme.getInputBorder()}; font-family: initial !important; color: ${ColorScheme.getContent()};`,
         }),
         assign(
           this.fireButton,
