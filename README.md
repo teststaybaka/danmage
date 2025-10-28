@@ -4,7 +4,11 @@
 
 DanMage is a project that brings NicoNico-style flow chat (A.K.A., scrolling chat, danmaku, danmu) to multiple video sites as both [a chrome extension](https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm) and [a firefox extension](https://addons.mozilla.org/en-US/firefox/addon/danmage), now supporting YouTube, Twitch and Crunchyroll. It's also deployed as a [website](https://www.danmage.com/), which provides minimum backend support to the extension, such as storing posted chats and player settings.
 
-If you want to see danmaku being built into a native video platform, wish list [here](https://www.secount.com/danmaku).
+It's definitely not perfect. The DOM tree is completely and not easy to parse. YouTube & Twitch etc. can introduce changes anytime without notifying me.
+
+So if you want to see danmaku being built into a native video platform, wish list [here](https://www.secount.com/danmaku).
+
+![Secount wish list page](./danmaku_site.png)
 
 ## Deployment
 
