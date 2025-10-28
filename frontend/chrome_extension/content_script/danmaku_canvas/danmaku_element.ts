@@ -5,12 +5,7 @@ import {
   PlayerSettings,
 } from "../../../../interface/player_settings";
 import { BlockPatternTester } from "../common/block_pattern_tester";
-import {
-  DanmakuElementContentBuilder,
-  StructuredContentBuilder,
-  TwitchChatContentBuilder,
-  YouTubeChatContentBuilder,
-} from "./danmaku_element_content_builder";
+import { DanmakuElementContentBuilder } from "./danmaku_element_content_builder";
 import { E } from "@selfage/element/factory";
 
 export interface DanmakuElement {
@@ -19,40 +14,16 @@ export interface DanmakuElement {
 }
 
 export class DanmakuElement extends EventEmitter {
-  public static createStructured(
+  public static create(
     playerSettings: PlayerSettings,
     chatEntry: ChatEntry,
+    blockPatternTester: BlockPatternTester,
+    contentBuilder: DanmakuElementContentBuilder,
   ): DanmakuElement {
     return new DanmakuElement(
-      BlockPatternTester.createIdentity(playerSettings.blockSettings),
-      new StructuredContentBuilder(),
       window,
-      playerSettings.displaySettings,
-      chatEntry,
-    );
-  }
-
-  public static createTwitch(
-    playerSettings: PlayerSettings,
-    chatEntry: ChatEntry,
-  ): DanmakuElement {
-    return new DanmakuElement(
-      BlockPatternTester.createHtml(playerSettings.blockSettings),
-      new TwitchChatContentBuilder(),
-      window,
-      playerSettings.displaySettings,
-      chatEntry,
-    );
-  }
-
-  public static createYouTube(
-    playerSettings: PlayerSettings,
-    chatEntry: ChatEntry,
-  ): DanmakuElement {
-    return new DanmakuElement(
-      BlockPatternTester.createHtml(playerSettings.blockSettings),
-      new YouTubeChatContentBuilder(),
-      window,
+      blockPatternTester,
+      contentBuilder,
       playerSettings.displaySettings,
       chatEntry,
     );
@@ -71,9 +42,9 @@ export class DanmakuElement extends EventEmitter {
   private endDisplayTimeoutId: number;
 
   public constructor(
+    private window: Window,
     private blockPatternTester: BlockPatternTester,
     private danmakuElementContentBuilder: DanmakuElementContentBuilder,
-    private window: Window,
     private displaySettings: DisplaySettings,
     private chatEntry: ChatEntry,
   ) {

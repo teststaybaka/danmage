@@ -3,43 +3,29 @@ import {
   DistributionStyle,
   PlayerSettings,
 } from "../../../../interface/player_settings";
+import { BlockPatternTester } from "../common/block_pattern_tester";
 import { LinkedList, LinkedNode } from "../common/linked_list";
 import { DanmakuElement } from "./danmaku_element";
+import { DanmakuElementContentBuilder } from "./danmaku_element_content_builder";
 
 export class DanmakuCanvasController {
-  public static createStructured(
+  public static create(
     canvas: HTMLElement,
     playerSettings: PlayerSettings,
+    blockPatternTester: BlockPatternTester,
+    contentBuilder: DanmakuElementContentBuilder,
   ): DanmakuCanvasController {
     return new DanmakuCanvasController(
+      Math.random,
       canvas,
       playerSettings,
-      DanmakuElement.createStructured,
-      Math.random,
-    );
-  }
-
-  public static createYouTube(
-    canvas: HTMLElement,
-    playerSettings: PlayerSettings,
-  ): DanmakuCanvasController {
-    return new DanmakuCanvasController(
-      canvas,
-      playerSettings,
-      DanmakuElement.createYouTube,
-      Math.random,
-    );
-  }
-
-  public static createTwitch(
-    canvas: HTMLElement,
-    playerSettings: PlayerSettings,
-  ): DanmakuCanvasController {
-    return new DanmakuCanvasController(
-      canvas,
-      playerSettings,
-      DanmakuElement.createTwitch,
-      Math.random,
+      (playerSettings, chatEntry) =>
+        DanmakuElement.create(
+          playerSettings,
+          chatEntry,
+          blockPatternTester,
+          contentBuilder,
+        ),
     );
   }
 
@@ -51,13 +37,13 @@ export class DanmakuCanvasController {
   private resizeObserver: ResizeObserver;
 
   public constructor(
+    private random: () => number,
     private canvas: HTMLElement,
     private playerSettings: PlayerSettings,
     private createDanmakuElement: (
       playerSettings: PlayerSettings,
       chatEntry: ChatEntry,
     ) => DanmakuElement,
-    private random: () => number,
   ) {
     this.resizeObserver = new ResizeObserver((entries) =>
       this.getNewSize(entries[0]),

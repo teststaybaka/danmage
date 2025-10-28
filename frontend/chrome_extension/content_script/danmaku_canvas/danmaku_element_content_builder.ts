@@ -15,7 +15,7 @@ function removeSelectedChildElements(
   }
 }
 
-function resizeSelectedChildElements(
+function setHeightForSelectedChildElements(
   container: HTMLElement | DocumentFragment,
   selector: string,
   fontSize: number,
@@ -23,8 +23,37 @@ function resizeSelectedChildElements(
   let children = container.querySelectorAll(selector);
   for (let i = children.length - 1; i >= 0; i--) {
     let child = children.item(i) as HTMLElement;
-    child.style.width = `${fontSize * FONT_SIZE_SCALE}px`;
     child.style.height = `${fontSize * FONT_SIZE_SCALE}px`;
+    child.style.width = "auto";
+  }
+}
+
+function setFontAndColorForSelectedChildElements(
+  container: HTMLElement | DocumentFragment,
+  selector: string,
+  displaySettings: DisplaySettings,
+): void {
+  let children = container.querySelectorAll(selector);
+  for (let i = children.length - 1; i >= 0; i--) {
+    let child = children.item(i) as HTMLElement;
+    child.style.fontFamily = displaySettings.fontFamily;
+    child.style.fontSize = `${displaySettings.fontSize * FONT_SIZE_SCALE}px`;
+    child.style.lineHeight = "100%";
+    child.style.color = "white";
+    child.style.textShadow = TEXT_SHADOW;
+  }
+}
+
+function setStyleForSelectedChildElements(
+  container: HTMLElement | DocumentFragment,
+  selector: string,
+  styleName: string,
+  styleValue: string,
+): void {
+  let children = container.querySelectorAll(selector);
+  for (let i = children.length - 1; i >= 0; i--) {
+    let child = children.item(i) as HTMLElement;
+    child.style.setProperty(styleName, styleValue);
   }
 }
 
@@ -59,121 +88,228 @@ export class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
       template.content,
       "#inline-action-button-container",
     );
+    removeSelectedChildElements(
+      template.content,
+      "#action-buttons"
+    )
     if (!displaySettings.showUserName) {
       removeSelectedChildElements(template.content, "#author-photo");
       removeSelectedChildElements(template.content, "#author-name");
       removeSelectedChildElements(template.content, "#chat-badges");
     }
-
-    for (let content of template.content.querySelectorAll("#content")) {
-      (content as HTMLElement).style.display = "flex";
-    }
-    for (let message of template.content.querySelectorAll("#message")) {
-      (message as HTMLElement).style.lineHeight = "100%";
-      (message as HTMLElement).style.color = "white";
-      (message as HTMLElement).style.textShadow = TEXT_SHADOW;
-    }
-    for (let authorName of template.content.querySelectorAll("#author-name")) {
-      (authorName as HTMLElement).style.display = "flex";
-      (authorName as HTMLElement).style.fontSize = `${
-        displaySettings.fontSize * FONT_SIZE_SCALE
-      }px`;
-      (authorName as HTMLElement).style.lineHeight = "100%";
-      (authorName as HTMLElement).parentElement.style.display = "flex";
-      (authorName as HTMLElement).parentElement.style.marginRight = "8px";
-    }
-    for (let subtext of template.content.querySelectorAll("#header-subtext")) {
-      (subtext as HTMLElement).style.fontSize = `${
-        displaySettings.fontSize * FONT_SIZE_SCALE
-      }px`;
-      (subtext as HTMLElement).style.lineHeight = "100%";
-    }
-    resizeSelectedChildElements(
+    setStyleForSelectedChildElements(
+      template.content,
+      ".yt-live-chat-text-message-renderer",
+      "padding",
+      "0px",
+    );
+    setStyleForSelectedChildElements(
+      template.content,
+      ".yt-live-chat-text-message-renderer",
+      "display",
+      "inline-flex",
+    );
+    setStyleForSelectedChildElements(
+      template.content,
+      ".yt-live-chat-paid-message-renderer",
+      "display",
+      "flex",
+    )
+    setStyleForSelectedChildElements(
+      template.content,
+      "#chat-badges",
+      "margin-right",
+      "8px",
+    );
+    setStyleForSelectedChildElements(
+      template.content,
+      "#message",
+      "flex",
+      "0 0 auto",
+    );
+    setFontAndColorForSelectedChildElements(
+      template.content,
+      "#message",
+      displaySettings,
+    );
+    setHeightForSelectedChildElements(
       template.content,
       ".emoji",
       displaySettings.fontSize,
     );
-    resizeSelectedChildElements(
+    setHeightForSelectedChildElements(
       template.content,
       "#author-photo > img",
       displaySettings.fontSize,
     );
-    resizeSelectedChildElements(
+    setHeightForSelectedChildElements(
       template.content,
       "#chip-badges",
       displaySettings.fontSize,
     );
-    resizeSelectedChildElements(
-      template.content,
-      "#chat-badges div#image",
-      displaySettings.fontSize,
-    );
-    resizeSelectedChildElements(
+    setHeightForSelectedChildElements(
       template.content,
       "#chat-badges img",
-      displaySettings.fontSize,
-    );
-    resizeSelectedChildElements(
-      template.content,
-      "#icon",
       displaySettings.fontSize,
     );
     return template.innerHTML;
   }
 }
 
-export class TwitchChatContentBuilder implements DanmakuElementContentBuilder {
+export class TwitchLiveChatContentBuilder implements DanmakuElementContentBuilder {
   private static COLON_REPLACER = />: ?<\//;
 
   public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
     let template = document.createElement("template");
-    template.innerHTML = chatEntry.content.replace(
-      TwitchChatContentBuilder.COLON_REPLACER,
-      `> </`,
-    );
-    removeSelectedChildElements(template.content, ".vod-message__header");
     if (!displaySettings.showUserName) {
+      template.innerHTML = chatEntry.content.replace(
+        TwitchLiveChatContentBuilder.COLON_REPLACER,
+        `> </`,
+      );
       removeSelectedChildElements(template.content, ".chat-badge");
       removeSelectedChildElements(
         template.content,
         ".chat-author__display-name",
       );
       removeSelectedChildElements(template.content, ".chat-author__intl-login");
+    } else {
+      template.innerHTML = chatEntry.content;
     }
 
-    let texts = template.content.querySelectorAll(".text-fragment");
-    TwitchChatContentBuilder.setContentStyle(texts, displaySettings);
-    let mentions = template.content.querySelectorAll(".mention-fragment");
-    TwitchChatContentBuilder.setContentStyle(mentions, displaySettings);
-    let links = template.content.querySelectorAll(".link-fragment");
-    TwitchChatContentBuilder.setContentStyle(links, displaySettings);
-    resizeSelectedChildElements(
+    setStyleForSelectedChildElements(
+      template.content,
+      ".chat-line__message",
+      "padding",
+      "0px",
+    );
+    setFontAndColorForSelectedChildElements(
+      template.content,
+      ".text-fragment",
+      displaySettings,
+    );
+    setFontAndColorForSelectedChildElements(
+      template.content,
+      ".mention-fragment",
+      displaySettings,
+    );
+    setFontAndColorForSelectedChildElements(
+      template.content,
+      ".link-fragment",
+      displaySettings,
+    );
+    setHeightForSelectedChildElements(
       template.content,
       ".chat-badge",
       displaySettings.fontSize,
     );
-    resizeSelectedChildElements(
-      template.content,
-      ".chat-image__container",
-      displaySettings.fontSize,
-    );
-    resizeSelectedChildElements(
+    setHeightForSelectedChildElements(
       template.content,
       ".chat-line__message--emote",
       displaySettings.fontSize,
     );
     return template.innerHTML;
   }
+}
 
-  private static setContentStyle(
-    texts: NodeListOf<Element>,
-    displaySettings: DisplaySettings,
-  ): void {
-    for (let i = 0; i < texts.length; i++) {
-      let text = texts.item(i) as HTMLElement;
-      text.style.color = "white";
-      text.style.textShadow = TEXT_SHADOW;
-      text.style.fontFamily = displaySettings.fontFamily;
+export class TwitchVideoChatContentBuilder implements DanmakuElementContentBuilder {
+  private static COLON_REPLACER = />: ?<\//;
+
+  public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
+    let template = document.createElement("template");
+    if (!displaySettings.showUserName) {
+      template.innerHTML = chatEntry.content.replace(
+        TwitchVideoChatContentBuilder.COLON_REPLACER,
+        `> </`,
+      );
+      removeSelectedChildElements(template.content, ".chat-badge");
+      removeSelectedChildElements(
+        template.content,
+        ".chat-author__display-name",
+      );
+      removeSelectedChildElements(template.content, ".chat-author__intl-login");
+    } else {
+      template.innerHTML = chatEntry.content;
     }
+    removeSelectedChildElements(template.content, ".vod-message__header"); // Remove timestamp
+    setStyleForSelectedChildElements(
+      template.content,
+      ".vod-message",
+      "padding",
+      "0px",
+    );
+    setFontAndColorForSelectedChildElements(
+      template.content,
+      ".text-fragment",
+      displaySettings,
+    );
+    setFontAndColorForSelectedChildElements(
+      template.content,
+      ".mention-fragment",
+      displaySettings,
+    );
+    setFontAndColorForSelectedChildElements(
+      template.content,
+      ".link-fragment",
+      displaySettings,
+    );
+    setHeightForSelectedChildElements(
+      template.content,
+      ".chat-badge",
+      displaySettings.fontSize,
+    );
+    setHeightForSelectedChildElements(
+      template.content,
+      ".chat-line__message--emote",
+      displaySettings.fontSize,
+    );
+    return template.innerHTML;
+  }
+}
+
+export class Twitch7tvChatContentBuilder
+  implements DanmakuElementContentBuilder
+{
+  private static COLON_REPLACER = />: ?<\//;
+
+  public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
+    let template = document.createElement("template");
+    if (!displaySettings.showUserName) {
+      template.innerHTML = chatEntry.content.replace(
+        Twitch7tvChatContentBuilder.COLON_REPLACER,
+        `> </`,
+      );
+      removeSelectedChildElements(
+        template.content,
+        ".seventv-chat-user-badge-list",
+      );
+      removeSelectedChildElements(
+        template.content,
+        ".seventv-chat-user-username",
+      );
+    } else {
+      template.innerHTML = chatEntry.content;
+    }
+    setStyleForSelectedChildElements(
+      template.content,
+      ".seventv-chat-message-background",
+      "padding",
+      "0px",
+    );
+    setFontAndColorForSelectedChildElements(
+      template.content,
+      ".seventv-chat-message-body",
+      displaySettings,
+    );
+    setHeightForSelectedChildElements(
+      template.content,
+      ".seventv-chat-badge > img",
+      displaySettings.fontSize,
+    );
+    setHeightForSelectedChildElements(
+      template.content,
+      ".seventv-chat-emote",
+      displaySettings.fontSize,
+    );
+    return template.innerHTML;
   }
 }

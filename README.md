@@ -24,6 +24,10 @@ If you want to build it for Windows/MacOS, you gotta do some work youself :)
 
 ## Version
 
+### Version 5.1.0
+
+Added support for 7tv extension on Twitch. Small refactors on extrating and applying styles to danmaku HTML elements.
+
 ### Version 5.0.1
 
 Huge bump of library versions, which breaks the authentication on old extension unfortunately. Please update if you want to log in and load player settings. Otherwise the old extension works fine on its own.

@@ -105,70 +105,12 @@ export class StructuredChatPool implements ChatPool {
   }
 }
 
-export class YouTubeChatPool implements ChatPool {
+export class OnPageChatPool implements ChatPool {
   public static create(
     chatContainer: Element,
     blockSettings: BlockSettings,
-  ): YouTubeChatPool {
-    return new YouTubeChatPool(
-      chatContainer,
-      BlockPatternTester.createHtml(blockSettings),
-    );
-  }
-
-  private lastLogElement: Element;
-
-  public constructor(
-    private chatContainer: Element,
-    private blockTester: BlockPatternTester,
-  ) {}
-
-  public fill(): void {
-    // Do nothing.
-  }
-
-  public clear(): void {
-    // Do nothing.
-  }
-
-  public start(): void {
-    this.lastLogElement = this.chatContainer.lastElementChild;
-  }
-
-  public read(): Array<ChatEntry> {
-    let logElementPointer: Element;
-    if (this.chatContainer.contains(this.lastLogElement)) {
-      logElementPointer = this.lastLogElement.nextElementSibling;
-    } else {
-      logElementPointer = this.chatContainer.firstElementChild;
-    }
-
-    let returnChatEntries = new Array<ChatEntry>();
-    for (
-      ;
-      logElementPointer;
-      this.lastLogElement = logElementPointer,
-        logElementPointer = logElementPointer.nextElementSibling
-    ) {
-      let chatEntry: ChatEntry = {
-        content: logElementPointer.innerHTML,
-      };
-      if (this.blockTester.test(chatEntry)) {
-        continue;
-      }
-
-      returnChatEntries.push(chatEntry);
-    }
-    return returnChatEntries;
-  }
-}
-
-export class TwitchChatPool implements ChatPool {
-  public static create(
-    chatContainer: Element,
-    blockSettings: BlockSettings,
-  ): TwitchChatPool {
-    return new TwitchChatPool(
+  ): OnPageChatPool {
+    return new OnPageChatPool(
       chatContainer,
       BlockPatternTester.createHtml(blockSettings),
     );
@@ -212,7 +154,7 @@ export class TwitchChatPool implements ChatPool {
     ) {
       let htmlContent = nextLogElementPointer.innerHTML;
       // Silly twitch hidden emoticons. Stop and try from here next time.
-      if (htmlContent.indexOf(TwitchChatPool.TW_HIDE_CLASS) !== -1) {
+      if (htmlContent.indexOf(OnPageChatPool.TW_HIDE_CLASS) !== -1) {
         break;
       }
 

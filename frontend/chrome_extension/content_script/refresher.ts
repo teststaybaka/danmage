@@ -91,14 +91,25 @@ export class TwitchAssembler implements Assembler {
       ".chat-scrollable-area__message-container",
     );
     if (!this.chatContainer) {
-      this.chatContainer = document.querySelector(
-        ".video-chat__message-list-wrapper ul",
-      );
-      this.anchorButtonElement = document.querySelector(
-        ".video-chat__header > span",
-      );
-      this.assemble = this.assembleVideo;
+      this.chatContainer = document.querySelector(`main.seventv-chat-list`);
+      if (!this.chatContainer) {
+        // Play back videos
+        this.chatContainer = document.querySelector(
+          ".video-chat__message-list-wrapper ul",
+        );
+        this.anchorButtonElement = document.querySelector(
+          ".video-chat__header > span",
+        );
+        this.assemble = this.assembleVideo;
+      } else {
+        // Live 7tv chat
+        this.anchorButtonElement = document.querySelector(
+          "seventv-chat-input-button-container",
+        );
+        this.assemble = this.assemble7tv;
+      }
     } else {
+      // Live Twitch chat
       this.anchorButtonElement = document.querySelector(
         ".chat-input__buttons-container > div:last-child > div:last-child",
       );
@@ -125,6 +136,17 @@ export class TwitchAssembler implements Assembler {
 
   public assembleLive(): void {
     this.playController = PlayerController.createTwitchLive(
+      this.video,
+      this.canvas,
+      this.anchorButtonElement,
+      this.chatContainer,
+      GlobalDocuments.create([document]),
+      this.playerSettings,
+    );
+  }
+
+  public assemble7tv(): void {
+    this.playController = PlayerController.createTwitch7tvLive(
       this.video,
       this.canvas,
       this.anchorButtonElement,

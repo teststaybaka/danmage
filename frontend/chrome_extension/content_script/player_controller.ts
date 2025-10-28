@@ -1,12 +1,8 @@
 import { ChatEntry, HostApp } from "../../../interface/chat_entry";
 import { PlayerSettings } from "../../../interface/player_settings";
 import { newGetChatRequest, newPostChatRequest } from "../../client_requests";
-import {
-  ChatPool,
-  StructuredChatPool,
-  TwitchChatPool,
-  YouTubeChatPool,
-} from "./chat_pool";
+import { ChatPool, OnPageChatPool, StructuredChatPool } from "./chat_pool";
+import { BlockPatternTester } from "./common/block_pattern_tester";
 import { GlobalDocuments } from "./common/global_documents";
 import { SERVICE_CLIENT } from "./common/service_client";
 import { ControlPanel } from "./control_panel";
@@ -16,6 +12,13 @@ import {
   ControlPanelPeriodicPrepender,
 } from "./control_panel_attacher";
 import { DanmakuCanvasController } from "./danmaku_canvas/danmaku_canvas_controller";
+import {
+  StructuredContentBuilder,
+  Twitch7tvChatContentBuilder,
+  TwitchLiveChatContentBuilder,
+  TwitchVideoChatContentBuilder,
+  YouTubeChatContentBuilder,
+} from "./danmaku_canvas/danmaku_element_content_builder";
 import {
   CrunchyrollVideoIdExtractor,
   NoopVideoIdExtractor,
@@ -40,7 +43,12 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      DanmakuCanvasController.createStructured(canvas, playerSettings),
+      DanmakuCanvasController.create(
+        canvas,
+        playerSettings,
+        BlockPatternTester.createIdentity(playerSettings.blockSettings),
+        new StructuredContentBuilder(),
+      ),
       controlPanel,
       ControlPanelOneTimePrepender.create(
         controlPanel.body,
@@ -68,13 +76,18 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      DanmakuCanvasController.createYouTube(canvas, playerSettings),
+      DanmakuCanvasController.create(
+        canvas,
+        playerSettings,
+        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        new YouTubeChatContentBuilder(),
+      ),
       controlPanel,
       ControlPanelOneTimePrepender.create(
         controlPanel.body,
         anchorButtonElement,
       ),
-      YouTubeChatPool.create(chatContainer, playerSettings.blockSettings),
+      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create(),
     );
   }
@@ -95,13 +108,18 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      DanmakuCanvasController.createTwitch(canvas, playerSettings),
+      DanmakuCanvasController.create(
+        canvas,
+        playerSettings,
+        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        new TwitchVideoChatContentBuilder(),
+      ),
       controlPanel,
       ControlPanelOneTimePrepender.create(
         controlPanel.body,
         anchorButtonElement,
       ),
-      TwitchChatPool.create(chatContainer, playerSettings.blockSettings),
+      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create(),
     );
   }
@@ -122,13 +140,50 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      DanmakuCanvasController.createTwitch(canvas, playerSettings),
+      DanmakuCanvasController.create(
+        canvas,
+        playerSettings,
+        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        new TwitchLiveChatContentBuilder(),
+      ),
       controlPanel,
       ControlPanelOneTimePrepender.create(
         controlPanel.body,
         anchorButtonElement,
       ),
-      TwitchChatPool.create(chatContainer, playerSettings.blockSettings),
+      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
+      NoopVideoIdExtractor.create(),
+    );
+  }
+
+  public static createTwitch7tvLive(
+    video: HTMLVideoElement,
+    canvas: HTMLElement,
+    anchorButtonElement: Element,
+    chatContainer: Element,
+    globalDocuments: GlobalDocuments,
+    playerSettings: PlayerSettings,
+  ): PlayerController {
+    let controlPanel = ControlPanel.createTwitchLive(
+      globalDocuments,
+      playerSettings,
+    );
+    return new PlayerController(
+      window,
+      SERVICE_CLIENT,
+      video,
+      DanmakuCanvasController.create(
+        canvas,
+        playerSettings,
+        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        new Twitch7tvChatContentBuilder(),
+      ),
+      controlPanel,
+      ControlPanelOneTimePrepender.create(
+        controlPanel.body,
+        anchorButtonElement,
+      ),
+      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create(),
     );
   }
@@ -148,7 +203,12 @@ export class PlayerController {
       window,
       SERVICE_CLIENT,
       video,
-      DanmakuCanvasController.createStructured(canvas, playerSettings),
+      DanmakuCanvasController.create(
+        canvas,
+        playerSettings,
+        BlockPatternTester.createIdentity(playerSettings.blockSettings),
+        new StructuredContentBuilder(),
+      ),
       controlPanel,
       ControlPanelPeriodicPrepender.create(
         controlPanel.body,
