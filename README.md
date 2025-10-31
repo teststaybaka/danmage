@@ -24,6 +24,14 @@ If you want to build it for Windows/MacOS, you gotta do some work youself :)
 
 ## Version
 
+### Version 5.2.1
+
+Fixed small issues on Kick, including danmaku appearing mid screen on large screen, and sometimes timestamp is not removed. Though still easy to break whenver Kick updates their UI.
+
+### Version 5.2.0
+
+Supported Kick live streaming platform. Updated danmaku styling for YouTube.
+
 ### Version 5.1.0
 
 Added support for 7tv extension on Twitch. Small refactors on extrating and applying styles to danmaku HTML elements.

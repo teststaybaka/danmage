@@ -1,27 +1,32 @@
+import { ControlPanel } from "./control_panel";
+
 export interface ControlPanelAttacher {
   start(): void;
   stop(): void;
 }
 
-export class ControlPanelOneTimePrepender implements ControlPanelAttacher {
+export class ControlPanelOneTimeAttacher implements ControlPanelAttacher {
   public static create(
-    controlPanelBody: HTMLElement,
+    controlPanel: ControlPanel,
     anchorButtonElement: Element,
-  ): ControlPanelOneTimePrepender {
-    return new ControlPanelOneTimePrepender(
-      controlPanelBody,
+  ): ControlPanelOneTimeAttacher {
+    return new ControlPanelOneTimeAttacher(
+      document,
+      controlPanel,
       anchorButtonElement,
     );
   }
 
   public constructor(
-    private controlPanelBody: HTMLElement,
+    private document: Document,
+    private controlPanel: ControlPanel,
     private anchorButtonElement: Element,
   ) {}
 
   public start(): void {
+    this.document.body.appendChild(this.controlPanel.panel);
     this.anchorButtonElement.parentElement.insertBefore(
-      this.controlPanelBody,
+      this.controlPanel.button,
       this.anchorButtonElement,
     );
   }
@@ -29,13 +34,13 @@ export class ControlPanelOneTimePrepender implements ControlPanelAttacher {
   public stop(): void {}
 }
 
-export class ControlPanelPeriodicPrepender implements ControlPanelAttacher {
+export class ControlPanelPeriodicAttacher implements ControlPanelAttacher {
   public static create(
-    controlPanelBody: HTMLElement,
+    controlPanel: ControlPanel,
     anchorButtonSelector: string,
-  ): ControlPanelPeriodicPrepender {
-    return new ControlPanelPeriodicPrepender(
-      controlPanelBody,
+  ): ControlPanelPeriodicAttacher {
+    return new ControlPanelPeriodicAttacher(
+      controlPanel,
       anchorButtonSelector,
       document,
       window,
@@ -48,13 +53,14 @@ export class ControlPanelPeriodicPrepender implements ControlPanelAttacher {
   private cycleId: number;
 
   public constructor(
-    private controlPanelBody: HTMLElement,
+    private controlPanel: ControlPanel,
     private anchorButtonSelector: string,
     private document: Document,
     private window: Window,
   ) {}
 
   public start(): void {
+    this.document.body.appendChild(this.controlPanel.panel);
     this.cycle();
   }
 
@@ -66,14 +72,14 @@ export class ControlPanelPeriodicPrepender implements ControlPanelAttacher {
       this.lastAnchorButtonElement = anchorButtonElement;
       if (anchorButtonElement) {
         anchorButtonElement.parentElement.insertBefore(
-          this.controlPanelBody,
+          this.controlPanel.button,
           anchorButtonElement,
         );
       }
     }
     this.cycleId = this.window.setTimeout(
       this.cycle,
-      ControlPanelPeriodicPrepender.INTERVAL,
+      ControlPanelPeriodicAttacher.INTERVAL,
     );
   };
 

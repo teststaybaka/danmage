@@ -8,15 +8,15 @@ import { SERVICE_CLIENT } from "./common/service_client";
 import { ControlPanel } from "./control_panel";
 import {
   ControlPanelAttacher,
-  ControlPanelOneTimePrepender,
-  ControlPanelPeriodicPrepender,
+  ControlPanelOneTimeAttacher,
+  ControlPanelPeriodicAttacher,
 } from "./control_panel_attacher";
 import { DanmakuCanvasController } from "./danmaku_canvas/danmaku_canvas_controller";
 import {
+  KickChatContentBuilder,
   StructuredContentBuilder,
   Twitch7tvChatContentBuilder,
-  TwitchLiveChatContentBuilder,
-  TwitchVideoChatContentBuilder,
+  TwitchChatContentBuilder,
   YouTubeChatContentBuilder,
 } from "./danmaku_canvas/danmaku_element_content_builder";
 import {
@@ -50,10 +50,7 @@ export class PlayerController {
         new StructuredContentBuilder(),
       ),
       controlPanel,
-      ControlPanelOneTimePrepender.create(
-        controlPanel.body,
-        anchorButtonElement,
-      ),
+      ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
       StructuredChatPool.create(playerSettings.blockSettings),
       YouTubeVideoIdExtractor.create(canvas),
       HostApp.YouTube,
@@ -65,10 +62,12 @@ export class PlayerController {
     canvas: HTMLElement,
     anchorButtonElement: Element,
     chatContainer: Element,
+    iframeElement: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
     let controlPanel = ControlPanel.createYouTubeChat(
+      iframeElement,
       globalDocuments,
       playerSettings,
     );
@@ -83,10 +82,7 @@ export class PlayerController {
         new YouTubeChatContentBuilder(),
       ),
       controlPanel,
-      ControlPanelOneTimePrepender.create(
-        controlPanel.body,
-        anchorButtonElement,
-      ),
+      ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
       OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create(),
     );
@@ -100,7 +96,7 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
-    let controlPanel = ControlPanel.createTwitchVideo(
+    let controlPanel = ControlPanel.createTwitch(
       globalDocuments,
       playerSettings,
     );
@@ -112,13 +108,10 @@ export class PlayerController {
         canvas,
         playerSettings,
         BlockPatternTester.createHtml(playerSettings.blockSettings),
-        new TwitchVideoChatContentBuilder(),
+        new TwitchChatContentBuilder(),
       ),
       controlPanel,
-      ControlPanelOneTimePrepender.create(
-        controlPanel.body,
-        anchorButtonElement,
-      ),
+      ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
       OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create(),
     );
@@ -132,7 +125,7 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
-    let controlPanel = ControlPanel.createTwitchLive(
+    let controlPanel = ControlPanel.createTwitch(
       globalDocuments,
       playerSettings,
     );
@@ -144,13 +137,10 @@ export class PlayerController {
         canvas,
         playerSettings,
         BlockPatternTester.createHtml(playerSettings.blockSettings),
-        new TwitchLiveChatContentBuilder(),
+        new TwitchChatContentBuilder(),
       ),
       controlPanel,
-      ControlPanelOneTimePrepender.create(
-        controlPanel.body,
-        anchorButtonElement,
-      ),
+      ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
       OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create(),
     );
@@ -164,7 +154,7 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
-    let controlPanel = ControlPanel.createTwitchLive(
+    let controlPanel = ControlPanel.createTwitch(
       globalDocuments,
       playerSettings,
     );
@@ -179,10 +169,33 @@ export class PlayerController {
         new Twitch7tvChatContentBuilder(),
       ),
       controlPanel,
-      ControlPanelOneTimePrepender.create(
-        controlPanel.body,
-        anchorButtonElement,
+      ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
+      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
+      NoopVideoIdExtractor.create(),
+    );
+  }
+
+  public static createKick(
+    video: HTMLVideoElement,
+    canvas: HTMLElement,
+    anchorButtonElement: Element,
+    chatContainer: Element,
+    globalDocuments: GlobalDocuments,
+    playerSettings: PlayerSettings,
+  ): PlayerController {
+    let controlPanel = ControlPanel.createKick(globalDocuments, playerSettings);
+    return new PlayerController(
+      window,
+      SERVICE_CLIENT,
+      video,
+      DanmakuCanvasController.create(
+        canvas,
+        playerSettings,
+        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        new KickChatContentBuilder(),
       ),
+      controlPanel,
+      ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
       OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
       NoopVideoIdExtractor.create(),
     );
@@ -210,10 +223,7 @@ export class PlayerController {
         new StructuredContentBuilder(),
       ),
       controlPanel,
-      ControlPanelPeriodicPrepender.create(
-        controlPanel.body,
-        anchorButtonSelector,
-      ),
+      ControlPanelPeriodicAttacher.create(controlPanel, anchorButtonSelector),
       StructuredChatPool.create(playerSettings.blockSettings),
       CrunchyrollVideoIdExtractor.create(),
       HostApp.Crunchyroll,

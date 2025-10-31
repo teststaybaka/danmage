@@ -14,6 +14,7 @@ export class YouTubeAssembler implements Assembler {
   private video: HTMLVideoElement;
   private chatContainer: Element;
   private anchorButtonElement: Element;
+  private iframeElement: Element;
   private iframeDocument: Document;
   private playController: PlayerController;
 
@@ -30,6 +31,7 @@ export class YouTubeAssembler implements Assembler {
       this.assemble = this.assembleStructured;
       return [this.canvas, this.video, this.anchorButtonElement];
     } else {
+      this.iframeElement = chatFrame;
       this.iframeDocument = chatFrame.contentDocument;
       this.chatContainer = this.iframeDocument.querySelector("#chat #items");
       this.anchorButtonElement = this.iframeDocument.querySelector(
@@ -61,6 +63,7 @@ export class YouTubeAssembler implements Assembler {
       this.canvas,
       this.anchorButtonElement,
       this.chatContainer,
+      this.iframeElement,
       GlobalDocuments.create([document, this.iframeDocument]),
       this.playerSettings,
     );
@@ -164,6 +167,57 @@ export class TwitchAssembler implements Assembler {
   }
 }
 
+export class KickAssembler implements Assembler {
+  private canvas: HTMLElement;
+  private video: HTMLVideoElement;
+  private chatContainer: Element;
+  private anchorButtonElement: Element;
+  private playController: PlayerController;
+
+  public constructor(private playerSettings: PlayerSettings) {}
+
+  public queryElements(): Element[] {
+    this.canvas = document.querySelector(
+      "#injected-embedded-channel-player-video",
+    )?.parentElement?.parentElement?.parentElement;
+    this.video = document.getElementsByTagName("video")[0];
+    this.chatContainer = document.querySelector("#chatroom-messages > div");
+    this.anchorButtonElement = document.querySelector(
+      "#chatroom-footer > div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(1)",
+    );
+    if (!this.anchorButtonElement) {
+      // Playback
+      this.anchorButtonElement = document.querySelector(
+        "#channel-chatroom > div:first-of-type > span",
+      );
+    }
+    return [
+      this.canvas,
+      this.video,
+      this.anchorButtonElement,
+      this.chatContainer,
+    ];
+  }
+
+  public assemble(): void {
+    this.playController = PlayerController.createKick(
+      this.video,
+      this.canvas,
+      this.anchorButtonElement,
+      this.chatContainer,
+      GlobalDocuments.create([document]),
+      this.playerSettings,
+    );
+  }
+
+  public remove(): void {
+    if (this.playController) {
+      this.playController.remove();
+      this.playController = undefined;
+    }
+  }
+}
+
 export class CrunchyrollAssembler implements Assembler {
   private canvas: HTMLElement;
   private video: HTMLVideoElement;
@@ -208,6 +262,10 @@ export class Refresher {
 
   public static createTwitch(playerSettings: PlayerSettings): Refresher {
     return new Refresher(new TwitchAssembler(playerSettings), window);
+  }
+
+  public static createKick(playerSettings: PlayerSettings): Refresher {
+    return new Refresher(new KickAssembler(playerSettings), window);
   }
 
   public static createCrunchyroll(playerSettings: PlayerSettings): Refresher {

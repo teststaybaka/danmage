@@ -10,6 +10,9 @@ async function main(): Promise<void> {
     case "www.twitch.tv":
       Refresher.createTwitch(playerSettings);
       break;
+    case "kick.com":
+      Refresher.createKick(playerSettings);
+      break;
     case "static.crunchyroll.com":
       Refresher.createCrunchyroll(playerSettings);
       break;

@@ -38,10 +38,10 @@ export class ControlPanel extends EventEmitter {
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      window,
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 100%; aspect-ratio: 1/1;`,
+      `height: 100%; aspect-ratio: 1/1;`,
       "currentColor",
-      "bottom: 100%; right: 0;",
       true,
       globalDocuments,
       playerSettings,
@@ -49,44 +49,46 @@ export class ControlPanel extends EventEmitter {
   }
 
   public static createYouTubeChat(
+    iframeElement: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      window,
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 40px; width: 40px;`,
+      `height: 40px; width: 40px;`,
       "var(--yt-live-chat-header-button-color)",
-      "top: 40px; right: -40px;",
+      false,
+      globalDocuments,
+      playerSettings,
+      iframeElement,
+    );
+  }
+
+  public static createTwitch(
+    globalDocuments: GlobalDocuments,
+    playerSettings: PlayerSettings,
+  ): ControlPanel {
+    return new ControlPanel(
+      window,
+      PLAYER_SETTINGS_STORAGE,
+      `height: 32px; width: 32px;`,
+      "currentColor",
       false,
       globalDocuments,
       playerSettings,
     );
   }
 
-  public static createTwitchVideo(
+  public static createKick(
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      window,
       PLAYER_SETTINGS_STORAGE,
-      `position: absolute; height: 32px; width: 32px; right: 12px;`,
-      "currentColor",
-      "top: 32px; right: 0;",
-      false,
-      globalDocuments,
-      playerSettings,
-    );
-  }
-
-  public static createTwitchLive(
-    globalDocuments: GlobalDocuments,
-    playerSettings: PlayerSettings,
-  ): ControlPanel {
-    return new ControlPanel(
-      PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 32px; width: 32px;`,
-      "currentColor",
-      "bottom: 32px; right: 0;",
+      `height: 32px; width: 32px;`,
+      "white",
       false,
       globalDocuments,
       playerSettings,
@@ -98,10 +100,10 @@ export class ControlPanel extends EventEmitter {
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
+      window,
       PLAYER_SETTINGS_STORAGE,
-      `position: relative; height: 40px; width: 40px;`,
+      `height: 40px; width: 40px;`,
       "white",
-      "bottom: 40px; right: 0;",
       true,
       globalDocuments,
       playerSettings,
@@ -111,9 +113,8 @@ export class ControlPanel extends EventEmitter {
   private static TAB_BUTTON_WIDTH = 24; // px
   private static WIDTH_TRANSITION_STYLE = "width .3s";
 
-  public body: HTMLDivElement;
-  private controlPanelButton = new Ref<HTMLDivElement>();
-  private controlPanelPopup = new Ref<HTMLDivElement>();
+  public button: HTMLDivElement;
+  public panel: HTMLDivElement;
   private tabHeadLine = new Ref<HTMLDivElement>();
   private chatListTabHead = new Ref<HTMLDivElement>();
   private chatListTabButton = new Ref<HTMLDivElement>();
@@ -130,13 +131,14 @@ export class ControlPanel extends EventEmitter {
   private tabNavigator: TabNavigator<Tab>;
 
   public constructor(
+    private window: Window,
     private playerSettingsStorage: PlayerSettingsStorage,
-    elementStyle: string,
-    controlPanelButtonColor: string,
-    controlPanelPopupStyle: string,
+    buttonStyle: string,
+    buttonColor: string,
     hasChat: boolean,
     private globalDocuments: GlobalDocuments,
     private playerSettings: PlayerSettings,
+    private iframeElement?: Element,
   ) {
     super();
     let tabHeads = new Array<HTMLDivElement>();
@@ -200,21 +202,20 @@ export class ControlPanel extends EventEmitter {
       assign(this.accountTab, AccountTab.create().hide()).body,
     );
 
-    this.body = E.div(
+    this.button = E.div(
       {
-        class: "control-panel-container",
-        style: `display: inline-block; text-align: left; text-shadow: none; vertical-align: top; font-size: 0; line-height: 0; ${elementStyle}`,
+        class: "control-panel-button-container",
+        style: `font-size: 0; line-height: 0; display: inline-block; text-align: left; text-shadow: none; vertical-align: top; cursor: pointer; ${buttonStyle}`,
       },
       E.div(
         {
-          ref: this.controlPanelButton,
           class: "control-panel-button",
-          style: `height: 100%; padding: 22%; box-sizing: border-box; cursor: pointer;`,
+          style: `width: 100%; height: 100%; padding: 22%; box-sizing: border-box;`,
         },
         E.svg(
           {
             class: "control-panel-svg",
-            style: `display: block; height: 100%; fill: ${controlPanelButtonColor};`,
+            style: `display: block; height: 100%; fill: ${buttonColor};`,
             viewBox: "0 0 200 200",
           },
           E.path({
@@ -223,27 +224,26 @@ export class ControlPanel extends EventEmitter {
           }),
         ),
       ),
+    );
+    this.panel = E.div(
+      {
+        class: "control-panel-control-panel-popup",
+        style: `font-size: 0; line-height: 0; position: absolute; display: flex; flex-flow: column nowrap; width: 320px; height: 384px; padding: 4px; box-sizing: border-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 1px 1px 4px ${ColorScheme.getPopupShadow()}; z-index: 1000;`,
+      },
       E.div(
         {
-          ref: this.controlPanelPopup,
-          class: "control-panel-control-panel-popup",
-          style: `position: absolute; display: flex; flex-flow: column nowrap; width: 320px; height: 384px; padding: 4px; box-sizing: border-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 1px 1px 4px ${ColorScheme.getPopupShadow()}; z-index: 100; ${controlPanelPopupStyle}`,
+          ref: this.tabHeadLine,
+          class: "control-panel-tab-head-line",
+          style: `width: 100%;`,
         },
-        E.div(
-          {
-            ref: this.tabHeadLine,
-            class: "control-panel-tab-head-line",
-            style: `width: 100%;`,
-          },
-          ...tabHeads,
-        ),
-        E.div(
-          {
-            class: "control-panel-tabs",
-            style: `flex-grow: 1; box-sizing: border-box; width: 100%; min-height: 0;`,
-          },
-          ...tabs,
-        ),
+        ...tabHeads,
+      ),
+      E.div(
+        {
+          class: "control-panel-tabs",
+          style: `flex-grow: 1; box-sizing: border-box; width: 100%; min-height: 0;`,
+        },
+        ...tabs,
       ),
     );
     this.hidePopup();
@@ -277,13 +277,16 @@ export class ControlPanel extends EventEmitter {
     );
     this.blockSettingsTab.val.on("update", () => this.updateBlockSettings());
 
-    this.body.addEventListener("click", (event) => event.stopPropagation());
-    this.body.addEventListener("mousedown", (event) => event.stopPropagation());
-    this.body.addEventListener("mouseup", (event) => event.stopPropagation());
-    this.controlPanelButton.val.addEventListener("click", () =>
-      this.togglePopup(),
+    this.button.addEventListener("click", (event) => {
+      this.togglePopup();
+    });
+    this.button.addEventListener("mousedown", (event) =>
+      event.stopPropagation(),
     );
-    this.globalDocuments.hideWhenMousedown(this.body, () => this.hidePopup());
+    this.panel.addEventListener("mousedown", (event) =>
+      event.stopPropagation(),
+    );
+    this.globalDocuments.hideWhenMousedown(() => this.hidePopup());
   }
 
   private static createTabHead(
@@ -324,14 +327,44 @@ export class ControlPanel extends EventEmitter {
   }
 
   private hidePopup(): void {
-    this.controlPanelPopup.val.style.display = "none";
+    this.panel.style.display = "none";
   }
 
   private togglePopup(): void {
-    if (this.controlPanelPopup.val.style.display === "none") {
-      this.controlPanelPopup.val.style.display = "flex";
+    if (this.panel.style.display === "none") {
+      this.panel.style.display = "flex";
+      let rect = this.button.getBoundingClientRect();
+      let iframeRect = this.iframeElement?.getBoundingClientRect();
+      let mergedRect = {
+        top: rect.top + (iframeRect?.top ?? 0),
+        bottom: rect.bottom + (iframeRect?.top ?? 0),
+        left: rect.left + (iframeRect?.left ?? 0),
+        right: rect.right + (iframeRect?.left ?? 0),
+      }
+      let panelRect = this.panel.getBoundingClientRect();
+      let viewportWidth = this.window.innerWidth;
+      let viewportHeight = this.window.innerHeight;
+
+      let top = mergedRect.top - panelRect.height;
+      if (top < 0) {
+        top = mergedRect.bottom;
+        if (top + panelRect.height > viewportHeight) {
+          top = viewportHeight - panelRect.height;
+        }
+      }
+
+      let left = mergedRect.right - panelRect.width;
+      if (left < 0) {
+        left = mergedRect.left;
+        if (left + panelRect.width > viewportWidth) {
+          left = viewportWidth - panelRect.width;
+        }
+      }
+
+      this.panel.style.top = `${top}px`;
+      this.panel.style.left = `${left}px`;
     } else {
-      this.controlPanelPopup.val.style.display = "none";
+      this.panel.style.display = "none";
     }
   }
 
@@ -422,6 +455,7 @@ export class ControlPanel extends EventEmitter {
   }
 
   public remove(): void {
-    this.body.remove();
+    this.button.remove();
+    this.panel.remove();
   }
 }

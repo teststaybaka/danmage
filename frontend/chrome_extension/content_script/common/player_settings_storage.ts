@@ -34,73 +34,88 @@ export class PlayerSettingsStorage {
   public constructor(private serviceClient: WebServiceClient) {}
 
   public async read(): Promise<PlayerSettings> {
-    let playerSettings: PlayerSettings;
+    let remotePlayerSettings: PlayerSettings;
     try {
-      playerSettings = (
+      remotePlayerSettings = (
         await this.serviceClient.send(newGetPlayerSettingsRequest({}))
       ).playerSettings;
     } catch (e) {
-      playerSettings = parseMessage(
-        JSON.parse(localStorage.getItem(PlayerSettingsStorage.NAME)),
-        PLAYER_SETTINGS,
-      );
+      remotePlayerSettings = {};
     }
-    return PlayerSettingsStorage.normalizePlayerSettings(playerSettings);
+    let localPlayerSettings = parseMessage(
+      JSON.parse(localStorage.getItem(PlayerSettingsStorage.NAME)),
+      PLAYER_SETTINGS,
+    );
+    return PlayerSettingsStorage.normalizePlayerSettings(
+      remotePlayerSettings,
+      localPlayerSettings,
+    );
   }
 
   private static normalizePlayerSettings(
-    playerSettings?: PlayerSettings,
+    remotePlayerSettings?: PlayerSettings,
+    localPlayerSettings?: PlayerSettings,
   ): PlayerSettings {
-    if (!playerSettings) {
-      playerSettings = {};
-    }
+    let playerSettings: PlayerSettings = {
+      displaySettings: {},
+      blockSettings: {},
+    };
 
-    if (!playerSettings.displaySettings) {
-      playerSettings.displaySettings = {};
-    }
     let displaySettings = playerSettings.displaySettings;
-    displaySettings.speed = SPEED_RANGE.getValidValue(displaySettings.speed);
+    displaySettings.speed = SPEED_RANGE.getValidValue(
+      remotePlayerSettings?.displaySettings?.speed ??
+        localPlayerSettings?.displaySettings?.speed,
+    );
     displaySettings.opacity = OPACITY_RANGE.getValidValue(
-      displaySettings.opacity,
+      remotePlayerSettings?.displaySettings?.opacity ??
+        localPlayerSettings?.displaySettings?.opacity,
     );
     displaySettings.fontSize = FONT_SIZE_RANGE.getValidValue(
-      displaySettings.fontSize,
+      remotePlayerSettings?.displaySettings?.fontSize ??
+        localPlayerSettings?.displaySettings?.fontSize,
     );
     displaySettings.density = DENSITY_RANGE.getValidValue(
-      displaySettings.density,
+      remotePlayerSettings?.displaySettings?.density ??
+        localPlayerSettings?.displaySettings?.density,
     );
     displaySettings.topMargin = TOP_MARGIN_RANGE.getValidValue(
-      displaySettings.topMargin,
+      remotePlayerSettings?.displaySettings?.topMargin ??
+        localPlayerSettings?.displaySettings?.topMargin,
     );
     displaySettings.bottomMargin = BOTTOM_MARGIN_RANGE.getValidValue(
-      displaySettings.bottomMargin,
+      remotePlayerSettings?.displaySettings?.bottomMargin ??
+        localPlayerSettings?.displaySettings?.bottomMargin,
     );
     displaySettings.fontWeight = FONT_WEIGHT_RANGE.getValidValue(
-      displaySettings.fontWeight,
+      remotePlayerSettings?.displaySettings?.fontWeight ??
+        localPlayerSettings?.displaySettings?.fontWeight,
     );
-    if (!displaySettings.fontFamily) {
-      displaySettings.fontFamily = FONT_FAMILY_DEFAULT;
-    }
-    if (displaySettings.showUserName === undefined) {
-      displaySettings.showUserName = SHOW_USER_NAME_DEFAULT;
-    }
-    if (displaySettings.enable === undefined) {
-      displaySettings.enable = ENABLE_CHAT_SCROLLING_DEFAULT;
-    }
-    if (displaySettings.distributionStyle === undefined) {
-      displaySettings.distributionStyle = DISTRIBUTION_STYLE_DEFAULT;
-    }
-    if (displaySettings.enableInteraction === undefined) {
-      displaySettings.enableInteraction = ENABLE_CHAT_INTERACTION_DEFAULT;
-    }
+    displaySettings.fontFamily =
+      remotePlayerSettings?.displaySettings?.fontFamily ??
+      localPlayerSettings?.displaySettings?.fontFamily ??
+      FONT_FAMILY_DEFAULT;
+    displaySettings.showUserName =
+      remotePlayerSettings?.displaySettings?.showUserName ??
+      localPlayerSettings?.displaySettings?.showUserName ??
+      SHOW_USER_NAME_DEFAULT;
+    displaySettings.enable =
+      remotePlayerSettings?.displaySettings?.enable ??
+      localPlayerSettings?.displaySettings?.enable ??
+      ENABLE_CHAT_SCROLLING_DEFAULT;
+    displaySettings.distributionStyle =
+      remotePlayerSettings?.displaySettings?.distributionStyle ??
+      localPlayerSettings?.displaySettings?.distributionStyle ??
+      DISTRIBUTION_STYLE_DEFAULT;
+    displaySettings.enableInteraction =
+      remotePlayerSettings?.displaySettings?.enableInteraction ??
+      localPlayerSettings?.displaySettings?.enableInteraction ??
+      ENABLE_CHAT_INTERACTION_DEFAULT;
 
-    if (!playerSettings.blockSettings) {
-      playerSettings.blockSettings = {};
-    }
     let blockSettings = playerSettings.blockSettings;
-    if (!blockSettings.blockPatterns) {
-      blockSettings.blockPatterns = [];
-    }
+    blockSettings.blockPatterns = [
+      ...(remotePlayerSettings?.blockSettings?.blockPatterns ?? []),
+      ...(localPlayerSettings?.blockSettings?.blockPatterns ?? []),
+    ];
     return playerSettings;
   }
 
