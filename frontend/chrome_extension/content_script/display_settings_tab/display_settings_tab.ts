@@ -14,6 +14,7 @@ import {
   FONT_SIZE_RANGE,
   FONT_WEIGHT_RANGE,
   OPACITY_RANGE,
+  SHOW_CHAT_WINDOW_DEFAULT,
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
   TOP_MARGIN_RANGE,
@@ -38,6 +39,7 @@ export class DisplaySettingsTab extends EventEmitter {
 
   public body: HTMLDivElement;
   private enableOption = new Ref<SwitchCheckbox>();
+  private showChatWindowOption = new Ref<SwitchCheckbox>();
   private enableInteractionOption = new Ref<SwitchCheckbox>();
   private opacityOption = new Ref<Slider>();
   private speedOption = new Ref<Slider>();
@@ -64,6 +66,14 @@ export class DisplaySettingsTab extends EventEmitter {
           chrome.i18n.getMessage("enableScrollingOption"),
           ENABLE_CHAT_SCROLLING_DEFAULT,
           displaySettings.enable,
+        ),
+      ).body,
+      assign(
+        this.showChatWindowOption,
+        SwitchCheckbox.create(
+          chrome.i18n.getMessage("showChatWindowOption"),
+          SHOW_CHAT_WINDOW_DEFAULT,
+          displaySettings.showChatWindow,
         ),
       ).body,
       assign(
@@ -204,6 +214,9 @@ export class DisplaySettingsTab extends EventEmitter {
       ),
     );
     this.enableOption.val.on("change", (value) => this.enableChange(value));
+    this.showChatWindowOption.val.on("change", (value) =>
+      this.showChatWindowChange(value),
+    );
     this.enableInteractionOption.val.on("change", (value) =>
       this.enableInteractionChange(value),
     );
@@ -278,6 +291,11 @@ export class DisplaySettingsTab extends EventEmitter {
     this.emit("update");
   }
 
+  public showChatWindowChange(value: boolean): void {
+    this.displaySettings.showChatWindow = value;
+    this.emit("update");
+  }
+
   public enableInteractionChange(value: boolean): void {
     this.displaySettings.enableInteraction = value;
     this.emit("update");
@@ -310,6 +328,9 @@ export class DisplaySettingsTab extends EventEmitter {
     this.displaySettings.showUserName = this.showUsernameOption.val.reset();
     this.displaySettings.distributionStyle =
       this.distributionOption.val.reset();
+    this.displaySettings.enableInteraction =
+      this.enableInteractionOption.val.reset();
+    this.displaySettings.showChatWindow = this.showChatWindowOption.val.reset();
     this.emit("update");
   }
 

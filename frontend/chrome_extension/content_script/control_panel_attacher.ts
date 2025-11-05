@@ -25,7 +25,7 @@ export class ControlPanelOneTimeAttacher implements ControlPanelAttacher {
 
   public start(): void {
     this.document.body.appendChild(this.controlPanel.panel);
-    this.anchorButtonElement.parentElement.insertBefore(
+    this.anchorButtonElement.before(
       this.controlPanel.button,
       this.anchorButtonElement,
     );
@@ -37,26 +37,26 @@ export class ControlPanelOneTimeAttacher implements ControlPanelAttacher {
 export class ControlPanelPeriodicAttacher implements ControlPanelAttacher {
   public static create(
     controlPanel: ControlPanel,
-    anchorButtonSelector: string,
+    anchorElementSelectFn: () => HTMLElement,
   ): ControlPanelPeriodicAttacher {
     return new ControlPanelPeriodicAttacher(
-      controlPanel,
-      anchorButtonSelector,
       document,
       window,
+      controlPanel,
+      anchorElementSelectFn,
     );
   }
 
   private static INTERVAL = 100; // ms
 
-  private lastAnchorButtonElement: Element;
+  private lastAnchorElement: Element;
   private cycleId: number;
 
   public constructor(
-    private controlPanel: ControlPanel,
-    private anchorButtonSelector: string,
     private document: Document,
     private window: Window,
+    private controlPanel: ControlPanel,
+    private anchorElementSelectFn: () => HTMLElement,
   ) {}
 
   public start(): void {
@@ -65,16 +65,11 @@ export class ControlPanelPeriodicAttacher implements ControlPanelAttacher {
   }
 
   private cycle = (): void => {
-    let anchorButtonElement = this.document.querySelector(
-      this.anchorButtonSelector,
-    );
-    if (this.lastAnchorButtonElement !== anchorButtonElement) {
-      this.lastAnchorButtonElement = anchorButtonElement;
-      if (anchorButtonElement) {
-        anchorButtonElement.parentElement.insertBefore(
-          this.controlPanel.button,
-          anchorButtonElement,
-        );
+    let anchorElement = this.anchorElementSelectFn();
+    if (this.lastAnchorElement !== anchorElement) {
+      this.lastAnchorElement = anchorElement;
+      if (anchorElement) {
+        anchorElement.before(this.controlPanel.button, anchorElement);
       }
     }
     this.cycleId = this.window.setTimeout(

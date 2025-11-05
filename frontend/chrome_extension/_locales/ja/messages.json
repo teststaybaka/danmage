@@ -62,6 +62,9 @@
   "enableInteractionOption": {
     "message": "ホバーすると流れが止まる"
   },
+  "showChatWindowOption": {
+    "message": "YouTubeチャットを表示／非表示"
+  },
   "blockRuleInputPlaceHolder": {
     "message": "新しいルール"
   },

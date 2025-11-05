@@ -77,6 +77,7 @@ export interface DisplaySettings {
   showUserName?: boolean,
   distributionStyle?: DistributionStyle,
   enableInteraction?: boolean,
+  showChatWindow?: boolean,
 }
 
 export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
@@ -128,6 +129,10 @@ export let DISPLAY_SETTINGS: MessageDescriptor<DisplaySettings> = {
   }, {
     name: 'enableInteraction',
     index: 12,
+    primitiveType: PrimitiveType.BOOLEAN,
+  }, {
+    name: 'showChatWindow',
+    index: 13,
     primitiveType: PrimitiveType.BOOLEAN,
   }],
 };

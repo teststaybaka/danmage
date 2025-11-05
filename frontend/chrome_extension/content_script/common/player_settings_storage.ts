@@ -16,6 +16,7 @@ import {
   FONT_SIZE_RANGE,
   FONT_WEIGHT_RANGE,
   OPACITY_RANGE,
+  SHOW_CHAT_WINDOW_DEFAULT,
   SHOW_USER_NAME_DEFAULT,
   SPEED_RANGE,
   TOP_MARGIN_RANGE,
@@ -110,6 +111,10 @@ export class PlayerSettingsStorage {
       remotePlayerSettings?.displaySettings?.enableInteraction ??
       localPlayerSettings?.displaySettings?.enableInteraction ??
       ENABLE_CHAT_INTERACTION_DEFAULT;
+    displaySettings.showChatWindow =
+      remotePlayerSettings?.displaySettings?.showChatWindow ??
+      localPlayerSettings?.displaySettings?.showChatWindow ??
+      SHOW_CHAT_WINDOW_DEFAULT;
 
     let blockSettings = playerSettings.blockSettings;
     blockSettings.blockPatterns = [

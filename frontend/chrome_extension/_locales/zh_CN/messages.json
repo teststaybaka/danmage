@@ -62,6 +62,9 @@
   "enableInteractionOption": {
     "message": "悬停以停止滚动"
   },
+  "showChatWindowOption": {
+    "message": "显示/隐藏YouTube直播聊天室"
+  },
   "blockRuleInputPlaceHolder": {
     "message": "新的屏蔽规则"
   },

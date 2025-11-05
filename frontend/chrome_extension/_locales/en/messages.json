@@ -83,6 +83,10 @@
     "message": "Mouse hover to stop scrolling",
     "description": "Explain the option to enable hover on chat to stop scrolling."
   },
+  "showChatWindowOption": {
+    "message": "Show/Hide YouTube live chat window",
+    "description": "Explain the option to show or hide chat window."
+  },
   "blockRuleInputPlaceHolder": {
     "message": "New block rule",
     "description": "Place holder for the input to add new a block rule."

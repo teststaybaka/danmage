@@ -49,19 +49,17 @@ export class ControlPanel extends EventEmitter {
   }
 
   public static createYouTubeChat(
-    iframeElement: Element,
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
       window,
       PLAYER_SETTINGS_STORAGE,
-      `height: 40px; width: 40px;`,
-      "var(--yt-live-chat-header-button-color)",
+      `height: 100%; aspect-ratio: 1/1;`,
+      "currentColor",
       false,
       globalDocuments,
       playerSettings,
-      iframeElement,
     );
   }
 
@@ -72,8 +70,8 @@ export class ControlPanel extends EventEmitter {
     return new ControlPanel(
       window,
       PLAYER_SETTINGS_STORAGE,
-      `height: 32px; width: 32px;`,
-      "currentColor",
+      `height: 100%; aspect-ratio: 1/1;`,
+      "white",
       false,
       globalDocuments,
       playerSettings,
@@ -87,7 +85,7 @@ export class ControlPanel extends EventEmitter {
     return new ControlPanel(
       window,
       PLAYER_SETTINGS_STORAGE,
-      `height: 32px; width: 32px;`,
+      `height: 44px; width: 44px;`,
       "white",
       false,
       globalDocuments,
@@ -138,7 +136,6 @@ export class ControlPanel extends EventEmitter {
     hasChat: boolean,
     private globalDocuments: GlobalDocuments,
     private playerSettings: PlayerSettings,
-    private iframeElement?: Element,
   ) {
     super();
     let tabHeads = new Array<HTMLDivElement>();
@@ -228,7 +225,7 @@ export class ControlPanel extends EventEmitter {
     this.panel = E.div(
       {
         class: "control-panel-control-panel-popup",
-        style: `font-size: 0; line-height: 0; position: absolute; display: flex; flex-flow: column nowrap; width: 320px; height: 384px; padding: 4px; box-sizing: border-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 1px 1px 4px ${ColorScheme.getPopupShadow()}; z-index: 1000;`,
+        style: `font-size: 0; line-height: 0; position: absolute; display: flex; flex-flow: column nowrap; width: 320px; height: 384px; padding: 4px; box-sizing: border-box; background-color: ${ColorScheme.getBackground()}; box-shadow: 1px 1px 4px ${ColorScheme.getPopupShadow()}; z-index: 10000;`,
       },
       E.div(
         {
@@ -334,28 +331,21 @@ export class ControlPanel extends EventEmitter {
     if (this.panel.style.display === "none") {
       this.panel.style.display = "flex";
       let rect = this.button.getBoundingClientRect();
-      let iframeRect = this.iframeElement?.getBoundingClientRect();
-      let mergedRect = {
-        top: rect.top + (iframeRect?.top ?? 0),
-        bottom: rect.bottom + (iframeRect?.top ?? 0),
-        left: rect.left + (iframeRect?.left ?? 0),
-        right: rect.right + (iframeRect?.left ?? 0),
-      }
       let panelRect = this.panel.getBoundingClientRect();
       let viewportWidth = this.window.innerWidth;
       let viewportHeight = this.window.innerHeight;
 
-      let top = mergedRect.top - panelRect.height;
+      let top = rect.top - panelRect.height;
       if (top < 0) {
-        top = mergedRect.bottom;
+        top = rect.bottom;
         if (top + panelRect.height > viewportHeight) {
           top = viewportHeight - panelRect.height;
         }
       }
 
-      let left = mergedRect.right - panelRect.width;
+      let left = rect.right - panelRect.width;
       if (left < 0) {
-        left = mergedRect.left;
+        left = rect.left;
         if (left + panelRect.width > viewportWidth) {
           left = viewportWidth - panelRect.width;
         }

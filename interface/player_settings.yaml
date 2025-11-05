@@ -67,6 +67,9 @@
     - name: enableInteraction
       type: boolean
       index: 12
+    - name: showChatWindow
+      type: boolean
+      index: 13
 - kind: Message
   name: PlayerSettings
   fields:

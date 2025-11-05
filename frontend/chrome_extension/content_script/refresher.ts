@@ -14,8 +14,9 @@ export class YouTubeAssembler implements Assembler {
   private video: HTMLVideoElement;
   private chatContainer: Element;
   private anchorButtonElement: Element;
-  private iframeElement: Element;
   private iframeDocument: Document;
+  private chatWindowContainer1: HTMLElement;
+  private chatWindowContainer2: HTMLElement;
   private playController: PlayerController;
 
   public constructor(private playerSettings: PlayerSettings) {}
@@ -23,19 +24,17 @@ export class YouTubeAssembler implements Assembler {
   public queryElements(): Element[] {
     this.canvas = document.getElementById("movie_player");
     this.video = document.getElementsByTagName("video")[0];
-    let chatFrame = document.getElementById("chatframe") as HTMLIFrameElement;
-    if (!chatFrame) {
-      this.anchorButtonElement = document.querySelector(
-        ".ytp-right-controls > .ytp-settings-button",
-      );
+    this.anchorButtonElement = document.querySelector(".ytp-settings-button");
+    let chatIframe = document.getElementById("chatframe") as HTMLIFrameElement;
+    if (!chatIframe) {
       this.assemble = this.assembleStructured;
       return [this.canvas, this.video, this.anchorButtonElement];
     } else {
-      this.iframeElement = chatFrame;
-      this.iframeDocument = chatFrame.contentDocument;
+      this.iframeDocument = chatIframe.contentDocument;
       this.chatContainer = this.iframeDocument.querySelector("#chat #items");
-      this.anchorButtonElement = this.iframeDocument.querySelector(
-        "#live-chat-header-context-menu",
+      this.chatWindowContainer1 = document.getElementById("chat-container");
+      this.chatWindowContainer2 = document.getElementById(
+        "panels-full-bleed-container",
       );
       this.assemble = this.assembleChat;
       return [
@@ -43,6 +42,8 @@ export class YouTubeAssembler implements Assembler {
         this.video,
         this.chatContainer,
         this.anchorButtonElement,
+        this.chatWindowContainer1,
+        this.chatWindowContainer2,
       ];
     }
   }
@@ -63,7 +64,7 @@ export class YouTubeAssembler implements Assembler {
       this.canvas,
       this.anchorButtonElement,
       this.chatContainer,
-      this.iframeElement,
+      [this.chatWindowContainer1, this.chatWindowContainer2],
       GlobalDocuments.create([document, this.iframeDocument]),
       this.playerSettings,
     );
@@ -90,6 +91,9 @@ export class TwitchAssembler implements Assembler {
   public queryElements(): Element[] {
     this.canvas = document.querySelector(".video-player__container");
     this.video = document.getElementsByTagName("video")[0];
+    this.anchorButtonElement = document.querySelector(
+      `[data-a-target="player-settings-button"]`,
+    )?.parentElement?.parentElement?.parentElement?.parentElement;
     this.chatContainer = document.querySelector(
       ".chat-scrollable-area__message-container",
     );
@@ -100,23 +104,14 @@ export class TwitchAssembler implements Assembler {
         this.chatContainer = document.querySelector(
           ".video-chat__message-list-wrapper ul",
         );
-        this.anchorButtonElement = document.querySelector(
-          ".video-chat__header > span",
-        );
         this.assemble = this.assembleVideo;
       } else {
         // Live 7tv chat
-        this.anchorButtonElement = document.querySelector(
-          "seventv-chat-input-button-container",
-        );
         this.assemble = this.assemble7tv;
       }
     } else {
       // Live Twitch chat
-      this.anchorButtonElement = document.querySelector(
-        ".chat-input__buttons-container > div:last-child > div:last-child",
-      );
-      this.assemble = this.assembleLive;
+      this.assemble = this.assembleVideo;
     }
     return [
       this.canvas,
@@ -127,18 +122,7 @@ export class TwitchAssembler implements Assembler {
   }
 
   public assembleVideo(): void {
-    this.playController = PlayerController.createTwitchVideo(
-      this.video,
-      this.canvas,
-      this.anchorButtonElement,
-      this.chatContainer,
-      GlobalDocuments.create([document]),
-      this.playerSettings,
-    );
-  }
-
-  public assembleLive(): void {
-    this.playController = PlayerController.createTwitchLive(
+    this.playController = PlayerController.createTwitch(
       this.video,
       this.canvas,
       this.anchorButtonElement,
@@ -171,7 +155,6 @@ export class KickAssembler implements Assembler {
   private canvas: HTMLElement;
   private video: HTMLVideoElement;
   private chatContainer: Element;
-  private anchorButtonElement: Element;
   private playController: PlayerController;
 
   public constructor(private playerSettings: PlayerSettings) {}
@@ -182,29 +165,16 @@ export class KickAssembler implements Assembler {
     )?.parentElement?.parentElement?.parentElement;
     this.video = document.getElementsByTagName("video")[0];
     this.chatContainer = document.querySelector("#chatroom-messages > div");
-    this.anchorButtonElement = document.querySelector(
-      "#chatroom-footer > div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(1)",
-    );
-    if (!this.anchorButtonElement) {
-      // Playback
-      this.anchorButtonElement = document.querySelector(
-        "#channel-chatroom > div:first-of-type > span",
-      );
-    }
-    return [
-      this.canvas,
-      this.video,
-      this.anchorButtonElement,
-      this.chatContainer,
-    ];
+    return [this.canvas, this.video, this.chatContainer];
   }
 
   public assemble(): void {
     this.playController = PlayerController.createKick(
       this.video,
       this.canvas,
-      this.anchorButtonElement,
       this.chatContainer,
+      () =>
+        this.video?.nextElementSibling?.children?.[1]?.querySelector("button"),
       GlobalDocuments.create([document]),
       this.playerSettings,
     );
@@ -235,7 +205,7 @@ export class CrunchyrollAssembler implements Assembler {
     this.playController = PlayerController.createCrunchyroll(
       this.video,
       this.canvas,
-      "#settingsControl",
+      () => document.querySelector("#settingsControl"),
       GlobalDocuments.create([document]),
       this.playerSettings,
     );

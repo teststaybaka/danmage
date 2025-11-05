@@ -14,3 +14,4 @@ export let SHOW_USER_NAME_DEFAULT = false;
 export let DISTRIBUTION_STYLE_DEFAULT =
   DistributionStyle.RandomDistributionStyle;
 export let ENABLE_CHAT_INTERACTION_DEFAULT = false;
+export let SHOW_CHAT_WINDOW_DEFAULT = true;
