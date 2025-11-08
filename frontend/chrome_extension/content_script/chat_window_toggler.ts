@@ -2,6 +2,7 @@ import { DisplaySettings } from "../../../interface/player_settings";
 
 export interface ChatWindowToggler {
   updateDisplaySettings(): void;
+  remove(): void;
 }
 
 export class YouTubeChatWindowToggler implements ChatWindowToggler {
@@ -22,15 +23,28 @@ export class YouTubeChatWindowToggler implements ChatWindowToggler {
 
   public updateDisplaySettings() {
     if (this.displaySettings.showChatWindow) {
-      this.containers.forEach((container) => {
-        container.style.display = "block";
-      });
+      this.show();
     } else {
-      this.containers.forEach((container) => {
-        container.style.display = "none";
-      });
+      this.hide();
     }
+  }
+
+  private show(): void {
+    this.containers.forEach((container) => {
+      container.style.display = "block";
+    });
     this.window.dispatchEvent(new Event("resize"));
+  }
+
+  private hide(): void {
+    this.containers.forEach((container) => {
+      container.style.display = "none";
+    });
+    this.window.dispatchEvent(new Event("resize"));
+  }
+
+  public remove(): void {
+    this.show();
   }
 }
 
@@ -40,6 +54,10 @@ export class NoopChatWindowToggler implements ChatWindowToggler {
   }
 
   public updateDisplaySettings(): void {
+    // No operation
+  }
+
+  public remove(): void {
     // No operation
   }
 }

@@ -348,6 +348,7 @@ export class PlayerController {
     this.video.onseeking = undefined;
     this.pause();
     this.danmakuCanvasController.remove();
+    this.chatWindowToggler.remove();
     this.controlPanel.remove();
     this.controlPanelAttacher.stop();
   }
