@@ -31,14 +31,18 @@ export class YouTubeChatWindowToggler implements ChatWindowToggler {
 
   private show(): void {
     this.containers.forEach((container) => {
-      container.style.display = "block";
+      if (container.style.display === "none") {
+        container.style.display = "";
+      }
     });
     this.window.dispatchEvent(new Event("resize"));
   }
 
   private hide(): void {
     this.containers.forEach((container) => {
-      container.style.display = "none";
+      if (container.style.display !== "none") {
+        container.style.display = "none";
+      }
     });
     this.window.dispatchEvent(new Event("resize"));
   }
