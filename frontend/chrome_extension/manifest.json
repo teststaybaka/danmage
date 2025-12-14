@@ -2,28 +2,37 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
-  "version": "5.3.1",
-  "icons": { "128": "image/app_icon.png" },
+  "version": "5.3.2",
+  "icons": {
+    "128": "image/app_icon.png"
+  },
   "default_locale": "en",
   "background": {
     "service_worker": "background/index.js"
   },
-  "content_scripts": [{
-    "matches": [
-      "https://www.youtube.com/*",
-      "https://www.twitch.tv/*",
-      "https://kick.com/*"
-    ],
-    "js": ["content_script/index.js"],
-    "run_at": "document_end"
-  }, {
-    "matches": [
-      "https://static.crunchyroll.com/*"
-    ],
-    "all_frames": true,
-    "js": ["content_script/index.js"],
-    "run_at": "document_end"
-  }],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://www.twitch.tv/*",
+        "https://kick.com/*"
+      ],
+      "js": [
+        "content_script/index.js"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "https://static.crunchyroll.com/*"
+      ],
+      "all_frames": true,
+      "js": [
+        "content_script/index.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
   "permissions": [
     "identity"
   ],

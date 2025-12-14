@@ -2,9 +2,9 @@
 
 ## Overview
 
-DanMage is a project that brings NicoNico-style flow chat (A.K.A., scrolling chat, danmaku, danmu) to multiple video sites as both [a chrome extension](https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm) and [a firefox extension](https://addons.mozilla.org/en-US/firefox/addon/danmage), now supporting YouTube, Twitch and Crunchyroll. It's also deployed as a [website](https://www.danmage.com/), which provides minimum backend support to the extension, such as storing posted chats and player settings.
+DanMage is a project that brings NicoNico-style flow chat (A.K.A., scrolling chat, danmaku, danmu) to multiple video sites as both [a chrome extension](https://chrome.google.com/webstore/detail/danmage/elhaopojedichjdgkglifmijgkeclalm) and [a firefox extension](https://addons.mozilla.org/en-US/firefox/addon/danmage), now supporting YouTube, Twitch, Kick and Crunchyroll. It's also deployed as a [website](https://www.danmage.com/), which provides minimum backend support to the extension, such as storing posted chats and player settings.
 
-It's definitely not perfect. The DOM tree is completely and not easy to parse. YouTube & Twitch etc. can introduce changes anytime without notifying me.
+It's definitely not perfect. The DOM tree is a complete mess and not easy to parse, while the sites can introduce changes anytime without notifying me.
 
 So if you want to see danmaku being built into a native video platform, wish list [here](https://www.secount.com/danmaku).
 
@@ -23,6 +23,10 @@ You can do so for firefox with `npm run ext_firefox_linux_zip`.
 If you want to build it for Windows/MacOS, you gotta do some work youself :)
 
 ## Version
+
+### Version 5.3.2
+
+Merged fix for compability with other scripts.
 
 ### Version 5.3.1
 
