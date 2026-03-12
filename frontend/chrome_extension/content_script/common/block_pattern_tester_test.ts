@@ -1,4 +1,5 @@
 import { BlockPatternTester, ContentExtractor } from "./block_pattern_tester";
+import { StructuredContentBuilder } from "./chat_content_builder";
 import { TEST_RUNNER } from "@selfage/puppeteer_test_runner";
 import { assertThat, eq } from "@selfage/test_matcher";
 
@@ -20,6 +21,7 @@ TEST_RUNNER.run({
             blockPatterns: [{ kind: 1, content: "KEY" }],
           },
           contentExtractor,
+          new StructuredContentBuilder(),
         );
 
         // Execute
@@ -43,6 +45,7 @@ TEST_RUNNER.run({
             blockPatterns: [{ kind: 3, content: "^Has.*?reg.*?$" }],
           },
           contentExtractor,
+          new StructuredContentBuilder(),
         );
 
         // Execute
@@ -69,6 +72,7 @@ TEST_RUNNER.run({
             ],
           },
           contentExtractor,
+          new StructuredContentBuilder(),
         );
 
         // Execute
