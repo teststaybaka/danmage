@@ -1,22 +1,11 @@
 import EventEmitter = require("events");
 import { ChatEntry } from "../../../../interface/chat_entry";
-import { BlockSettings } from "../../../../interface/player_settings";
 import { ColorScheme } from "../../../color_scheme";
 import { FONT_M } from "../../../font_sizes";
 import { BlockPatternTester } from "../common/block_pattern_tester";
 import { E } from "@selfage/element/factory";
 
 export class ChatListEntry extends EventEmitter {
-  public static create(
-    chatEntry: ChatEntry,
-    blockSettings: BlockSettings,
-  ): ChatListEntry {
-    return new ChatListEntry(
-      chatEntry,
-      BlockPatternTester.createIdentity(blockSettings),
-    );
-  }
-
   public body: HTMLDivElement;
 
   public constructor(

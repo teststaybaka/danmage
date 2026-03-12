@@ -2,8 +2,19 @@ import { ChatEntry, HostApp } from "../../../interface/chat_entry";
 import { PlayerSettings } from "../../../interface/player_settings";
 import { newGetChatRequest, newPostChatRequest } from "../../client_requests";
 import { ChatPool, OnPageChatPool, StructuredChatPool } from "./chat_pool";
-import { ChatWindowToggler, NoopChatWindowToggler, YouTubeChatWindowToggler } from "./chat_window_toggler";
+import {
+  ChatWindowToggler,
+  NoopChatWindowToggler,
+  YouTubeChatWindowToggler,
+} from "./chat_window_toggler";
 import { BlockPatternTester } from "./common/block_pattern_tester";
+import {
+  KickChatContentBuilder,
+  StructuredContentBuilder,
+  Twitch7tvChatContentBuilder,
+  TwitchChatContentBuilder,
+  YouTubeChatContentBuilder,
+} from "./common/chat_content_builder";
 import { GlobalDocuments } from "./common/global_documents";
 import { SERVICE_CLIENT } from "./common/service_client";
 import { ControlPanel } from "./control_panel";
@@ -13,13 +24,6 @@ import {
   ControlPanelPeriodicAttacher,
 } from "./control_panel_attacher";
 import { DanmakuCanvasController } from "./danmaku_canvas/danmaku_canvas_controller";
-import {
-  KickChatContentBuilder,
-  StructuredContentBuilder,
-  Twitch7tvChatContentBuilder,
-  TwitchChatContentBuilder,
-  YouTubeChatContentBuilder,
-} from "./danmaku_canvas/danmaku_element_content_builder";
 import {
   CrunchyrollVideoIdExtractor,
   NoopVideoIdExtractor,
@@ -36,8 +40,13 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
+    let blockPatternTester = BlockPatternTester.createIdentity(
+      new StructuredContentBuilder(),
+      playerSettings.blockSettings,
+    );
     let controlPanel = ControlPanel.createYouTubeStructured(
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
     return new PlayerController(
@@ -47,13 +56,13 @@ export class PlayerController {
       DanmakuCanvasController.create(
         canvas,
         playerSettings,
-        BlockPatternTester.createIdentity(playerSettings.blockSettings),
+        blockPatternTester,
         new StructuredContentBuilder(),
       ),
       NoopChatWindowToggler.create(),
       controlPanel,
       ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
-      StructuredChatPool.create(playerSettings.blockSettings),
+      new StructuredChatPool(blockPatternTester),
       YouTubeVideoIdExtractor.create(canvas),
       HostApp.YouTube,
     );
@@ -68,8 +77,13 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
+    let blockPatternTester = BlockPatternTester.createHtml(
+      new YouTubeChatContentBuilder(),
+      playerSettings.blockSettings,
+    );
     let controlPanel = ControlPanel.createYouTubeChat(
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
     return new PlayerController(
@@ -79,13 +93,16 @@ export class PlayerController {
       DanmakuCanvasController.create(
         canvas,
         playerSettings,
-        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        blockPatternTester,
         new YouTubeChatContentBuilder(),
       ),
-      YouTubeChatWindowToggler.create(chatWindowContainers, playerSettings.displaySettings),
+      YouTubeChatWindowToggler.create(
+        chatWindowContainers,
+        playerSettings.displaySettings,
+      ),
       controlPanel,
       ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
-      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
+      new OnPageChatPool(chatContainer, blockPatternTester),
       NoopVideoIdExtractor.create(),
     );
   }
@@ -98,8 +115,13 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
+    let blockPatternTester = BlockPatternTester.createHtml(
+      new TwitchChatContentBuilder(),
+      playerSettings.blockSettings,
+    );
     let controlPanel = ControlPanel.createTwitch(
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
     return new PlayerController(
@@ -109,13 +131,13 @@ export class PlayerController {
       DanmakuCanvasController.create(
         canvas,
         playerSettings,
-        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        blockPatternTester,
         new TwitchChatContentBuilder(),
       ),
       NoopChatWindowToggler.create(),
       controlPanel,
       ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
-      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
+      new OnPageChatPool(chatContainer, blockPatternTester),
       NoopVideoIdExtractor.create(),
     );
   }
@@ -128,8 +150,13 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
+    let blockPatternTester = BlockPatternTester.createHtml(
+      new Twitch7tvChatContentBuilder(),
+      playerSettings.blockSettings,
+    );
     let controlPanel = ControlPanel.createTwitch(
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
     return new PlayerController(
@@ -139,13 +166,13 @@ export class PlayerController {
       DanmakuCanvasController.create(
         canvas,
         playerSettings,
-        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        blockPatternTester,
         new Twitch7tvChatContentBuilder(),
       ),
       NoopChatWindowToggler.create(),
       controlPanel,
       ControlPanelOneTimeAttacher.create(controlPanel, anchorButtonElement),
-      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
+      new OnPageChatPool(chatContainer, blockPatternTester),
       NoopVideoIdExtractor.create(),
     );
   }
@@ -158,7 +185,15 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
-    let controlPanel = ControlPanel.createKick(globalDocuments, playerSettings);
+    let blockPatternTester = BlockPatternTester.createHtml(
+      new KickChatContentBuilder(),
+      playerSettings.blockSettings,
+    );
+    let controlPanel = ControlPanel.createKick(
+      globalDocuments,
+      blockPatternTester,
+      playerSettings,
+    );
     return new PlayerController(
       window,
       SERVICE_CLIENT,
@@ -166,13 +201,13 @@ export class PlayerController {
       DanmakuCanvasController.create(
         canvas,
         playerSettings,
-        BlockPatternTester.createHtml(playerSettings.blockSettings),
+        blockPatternTester,
         new KickChatContentBuilder(),
       ),
       NoopChatWindowToggler.create(),
       controlPanel,
       ControlPanelPeriodicAttacher.create(controlPanel, anchorElementSelectFn),
-      OnPageChatPool.create(chatContainer, playerSettings.blockSettings),
+      new OnPageChatPool(chatContainer, blockPatternTester),
       NoopVideoIdExtractor.create(),
     );
   }
@@ -184,8 +219,13 @@ export class PlayerController {
     globalDocuments: GlobalDocuments,
     playerSettings: PlayerSettings,
   ): PlayerController {
+    let blockPatternTester = BlockPatternTester.createIdentity(
+      new StructuredContentBuilder(),
+      playerSettings.blockSettings,
+    );
     let controlPanel = ControlPanel.createCrunchyroll(
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
     return new PlayerController(
@@ -195,13 +235,13 @@ export class PlayerController {
       DanmakuCanvasController.create(
         canvas,
         playerSettings,
-        BlockPatternTester.createIdentity(playerSettings.blockSettings),
+        blockPatternTester,
         new StructuredContentBuilder(),
       ),
       NoopChatWindowToggler.create(),
       controlPanel,
       ControlPanelPeriodicAttacher.create(controlPanel, anchorElementSelectFn),
-      StructuredChatPool.create(playerSettings.blockSettings),
+      new StructuredChatPool(blockPatternTester),
       CrunchyrollVideoIdExtractor.create(),
       HostApp.Crunchyroll,
     );

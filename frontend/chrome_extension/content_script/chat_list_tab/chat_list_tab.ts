@@ -1,9 +1,9 @@
 import EventEmitter = require("events");
 import { ChatEntry } from "../../../../interface/chat_entry";
-import { BlockSettings } from "../../../../interface/player_settings";
 import { FilledBlockingButton } from "../../../blocking_button";
 import { ColorScheme } from "../../../color_scheme";
 import { FONT_M } from "../../../font_sizes";
+import { BlockPatternTester } from "../common/block_pattern_tester";
 import { CustomTextInputController } from "../common/custom_text_input_controller";
 import { LinkedList } from "../common/linked_list";
 import { LOCAL_SESSION_STORAGE } from "../common/local_session_storage";
@@ -21,8 +21,8 @@ export interface ChatListTab {
 }
 
 export class ChatListTab extends EventEmitter {
-  public static create(blockSettings: BlockSettings): ChatListTab {
-    return new ChatListTab(LOCAL_SESSION_STORAGE, blockSettings);
+  public static create(blockPatternTester: BlockPatternTester): ChatListTab {
+    return new ChatListTab(LOCAL_SESSION_STORAGE, blockPatternTester);
   }
 
   private static LENGTH_LIMIT = 40;
@@ -36,7 +36,7 @@ export class ChatListTab extends EventEmitter {
 
   public constructor(
     private localSessionStorage: LocalSessionStorage,
-    private blockSettings: BlockSettings,
+    private blockSettingsTester: BlockPatternTester,
   ) {
     super();
     this.body = E.div(
@@ -104,7 +104,7 @@ export class ChatListTab extends EventEmitter {
       this.entryList.val.scrollTop + this.entryList.val.offsetHeight >=
       this.entryList.val.scrollHeight;
     for (let chatEntry of chatEntries) {
-      let entry = ChatListEntry.create(chatEntry, this.blockSettings);
+      let entry = new ChatListEntry(chatEntry, this.blockSettingsTester);
       this.entryList.val.appendChild(entry.body);
       this.chatListEntries.pushBack(entry);
     }

@@ -3,6 +3,7 @@ import {
   BlockKind,
   BlockSettings,
 } from "../../../../interface/player_settings";
+import { ChatContentBuilder } from "./chat_content_builder";
 
 export interface ContentExtractor {
   extract: (content: string) => string;
@@ -24,23 +25,38 @@ class HtmlExtractor implements ContentExtractor {
 
 export class BlockPatternTester {
   public static createIdentity(
+    contentBuilder: ChatContentBuilder,
     blockSettings: BlockSettings,
   ): BlockPatternTester {
-    return new BlockPatternTester(blockSettings, new IdentityExtractor());
+    return new BlockPatternTester(
+      blockSettings,
+      new IdentityExtractor(),
+      contentBuilder,
+    );
   }
 
-  public static createHtml(blockSettings: BlockSettings): BlockPatternTester {
-    return new BlockPatternTester(blockSettings, new HtmlExtractor());
+  public static createHtml(
+    contentBuilder: ChatContentBuilder,
+    blockSettings: BlockSettings,
+  ): BlockPatternTester {
+    return new BlockPatternTester(
+      blockSettings,
+      new HtmlExtractor(),
+      contentBuilder,
+    );
   }
 
   public constructor(
     private blockSettings: BlockSettings,
     private contentExtractor: ContentExtractor,
+    private contentBuilder: ChatContentBuilder,
   ) {}
 
   public test(chatEntry: ChatEntry): boolean {
     for (let blockPattern of this.blockSettings.blockPatterns) {
-      let content = this.contentExtractor.extract(chatEntry.content);
+      let content = this.contentExtractor.extract(
+        this.contentBuilder.extractContent(chatEntry.content),
+      );
       switch (blockPattern.kind) {
         case BlockKind.KeywordBlockKind:
           if (

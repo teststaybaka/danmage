@@ -5,7 +5,7 @@ import {
   PlayerSettings,
 } from "../../../../interface/player_settings";
 import { BlockPatternTester } from "../common/block_pattern_tester";
-import { DanmakuElementContentBuilder } from "./danmaku_element_content_builder";
+import { ChatContentBuilder } from "../common/chat_content_builder";
 import { E } from "@selfage/element/factory";
 
 export interface DanmakuElement {
@@ -18,7 +18,7 @@ export class DanmakuElement extends EventEmitter {
     playerSettings: PlayerSettings,
     chatEntry: ChatEntry,
     blockPatternTester: BlockPatternTester,
-    contentBuilder: DanmakuElementContentBuilder,
+    contentBuilder: ChatContentBuilder,
   ): DanmakuElement {
     return new DanmakuElement(
       window,
@@ -44,7 +44,7 @@ export class DanmakuElement extends EventEmitter {
   public constructor(
     private window: Window,
     private blockPatternTester: BlockPatternTester,
-    private danmakuElementContentBuilder: DanmakuElementContentBuilder,
+    private danmakuElementContentBuilder: ChatContentBuilder,
     private displaySettings: DisplaySettings,
     private chatEntry: ChatEntry,
   ) {

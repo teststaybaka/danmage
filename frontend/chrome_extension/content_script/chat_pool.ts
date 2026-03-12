@@ -1,5 +1,4 @@
 import { ChatEntry } from "../../../interface/chat_entry";
-import { BlockSettings } from "../../../interface/player_settings";
 import { BlockPatternTester } from "./common/block_pattern_tester";
 
 export interface ChatPool {
@@ -10,12 +9,6 @@ export interface ChatPool {
 }
 
 export class StructuredChatPool implements ChatPool {
-  public static create(blockSettings: BlockSettings): StructuredChatPool {
-    return new StructuredChatPool(
-      BlockPatternTester.createIdentity(blockSettings),
-    );
-  }
-
   private static ANONYMOUS = "Anonymous";
 
   private lastTimestamp: number = 0; // ms
@@ -106,16 +99,6 @@ export class StructuredChatPool implements ChatPool {
 }
 
 export class OnPageChatPool implements ChatPool {
-  public static create(
-    chatContainer: Element,
-    blockSettings: BlockSettings,
-  ): OnPageChatPool {
-    return new OnPageChatPool(
-      chatContainer,
-      BlockPatternTester.createHtml(blockSettings),
-    );
-  }
-
   private static TW_HIDE_CLASS = "tw-hide";
 
   private logElementPointer: Element;

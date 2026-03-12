@@ -51,11 +51,16 @@ function getHeightStyles(fontSize: number): { [key: string]: string } {
   };
 }
 
-export interface DanmakuElementContentBuilder {
+export interface ChatContentBuilder {
+  extractContent: (content: string) => string;
   build: (chatEntry: ChatEntry, displaySettings: DisplaySettings) => string;
 }
 
-export class StructuredContentBuilder implements DanmakuElementContentBuilder {
+export class StructuredContentBuilder implements ChatContentBuilder {
+  public extractContent(content: string): string {
+    return content;
+  }
+
   public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
     let contentHTML = `<span style="color: white; text-shadow: ${TEXT_SHADOW};">${chatEntry.content}</span>`;
     if (displaySettings.showUserName) {
@@ -66,9 +71,30 @@ export class StructuredContentBuilder implements DanmakuElementContentBuilder {
   }
 }
 
-export class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
+export class YouTubeChatContentBuilder implements ChatContentBuilder {
   private static CUSTOM_TAG_OPEN = /<ytd?-.*? /g;
   private static CUSTOM_TAG_CLOSE = /<\/ytd?-.*?>/g;
+
+  public extractContent(content: string): string {
+    let template = document.createElement("template");
+    template.innerHTML = content
+      .replace(YouTubeChatContentBuilder.CUSTOM_TAG_OPEN, "<div ")
+      .replace(YouTubeChatContentBuilder.CUSTOM_TAG_CLOSE, "</div>");
+    this.removeUserName(template);
+    return template.innerHTML;
+  }
+
+  private removeUserName(template: HTMLTemplateElement): void {
+    removeSelectedChildElements(
+      template.content.querySelectorAll("#author-photo"),
+    );
+    removeSelectedChildElements(
+      template.content.querySelectorAll("#author-name"),
+    );
+    removeSelectedChildElements(
+      template.content.querySelectorAll("#chat-badges"),
+    );
+  }
 
   public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
     let template = document.createElement("template");
@@ -89,15 +115,7 @@ export class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
       template.content.querySelectorAll("#action-buttons"),
     );
     if (!displaySettings.showUserName) {
-      removeSelectedChildElements(
-        template.content.querySelectorAll("#author-photo"),
-      );
-      removeSelectedChildElements(
-        template.content.querySelectorAll("#author-name"),
-      );
-      removeSelectedChildElements(
-        template.content.querySelectorAll("#chat-badges"),
-      );
+      this.removeUserName(template);
     }
     setStyleForSelectedChildElements(
       template.content.querySelectorAll(".yt-live-chat-text-message-renderer"),
@@ -227,8 +245,30 @@ export class YouTubeChatContentBuilder implements DanmakuElementContentBuilder {
   }
 }
 
-export class TwitchChatContentBuilder implements DanmakuElementContentBuilder {
+export class TwitchChatContentBuilder implements ChatContentBuilder {
   private static COLON_REPLACER = />: ?<\//;
+
+  public extractContent(content: string): string {
+    let template = document.createElement("template");
+    template.innerHTML = content.replace(
+      TwitchChatContentBuilder.COLON_REPLACER,
+      `> </`,
+    );
+    this.removeUserName(template);
+    return template.innerHTML;
+  }
+
+  private removeUserName(template: HTMLTemplateElement): void {
+    removeSelectedChildElements(
+      template.content.querySelectorAll(".chat-badge"),
+    );
+    removeSelectedChildElements(
+      template.content.querySelectorAll(".chat-author__display-name"),
+    );
+    removeSelectedChildElements(
+      template.content.querySelectorAll(".chat-author__intl-login"),
+    );
+  }
 
   public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
     let template = document.createElement("template");
@@ -237,15 +277,7 @@ export class TwitchChatContentBuilder implements DanmakuElementContentBuilder {
         TwitchChatContentBuilder.COLON_REPLACER,
         `> </`,
       );
-      removeSelectedChildElements(
-        template.content.querySelectorAll(".chat-badge"),
-      );
-      removeSelectedChildElements(
-        template.content.querySelectorAll(".chat-author__display-name"),
-      );
-      removeSelectedChildElements(
-        template.content.querySelectorAll(".chat-author__intl-login"),
-      );
+      this.removeUserName(template);
     } else {
       template.innerHTML = chatEntry.content;
     }
@@ -286,10 +318,27 @@ export class TwitchChatContentBuilder implements DanmakuElementContentBuilder {
   }
 }
 
-export class Twitch7tvChatContentBuilder
-  implements DanmakuElementContentBuilder
-{
+export class Twitch7tvChatContentBuilder implements ChatContentBuilder {
   private static COLON_REPLACER = />: ?<\//;
+
+  public extractContent(content: string): string {
+    let template = document.createElement("template");
+    template.innerHTML = content.replace(
+      Twitch7tvChatContentBuilder.COLON_REPLACER,
+      `> </`,
+    );
+    this.removeUserName(template);
+    return template.innerHTML;
+  }
+
+  private removeUserName(template: HTMLTemplateElement): void {
+    removeSelectedChildElements(
+      template.content.querySelectorAll(".seventv-chat-user-badge-list"),
+    );
+    removeSelectedChildElements(
+      template.content.querySelectorAll(".seventv-chat-user-username"),
+    );
+  }
 
   public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
     let template = document.createElement("template");
@@ -298,12 +347,7 @@ export class Twitch7tvChatContentBuilder
         Twitch7tvChatContentBuilder.COLON_REPLACER,
         `> </`,
       );
-      removeSelectedChildElements(
-        template.content.querySelectorAll(".seventv-chat-user-badge-list"),
-      );
-      removeSelectedChildElements(
-        template.content.querySelectorAll(".seventv-chat-user-username"),
-      );
+      this.removeUserName(template);
     } else {
       template.innerHTML = chatEntry.content;
     }
@@ -327,8 +371,27 @@ export class Twitch7tvChatContentBuilder
   }
 }
 
-export class KickChatContentBuilder implements DanmakuElementContentBuilder {
+export class KickChatContentBuilder implements ChatContentBuilder {
   private static COLON_REPLACER = />:&nbsp;<\//;
+
+  public extractContent(content: string): string {
+    let template = document.createElement("template");
+    template.innerHTML = content.replace(
+      KickChatContentBuilder.COLON_REPLACER,
+      `> </`,
+    );
+    this.removeUserName(template);
+    return template.innerHTML;
+  }
+
+  private removeUserName(template: HTMLTemplateElement): void {
+    // Remove username element
+    removeSelectedChildElements(
+      template.content.querySelectorAll(
+        ".inline-flex.min-w-0.flex-nowrap.items-baseline.rounded.transition-colors",
+      ),
+    );
+  }
 
   public build(chatEntry: ChatEntry, displaySettings: DisplaySettings): string {
     let template = document.createElement("template");
@@ -338,12 +401,7 @@ export class KickChatContentBuilder implements DanmakuElementContentBuilder {
         KickChatContentBuilder.COLON_REPLACER,
         `> </`,
       );
-      // Remove username element
-      removeSelectedChildElements(
-        template.content.querySelectorAll(
-          ".inline-flex.min-w-0.flex-nowrap.items-baseline.rounded.transition-colors",
-        ),
-      );
+      this.removeUserName(template);
     } else {
       template.innerHTML = chatEntry.content;
     }

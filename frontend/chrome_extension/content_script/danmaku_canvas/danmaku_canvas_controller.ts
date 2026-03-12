@@ -4,16 +4,16 @@ import {
   PlayerSettings,
 } from "../../../../interface/player_settings";
 import { BlockPatternTester } from "../common/block_pattern_tester";
+import { ChatContentBuilder } from "../common/chat_content_builder";
 import { LinkedList, LinkedNode } from "../common/linked_list";
 import { DanmakuElement } from "./danmaku_element";
-import { DanmakuElementContentBuilder } from "./danmaku_element_content_builder";
 
 export class DanmakuCanvasController {
   public static create(
     canvas: HTMLElement,
     playerSettings: PlayerSettings,
     blockPatternTester: BlockPatternTester,
-    contentBuilder: DanmakuElementContentBuilder,
+    contentBuilder: ChatContentBuilder,
   ): DanmakuCanvasController {
     return new DanmakuCanvasController(
       Math.random,

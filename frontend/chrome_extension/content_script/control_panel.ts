@@ -6,6 +6,7 @@ import { FONT_M } from "../../font_sizes";
 import { AccountTab } from "./account_tab/account_tab";
 import { BlockSettingsTab } from "./block_settings_tab/block_settings_tab";
 import { ChatListTab } from "./chat_list_tab/chat_list_tab";
+import { BlockPatternTester } from "./common/block_pattern_tester";
 import { GlobalDocuments } from "./common/global_documents";
 import {
   PLAYER_SETTINGS_STORAGE,
@@ -35,6 +36,7 @@ export interface ControlPanel {
 export class ControlPanel extends EventEmitter {
   public static createYouTubeStructured(
     globalDocuments: GlobalDocuments,
+    blockPatternTester: BlockPatternTester,
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
@@ -44,12 +46,14 @@ export class ControlPanel extends EventEmitter {
       "currentColor",
       true,
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
   }
 
   public static createYouTubeChat(
     globalDocuments: GlobalDocuments,
+    blockPatternTester: BlockPatternTester,
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
@@ -59,12 +63,14 @@ export class ControlPanel extends EventEmitter {
       "currentColor",
       false,
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
   }
 
   public static createTwitch(
     globalDocuments: GlobalDocuments,
+    blockPatternTester: BlockPatternTester,
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
@@ -74,12 +80,14 @@ export class ControlPanel extends EventEmitter {
       "white",
       false,
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
   }
 
   public static createKick(
     globalDocuments: GlobalDocuments,
+    blockPatternTester: BlockPatternTester,
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
@@ -89,12 +97,14 @@ export class ControlPanel extends EventEmitter {
       "white",
       false,
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
   }
 
   public static createCrunchyroll(
     globalDocuments: GlobalDocuments,
+    blockPatternTester: BlockPatternTester,
     playerSettings: PlayerSettings,
   ): ControlPanel {
     return new ControlPanel(
@@ -104,6 +114,7 @@ export class ControlPanel extends EventEmitter {
       "white",
       true,
       globalDocuments,
+      blockPatternTester,
       playerSettings,
     );
   }
@@ -135,6 +146,7 @@ export class ControlPanel extends EventEmitter {
     buttonColor: string,
     hasChat: boolean,
     private globalDocuments: GlobalDocuments,
+    private blockPatternTester: BlockPatternTester,
     private playerSettings: PlayerSettings,
   ) {
     super();
@@ -183,7 +195,7 @@ export class ControlPanel extends EventEmitter {
       tabs.push(
         assign(
           this.chatListTab,
-          ChatListTab.create(this.playerSettings.blockSettings).hide(),
+          ChatListTab.create(this.blockPatternTester).hide(),
         ).body,
       );
     }
