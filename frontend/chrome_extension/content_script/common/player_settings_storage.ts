@@ -117,10 +117,19 @@ export class PlayerSettingsStorage {
       SHOW_CHAT_WINDOW_DEFAULT;
 
     let blockSettings = playerSettings.blockSettings;
-    blockSettings.blockPatterns = [
+    let mergedPatterns = [
       ...(remotePlayerSettings?.blockSettings?.blockPatterns ?? []),
       ...(localPlayerSettings?.blockSettings?.blockPatterns ?? []),
     ];
+    let seen = new Set<string>();
+    blockSettings.blockPatterns = mergedPatterns.filter((pattern) => {
+      let key = `${pattern.kind}:${pattern.content}`;
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
     return playerSettings;
   }
 
