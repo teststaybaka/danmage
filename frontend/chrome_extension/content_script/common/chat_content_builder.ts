@@ -30,7 +30,7 @@ function getFontStyles(displaySettings: DisplaySettings): {
   return {
     "font-family": displaySettings.fontFamily,
     "font-size": `${displaySettings.fontSize * FONT_SIZE_SCALE}px`,
-    "line-height": "100%",
+    "line-height": "normal",
   };
 }
 
