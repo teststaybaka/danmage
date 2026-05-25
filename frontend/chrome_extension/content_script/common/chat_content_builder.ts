@@ -47,7 +47,7 @@ function getFontAndColorStyles(displaySettings: DisplaySettings): {
 function getHeightStyles(fontSize: number): { [key: string]: string } {
   return {
     height: `${fontSize * FONT_SIZE_SCALE}px`,
-    width: "auto",
+    width: `${fontSize * FONT_SIZE_SCALE}px`,
   };
 }
 
@@ -137,6 +137,9 @@ export class YouTubeChatContentBuilder implements ChatContentBuilder {
       template.content.querySelectorAll("#author-name"),
       getFontStyles(displaySettings),
     );
+    removeSelectedChildElements(
+      template.content.querySelectorAll("#author-name > #chip-badges"),
+    );
     setStyleForSelectedChildElements(
       template.content.querySelectorAll(".emoji"),
       getHeightStyles(displaySettings.fontSize),
@@ -153,6 +156,7 @@ export class YouTubeChatContentBuilder implements ChatContentBuilder {
       template.content.querySelectorAll("#chat-badges"),
       {
         "margin-right": "8px",
+        "margin-left": "8px",
       },
     );
     setStyleForSelectedChildElements(
