@@ -25,10 +25,7 @@ export class ControlPanelOneTimeAttacher implements ControlPanelAttacher {
 
   public start(): void {
     this.document.body.appendChild(this.controlPanel.panel);
-    this.anchorButtonElement.before(
-      this.controlPanel.button,
-      this.anchorButtonElement,
-    );
+    this.anchorButtonElement.before(this.controlPanel.button);
   }
 
   public stop(): void {}
@@ -69,7 +66,7 @@ export class ControlPanelPeriodicAttacher implements ControlPanelAttacher {
     if (this.lastAnchorElement !== anchorElement) {
       this.lastAnchorElement = anchorElement;
       if (anchorElement) {
-        anchorElement.before(this.controlPanel.button, anchorElement);
+        anchorElement.before(this.controlPanel.button);
       }
     }
     this.cycleId = this.window.setTimeout(

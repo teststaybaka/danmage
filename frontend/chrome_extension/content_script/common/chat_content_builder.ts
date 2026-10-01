@@ -149,10 +149,6 @@ export class YouTubeChatContentBuilder implements ChatContentBuilder {
       getHeightStyles(displaySettings.fontSize),
     );
     setStyleForSelectedChildElements(
-      template.content.querySelectorAll("#chip-badges"),
-      getHeightStyles(displaySettings.fontSize),
-    );
-    setStyleForSelectedChildElements(
       template.content.querySelectorAll("#chat-badges"),
       {
         "margin-right": "8px",
