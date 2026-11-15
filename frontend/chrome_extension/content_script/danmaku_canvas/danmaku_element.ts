@@ -34,7 +34,14 @@ export class DanmakuElement extends EventEmitter {
 
   public body: HTMLDivElement;
   private canvasWidth: number;
+  // Where the element is, or where its current transition started.
   private posX: number;
+  // Set while a transition is running. The position is derived from it rather
+  // than read from the computed style, because the browser cancels transitions
+  // when the element is moved in the DOM (YouTube does that to the player on
+  // entering/leaving fullscreen) and the computed style then jumps to the end.
+  private transitionStartedAt: number | undefined;
+  private transitionSpeed: number;
   private posY: number;
   private playAfterLeaving: boolean;
   private playByPlayer: boolean;
@@ -94,6 +101,10 @@ export class DanmakuElement extends EventEmitter {
   }
 
   private startTransition(): void {
+    // Can be called while already moving, e.g. when playback resumes after
+    // buffering without a pause in between.
+    this.posX = this.getCurrentPosX();
+    this.clearAllTimeouts();
     if (this.posX > 0) {
       let remainingDuration = this.posX / this.displaySettings.speed;
       this.endOccupyTimeoutId = this.window.setTimeout(() => {
@@ -105,6 +116,8 @@ export class DanmakuElement extends EventEmitter {
     if (this.posX > -this.canvasWidth) {
       let duration =
         (this.canvasWidth + this.posX) / this.displaySettings.speed;
+      this.transitionStartedAt = this.window.performance.now();
+      this.transitionSpeed = this.displaySettings.speed;
       this.body.style.transition = `transform ${duration}s linear`;
       this.transform(-this.canvasWidth);
       this.endDisplayTimeoutId = this.window.setTimeout(() => {
@@ -126,15 +139,20 @@ export class DanmakuElement extends EventEmitter {
 
   private pauseTransition(): void {
     this.clearAllTimeouts();
-    this.posX = this.getPosXComputed();
+    this.posX = this.getCurrentPosX();
+    this.transitionStartedAt = undefined;
     this.transform(this.posX);
     this.body.style.transition = `none`;
     // Force reflow.
     this.body.offsetHeight;
   }
 
-  private getPosXComputed(): number {
-    return new DOMMatrix(this.window.getComputedStyle(this.body).transform).m41;
+  private getCurrentPosX(): number {
+    if (this.transitionStartedAt === undefined) {
+      return this.posX;
+    }
+    let elapsed = this.window.performance.now() - this.transitionStartedAt;
+    return this.posX - (this.transitionSpeed * elapsed) / 1000;
   }
 
   private clearAllTimeouts(): void {
